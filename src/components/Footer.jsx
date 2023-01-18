@@ -18,7 +18,7 @@ const Footer = () => {
                         Mentions légales
                     </a>
                 </Link>
-                <Link href={`/`} legacyBehavior>
+                <Link href={`/contact`} legacyBehavior>
                     <a className="px-3 text-stone-400 text-lg font-bold">
                         Contact
                     </a>
