@@ -21,6 +21,9 @@ const Navbar = () => {
                     <Link href={`/`} className="px-2 py-1">
                         <MagnifyingGlassIcon className="w-7 text-stone-400"/>
                     </Link>
+                    <Link href={"/1/categorie"} className="px-2 py-1">
+                        Catégorie Test
+                    </Link>
                     <Link href={`/`} className="px-2 py-1">
                         <Bars3Icon className="w-7 text-stone-400"/>
                     </Link>
