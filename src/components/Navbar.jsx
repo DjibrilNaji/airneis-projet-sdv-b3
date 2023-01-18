@@ -6,7 +6,7 @@ const Navbar = () => {
     return (
         <>
             <nav
-                className="flex font-mono items-center sticky top-0 bg-white border-b-2 border-stone-400 shadow-md p-4">
+                className="z-10 flex font-mono items-center sticky top-0 bg-white border-b-2 border-stone-400 shadow-md p-4">
                 <Link href="/" legacyBehavior>
                     <a className="text-stone-400 text-3xl font-bold">
                         ÀIRNES

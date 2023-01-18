@@ -24,13 +24,16 @@ const CategoriePage = (props) => {
     <>
     <Navbar/>
     {Object.values(categories).map((value) => value["idCategorie"] === categorieId ? (
-      <><div>
-        <ImageDefault src={"/assets/img/categorieImg/catLiterie.jpg"} width="500" height="500" alt="image" className="w-full h-96 inline-block static" />
-        <Title className="z-0 absolute text-2xl text-center font-serif font-bold top-1/4 w-full">Literie</Title>
-        <Description className="pt-6 w-full text-center">Description Description Description Description Description Description Description Description </Description>
-      </div><div>
+      <>
+        <div>
+        <ImageDefault src={`/assets/img/categorieImg/${value["imageCategorie"]}`} width="500" height="500" alt="image" className="w-full inline-block static h-72 md:h-80 lg:h-96 " />
+        <Title className="z-0 absolute text-2xl text-center font-serif font-bold w-full top-1/4 md:top-48 lg:top-1/3">Literie</Title>
+          <Description className="pt-6 w-full text-center">{value["description"]}</Description>
+        </div>
+        <div>
           <ListProduits idCategorie={categorieId} products={products}></ListProduits>
-        </div></>
+        </div>
+      </>
     ): "" )}
     </>
   )
