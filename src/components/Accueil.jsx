@@ -24,18 +24,19 @@ const Accueil = () => {
     return (
         <>
             <div>
-                <div>
+                <div className="z-0">
                     <Carousel>
-                        <Image src={Image2} alt="slide 1"/>
-                        <Image src={Image2} alt="slide 2"/>
-                        <Image src={Image2} alt="slide 3"/>
+                        <Image src={Image2} alt="slide 1" className="h-96 w-full object-cover"/>
+                        <Image src={Image2} alt="slide 2" className="h-96 w-full object-cover"/>
+                        <Image src={Image2} alt="slide 3" className="h-96 w-full object-cover"/>
                     </Carousel>
                 </div>
 
                 <div className="flex items-center justify-center">
-                    <p className="pt-10 pb-10 text-center font-bold text-stone-400">Venant des hautes terres d'écosse
-                        nos meubles sont
-                        immortels</p>
+                    <p className="pt-10 pb-10 text-center font-bold text-stone-400">
+                        Venant des hautes terres d'écosse
+                        nos meubles sont immortels
+                    </p>
                 </div>
 
                 <div
@@ -47,7 +48,6 @@ const Accueil = () => {
                         </div>
                     ))}
                 </div>
-
 
                 <div className="flex items-center justify-center">
                     <p className="text-center font-bold text-stone-400 text-xl">
