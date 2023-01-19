@@ -35,7 +35,8 @@ const Login = () => {
                                         placeholder="Mot de passe*"
                                     />
                                     <div className="text-right">
-                                        <a href="#" className="text-gray-800 text-center text-xs font-bold">Mot de passe
+                                        <a href="src/pages/Login#login.jsx"
+                                           className="text-gray-800 text-center text-xs font-bold">Mot de passe
                                             oublié ?</a>
                                     </div>
                                 </div>
@@ -44,7 +45,7 @@ const Login = () => {
                                     <p className="text-stone-400 text-sm font-semibold mt-2 pt-1 pb-4 mb-0">
                                         Vous n'êtes pas encore inscrit ?
                                         <a
-                                            href="#"
+                                            href="src/pages/Login#login.jsx"
                                             className="text-black"
                                         > S'inscrire
                                         </a>
