@@ -1,6 +1,7 @@
 import React from "react"
 import Link from "next/link"
-import {Bars3Icon, MagnifyingGlassIcon, ShoppingCartIcon} from "@heroicons/react/24/solid"
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
+import {faBars, faMagnifyingGlass, faShoppingCart} from "@fortawesome/free-solid-svg-icons"
 
 const Navbar = () => {
     return (
@@ -13,16 +14,15 @@ const Navbar = () => {
                     </a>
                 </Link>
                 <div className="flex ml-auto">
-                    <Link href={`/`} className="px-2 py-1">
-                        <ShoppingCartIcon className="w-7 text-stone-400"/>
-                    </Link>
-
                     {/*Link a modifier par autre chose*/}
                     <Link href={`/`} className="px-2 py-1">
-                        <MagnifyingGlassIcon className="w-7 text-stone-400"/>
+                        <FontAwesomeIcon icon={faMagnifyingGlass} className="h-6 text-stone-400"/>
                     </Link>
                     <Link href={`/`} className="px-2 py-1">
-                        <Bars3Icon className="w-7 text-stone-400"/>
+                        <FontAwesomeIcon icon={faShoppingCart} className="h-6 text-stone-400"/>
+                    </Link>
+                    <Link href={`/`} className="px-2 py-1">
+                        <FontAwesomeIcon icon={faBars} className="h-6 text-stone-400"/>
                     </Link>
                 </div>
             </nav>
