@@ -46,7 +46,7 @@ const Inscription = () => {
                                     <p className="text-stone-400 text-sm font-semibold mt-2 pt-1 pb-4 mb-0">
                                         Déjà un compte ?
                                         <a
-                                            href="#"
+                                            href="src/pages/inscription#inscritpion.jsx"
                                             className="text-black"
                                         > Connectez vous
                                         </a>
