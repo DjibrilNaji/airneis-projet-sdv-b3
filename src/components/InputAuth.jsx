@@ -16,4 +16,3 @@ const InputAuth = (props) => {
 
 export default InputAuth
 
-
