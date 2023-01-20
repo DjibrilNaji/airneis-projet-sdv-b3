@@ -1,6 +1,7 @@
 import Carousel from "./Carousel"
 import Image from "next/image"
 import Image2 from "/src/images/download-1.jpg"
+import Text from "./Text"
 
 const categories = [
     {id: 1, name: "CAT1", img: "test"},
@@ -32,15 +33,11 @@ const Accueil = () => {
                     </Carousel>
                 </div>
 
-                <div className="flex items-center justify-center">
-                    <p className="pt-10 pb-10 text-center font-bold text-stone-400">
-                        Venant des hautes terres d'écosse
-                        nos meubles sont immortels
-                    </p>
-                </div>
+
+                <Text firstTextPart="Venant des hautes terres d'écosse" secondTextPart="nos meubles sont immortels"/>
 
                 <div
-                    className="container mx-auto grid pb-10 gap-12 md:grid-cols-2 md:gap-10 md:pl-4 md:pr-4 lg:grid-cols-3">
+                    className="container mx-auto grid gap-12 md:grid-cols-2 md:gap-10 md:pl-4 md:pr-4 lg:grid-cols-3">
                     {categories.map((category) => (
                         <div key={category.id}
                              className="grid-item border-2 h-60 flex items-center justify-center">
@@ -49,14 +46,10 @@ const Accueil = () => {
                     ))}
                 </div>
 
-                <div className="flex items-center justify-center">
-                    <p className="text-center font-bold text-stone-400 text-xl">
-                        Les Highlanders du moment
-                    </p>
-                </div>
+                <Text firstTextPart="Les Highlanders du moment"/>
 
                 <div
-                    className="container mx-auto grid pt-10 pb-10 gap-12 md:grid-cols-2 md:gap-10 md:pl-4 md:pr-4 lg:grid-cols-3">
+                    className="container mx-auto grid pb-10 gap-12 md:grid-cols-2 md:gap-10 md:pl-4 md:pr-4 lg:grid-cols-3">
                     {products.map((category) => (
                         <div key={category.id}
                              className="grid-item border-2 h-60 flex items-center justify-center">
