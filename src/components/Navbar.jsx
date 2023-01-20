@@ -24,6 +24,9 @@ const Navbar = () => {
                     <Link href={`/1/produit`} className="px-2 py-1">
                         <FontAwesomeIcon icon={faShoppingCart} className="h-6 text-stone-400"/>
                     </Link>
+                    <Link href={"/1/categorie"} className="px-2 py-1">
+                        Catégorie Test
+                    </Link>
                     <Link href={`/`} className="px-2 py-1">
                         <FontAwesomeIcon icon={faBars} className="h-6 text-stone-400"/>
                     </Link>

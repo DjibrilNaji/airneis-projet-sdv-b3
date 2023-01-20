@@ -6,5 +6,5 @@ export default function App({ Component, pageProps }) {
     <ContextProvider>
       <Component {...pageProps} />
     </ContextProvider>
-  )
-
+    )
+}
