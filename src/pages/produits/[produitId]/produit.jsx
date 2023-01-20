@@ -4,7 +4,10 @@ import ImageDefault from "@/components/ImageDefault"
 import ListProduits from "@/components/ListProduits"
 import Carousel from "@/components/Carousel"
 import Navbar from "@/components/Navbar"
+import Button from "@/components/Button"
 import { useContext } from "@/components/ContextProvider"
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
+import {faShoppingCart} from "@fortawesome/free-solid-svg-icons"
 
 
 export const getServerSideProps = ({ params }) => ({
@@ -40,8 +43,12 @@ const ProductPage = (props) => {
           </div>
           <p className="text-2xl text-end font-serif font-bold mt-10 mr-5">599,99 €</p>
         </div>
-        <Description className="pt-6 w-full text-start ml-5">{value["description"]}</Description>
+          <Description className="pt-6 w-full text-start ml-5">{value["description"]}</Description>
+          <div className="flex justify-center mt-10">
+            <Button className="flex w-80 justify-center"><FontAwesomeIcon icon={faShoppingCart} className="h-6 mr-5 text-stone-400" />Ajouter au panier</Button>
+          </div>
         <div>
+          <Title className="text-2xl text-center font-serif font-bold mt-10 ml-5">Produits similaires</Title>
           <ListProduits idCategorie={value["idCategorie"]} products={products.filter(({ idProduct }) => idProduct !== produitId)}></ListProduits>
         </div>
       </>
