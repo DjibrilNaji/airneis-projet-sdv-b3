@@ -7,7 +7,7 @@ const Navbar = () => {
     return (
         <>
             <nav
-                className="z-10 flex font-mono items-center sticky top-0 bg-white border-b-2 border-stone-400 shadow-md p-4">
+                className="flex font-mono items-center sticky top-0 bg-white border-b-2 border-stone-400 shadow-md p-4 z-10">
                 <Link href="/" legacyBehavior>
                     <a className="text-stone-400 text-3xl font-bold">
                         ÀIRNES
@@ -18,7 +18,7 @@ const Navbar = () => {
                     <Link href={`/`} className="px-2 py-1">
                         <FontAwesomeIcon icon={faMagnifyingGlass} className="h-6 text-stone-400"/>
                     </Link>
-                    <Link href={`/`} className="px-2 py-1">
+                    <Link href={`/cart`} className="px-2 py-1">
                         <FontAwesomeIcon icon={faShoppingCart} className="h-6 text-stone-400"/>
                     </Link>
                     <Link href={`/1/produit`} className="px-2 py-1">
