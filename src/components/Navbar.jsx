@@ -21,10 +21,10 @@ const Navbar = () => {
                     <Link href={`/cart`} className="px-2 py-1">
                         <FontAwesomeIcon icon={faShoppingCart} className="h-6 text-stone-400"/>
                     </Link>
-                    <Link href={`/1/produit`} className="px-2 py-1">
+                    <Link href={`/produits/1/produit`} className="px-2 py-1">
                         <FontAwesomeIcon icon={faShoppingCart} className="h-6 text-stone-400"/>
                     </Link>
-                    <Link href={"/1/categorie"} className="px-2 py-1">
+                    <Link href={"/categories/1/categorie"} className="px-2 py-1">
                         Catégorie Test
                     </Link>
                     <Link href={`/`} className="px-2 py-1">

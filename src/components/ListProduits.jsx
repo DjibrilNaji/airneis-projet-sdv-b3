@@ -1,7 +1,6 @@
 import classNames from "classnames"
 import ImageDefault from "./ImageDefault"
 import Title from "@/components/Title"
-import Link from "./Link"
 import Link from "@/components/Link"
 
 const ListProduits = (props) => {
