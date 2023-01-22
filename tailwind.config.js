@@ -5,7 +5,15 @@ module.exports = {
     "./src/components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      spacing: {
+        small: "5%",
+        middlemedium: "20%",
+        medium: "10%",
+        long: "30%",
+        superlong: "100%",
+      },
+    },
   },
   plugins: [],
 }
