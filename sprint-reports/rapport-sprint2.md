@@ -2,20 +2,15 @@ RAPPORT DE SPRINT 2
 
 ### *Activités générales :*
 
-![Trello sprint 2](img/trello-sprint-2.png)
+![Trello sprint 3](img/trello-sprint-3.png)
+**DN :** Djibril NAJI / TO : Thomas Oliviera / AD : Alexis DUCHEMANN / MB: Myriam BENABDESSADOK
 
-- Changement de tout le stack : Next.js (front-end) et MongoDB (base de données)
-
-
-- Développement du Layout en React mais pas de push en raison du changement de stack
+- Design de presque tous les pages de l’application ( Front )
 
 
-- Création du projet Next.js
-
-
-- Commencement d’adaptation modélisation SQL en modèle MongoDB en créant la base de données
-
+- Finition des maquettes
+  -Développement des pages Login, Inscription, Panier, Livraison, Paiement et Contact
 
 ### *Rétrospective de sprint :*
 
-Aucun commentaire et difficulté rencontrée pour les quatre membre
+Quelques conflits lors des merges qui ont été rapidement réglés
