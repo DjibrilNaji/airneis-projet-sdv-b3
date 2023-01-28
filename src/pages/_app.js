@@ -1,5 +1,4 @@
 import "@/styles.css"
-import ContextProvider from "@/components/ContextProvider"
 import Head from "next/head"
 import React from "react"
 import Layout from "@/components/Layout/Layout"
@@ -12,9 +11,7 @@ export default function App({Component, pageProps}) {
             </Head>
 
             <Layout>
-                <ContextProvider>
-                    <Component {...pageProps} />
-                </ContextProvider>
+                <Component {...pageProps} />
             </Layout>
         </>
     )

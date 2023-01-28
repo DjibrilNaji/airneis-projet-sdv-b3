@@ -13,7 +13,7 @@ const Carousel = ({children}) => {
     }
 
     return (
-        <Slider {...settings} className="md:h-96">
+        <Slider {...settings}>
             {children}
         </Slider>
     )

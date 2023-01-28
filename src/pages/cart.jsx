@@ -1,9 +1,9 @@
 import Image from "next/image"
 import Image2 from "/src/images/download-2.jpg"
-import Navbar from "../components/Navbar"
 import React from "react"
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
-import {faTrash} from "@fortawesome/free-solid-svg-icons"
+import {faShoppingBasket, faTrash} from "@fortawesome/free-solid-svg-icons"
+import Link from "next/link"
 
 
 const productInCart = [
@@ -44,23 +44,22 @@ const productInCart = [
 const Cart = () => {
     return (
         <>
-            <Navbar/>
-            <h1 className="flex py-4 pl-3 text-stone-400 text-3xl font-bold md:justify-center">Panier</h1>
-            <section className="p-2 lg:grid lg:grid-cols-2 grid-rows-4 grid-flow-col container mx-auto">
+            <h1 className="flex text-stone-400 text-3xl font-bold md:justify-center">Panier</h1>
+            <section className="lg:grid lg:grid-cols-2 container mx-auto">
                 {productInCart.map((product) => (
                     <div className="pb-4 lg:col-start-1 " key={product.id}>
                         <div className="flex items-center  border shadow-lg rounded-xl p-2">
-                            {product.img}
+                            <Link href={"/produits/prod"}>{product.img}</Link>
                             <div className="px-2 md:pl-6">
-                                <h2 className="font-semibold uppercase">{product.name}</h2>
-                                <p className="w-46">{product.description}</p>
+                                <Link href={"/produits/prod"} className="font-semibold uppercase">{product.name}</Link>
+                                <p className="">{product.description}</p>
                             </div>
 
                             <div className="flex flex-col ml-auto">
                                 <span className="text-right pb-2">{product.price}</span>
                                 {/*Gérer le onChange*/}
-                                <input type="number" min="0" value={product.quantity} readOnly
-                                       className="border-2 border-black w-8 h-6 md:w-10 md:p-1"/>
+                                <input type="number" min="0" className="border-2 border-black w-8 h-6 md:w-12 md:p-1"/>
+
                                 <button className="text-right">
                                     <FontAwesomeIcon icon={faTrash} className="pt-3 h-5 text-stone-400"/>
                                 </button>
@@ -70,18 +69,19 @@ const Cart = () => {
 
                 ))}
 
-                <div className="lg:pr-8 lg:pl-8">
+                <div className="col-start-2 row-start-1">
                     <div className="flex flex-col px-3 pb-8 lg:col-start-2 lg:row-span-1">
                         <h3 className="flex text-lg font-bold">Total <span className="ml-auto">4800€</span></h3>
                         <h4 className="flex text-md font-semibold text-stone-400">Tva <span
                             className="ml-auto">800€</span>
                         </h4>
                     </div>
-
                     <button
-                        className="flex justify-center lg:col-start-2 lg:row-span-1 m-auto w-full border-2 border-black text-lg font-bold p-4 bg-stone-400 rounded-xl uppercase">
-                        Passer la commande
+                        className="flex bg-stone-200 items-center mx-auto text-lg rounded-full py-1 px-3">
+                        <FontAwesomeIcon icon={faShoppingBasket} className="mr-3 bg-white rounded-full p-2"/> Passer la
+                        commande
                     </button>
+
                 </div>
             </section>
         </>
