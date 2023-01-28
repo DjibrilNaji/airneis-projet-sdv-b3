@@ -53,51 +53,52 @@ const Navbar = () => {
                     </button>
                 </div>
                 <div
-                    className={`${isOpen ? "flex flex-col pt-16 h-auto bg-stone-200" : "hidden"} z-[-1] md:z-0 absolute right-0 top-0 bg-white rounded-md shadow-md w-full items-center md:w-1/5 h-64 md:h-screen`}>
+                    className={`${isOpen ? "pt-16 h-auto bg-stone-300" : "hidden"} z-[-1] md:z-0 absolute right-0 top-0 bg-white rounded-md shadow-md w-full items-center md:w-80 h-64 md:h-screen`}>
 
-                    <span className="bg-amber-500">Connecter :</span>
+                    <div className="flex flex-col items-center">
+                        <span className="bg-amber-500">Connecter :</span>
 
-                    <Link href={`/`} onClick={() => setIsOpen(!isOpen)}
-                          className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Mes
-                        paramètres</Link>
-                    <Link href={`/`} onClick={() => setIsOpen(!isOpen)}
-                          className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"> Mes
-                        commandes</Link>
-                    <Link href={`/cart`} onClick={() => setIsOpen(!isOpen)}
-                          className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">CGU
-                    </Link>
-                    <Link href={`/cart`} onClick={() => setIsOpen(!isOpen)}
-                          className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Mentions
-                        légales</Link>
+                        <Link href={`/`} onClick={() => setIsOpen(!isOpen)}
+                              className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Mes
+                            paramètres</Link>
+                        <Link href={`/`} onClick={() => setIsOpen(!isOpen)}
+                              className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"> Mes
+                            commandes</Link>
+                        <Link href={`/cart`} onClick={() => setIsOpen(!isOpen)}
+                              className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">CGU
+                        </Link>
+                        <Link href={`/cart`} onClick={() => setIsOpen(!isOpen)}
+                              className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Mentions
+                            légales</Link>
 
-                    <Link href={`/contact`} onClick={() => setIsOpen(!isOpen)}
-                          className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Contact</Link>
-                    <Link href={`/contact`} onClick={() => setIsOpen(!isOpen)}
-                          className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">À propos
-                        d'ÀIRNEIS</Link>
-                    <Link href={`/`} onClick={() => setIsOpen(!isOpen)}
-                          className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Se
-                        déconnecter</Link>
+                        <Link href={`/contact`} onClick={() => setIsOpen(!isOpen)}
+                              className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Contact</Link>
+                        <Link href={`/contact`} onClick={() => setIsOpen(!isOpen)}
+                              className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">À propos
+                            d'ÀIRNEIS</Link>
+                        <Link href={`/`} onClick={() => setIsOpen(!isOpen)}
+                              className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Se
+                            déconnecter</Link>
 
-                    <br/> <span className="bg-amber-500">Déconnecter :</span>
-                    <Link href={`/login`} onClick={() => setIsOpen(!isOpen)}
-                          className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Se
-                        connecter</Link>
-                    <Link href={`/register`} onClick={() => setIsOpen(!isOpen)}
-                          className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">S'inscrire</Link>
+                        <br/> <span className="bg-amber-500">Déconnecter :</span>
+                        <Link href={`/login`} onClick={() => setIsOpen(!isOpen)}
+                              className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Se
+                            connecter</Link>
+                        <Link href={`/register`} onClick={() => setIsOpen(!isOpen)}
+                              className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">S'inscrire</Link>
 
-                    <Link href={`/cart`} onClick={() => setIsOpen(!isOpen)}
-                          className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">CGU
-                    </Link>
-                    <Link href={`/cart`} onClick={() => setIsOpen(!isOpen)}
-                          className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Mentions
-                        légales</Link>
-                    <Link href={`/contact`} onClick={() => setIsOpen(!isOpen)}
-                          className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Contact</Link>
-                    <Link href={`/contact`} onClick={() => setIsOpen(!isOpen)}
-                          className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">À propos
-                        d'ÀIRNEIS</Link>
-
+                        <Link href={`/cart`} onClick={() => setIsOpen(!isOpen)}
+                              className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">CGU
+                        </Link>
+                        <Link href={`/cart`} onClick={() => setIsOpen(!isOpen)}
+                              className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Mentions
+                            légales</Link>
+                        <Link href={`/contact`} onClick={() => setIsOpen(!isOpen)}
+                              className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">Contact</Link>
+                        <Link href={`/contact`} onClick={() => setIsOpen(!isOpen)}
+                              className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">À propos
+                            d'ÀIRNEIS</Link>
+                    </div>
                 </div>
             </nav>
 
