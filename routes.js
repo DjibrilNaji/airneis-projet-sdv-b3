@@ -3,21 +3,46 @@ const MongoClient = require("mongodb").MongoClient
 
 const router = express.Router()
 
+// Products
 router.get("/products", (req, res) => {
-    MongoClient.connect("mongodb+srv://Djibril:Admin123@cluster-marketplace.ecqgaul.mongodb.net/?retryWrites=true&w=majority", {useNewUrlParser: true}, (err, client) => {
+    MongoClient.connect(process.env.MONGODB_URL, {useNewUrlParser: true}, (err, client) => {
         if (err) {
             throw err
         }
-        
-        const db = client.db("marketplace")
-        db.collection("products").find({}).toArray((err, result) => {
-            if (err) {
-                throw err
-            }
 
-            res.json(result)
-            client.close()
-        })
+        const db = client.db(process.env.DB_NAME)
+        const products = db.collection("products")
+
+        products
+            .find({})
+            .toArray((err, result) => {
+                if (err) {
+                    throw err
+                }
+
+                res.json(result)
+                client.close()
+            })
+    })
+})
+
+// Users
+router.post("/users/add", (req, res) => {
+    MongoClient.connect(process.env.MONGODB_URL, {useNewUrlParser: true}, (err, client) => {
+        if (err) {
+            throw err
+        }
+
+        const db = client.db(process.env.DB_NAME)
+        const products = db.collection("users")
+
+        products
+            .insertOne(req.body)
+            .then(() => res.status(200)
+                .send("successfully inserted new document"))
+            .catch((err) => {
+                res.send(err)
+            })
     })
 })
 

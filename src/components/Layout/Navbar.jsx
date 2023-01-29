@@ -1,7 +1,7 @@
 import React, {useState} from "react"
 import Link from "next/link"
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
-import {faBars, faMagnifyingGlass, faPlus, faShoppingCart, faXmark} from "@fortawesome/free-solid-svg-icons"
+import {faBars, faMagnifyingGlass, faShoppingCart, faXmark} from "@fortawesome/free-solid-svg-icons"
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false)
@@ -42,16 +42,17 @@ const Navbar = () => {
                     </Link>
 
                     <button
-                        className={`px-2 py-1 z-10 transition duration-200 ease-in-out transform ${isOpen ? "rotate-45" : "rotate-0"}`}
+                        className={`px-2 py-1 z-10 transition duration-200 ease-in-out transform ${isOpen ? "rotate-90" : "rotate-0"}`}
                         onClick={() => setIsOpen(!isOpen)}
                     >
                         {isOpen ? (
-                            <FontAwesomeIcon icon={faPlus} className="h-6 text-stone-400"/>
+                            <FontAwesomeIcon icon={faXmark} className="h-6 text-stone-400"/>
                         ) : (
                             <FontAwesomeIcon icon={faBars} className="h-6 text-stone-400"/>
                         )}
                     </button>
                 </div>
+
                 <div
                     className={`${isOpen ? "pt-16 h-auto bg-stone-300" : "hidden"} z-[-1] md:z-0 absolute right-0 top-0 bg-white rounded-md shadow-md w-full items-center md:w-80 h-64 md:h-screen`}>
 
