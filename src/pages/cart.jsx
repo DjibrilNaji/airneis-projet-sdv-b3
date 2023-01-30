@@ -35,7 +35,8 @@ const Cart = () => {
                             <div className="flex flex-col ml-auto">
                                 <span className="text-right pb-2">{product.price}</span>
                                 {/*Gérer le onChange*/}
-                                <input type="number" min="0" className="border-2 border-black w-8 h-6 md:w-12 md:p-1"/>
+                                <input type="number" min="0" value={product.quantity}
+                                       className="border-2 border-black w-8 h-6 md:w-16 md:p-1"/>
 
                                 <button className="text-right">
                                     <FontAwesomeIcon icon={faTrash} className="pt-3 h-5 text-stone-400"/>
