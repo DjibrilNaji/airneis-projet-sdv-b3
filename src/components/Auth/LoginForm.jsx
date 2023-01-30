@@ -36,7 +36,8 @@ const LoginForm = (props) => {
         <Formik
             initialValues={initialValues}
             onSubmit={onSubmit}
-            validationSchema={validationSchema}>
+            validationSchema={validationSchema}
+        >
             <Form className="flex flex-col gap-4 p-4">
                 <FormField name="email" type="text" label="E-mail" icon={faEnvelope}/>
                 <FormField name="password" type="password" label="Password" icon={faLock}/>

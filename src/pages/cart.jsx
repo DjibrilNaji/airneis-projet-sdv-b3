@@ -1,57 +1,34 @@
 import Image from "next/image"
-import Image2 from "/src/images/download-2.jpg"
-import React from "react"
+import React, {useEffect, useState} from "react"
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
 import {faShoppingBasket, faTrash} from "@fortawesome/free-solid-svg-icons"
 import Link from "next/link"
+import axios from "axios"
 
-
-const productInCart = [
-    {
-        id: 1, img: <Image src={Image2} alt="img1" className="w-14 h-20 object-cover md:w-24 md:h-26 rounded-lg"/>,
-        name: "Nom produit 1",
-        description: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
-        price: "10 €",
-        quantity: 1
-    },
-    {
-        id: 2,
-        img: <Image src={Image2} alt="slide 1" className="w-14 h-20 object-cover md:w-24 md:h-26 rounded-lg"/>,
-        name: "Nom produit 2",
-        description: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
-        price: "11 €",
-        quantity: 2
-    },
-    {
-        id: 3,
-        img: <Image src={Image2} alt="slide 1" className="w-14 h-20 object-cover md:w-24 md:h-26 rounded-lg"/>,
-        name: "Nom produit 3",
-        description: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
-        price: "12 €",
-        quantity: 3
-    },
-    {
-        id: 4,
-        img: <Image src={Image2} alt="slide 1" className="w-14 h-20 object-cover md:w-24 md:h-26 rounded-lg"/>,
-        name: "Nom produit 4",
-        description: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
-        price: "14 €",
-        quantity: 4
-    },
-
-]
 
 const Cart = () => {
+    const [productInCart, setproductInCart] = useState([])
+
+    useEffect(() => {
+        axios.get("/api/products").then(res => {
+            setproductInCart(res.data)
+        })
+    }, [])
+
     return (
         <>
             <h1 className="flex text-stone-400 text-3xl font-bold md:justify-center">Panier</h1>
-            <section className="lg:grid lg:grid-cols-2 container mx-auto">
+            <section className="container mx-auto">
                 {productInCart.map((product) => (
                     <div className="pb-4 lg:col-start-1 " key={product.id}>
                         <div className="flex items-center  border shadow-lg rounded-xl p-2">
-                            <Link href={"/produits/prod"}>{product.img}</Link>
+                            <Link href={"/produits/prod"}>
+                                <Image src={`/assets/img/produitImg/${product.img}`} alt="slide 2"
+                                       className=" h-full w-full object-cover" width="100"
+                                       height="100"/></Link>
                             <div className="px-2 md:pl-6">
-                                <Link href={"/produits/prod"} className="font-semibold uppercase">{product.name}</Link>
+                                <Link href={`/produits/${product.slug}`}
+                                      className="font-semibold uppercase">{product.name}</Link>
                                 <p className="">{product.description}</p>
                             </div>
 
