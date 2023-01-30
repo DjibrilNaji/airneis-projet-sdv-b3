@@ -1,7 +1,13 @@
 const express = require("express")
 const MongoClient = require("mongodb").MongoClient
+const bodyParser = require("body-parser")
 
 const router = express.Router()
+
+// body-parser
+router.use(bodyParser.urlencoded({extended: false}))
+router.use(bodyParser.json())
+const jsonParser = bodyParser.json()
 
 // Products
 router.get("/products", (req, res) => {
@@ -26,8 +32,9 @@ router.get("/products", (req, res) => {
     })
 })
 
+
 // Users
-router.post("/users/add", (req, res) => {
+router.post("/users/add", jsonParser, (req, res) => {
     MongoClient.connect(process.env.MONGODB_URL, {useNewUrlParser: true}, (err, client) => {
         if (err) {
             throw err
