@@ -1,0 +1,154 @@
+{
+  "products" : [
+    {
+      "name" : "Simple bed",
+      "slug" : "simple_bed",
+      "price" : 186.90,
+      "img" : "simpleBed.jpg",
+      "quantity" : 5,
+      "description" : "Size 140 x 200 cm. Our beds impress not only with their modern design, but also with the quality of the solid pine wood and the excellent craftsmanship. The double varnishing with an ecological varnish gives additional protection and brings out the structure of the wood beautifully. The central bar under the slatted base and the wide bedposts provide additional support and security. Thanks to the simple assembly, the bed can be assembled quickly.",
+      "materials" : "pine wood",
+      "categorieId" : 1
+    },
+    {
+      "name" : "Standard Double Bed",
+      "slug" : "standard_bouble_bed",
+      "price" : 300.90,
+      "img" : "doubleBed.jpg",
+      "quantity" : 8,
+      "description" : "With clean lines and an oak decor, highlighted by a base and headboard with a refined black frame. This upholstery will bring a warm and trendy atmosphere to your bedroom. It can be easily integrated into many styles thanks to its contrasting colours and contemporary details that will create a calm and lasting atmosphere. Creating your own sleeping area is essential to start your day and end it well.",
+      "materials" : "oak wood",
+      "categorieId" : 1
+    },
+    {
+      "name" : "Queen Size bed",
+      "slug" : "queen_size_bed",
+      "price" : 750.00,
+      "img" : "queenSize.jpg",
+      "quantity" : 8,
+      "description" : "Size 160x200, This furniture has the FSC label. Forest Stewardship Council. stands for sustainable forest management worldwide. If the entire value chain of wood production meets the strict guidelines, the products receive this quality label.",
+      "materials" : "Hetre Wood",
+      "categorieId" : 1
+    },
+    {
+      "name" : "King Size bed",
+      "slug" : "king_size_bed",
+      "price" : 1250.99,
+      "img" : "kingSize.jpg",
+      "quantity" : 3,
+      "description" : "Size 180x200. Japan bed in high quality solid pine, with slatted base (width of each slat: 4.5 cm, between each slat: 5 cm) / without mattress. Finish : Varnish Origin : Spain",
+      "materials" : "pine wood",
+      "categorieId" : 1
+    },
+    {
+      "name" : "Bunk bed",
+      "slug" : "bunk_bed",
+      "price" : 259.99,
+      "img" : "bunkBed.jpg",
+      "quantity" : 10,
+      "description" : "Colour: Black.Material: metal.Upper bed dimensions: 97.5 x 200 cm.Lower bed dimensions: 147.5 x 210 cm.Includes safety rails and safety ladder.Assembly is required.",
+      "materials" : "Steel",
+      "categorieId" : 1
+    },
+    {
+      "name" : "Square dining table",
+      "slug" : "square_dining_table",
+      "price" : 250.79,
+      "img" : "squareTable.jpg",
+      "quantity" : 7,
+      "description" : "Size 70x70. Table for 2 persons. 100% MADE IN ITALY. Idea, Design, Conception and Production by Mobili Fiver. PRACTICAL :Light and practical due to its dimensions. Can be moved by one person. DETAILS: Easy to clean with a damp cloth and non-aggressive detergents.",
+      "materials" : "rustic wood",
+      "categorieId" : 2
+    },
+    {
+      "name" : "Round dining table",
+      "slug" : "round_dining_table",
+      "price" : 175.00,
+      "img" : "roundTable.jpg",
+      "quantity" : 12,
+      "description" : "70cm radius. Perfect for 2 persons. This table will be perfect for 2 persons. To the table!",
+      "materials" : "oak wood",
+      "categorieId" : 2
+    },
+    {
+      "name" : "Coffee table",
+      "slug" : "coffee_table",
+      "price" : 450.50,
+      "img" : "coffeeTable.jpg",
+      "quantity" : 6,
+      "description" : "A rectangular coffee table made of recycled teak wood in a natural colour that will make a difference. An authentic atmosphere that will suit you every day.",
+      "materials" : "recycled wood",
+      "categorieId" : 2
+    },
+    {
+      "name" : "Extendable dining table",
+      "slug" : "extendable_dining_table",
+      "price" : 500.00,
+      "img" : "extendableTable.jpg",
+      "quantity" : 5,
+      "description" : "Size 80x140 up to 80x200 with the 2 extensions. Made in Italy. DETAILS: Perfect for the kitchen or dining room. Easy to open and close (the legs always remain at the 4 corners for a reduced space requirement). For cleaning, use non-aggressive detergents. Chairs are not for sale",
+      "materials" : "rustic wood",
+      "categorieId" : 2
+    },
+    {
+      "name" : "Marble table",
+      "slug" : "marble_table",
+      "price" : 1500.00,
+      "img" : "marbleTable.png",
+      "quantity" : 2,
+      "description" : "When dressing the dining room, there are a few things you'll want to consider. Without a doubt, the dining table at centre stage will set the tone for the room. Timelessly elegant and highly functional, this dining table will be a great place for friends and family to gather and talk or share a good meal.",
+      "materials" : "marble",
+      "categorieId" : 2
+    },
+    {
+      "name" : "Dressing",
+      "slug" : "dressing",
+      "price" : 1150.00,
+      "img" : "dressing.jpg",
+      "quantity" : 4,
+      "description" : "Bring a warm atmosphere to your home and fall for this open dressing room with woody notes which will bring warmth and comfort to your room. You will not be disappointed by its great storage capacity which will give you the opportunity to store everything you want.",
+      "materials" : "oak wood",
+      "categorieId" : 3
+    },
+    {
+      "name" : "Shoes storage",
+      "slug" : "shoes_storage",
+      "price" : 59.99,
+      "img" : "shoeStorage.jpg",
+      "quantity" : 18,
+      "description" : "The 2-door shoe storage unit LUIS will bring a contemporary industrial touch to your home. Design and functional, with its 2 doors/storage spaces, it is ideal to optimize space.",
+      "materials" : "oak wood",
+      "categorieId" : 3
+    },
+    {
+      "name" : "TV stand",
+      "slug" : "tv_stand",
+      "price" : 210.00,
+      "img" : "tvStand.jpg",
+      "quantity" : 9,
+      "description" : "MODERN DESIGN: Add style to your living room with this durable and sturdy modern TV stand. The simplicity and minimalism of this functional TV stand will make it the undisputed star of your living room. DETAILS: Maximum capacity of 80 kg. 2 useful cable channels in anodised aluminium (will not rust or scratch) for better cable organisation. Equipped with 5 anodised aluminium legs. Closed at the back.",
+      "materials" : "oak wood",
+      "categorieId" : 3
+    },
+    {
+      "name" : "Bedside table",
+      "slug" : "bedside_table",
+      "price" : 39.99,
+      "img" : "bedsideTable.jpg",
+      "quantity" : 25,
+      "description" : "This bedside table is made of light grey metal and will bring an industrial touch to your bedroom, your office or your hallway! Its steel structure and 4 legs guarantee stability and sturdiness.",
+      "materials" : "Steel",
+      "categorieId" : 3
+    },
+    {
+      "name" : "Buffet",
+      "slug" : "buffet",
+      "price" : 250.90,
+      "img" : "buffet.jpg",
+      "quantity" : 12,
+      "description" : "Choose this buffet! Very trendy, it will make your living room a cosy place. It has 2 doors and 3 drawers with adjustable shelves. Its imitation wood finish will bring a touch of nature in your room!",
+      "materials" : "rustic wood",
+      "categorieId" : 3
+    }
+  ]
+}
