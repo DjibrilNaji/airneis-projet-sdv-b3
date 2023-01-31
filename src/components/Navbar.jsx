@@ -12,7 +12,7 @@ import logo from "@/images/sm-logo.png"
 const Navbar = () => {
   return (
     <>
-      <nav className="flex font-mono items-center sticky top-0 bg-white border-b-2 border-stone-400 shadow-md p-4 z-10">
+      <nav className="flex items-center sticky top-0 bg-white border-b-2 border-stone-400 shadow-md p-4 z-10">
         <Link href="/" legacyBehavior>
           <Image src={logo} alt="Logo" />
         </Link>
