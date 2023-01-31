@@ -1,0 +1,26 @@
+{
+  "categories" : [
+    {
+      "id" : 1,
+      "name" : "Literie",
+      "slug" : "literie",
+      "img" : "literie.png",
+      "description" : "La literie par définition désigne tous les éléments du lit, dont les principaux intervenants sont le matelas et le sommier, mais également et plus largement tous les accessoires qui s'utilisent avec le lit "
+
+    },
+    {
+      "id" : 2,
+      "name" : "Table",
+      "slug" : "table",
+      "img" : "table.png",
+      "description" : "La table est un type de meuble composé d'une surface plane et horizontale, soutenue par un ou plusieurs supports, est notamment mais pas uniquement utilisée pour les repas."
+    },
+    {
+      "id" : 3,
+      "name" : "Meuble de Rangement",
+      "slug" : "meuble_de_rangement",
+      "img" : "meubleRangement.png",
+      "description" : "Le meuble de rangement offre un certain volume intérieur pour ranger vos objets les plus précieux"
+    }
+  ]
+}
