@@ -28,7 +28,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="flex font-mono items-center sticky top-0 bg-white border-b-2 border-stone-400 shadow-lg p-4 z-10 relative">
+      <nav className="flex items-center sticky top-0 bg-white border-b-2 border-stone-400 shadow-lg p-4 z-10 relative">
         <Link href={"/"} legacyBehavior>
           <Image src={logo} alt="logo" />
         </Link>
