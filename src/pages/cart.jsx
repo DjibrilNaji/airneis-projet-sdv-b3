@@ -22,12 +22,12 @@ const Cart = () => {
                 {productInCart.map((product) => (
                     <div className="pb-4 lg:col-start-1 " key={product.id}>
                         <div className="flex items-center  border shadow-lg rounded-xl p-2">
-                            <Link href={"/produits/prod"}>
+                            <Link href={"/products/prod"}>
                                 <Image src={`/assets/img/products/${product.img}`} alt="slide 2"
                                        className=" h-full w-full object-cover" width="100"
                                        height="100"/></Link>
                             <div className="px-2 md:pl-6">
-                                <Link href={`/produits/${product.slug}`}
+                                <Link href={`/products/${product.slug}`}
                                       className="font-semibold uppercase">{product.name}</Link>
                                 <p className="">{product.description}</p>
                             </div>

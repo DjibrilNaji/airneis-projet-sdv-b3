@@ -28,7 +28,7 @@ const Categorie = () => {
             <div
                 className="px-4 grid pb-10 gap-12 md:grid-cols-2 md:gap-10 lg:grid-cols-3">
                 {products.map((product) => (
-                    <Link href={`/produits/${product.slug}`} key={product.id}
+                    <Link href={`/products/${product.slug}`} key={product.id}
                           className="h-60">
                         <div>
                             <Image src={`/assets/img/products/${product.img}`} width="500"

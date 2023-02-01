@@ -47,7 +47,7 @@ const Category = (props) => {
             <div
                 className="grid px-2 gap-7 md:pb-10 md:grid-cols-2 lg:grid-cols-3">
                 {filteredProducts.map((product) => (
-                    <Link href={`/produits/${product.slug}`} key={product.id}
+                    <Link href={`/products/${product.slug}`} key={product.id}
                           className="h-60">
                         <Image src={`/assets/img/products/${product.img}`} alt="slide 1"
                                className="h-full w-full object-cover" width="500"

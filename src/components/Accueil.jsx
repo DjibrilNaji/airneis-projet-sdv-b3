@@ -61,7 +61,7 @@ const Accueil = () => {
                 <div
                     className="mx-auto grid pb-10 gap-12 md:grid-cols-2 md:gap-10 md:pl-4 md:pr-4 lg:grid-cols-3">
                     {products.map((product) => (
-                        <Link href={`/produits/${product.slug}`} key={product._id}
+                        <Link href={`/products/${product.slug}`} key={product._id}
                               className="flex h-60 items-center justify-center">
                             <span className="absolute text-white uppercase font-bold text-2xl">{product.name}</span>
                             <Image src={`/assets/img/products/${product.img}`} alt="slide 2"
