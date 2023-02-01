@@ -24,19 +24,14 @@ const Accueil = () => {
 
     return (
         <>
-
             <div>
                 <div className="z-0">
                     <Carousel autoPlay>
-                        <Image src={`/assets/img/products/buffet.jpg`} alt="slide 1"
-                               className="h-96 w-full object-cover" width="500"
-                               height="500"/>
-                        <Image src={`/assets/img/products/buffet.jpg`} alt="slide 2"
-                               className="h-96 w-full object-cover" width="500"
-                               height="500"/>
-                        <Image src={`/assets/img/products/buffet.jpg`} alt="slide 3"
-                               className="h-96 w-full object-cover" width="500"
-                               height="500"/>
+                        {categories.map((category) => (
+                            <Image src={`/assets/img/categories/${category.img}`} alt="slide 2"
+                                   className="h-96 w-full object-cover" width="500"
+                                   height="500" key={category.id}/>
+                        ))}
                     </Carousel>
                 </div>
 
@@ -49,7 +44,7 @@ const Accueil = () => {
                         <Link href={`/categories/${category.slug}`} key={category.id}
                               className="h-60 flex items-center justify-center">
                             <span className="absolute text-white uppercase font-bold text-2xl">{category.name}</span>
-                            <Image src={`/assets/img/products/${category.img}`} alt="slide 2"
+                            <Image src={`/assets/img/categories/${category.img}`} alt="slide 2"
                                    className=" h-full w-full object-cover" width="500"
                                    height="500"/>
                         </Link>
@@ -64,7 +59,7 @@ const Accueil = () => {
                         <Link href={`/products/${product.slug}`} key={product._id}
                               className="flex h-60 items-center justify-center">
                             <span className="absolute text-white uppercase font-bold text-2xl">{product.name}</span>
-                            <Image src={`/assets/img/products/${product.img}`} alt="slide 2"
+                            <Image src={`/assets/img/products/${product.img}`} alt={product.name}
                                    className=" h-full w-full object-cover" width="500"
                                    height="500"/>
                         </Link>
