@@ -1,0 +1,48 @@
+import Input from "@/components/Input"
+import Button from "@/components/Button"
+import Select from "@/components/Select"
+
+const Checkout = () => {
+  // const [CheckoutCategories, setCheckoutCategories] = useState([])
+
+  // useEffect(() => {
+  //   axios.get("/api/categories").then((res) => {
+  //     setCheckoutCategories(res.data)
+  //   })
+  // }, []) //en attendant de régler les soucis dans .env
+
+  return (
+    <>
+      <h1 className="flex text-stone-400 text-3xl justify-center py-5 font-bold md:justify-center">
+        Livraison
+      </h1>
+      <div className="flex justify-center gap-16 p-4">
+        <div className="w-long">
+          <Select
+            options={[
+              "Décoration d'intérieur",
+              "Literie",
+              "Bureautique",
+              "Fenêtre",
+              "Tables",
+              "Meubles de rangement",
+            ]}
+            //données de test pour l'affichage des options puis remplacer par le tableau catégories (routes.js)
+          />
+          <Input label="Prénom *" />
+          <Input label="Nom *" />
+          <Input label="Adresse *" />
+          <Input label="Code postal" />
+          <Input label="Ville" />
+        </div>
+        <div className="py-7">
+          {/* <Link> */}
+          <Button>Passer au paiement</Button>
+          {/* </Link> */}
+        </div>
+      </div>
+    </>
+  )
+}
+
+export default Checkout
