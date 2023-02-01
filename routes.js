@@ -32,6 +32,28 @@ router.get("/products", (req, res) => {
     })
 })
 
+// Categories
+router.get("/categories", (req, res) => {
+    MongoClient.connect(process.env.MONGODB_URL, {useNewUrlParser: true}, (err, client) => {
+        if (err) {
+            throw err
+        }
+
+        const db = client.db(process.env.DB_NAME)
+        const categories = db.collection("categories")
+
+        categories
+            .find({})
+            .toArray((err, result) => {
+                if (err) {
+                    throw err
+                }
+
+                res.json(result)
+                client.close()
+            })
+    })
+})
 
 // Users
 router.post("/users/add", jsonParser, (req, res) => {

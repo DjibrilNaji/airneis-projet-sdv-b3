@@ -23,7 +23,7 @@ const Cart = () => {
                     <div className="pb-4 lg:col-start-1 " key={product.id}>
                         <div className="flex items-center  border shadow-lg rounded-xl p-2">
                             <Link href={"/produits/prod"}>
-                                <Image src={`/assets/img/produitImg/${product.img}`} alt="slide 2"
+                                <Image src={`/assets/img/products/${product.img}`} alt="slide 2"
                                        className=" h-full w-full object-cover" width="100"
                                        height="100"/></Link>
                             <div className="px-2 md:pl-6">

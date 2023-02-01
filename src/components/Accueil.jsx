@@ -6,54 +6,9 @@ import {useEffect, useState} from "react"
 import axios from "axios"
 
 
-const categories = [
-    {
-        id: 1,
-        name: "CAT1",
-        img: <Image src={`/assets/img/produitImg/litDouble.jpg`} alt="slide 2" className=" h-full w-full object-cover"
-                    width="500"
-                    height="500"/>
-    },
-    {
-        id: 2,
-        name: "CAT2",
-        img: <Image src={`/assets/img/produitImg/litDouble.jpg`} alt="slide 2" className=" h-full w-full object-cover"
-                    width="500"
-                    height="500"/>
-    },
-    {
-        id: 3,
-        name: "CAT3",
-        img: <Image src={`/assets/img/produitImg/litDouble.jpg`} alt="slide 2" className=" h-full w-full object-cover"
-                    width="500"
-                    height="500"/>
-    },
-    {
-        id: 4,
-        name: "CAT4",
-        img: <Image src={`/assets/img/produitImg/litDouble.jpg`} alt="slide 2" className=" h-full w-full object-cover"
-                    width="500"
-                    height="500"/>
-    },
-    {
-        id: 5,
-        name: "CAT5",
-        img: <Image src={`/assets/img/produitImg/litDouble.jpg`} alt="slide 2" className=" h-full w-full object-cover"
-                    width="500"
-                    height="500"/>
-    },
-    {
-        id: 6,
-        name: "CAT6",
-        img: <Image src={`/assets/img/produitImg/litDouble.jpg`} alt="slide 2" className=" h-full w-full object-cover"
-                    width="500"
-                    height="500"/>
-    }
-]
-
-
 const Accueil = () => {
     const [products, setProducts] = useState([])
+    const [categories, setCategories] = useState([])
 
     useEffect(() => {
         axios.get("/api/products").then(res => {
@@ -61,6 +16,11 @@ const Accueil = () => {
         })
     }, [])
 
+    useEffect(() => {
+        axios.get("/api/categories").then(res => {
+            setCategories(res.data)
+        })
+    }, [])
 
     return (
         <>
@@ -68,13 +28,13 @@ const Accueil = () => {
             <div>
                 <div className="z-0">
                     <Carousel autoPlay>
-                        <Image src={`/assets/img/produitImg/litDouble.jpg`} alt="slide 1"
+                        <Image src={`/assets/img/products/buffet.jpg`} alt="slide 1"
                                className="h-96 w-full object-cover" width="500"
                                height="500"/>
-                        <Image src={`/assets/img/produitImg/litDouble.jpg`} alt="slide 2"
+                        <Image src={`/assets/img/products/buffet.jpg`} alt="slide 2"
                                className="h-96 w-full object-cover" width="500"
                                height="500"/>
-                        <Image src={`/assets/img/produitImg/litDouble.jpg`} alt="slide 3"
+                        <Image src={`/assets/img/products/buffet.jpg`} alt="slide 3"
                                className="h-96 w-full object-cover" width="500"
                                height="500"/>
                     </Carousel>
@@ -86,10 +46,12 @@ const Accueil = () => {
                 <div
                     className="gap-12 mx-auto grid md:grid-cols-2 md:gap-10 md:pl-4 md:pr-4 lg:grid-cols-3">
                     {categories.map((category) => (
-                        <Link href={"/categories/cat"} key={category.id}
+                        <Link href={`/categories/${category.slug}`} key={category.id}
                               className="h-60 flex items-center justify-center">
                             <span className="absolute text-white uppercase font-bold text-2xl">{category.name}</span>
-                            {category.img}
+                            <Image src={`/assets/img/products/${category.img}`} alt="slide 2"
+                                   className=" h-full w-full object-cover" width="500"
+                                   height="500"/>
                         </Link>
                     ))}
                 </div>
@@ -102,7 +64,7 @@ const Accueil = () => {
                         <Link href={`/produits/${product.slug}`} key={product._id}
                               className="flex h-60 items-center justify-center">
                             <span className="absolute text-white uppercase font-bold text-2xl">{product.name}</span>
-                            <Image src={`/assets/img/produitImg/${product.img}`} alt="slide 2"
+                            <Image src={`/assets/img/products/${product.img}`} alt="slide 2"
                                    className=" h-full w-full object-cover" width="500"
                                    height="500"/>
                         </Link>
