@@ -1,15 +1,19 @@
 import Input from "@/components/Input"
 import Button from "@/components/Button"
 import Select from "@/components/Select"
+import { useState, useEffect } from "react"
+import axios from "axios"
 
 const Checkout = () => {
-  // const [CheckoutCategories, setCheckoutCategories] = useState([])
+  const [categories, setCategories] = useState([])
 
-  // useEffect(() => {
-  //   axios.get("/api/categories").then((res) => {
-  //     setCheckoutCategories(res.data)
-  //   })
-  // }, []) //en attendant de régler les soucis dans .env
+  useEffect(() => {
+    axios.get("/api/categories").then((res) => {
+      setCategories(res.data)
+    })
+  }, [])
+
+  const CheckoutCategories = categories.map((category) => category.name)
 
   return (
     <>
@@ -18,17 +22,7 @@ const Checkout = () => {
       </h1>
       <div className="flex justify-center gap-16 p-4">
         <div className="w-long">
-          <Select
-            options={[
-              "Décoration d'intérieur",
-              "Literie",
-              "Bureautique",
-              "Fenêtre",
-              "Tables",
-              "Meubles de rangement",
-            ]}
-            //données de test pour l'affichage des options puis remplacer par le tableau catégories (routes.js)
-          />
+          <Select options={CheckoutCategories} />
           <Input label="Prénom *" />
           <Input label="Nom *" />
           <Input label="Adresse *" />
