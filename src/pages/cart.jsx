@@ -25,7 +25,7 @@ const Cart = () => {
                 {productInCart.map((product) => (
                     <div className="pb-4 lg:col-start-1 " key={product.id}>
                         <div className="flex items-center  border shadow-lg rounded-xl p-2">
-                            <Link href={"/products/prod"}>
+                            <Link href={`/products/${product.slug}`}>
                                 <Image src={`/assets/img/products/${product.img}`} alt="slide 2"
                                        className=" h-full w-full object-cover" width="100"
                                        height="100"/></Link>
