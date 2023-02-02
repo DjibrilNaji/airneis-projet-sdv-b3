@@ -3,16 +3,20 @@ import Head from "next/head"
 import React from "react"
 import Layout from "@/components/Layout/Layout"
 
-export default function App({Component, pageProps}) {
-    return (
+export default function App({ Component, pageProps }) {
+  const renderWithLayout =
+    Component.getLayout ||
+    function (page) {
+      return (
         <>
-            <Head>
-                <title>Airneis</title>
-            </Head>
+          <Head>
+            <title>Airneis</title>
+          </Head>
 
-            <Layout>
-                <Component {...pageProps} />
-            </Layout>
+          <Layout>{page}</Layout>
         </>
-    )
+      )
+    }
+
+  return renderWithLayout(<Component {...pageProps} />)
 }
