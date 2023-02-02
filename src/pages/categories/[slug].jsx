@@ -19,18 +19,26 @@ const Category = (props) => {
     const [filteredCategories, setFilteredCategories] = useState([])
     const [filteredProducts, setFilteredProducts] = useState([])
 
+
     useEffect(() => {
-        axios.get("/api/categories").then(res => {
-            setFilteredCategories(res.data.filter(category => category.slug === slug)[0])
-        })
+        async function fetchData() {
+            const result = await axios.get("/api/products")
+            setFilteredProducts(result.data.filter(product => product.categoryId === filteredCategories.id))
+        }
+
+        fetchData()
+    }, [filteredCategories.id])
+
+
+    useEffect(() => {
+        async function fetchData() {
+            const result = await axios.get("/api/categories")
+            setFilteredCategories(result.data.filter(category => category.slug === slug)[0])
+        }
+
+        fetchData()
     }, [slug])
-
-    useEffect(() => {
-        axios.get("/api/products").then(res => {
-            setFilteredProducts(res.data.filter(product => product.categoryId === filteredCategories.id))
-        })
-    }, [slug, filteredCategories])
-
+    
 
     return (
         <>
@@ -43,7 +51,7 @@ const Category = (props) => {
             <p className="m-20">
                 {filteredCategories.description}
             </p>
-            
+
             <div
                 className="grid px-2 gap-7 md:pb-10 md:grid-cols-2 lg:grid-cols-3">
                 {filteredProducts.map((product) => (
