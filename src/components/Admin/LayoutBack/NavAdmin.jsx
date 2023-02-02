@@ -2,31 +2,41 @@ import Image from "next/image"
 import Link from "next/link"
 import logo from "@@/public/assets/img/logo.png"
 import profilepic from "@@/public/assets/img/profilepictest.jpeg"
-import { CogIcon } from "@heroicons/react/24/outline"
+import {
+  CogIcon,
+  UserIcon,
+  ShoppingCartIcon,
+  HomeIcon,
+  ListBulletIcon,
+} from "@heroicons/react/24/outline"
 
 const NavAdmin = () => {
   const navItems = [
     {
       href: "/admin",
       title: "Dashboard",
+      icon: <HomeIcon />,
     },
     {
       href: "/admin/products",
       title: "Products",
+      icon: <ShoppingCartIcon />,
     },
     {
       href: "/admin/categories",
       title: "Categories",
+      icon: <ListBulletIcon />,
     },
     {
       href: "/admin/users",
       title: "Users",
+      icon: <UserIcon />,
     },
   ]
 
   return (
     <>
-      <aside className="bg-white drop-shadow-2xl w-[15vw] h-screen">
+      <aside className="bg-white drop-shadow-2xl w-[15vw] h-screen md-[10vw]">
         <nav>
           <div className="flex items-center border-b-2 mt-2">
             <Link href="/">
@@ -35,13 +45,16 @@ const NavAdmin = () => {
             <p className="font-bold">BACK-OFFICE</p>
           </div>
           <ul className="flex flex-col gap-4 m-5">
-            {navItems.map(({ href, title }) => (
+            {navItems.map(({ href, title, icon }) => (
               <Link
                 key={title}
                 href={href}
                 className=" bg-white w-[100%] p-4 border-2 rounded-lg hover:bg-slate-200"
               >
-                <li className="w-full">{title}</li>
+                <li className="w-full flex gap-3 items-center">
+                  <p className="w-4">{icon}</p>
+                  <p>{title}</p>
+                </li>
               </Link>
             ))}
           </ul>
