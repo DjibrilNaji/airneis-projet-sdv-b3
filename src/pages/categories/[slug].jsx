@@ -27,7 +27,7 @@ const Category = (props) => {
 
     useEffect(() => {
         axios.get("/api/products").then(res => {
-            setFilteredProducts(res.data.filter(product => product.categorieId === filteredCategories.id))
+            setFilteredProducts(res.data.filter(product => product.categoryId === filteredCategories.id))
         })
     }, [slug, filteredCategories])
 
@@ -36,14 +36,14 @@ const Category = (props) => {
         <>
             <div className="h-60 flex items-center justify-center">
                 <span className="absolute text-white uppercase font-bold text-2xl">{filteredCategories.name}</span>
-                <Image src={`/assets/img/products/${filteredCategories.img}`} width="500"
+                <Image src={`/assets/img/categories/${filteredCategories.img}`} width="500"
                        height="500" alt="slide 1" className="h-80 w-full object-cover"/>
             </div>
 
             <p className="m-20">
                 {filteredCategories.description}
             </p>
-
+            
             <div
                 className="grid px-2 gap-7 md:pb-10 md:grid-cols-2 lg:grid-cols-3">
                 {filteredProducts.map((product) => (
@@ -57,6 +57,7 @@ const Category = (props) => {
                             <span>{product.price} €</span>
                         </div>
                     </Link>
+
                 ))}
             </div>
         </>

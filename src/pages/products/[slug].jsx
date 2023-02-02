@@ -22,6 +22,8 @@ const Product = (props) => {
 
     const [products, setProducts] = useState([])
     const [filteredProducts, setFilteredProducts] = useState([])
+    const [filteredCategories, setFilteredCategories] = useState([])
+
 
     useEffect(() => {
         axios.get("/api/products").then(res => {
@@ -30,12 +32,18 @@ const Product = (props) => {
         })
     }, [slug])
 
+    useEffect(() => {
+        axios.get("/api/categories").then(res => {
+            setFilteredCategories(res.data.filter(category => category.id === filteredProducts.categoryId)[0])
+        })
+    }, [filteredProducts.categoryId, slug])
+
 
     return (
         <>
             <div className="hidden md:flex items-center justify-center">
-                <span className="absolute text-white uppercase font-bold text-2xl">Categorie</span>
-                <Image src={`/assets/img/products/${filteredProducts.img}`} alt="slide 1"
+                <span className="absolute text-white uppercase font-bold text-2xl">{filteredCategories.name}</span>
+                <Image src={`/assets/img/categories/${filteredCategories.img}`} alt="slide 1"
                        className="h-80 w-full object-cover" width="500"
                        height="500"/></div>
 
@@ -70,7 +78,6 @@ const Product = (props) => {
                                className="h-96 w-full object-cover" width="500"
                                height="500"/>
                     </Carousel>
-
                 </div>
 
                 <div className="flex flex-col m-4 md:my-0">
@@ -82,6 +89,7 @@ const Product = (props) => {
                     <p className="text-sm font-semibold my-4 md:w-4/5">
                         {filteredProducts.description}
                     </p>
+                    
                     <button
                         className="flex justify-center bg-stone-200 items-center mx-auto md:mx-0 md:ml-auto text-lg rounded-full py-1 px-3">
                         <FontAwesomeIcon icon={faShoppingBasket} className="mr-3 bg-white rounded-full p-2"/> Ajouter au
@@ -91,7 +99,6 @@ const Product = (props) => {
             </div>
 
             <Text firstTextPart="Produits Similaires"/>
-
 
             <div
                 className="grid px-2 gap-7 md:pb-10 md:grid-cols-2 lg:grid-cols-3">

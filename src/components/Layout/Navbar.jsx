@@ -72,7 +72,7 @@ const Navbar = () => {
             <div
                 className={`${
                     isOpen ? "pt-16 h-auto bg-stone-300" : "hidden"
-                } z-[-1] md:z-0 absolute right-0 top-0 bg-white rounded-md shadow-md w-full items-center md:w-80 h-64 md:h-screen`}
+                } z-[-1] md:z-0 absolute right-0 top-0 bg-white rounded-md shadow-md w-full overflow-scroll h-fit items-center md:w-80 md:h-screen`}
             >
                 <div className="flex flex-col items-center">
                     <span className="bg-amber-500">Connecter :</span>
