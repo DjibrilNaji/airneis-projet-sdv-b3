@@ -1,5 +1,5 @@
 import DashboardAdmin from "@/components/Admin/DashboardAdmin"
-import LayoutAdmin from "@/components/Admin/LayoutAdmin/LayoutAdmin"
+import LayoutAdmin from "@/components/Admin/LayoutBack/LayoutAdmin"
 
 const IndexAdmin = () => {
   return <DashboardAdmin />
