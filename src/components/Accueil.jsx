@@ -11,17 +11,23 @@ const Accueil = () => {
     const [categories, setCategories] = useState([])
 
     useEffect(() => {
-        axios.get("/api/products").then(res => {
-            setProducts(res.data)
-        })
+        async function fetchData() {
+            const result = await axios.get("/api/products")
+            setProducts(result.data)
+        }
+
+        fetchData()
     }, [])
 
     useEffect(() => {
-        axios.get("/api/categories").then(res => {
-            setCategories(res.data)
-        })
-    }, [])
+        async function fetchData() {
+            const result = await axios.get("/api/categories")
+            setCategories(result.data)
+        }
 
+        fetchData()
+    }, [])
+    
     return (
         <>
             <div>

@@ -26,18 +26,25 @@ const Product = (props) => {
 
 
     useEffect(() => {
-        axios.get("/api/products").then(res => {
-            setProducts(res.data)
-            setFilteredProducts(res.data.filter(product => product.slug === slug)[0])
-        })
+        async function fetchData() {
+            const result = await axios.get("/api/products")
+            setProducts(result.data)
+            setFilteredProducts(result.data.filter(product => product.slug === slug)[0])
+        }
+
+        fetchData()
     }, [slug])
 
-    useEffect(() => {
-        axios.get("/api/categories").then(res => {
-            setFilteredCategories(res.data.filter(category => category.id === filteredProducts.categoryId)[0])
-        })
-    }, [filteredProducts.categoryId, slug])
 
+    useEffect(() => {
+        async function fetchData() {
+            const result = await axios.get("/api/categories")
+            const categories = result.data[0]
+            setFilteredCategories(categories)
+        }
+
+        fetchData()
+    }, [])
 
     return (
         <>
@@ -89,7 +96,7 @@ const Product = (props) => {
                     <p className="text-sm font-semibold my-4 md:w-4/5">
                         {filteredProducts.description}
                     </p>
-                    
+
                     <button
                         className="flex justify-center bg-stone-200 items-center mx-auto md:mx-0 md:ml-auto text-lg rounded-full py-1 px-3">
                         <FontAwesomeIcon icon={faShoppingBasket} className="mr-3 bg-white rounded-full p-2"/> Ajouter au

@@ -10,9 +10,12 @@ const Cart = () => {
     const [productInCart, setproductInCart] = useState([])
 
     useEffect(() => {
-        axios.get("/api/products").then(res => {
-            setproductInCart(res.data)
-        })
+        async function fetchData() {
+            const result = await axios.get("/api/products")
+            setproductInCart(result.data)
+        }
+
+        fetchData()
     }, [])
 
     return (
