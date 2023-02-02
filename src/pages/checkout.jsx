@@ -1,20 +1,9 @@
 import Input from "@/components/Input"
 import Button from "@/components/Button"
 import Select from "@/components/Select"
-import { useState, useEffect } from "react"
-import axios from "axios"
+// import axios from "axios"
 
 const Checkout = () => {
-  const [categories, setCategories] = useState([])
-
-  useEffect(() => {
-    axios.get("/api/categories").then((res) => {
-      setCategories(res.data)
-    })
-  }, [])
-
-  const CheckoutCategories = categories.map((category) => category.name)
-
   return (
     <>
       <h1 className="flex text-stone-400 text-3xl justify-center py-5 font-bold md:justify-center">
@@ -22,7 +11,7 @@ const Checkout = () => {
       </h1>
       <div className="flex justify-center gap-16 p-4">
         <div className="w-long">
-          <Select options={CheckoutCategories} />
+          <Select options={["value 1", "value 2"]} />
           <Input label="Prénom *" />
           <Input label="Nom *" />
           <Input label="Adresse *" />
