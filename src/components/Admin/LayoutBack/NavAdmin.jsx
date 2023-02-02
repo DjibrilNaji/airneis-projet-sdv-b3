@@ -29,7 +29,9 @@ const NavAdmin = () => {
       <aside className="bg-white drop-shadow-2xl w-[15vw] h-screen">
         <nav>
           <div className="flex items-center border-b-2 mt-2">
-            <Image src={logo} alt="logo" className="p-4 w-40" />
+            <Link href="/">
+              <Image src={logo} alt="logo" className="p-4 w-40" />
+            </Link>
             <p className="font-bold">BACK-OFFICE</p>
           </div>
           <ul className="flex flex-col gap-4 m-5">
