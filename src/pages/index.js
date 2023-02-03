@@ -1,9 +1,11 @@
 import Accueil from "@/components/Accueil"
 
 const Home = () => {
-    return <>
-        <Accueil/>
+  return (
+    <>
+      <Accueil />
     </>
+  )
 }
 
 export default Home
