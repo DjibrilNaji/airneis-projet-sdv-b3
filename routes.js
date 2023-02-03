@@ -18,7 +18,7 @@ router.get("/products", (req, res) => {
       if (err) {
         throw err
       }
-
+      
       const db = client.db(process.env.DB_NAME)
       const products = db.collection("products")
 
@@ -30,6 +30,33 @@ router.get("/products", (req, res) => {
         res.json(result)
         client.close()
       })
+    }
+  )
+})
+
+router.get("/orders", (req, res) => {
+  MongoClient.connect(
+    process.env.MONGODB_URL,
+    { useNewUrlParser: true },
+    (err, client) => {
+      if (err) {
+        throw err
+      }
+
+      const db = client.db(process.env.DB_NAME)
+      const orders = db.collection("orders")
+
+      orders
+        .find({})
+        .sort({ dateOfOrder: -1 })
+        .toArray((err, result) => {
+          if (err) {
+            throw err
+          }
+
+          res.json(result)
+          client.close()
+        })
     }
   )
 })
@@ -68,9 +95,9 @@ router.post("/users/add", jsonParser, (req, res) => {
       if (err) {
         throw err
       }
-
       const db = client.db(process.env.DB_NAME)
       const products = db.collection("users")
+
 
       products
         .insertOne(req.body)
