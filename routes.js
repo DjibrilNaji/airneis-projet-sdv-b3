@@ -18,7 +18,7 @@ router.get("/products", (req, res) => {
       if (err) {
         throw err
       }
-
+      
       const db = client.db(process.env.DB_NAME)
       const products = db.collection("products")
 
@@ -95,9 +95,9 @@ router.post("/users/add", jsonParser, (req, res) => {
       if (err) {
         throw err
       }
-
       const db = client.db(process.env.DB_NAME)
       const products = db.collection("users")
+
 
       products
         .insertOne(req.body)
