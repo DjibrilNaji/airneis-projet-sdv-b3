@@ -1,4 +1,4 @@
-import LayoutAdmin from "@/components/Admin/LayoutBack/LayoutAdmin"
+import LayoutAdmin from "@/components/Admin/LayoutAdmin/LayoutAdmin"
 
 const UsersAdmin = () => {
   return <h1>Users</h1>

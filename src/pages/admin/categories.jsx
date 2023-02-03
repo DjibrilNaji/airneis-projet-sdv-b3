@@ -1,4 +1,4 @@
-import LayoutAdmin from "@/components/Admin/LayoutBack/LayoutAdmin"
+import LayoutAdmin from "@/components/Admin/LayoutAdmin/LayoutAdmin"
 
 const CategoriesAdmin = () => {
   return <h1>Categories</h1>
