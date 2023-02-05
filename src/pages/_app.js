@@ -18,5 +18,12 @@ export default function App({ Component, pageProps }) {
       )
     }
 
-  return renderWithLayout(<Component {...pageProps} />)
+  return renderWithLayout(
+    <>
+      <Head>
+        <title>Airneis</title>
+      </Head>
+      <Component {...pageProps} />
+    </>
+  )
 }
