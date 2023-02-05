@@ -19,12 +19,15 @@ const Product = (props) => {
     const [Year] = useState([])
 
     useEffect(() => {
-        axios.get("/api/orders").then(res => {
+        async function fetchData() {
+            axios.get("/api/orders").then(res => {
             setFilteredOrders(res.data.filter(orders => orders.idUser !== idUser))
         })
         filteredOrders.map((order) => (
             Year.includes(new Date(order.dateOfOrder).getFullYear()) === true ? "" : Year.push(new Date(order.dateOfOrder).getFullYear())
-        ))
+        ))}
+
+    fetchData()
     }, [Year, filteredOrders, idUser])
     
     
@@ -39,7 +42,7 @@ const Product = (props) => {
                         <h1 className="text-center text-xl font-bold border-solid border-b-2 w-full border-black pr-60 mb-4">
                             {year}
                         </h1>
-                        <ListOrders filteredOrders={filteredOrders} dateYear={year} idUser={idUser} />
+                        <ListOrders filteredOrders={filteredOrders} dateYear={year} />
                     </div>
                 </>
             ))}

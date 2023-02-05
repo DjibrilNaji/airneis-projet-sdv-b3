@@ -3,13 +3,13 @@ import Link from "./Link"
 
 
 const ListOrders = (props) => {
-  const { filteredOrders, dateYear, className, idUser, ...otherProps } = props
+  const { filteredOrders, dateYear, className, ...otherProps } = props
   
 
   return (
   <>
-      {filteredOrders.map((order,index) => ( new Date(order.dateOfOrder).getFullYear() === dateYear ?
-        <Link href={`/users/${idUser}/${order.trackingNumber}`} key={index} className={classNames("", className)} {...otherProps} >
+      {filteredOrders.map((order) => ( new Date(order.dateOfOrder).getFullYear() === dateYear ?
+        <Link href={`/order/${order.trackingNumber}`} key={order.trackingNumber} className={classNames("", className)} {...otherProps} >
           <div className="flex flex-wrap flex-row py-4">
             <div className="pr-6">
               <p className="text-black font-bold">{new Date(order.dateOfOrder).toLocaleDateString("fr")} - {order.trackingNumber}</p>
