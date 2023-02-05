@@ -2,7 +2,7 @@ RAPPORT DE SPRINT 3
 
 ### *Activités générales :*
 
-![Trello sprint 3](img/trello-sprint-3.png)
+![Jira sprint 3](img/jira-sprint-3.png)
 
 **DN :** Djibril NAJI / TO : Thomas Oliviera / AD : Alexis DUCHEMANN / MB: Myriam BENABDESSADOK
 
