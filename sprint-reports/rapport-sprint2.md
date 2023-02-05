@@ -15,7 +15,7 @@ RAPPORT DE SPRINT 2
 
 - Commencement d’adaptation modélisation SQL en modèle MongoDB en créant la base de données
 
-
 ### *Rétrospective de sprint :*
 
 Aucun commentaire et difficulté rencontrée pour les quatre membre
+

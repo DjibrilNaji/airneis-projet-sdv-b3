@@ -1,0 +1,231 @@
+{
+  "products": [
+    {
+      "name": "Pallas Athéna",
+      "description": "Ce vase en verre aux lignes épurées de la collection VARMBLIXT est tout aussi décoratif avec des fleurs que sans.",
+      "materials": ["Verre Tchèque", "Or", "0,20 m de hateur"],
+      "ttc_price": 11.99,
+      "ht_price": 11.69,
+      "slug": "pallas_athena",
+      "img": "vase.jpg",
+      "categoryId": 4,
+      "quantity": 10,
+      "sold_out": false,
+      "unavailable": false
+    },
+    {
+      "name": "Marvelous fenestra",
+      "description": "Cette fenêtre double vitrage en pvc assure une parfaite isolation phonique et thermique, s'adaptant à tout type d'installation grâce à son cadre universel.",
+      "materials": ["Verre d'Espagne", "Blanc réfléchi", "1,90 m de hauteur"],
+      "ttc_price": 205,
+      "ht_price": 203,
+      "slug": "marvelous_fenestra",
+      "img": "fenetres_coulissante.jpg",
+      "categoryId": 5,
+      "quantity": 678,
+      "sold_out": false,
+      "unavailable": false
+    },
+    {
+      "name": "Corporate Ace",
+      "description": "Asseyez-vous, adossez-vous et détendez-vous. Un design intemporel avec un revêtement résistant de cuir brun-rouge qui s'adapte à tous les styles.",
+      "materials": ["Polypropylène", "Noir", "1 m de hauteur"],
+      "ttc_price": 349,
+      "ht_price": 346,
+      "slug": "corporate_ace",
+      "img": "fautueil_roulant_noir.jpg",
+      "categoryId": 6,
+      "quantity": 120,
+      "sold_out": false,
+      "unavailable": false
+    },
+    {
+      "name": "Scott in paris",
+      "description": "Le Futural est un système à 3 chambres à coupure thermique pour fenêtres et portes en aluminium. En plus d’un bon niveau d’isolation, ce système offre une solution pour toutes les applications de fenêtres ouvrant vers l’intérieur et des portes battantes intérieures et extérieures.",
+      "materials": [
+        "Bois foret de Yard",
+        "Noir carbonisé",
+        "1,25 m de hauteur",
+        "2 m de largeur"
+      ],
+      "ttc_price": 91.7,
+      "ht_price": 90.6,
+      "slug": "scott_paris",
+      "img": "fenetres_parisien.jpg",
+      "categoryId": 5,
+      "quantity": 565,
+      "sold_out": false,
+      "unavailable": false
+    },
+    {
+      "name": "Ode Eden",
+      "description": "Motif créé par Kim Colthurst Johnson et Irene Suchocki.",
+      "materials": [
+        "Cadrage artisanale",
+        "Bois écossais",
+        "1,20 m de hateur",
+        "230 mm de largeur"
+      ],
+      "ttc_price": 12.35,
+      "ht_price": 12.15,
+      "slug": "ode_eden",
+      "img": "tableau.jpg",
+      "categoryId": 4,
+      "quantity": 25,
+      "sold_out": false,
+      "unavailable": false
+    },
+    {
+      "name": "Circle Sun",
+      "description": "Un fauteuil aux formes élégantes et riches en charme, il représente le juste rapport entre design et confort.",
+      "materials": ["Polyuréthane", "Jaune"],
+      "ttc_price": 110,
+      "ht_price": 110,
+      "slug": "circle_sun",
+      "img": "chaise_jaune.jpg",
+      "categoryId": 6,
+      "quantity": 96,
+      "sold_out": false,
+      "unavailable": false
+    },
+    {
+      "name": "The designer transporter",
+      "description": "Ce fauteuil inclinable est idéal. Son design épuré et son tissu bleu ciel lui permettent de facilement trouver sa place dans tous les intérieurs.",
+      "materials": [
+        "Rembourrage polyester",
+        "Mousse polyuréthane",
+        "Bleu ciel",
+        "1,12 m de hauteur"
+      ],
+      "ttc_price": 399,
+      "ht_price": 398,
+      "slug": "designer_transporter",
+      "img": "fautueil_roulant_bleu.jpg",
+      "categoryId": 6,
+      "quantity": 189,
+      "sold_out": false,
+      "unavailable": false
+    },
+    {
+      "name": "Relax fashionista",
+      "description": "Rien de mieux que des fauteuils confortables à travers toute la maison. Le fauteuil léger Relax Fashionista est parfait pour être bien assis",
+      "materials": [
+        "Holmby naturel",
+        "Lamellé-collé",
+        "Placage bouleau",
+        "Vernis acrylique incolore",
+        "Blanc lumineux",
+        "1 m de hauteur"
+      ],
+      "ttc_price": 69.99,
+      "ht_price": 69.99,
+      "slug": "relax_fashionista",
+      "img": "fautueil_roulant_blanc.jpg",
+      "categoryId": 6,
+      "quantity": 794,
+      "sold_out": false,
+      "unavailable": false
+    },
+    {
+      "name": "Braw",
+      "description": "Cette armoire permet d'avoir une place pour chaque chose : elle conviendra parfaitement à ceux qui aiment rationaliser le rangement tout en conservant une vue d'ensemble sur toutes leurs affaires.",
+      "materials": ["Bois métalisé", "Charbon luisant", "1,80 m de hateur"],
+      "ttc_price": 110.99,
+      "ht_price": 110.29,
+      "slug": "braw",
+      "img": "placard.jpg",
+      "categoryId": 4,
+      "quantity": 123,
+      "sold_out": false,
+      "unavailable": false
+    },
+    {
+      "name": "Simple noralis",
+      "description": "Cette fenêtre en aluminium à double vitrage assure une très bonne isolation phonique et thermique, dans un style moderne avec tout type d'installation grâce à son cadre universel.",
+      "materials": ["Bois de Vincennes", "Blanc cassé", "1,32 m de hauteur"],
+      "ttc_price": 216.3,
+      "ht_price": 215.1,
+      "slug": "simple_noralis",
+      "img": "fenetres_extérieur.jpg",
+      "categoryId": 5,
+      "quantity": 283,
+      "sold_out": false,
+      "unavailable": false
+    },
+    {
+      "name": "Irémia",
+      "description": "Ce petit cube astucieux se révèle toujours d’une grande utilité, que ce soit pour ranger, exposer ou vider vos poches.",
+      "materials": ["Bois métalisé", "Métal charbon", "1 m de hateur"],
+      "ttc_price": 79.99,
+      "ht_price": 79.89,
+      "slug": "iremia",
+      "img": "tabledenuit.jpg",
+      "categoryId": 4,
+      "quantity": 536,
+      "sold_out": false,
+      "unavailable": false
+    },
+    {
+      "name": "Triple",
+      "description": "Fenêtre pvc 3 vantaux oscillo-battant droit GoodHome blanc - 180 x h.135 cm - Uw 1,2",
+      "materials": ["Bois", "Blanc", "1,57 m de hauteur"],
+      "ttc_price": 319,
+      "ht_price": 318,
+      "slug": "triple",
+      "img": "triple_fenetre.jpg",
+      "categoryId": 5,
+      "quantity": 57,
+      "sold_out": false,
+      "unavailable": false
+    },
+    {
+      "name": "Twice view",
+      "description": "Rien de mieux que de voir double depuis chez soi",
+      "materials": [
+        "Bois de Sussex",
+        "Verre",
+        "1,32 m de hauteur pour la double fenêtre",
+        "1,54 m de hauteur pour la fenêtre supérieur"
+      ],
+      "ttc_price": 186.1,
+      "ht_price": 185,
+      "slug": "twice_view",
+      "img": "double_fenetres.jpg",
+      "categoryId": 5,
+      "quantity": 176,
+      "sold_out": false,
+      "unavailable": false
+    },
+    {
+      "name": "Dorian Gray",
+      "description": "La forme du fauteuil offre un confort agréable pour les lombaires.",
+      "materials": [
+        "Polyuréthane",
+        "Bois écossais",
+        "Gris clair",
+        "75 cm de hauteur"
+      ],
+      "ttc_price": 179,
+      "ht_price": 177,
+      "slug": "dorian_gray",
+      "img": "fauteuil-chaise-scandinave-tissu-gris-fonce.jpg",
+      "categoryId": 6,
+      "quantity": 47,
+      "sold_out": true,
+      "unavailable": true
+    },
+    {
+      "name": "Metaférontai",
+      "description": "Le banc Metaférontai combine fonctionnalité et look moderne. Il offre un grand espace de rangement et permet de cacher les câbles qui ont tendance à s'emmêler et à récolter la poussière.",
+      "materials": ["Bois d’Amazonie", "Métal dorée", "124 m de hateur"],
+      "ttc_price": 95.99,
+      "ht_price": 94.79,
+      "slug": "metaferontai",
+      "img": "placardtélé.jpg",
+      "categoryId": 4,
+      "quantity": 240,
+      "sold_out": true,
+      "unavailable": true
+    }
+  ]
+}
