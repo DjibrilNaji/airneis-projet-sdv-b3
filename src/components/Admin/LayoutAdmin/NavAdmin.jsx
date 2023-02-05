@@ -3,7 +3,6 @@ import Link from "next/link"
 import logo from "@@/public/assets/img/logo.png"
 import profilepic from "@@/public/assets/img/profilepictest.jpeg"
 import {
-  CogIcon,
   UserIcon,
   ShoppingCartIcon,
   HomeIcon,
