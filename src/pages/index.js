@@ -1,4 +1,4 @@
-import Accueil from "@/components/Accueil"
+import Accueil from "@/web/components/Accueil"
 
 const Home = () => {
   return (
@@ -7,5 +7,7 @@ const Home = () => {
     </>
   )
 }
+
+Home.isPublic = true
 
 export default Home
