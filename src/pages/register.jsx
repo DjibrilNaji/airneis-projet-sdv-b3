@@ -1,6 +1,30 @@
-import RegisterForm from "@/components/Auth/RegisterForm"
+import RegisterForm from "@/web/components/Auth/RegisterForm"
+import useAppContext from "@/web/hooks/useAppContext"
+import { useRouter } from "next/router.js"
+import { useCallback, useState } from "react"
+
 
 const Register = () => {
+  const router = useRouter()
+  const {
+    actions: { signUp },
+  } = useAppContext()
+  const [error, setError] = useState(null)
+  const handleSubmit = useCallback(
+    async (values) => {
+      const [err] = await signUp(values)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      router.push("/login")
+    },
+    [signUp, router]
+  )
+
   return (
     <>
       <div className="w-80 mx-auto">
@@ -8,10 +32,12 @@ const Register = () => {
           Inscription
         </h1>
 
-        <RegisterForm />
+        <RegisterForm onSubmit={handleSubmit} error={error} />
       </div>
     </>
   )
 }
+
+Register.isPublic = true
 
 export default Register

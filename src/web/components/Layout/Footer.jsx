@@ -48,4 +48,6 @@ const Footer = () => {
   )
 }
 
+Footer.isPublic = true
+
 export default Footer

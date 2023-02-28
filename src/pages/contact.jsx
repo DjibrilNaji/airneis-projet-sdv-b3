@@ -1,4 +1,4 @@
-import Input from "../components/Input"
+import Input from "../web/components/Input"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faInbox } from "@fortawesome/free-solid-svg-icons"
 
