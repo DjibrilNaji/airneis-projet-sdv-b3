@@ -5,18 +5,11 @@ import deepmerge from "deepmerge"
 import knex from "knex"
 import winston from "winston"
 
-// NOTES FOR STUDENTS: NFS
-
-// NFS: must be declared OUTSIDE of
-// the handler ((req, res) => ...) as we don't want
-// these to be instanciated for every single request
-// especially the database connection.
 const db = knex(config.db)
 BaseModel.knex(db)
 const logger = winston.createLogger({
   transports: [
     new winston.transports.Console({
-      // NFS: Nice for dev env only
       format: winston.format.combine(
         winston.format.json(),
         winston.format((info) => {
@@ -32,14 +25,9 @@ const logger = winston.createLogger({
     }),
   ],
   levels: { ...winston.config.cli.levels, sql: 10 },
-  // NFS: Nice for dev env only because shows all messages, including
-  // debug.
   level: 0,
 })
 
-// NFS: may be useful in dev esp. to track and debug queries.
-// NFS: never log bindings, they may contain sensitive data like
-// passwords
 db.on("query", ({ sql }) => logger.sql(sql))
 
 const mw = (methodHandlers) => async (req, res) => {

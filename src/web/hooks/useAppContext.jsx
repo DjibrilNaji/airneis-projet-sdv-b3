@@ -19,8 +19,6 @@ export const AppContextProvider = (props) => {
   const [jwt, setJWT] = useState(null)
   const api = createAPIClient({ jwt })
 
-  // NFS: we inject all the deps to our actions here but declare them
-  // in different files to not overburden the context declaration.
   const signUp = signUpService({ api })
   const signIn = signInService({ api, setSession, setJWT })
   const signOut = useCallback(() => {
@@ -28,8 +26,6 @@ export const AppContextProvider = (props) => {
     setSession(false)
   }, [])
 
-  // NFS: we load the session in a useEffect hook, preventing SSR
-  // to break because of localStorage (which is browser only).
   useEffect(() => {
     const jwt = localStorage.getItem(config.session.localStorageKey)
 
@@ -42,13 +38,6 @@ export const AppContextProvider = (props) => {
     setSession(session)
     setJWT({ jwt })
   }, [])
-
-  // NFS: if we're neither on a public nor the session has been
-  // loaded through the useEffect, then let's make the user wait.
-  // Technically this is useless as there is no network load, it's
-  // done directly from the localStorage, but if it was the case,
-  // then showing a loader may be useful. As for now, returning
-  // (almost) anything even null would work just fine.
 
   if (!isPublicPage && session === null) {
     return (
