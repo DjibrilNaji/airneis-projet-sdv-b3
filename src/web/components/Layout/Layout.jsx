@@ -1,7 +1,9 @@
-import Navbar from "@/components/Layout/Navbar"
-import Footer from "@/components/Layout/Footer"
+import Navbar from "@/web/components/Layout/Navbar"
+import Footer from "@/web/components/Layout/Footer"
 
-const Layout = ({ children }) => {
+const Layout = (props) => {
+  const { children } = props
+
   return (
     <>
       <div className="flex flex-col md:min-h-screen justify-between">

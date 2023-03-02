@@ -1,6 +1,6 @@
-import Input from "@/components/Input"
-import Button from "@/components/Button"
-import Select from "@/components/Select"
+import Input from "@/web/components/Input"
+import Button from "@/web/components/Button"
+import Select from "@/web/components/Select"
 // import axios from "axios"
 
 const Checkout = () => {
