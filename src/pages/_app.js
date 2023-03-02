@@ -1,7 +1,8 @@
 import "@/styles.css"
 import Head from "next/head"
 import React from "react"
-import Layout from "@/components/Layout/Layout"
+import Layout from "@/web/components/Layout/Layout"
+import { AppContextProvider } from "@/web/hooks/useAppContext"
 
 export default function App({ Component, pageProps }) {
   const renderWithLayout =
@@ -12,8 +13,9 @@ export default function App({ Component, pageProps }) {
           <Head>
             <title>Airneis</title>
           </Head>
-
-          <Layout>{page}</Layout>
+          <AppContextProvider isPublicPage={Component.isPublic}>
+            <Layout>{page}</Layout>
+          </AppContextProvider>
         </>
       )
     }
