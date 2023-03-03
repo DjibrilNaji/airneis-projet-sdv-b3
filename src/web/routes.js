@@ -12,6 +12,7 @@ const routes = {
   home: () => "/",
   signUp: () => "/register",
   signIn: () => "/login",
+  product: (idProduct) => `/products/${idProduct}`,
   api: {
     signUp: () => "/register",
     signIn: () => "/login",
