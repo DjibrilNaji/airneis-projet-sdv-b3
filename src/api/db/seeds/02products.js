@@ -31,7 +31,7 @@ exports.seed = async function (knex) {
     "tvStand",
   ]
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < categorieName.length; i++) {
     categories.push({
       id: i + 1,
       categoryName: categorieName[i],
@@ -42,7 +42,7 @@ exports.seed = async function (knex) {
 
   await knex("categories").insert(categories)
 
-  for (let i = 0; i < 14; i++) {
+  for (let i = 0; i < productName.length; i++) {
     products.push({
       id: i + 1,
       name: productName[i],
@@ -64,7 +64,7 @@ exports.seed = async function (knex) {
 
   await knex("materials").insert(materials)
 
-  for (let i = 0; i < 14; i++) {
+  for (let i = 0; i < productName.length; i++) {
     imageProduct.push({
       id: i + 1,
       urlImage: productName[i] + ".jpg",
