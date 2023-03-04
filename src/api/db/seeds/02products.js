@@ -16,7 +16,7 @@ exports.seed = async function (knex) {
 
   const productName = [
     "buffet",
-    "coffeTable",
+    "coffeeTable",
     "doubleBed",
     "dressing",
     "extandableTable",
