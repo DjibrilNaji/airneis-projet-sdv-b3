@@ -8,47 +8,54 @@ exports.seed = async function (knex) {
   await knex("categories").del()
 
   const categories = []
-  const categorieName = ["bedding", "storageSand", "table"]
   const products = []
   const imageProduct = []
   const materialProduct = []
   const materials = []
 
+  const categorieName = ["Bedding", "Storage Sand", "table"]
   const productName = [
-    "buffet",
-    "coffeeTable",
-    "doubleBed",
-    "dressing",
-    "extandableTable",
-    "kingSize",
-    "superposeBed",
-    "marbleTable",
-    "queenSize",
-    "roundTable",
-    "shoeStorage",
-    "simpleBed",
-    "squareTable",
-    "tvStand",
+    "Buffet",
+    "Coffee Table",
+    "Double Bed",
+    "Dressing",
+    "Extandable Table",
+    "King Size",
+    "Superpose Bed",
+    "Marble Table",
+    "Queen Size",
+    "Round Table",
+    "Shoe Storage",
+    "Simple Bed",
+    "Square Table",
+    "TV Stand",
+    "TV Stand Alpha1",
+    "TV Stand Alpha2",
+    "TV Stand Alpha3",
+    "TV Stand Alpha4",
+    "Dressing Klauss1",
+    "Dressing Klauss2",
   ]
 
   for (let i = 0; i < categorieName.length; i++) {
     categories.push({
       id: i + 1,
-      categoryName: categorieName[i],
+      name: categorieName[i],
       description: faker.lorem.sentence(),
-      urlImage: categorieName[i] + ".jpg",
+      urlImage: categorieName[i].toLowerCase().replace(" ", "") + ".jpg",
     })
   }
 
   await knex("categories").insert(categories)
 
-  for (let i = 0; i < productName.length; i++) {
+  for (let i = 0; i < 14; i++) {
     products.push({
       id: i + 1,
       name: productName[i],
       description: faker.commerce.productDescription(),
       price: faker.commerce.price(),
       quantity: faker.datatype.number(100),
+      highlander: faker.datatype.number({ min: 0, max: 1 }),
       categoryId: faker.datatype.number({ min: 1, max: 3 }),
     })
   }
@@ -67,17 +74,17 @@ exports.seed = async function (knex) {
   for (let i = 0; i < productName.length; i++) {
     imageProduct.push({
       id: i + 1,
-      urlImage: productName[i] + ".jpg",
-      productId: faker.datatype.number({ min: 1, max: 14 }),
+      urlImage: productName[i].toLowerCase().replace(" ", "") + ".jpg",
+      productId: i < 14 ? i + 1 : faker.datatype.number({ min: 1, max: 14 }),
     })
   }
 
   await knex("imageProduct").insert(imageProduct)
 
-  for (let i = 0; i < 14; i++) {
+  for (let i = 0; i < productName.length; i++) {
     materialProduct.push({
-      materialId: faker.datatype.number({ min: 1, max: 5 }),
-      productId: faker.datatype.number({ min: 1, max: 14 }),
+      materialId: i < 5 ? i + 1 : faker.datatype.number({ min: 1, max: 5 }),
+      productId: i < 14 ? i + 1 : faker.datatype.number({ min: 1, max: 14 }),
     })
   }
 
