@@ -7,8 +7,15 @@ import ImageHomePageModel from "@/api/db/models/ImageHomePageModel"
 const handler = mw({
   GET: [
     async ({ res }) => {
-      const imageHomePage = await ImageHomePageModel.query()
+      const imageHomePage = await ImageHomePageModel.query().where({
+        display: true,
+      })
       const categories = await CategoryModel.query()
+
+      if (!categories) {
+        res.send({ result: "An error occurred while retrieving categories" })
+      }
+
       const products = await ProductModel.query()
         .innerJoin("imageProduct", "products.id", "=", "imageProduct.productId")
         .select(
@@ -20,6 +27,11 @@ const handler = mw({
           "imageProduct.urlImage"
         )
         .distinctOn("imageProduct.productId")
+        .where({ highlander: true })
+
+      if (!products) {
+        res.send({ result: "An error occurred while retrieving products" })
+      }
 
       products.map((product) => {
         product.urlImage = s3.getSignedUrl("getObject", {
@@ -41,10 +53,6 @@ const handler = mw({
           Key: image.urlImage,
         })
       })
-
-      if (!products) {
-        res.send({ result: "An error occurred while retrieving products" })
-      }
 
       res.send({
         result: {

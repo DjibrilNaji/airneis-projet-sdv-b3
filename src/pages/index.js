@@ -29,47 +29,40 @@ const Home = (props) => {
     categoriesAndProducts: { result },
   } = props
 
-  const filteredImageHomePage = result.imageHomePage.filter(
-    (image) => image.display
-  )
-
-  const filteredProducts = result.products.filter((image) => image.highlander)
-
   const [activeIndex, setActiveIndex] = useState(0)
 
   const handlePrevious = () => {
     setActiveIndex(
       (prevActiveIndex) =>
-        (prevActiveIndex - 1 + filteredImageHomePage.length) %
+        (prevActiveIndex - 1 + result.imageHomePage.length) %
         result.imageHomePage.length
     )
   }
 
   const handleNext = () => {
     setActiveIndex(
-      (prevActiveIndex) => (prevActiveIndex + 1) % filteredImageHomePage.length
+      (prevActiveIndex) => (prevActiveIndex + 1) % result.imageHomePage.length
     )
   }
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       setActiveIndex(
-        (prevActiveIndex) =>
-          (prevActiveIndex + 1) % filteredImageHomePage.length
+        (prevActiveIndex) => (prevActiveIndex + 1) % result.imageHomePage.length
       )
     }, 8000)
 
     return () => {
       clearInterval(intervalId)
     }
-  }, [filteredImageHomePage.length])
+  }, [result.imageHomePage.length])
 
   return (
     <>
       <div>
         <div className="relative">
           <div className="m-4 h-96 relative">
-            {filteredImageHomePage.map((image, index) => (
+            {result.imageHomePage.map((image, index) => (
               <Image
                 key={image.id}
                 src={image.urlImage}
@@ -95,7 +88,7 @@ const Home = (props) => {
         </div>
 
         <div className="flex justify-center">
-          {filteredImageHomePage.map((image, index) => (
+          {result.imageHomePage.map((image, index) => (
             <button
               onClick={() => setActiveIndex(index)}
               key={image.id}
@@ -142,7 +135,7 @@ const Home = (props) => {
       </div>
 
       <div className="grid gap-12 pb-7 md:grid-cols-2 md:gap-8 md:px-4 lg:grid-cols-3">
-        {filteredProducts.map((product) => (
+        {result.products.map((product) => (
           <Link
             key={product._id}
             href={`/products/${product.id}`}
