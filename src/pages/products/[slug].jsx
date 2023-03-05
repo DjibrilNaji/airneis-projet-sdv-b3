@@ -1,14 +1,14 @@
 //import { useEffect, useState } from "react"
 //import axios from "axios"
 import Image from "next/image"
-import Carousel from "@/components/Carousel"
+import Carousel from "@/web/components/Carousel"
 import Link from "next/link"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faArrowLeft,
   faShoppingBasket,
 } from "@fortawesome/free-solid-svg-icons"
-import Text from "@/components/Text"
+import Text from "@/web/components/Text"
 
 export const getServerSideProps = ({ params }) => ({
   props: {
