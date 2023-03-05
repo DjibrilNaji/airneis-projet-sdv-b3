@@ -19,6 +19,7 @@ const handler = mw({
           "products.highlander",
           "imageProduct.urlImage"
         )
+        .distinctOn("imageProduct.productId")
 
       products.map((product) => {
         product.urlImage = s3.getSignedUrl("getObject", {
