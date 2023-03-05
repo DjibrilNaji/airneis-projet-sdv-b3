@@ -1,6 +1,7 @@
 import axios from "axios"
 import routes from "@/web/routes.js"
 import Image from "next/image"
+import ListProduct from "@/web/components/ListProduct.jsx"
 
 export const getServerSideProps = async ({ params, req: { url } }) => {
   const idCategory = params.idCategory
@@ -27,23 +28,32 @@ const Category = (props) => {
     category: { result },
   } = props
 
-  return result.category.map((cat) => (
-    <div key={cat.id} className="absolute top-28">
-      <div className="h-60 flex items-center justify-center">
-        <span className="absolute text-black uppercase font-bold text-2xl">
-          {cat.categoryName}
-        </span>
-        <Image
-          src={result.data}
-          width={500}
-          height={500}
-          alt={cat.urlImage}
-          className="h-80 w-full object-cover"
-        />
+  return (
+    <>
+      {result.category.map((cat) => (
+        <div key={cat.id}>
+          <div className="h-60 flex items-center justify-center">
+            <span className="absolute text-black uppercase font-bold text-2xl z-1">
+              {cat.name}
+            </span>
+            <Image
+              src={result.data}
+              width={1000}
+              height={1000}
+              alt={cat.urlImage}
+              className="h-80 w-full object-cover"
+            />
+          </div>
+          <p className="p-32 text-xl">{cat.description}</p>
+        </div>
+      ))}
+      <div className="grid px-2 gap-7 md:pb-10 md:grid-cols-2 lg:grid-cols-3">
+        {result.products.map((product) => (
+          <ListProduct key={product.id} product={product}></ListProduct>
+        ))}
       </div>
-      <p className="m-20">{cat.description}</p>
-    </div>
-  ))
+    </>
+  )
 }
 
 Category.isPublic = true
