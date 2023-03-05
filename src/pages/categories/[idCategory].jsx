@@ -34,7 +34,7 @@ const Category = (props) => {
         <div key={cat.id}>
           <div className="h-60 flex items-center justify-center">
             <span className="absolute text-black uppercase font-bold text-2xl z-1">
-              {cat.categoryName}
+              {cat.name}
             </span>
             <Image
               src={result.data}
