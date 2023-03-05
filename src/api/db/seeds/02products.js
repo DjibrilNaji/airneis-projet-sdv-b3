@@ -13,7 +13,7 @@ exports.seed = async function (knex) {
   const materialProduct = []
   const materials = []
 
-  const categorieName = ["Bedding", "Storage Sand", "table"]
+  const categorieName = ["Bedding", "Storage Sand", "Table"]
   const productName = [
     "Buffet",
     "Coffee Table",
