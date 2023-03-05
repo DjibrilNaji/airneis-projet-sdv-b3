@@ -1,7 +1,7 @@
 module.exports.up = async (knex) => {
   await knex.schema.createTable("categories", (table) => {
     table.increments("id")
-    table.text("categoryName").notNullable()
+    table.text("name").notNullable()
     table.text("description").notNullable()
     table.text("urlImage").notNullable()
   })
@@ -11,6 +11,7 @@ module.exports.up = async (knex) => {
     table.text("description").notNullable()
     table.float("price").notNullable()
     table.integer("quantity").notNullable()
+    table.boolean("highlander").notNullable().defaultTo(0)
     table
       .integer("categoryId")
       .references("id")
