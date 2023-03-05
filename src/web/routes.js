@@ -16,6 +16,9 @@ const routes = {
   api: {
     signUp: () => "/register",
     signIn: () => "/login",
+    categoriesAndProducts: {
+      collection: () => "/categories-and-products",
+    },
     categories: {
       single: (idCategory, query) =>
         createRouteWithQueryParams(`/categories/${idCategory}`, query),
