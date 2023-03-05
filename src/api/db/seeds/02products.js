@@ -48,7 +48,7 @@ exports.seed = async function (knex) {
 
   await knex("categories").insert(categories)
 
-  for (let i = 0; i < productName.length; i++) {
+  for (let i = 0; i < 14; i++) {
     products.push({
       id: i + 1,
       name: productName[i],
