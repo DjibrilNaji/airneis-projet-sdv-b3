@@ -9,23 +9,32 @@ const ListProduct = (props) => {
     <div>
       <Link
         href={routes.product(product.id)}
-        className="h-60 flex justify-center items-center"
+        className="h-60 flex justify-center items-center relative"
       >
-        <span className="absolute text-gray-600 uppercase font-bold text-2xl z-1">
+        <span className="absolute uppercase font-bold top-10 text-2xl bg-white text-stone-500 rounded-lg p-1 border-2 border-stone-500 px-2">
           {product.name}
         </span>
         <Image
           src={product.urlImage}
           alt={product.name}
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover rounded-2xl"
           width={1000}
           height={1000}
         />
-      </Link>
-      <div className="flex flex-wrap justify-around text-xl font-semibold">
-        <p>Price : </p>
-        <p>{product.price} €</p>
+        {product.quantity > 0 ? (
+        <div className="flex absolute uppercase font-bold top-44
+         text-2xl bg-white text-stone-500 rounded-lg p-1 border-2 border-stone-500 px-2">
+        <p className="pr-4">Price : </p>
+        <p>{product.price.toFixed(2)} €</p>
       </div>
+      ) : (
+        <div className="flex absolute uppercase font-bold top-44
+         text-2xl bg-white text-red-500 rounded-lg p-1 border-2 border-red-500 px-2">
+        <p> Out Of Stock </p>
+      </div>
+      )}
+      </Link>
+      
     </div>
   )
 }
