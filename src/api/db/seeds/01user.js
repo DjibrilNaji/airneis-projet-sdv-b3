@@ -3,6 +3,8 @@ const { pbkdf2, randomBytes } = require("node:crypto")
 const { promisify } = require("node:util")
 
 exports.seed = async function (knex) {
+  await knex("rel_order_product").del()
+  await knex("orders").del()
   await knex("billingAddress").del()
   await knex("address").del()
   await knex("users").del()
@@ -60,9 +62,9 @@ const hashPassword = async (
 ) => [
   (
     await pbkdf2Callback(
-      `${password}${"kjfnlfrekflazmkfzkfmz"}`,
+      `${password}${"bjvbkqfdjkvlqdvl54vf64f5f"}`,
       salt,
-      10000,
+      100000,
       512,
       "sha512"
     )

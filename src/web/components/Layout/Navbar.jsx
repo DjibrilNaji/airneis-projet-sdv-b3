@@ -60,7 +60,10 @@ const Navbar = () => {
       onClick: handleIsOpenClick,
     },
     {
-      href: "/",
+      href:
+        (session !== false) & (session !== null)
+          ? routes.orders.collection(session.user.id)
+          : "/",
       title: "Mes commandes",
       icon: <FontAwesomeIcon icon={faCircleCheck} />,
       onClick: handleIsOpenClick,
