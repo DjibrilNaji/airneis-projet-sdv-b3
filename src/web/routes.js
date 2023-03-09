@@ -13,6 +13,10 @@ const routes = {
   signUp: () => "/register",
   signIn: () => "/login",
   product: (idProduct) => `/products/${idProduct}`,
+  orders: {
+    collection: (idUser) => `/users/${idUser}/allOrdersUser`,
+    single: (numberOrder) => `/users/order/${numberOrder}`,
+  },
   api: {
     signUp: () => "/register",
     signIn: () => "/login",
@@ -22,6 +26,10 @@ const routes = {
     categories: {
       single: (idCategory, query) =>
         createRouteWithQueryParams(`/categories/${idCategory}`, query),
+    },
+    orders: {
+      collection: (userId, query) =>
+        createRouteWithQueryParams(`/users/${userId}/allOrdersUser`, query),
     },
   },
 }

@@ -3,7 +3,6 @@ module.exports.up = async (knex) => {
     table.increments("id")
     table.text("numberOrder").notNullable()
     table.text("status").notNullable()
-    table.float("amount").notNullable()
     table.timestamps(true, true, true)
     table.integer("userId").references("id").inTable("users").notNullable()
     table.integer("addressId").references("id").inTable("address").notNullable()
