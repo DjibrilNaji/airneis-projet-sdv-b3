@@ -46,7 +46,7 @@ const NavAdmin = () => {
       <button
         className={`${
           !isOpen
-            ? "ml-6 mt-6 border-2 rounded-lg pb-1 pt-2 pl-3 pr-3 hover:bg-slate-200"
+            ? "ml-6 mt-6 h-11 border-2 rounded-lg pb-1 pt-2 pl-3 pr-3 hover:bg-slate-200"
             : "hidden"
         } `}
         onClick={handleIsOpenClick}
