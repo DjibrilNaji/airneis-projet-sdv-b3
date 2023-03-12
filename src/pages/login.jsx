@@ -1,6 +1,31 @@
-import LoginForm from "@/components/Auth/LoginForm"
+import LoginForm from "@/web/components/Auth/LoginForm"
+import useAppContext from "@/web/hooks/useAppContext.jsx"
+import { useRouter } from "next/router.js"
+import { useCallback, useState } from "react"
 
 const Login = () => {
+  const router = useRouter()
+  const {
+    actions: { signIn },
+  } = useAppContext()
+  const [error, setError] = useState(null)
+  const handleSubmit = useCallback(
+    async (values) => {
+      setError(null)
+
+      const [err] = await signIn(values)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      router.push("/")
+    },
+    [signIn, router]
+  )
+
   return (
     <>
       <div className="w-80 mx-auto">
@@ -9,11 +34,13 @@ const Login = () => {
             Connexion
           </h1>
 
-          <LoginForm />
+          <LoginForm onSubmit={handleSubmit} error={error} />
         </div>
       </div>
     </>
   )
 }
+
+Login.isPublic = true
 
 export default Login
