@@ -20,6 +20,7 @@ const routes = {
   api: {
     signUp: () => "/register",
     signIn: () => "/login",
+    contact: () => "/contact",
     categoriesAndProducts: {
       collection: () => "/categories-and-products",
     },
