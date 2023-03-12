@@ -1,4 +1,4 @@
-import LayoutAdmin from "@/web/components/LayoutAdmin/LayoutAdmin"
+import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
 
 const SettingsAdmin = () => {
   return <h1>Settings</h1>
