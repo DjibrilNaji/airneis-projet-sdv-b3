@@ -1,4 +1,4 @@
-const { resolve } = require("node:path")
+const { resolve } = require("path")
 const { config } = require("dotenv")
 
 config()
