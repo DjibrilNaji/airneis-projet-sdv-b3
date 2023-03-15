@@ -91,6 +91,41 @@ const Order = (props) => {
                   </p>
                 </div>
               </div>
+              <div className="pt-4 border-solid border-black border-b-4 pb-4">
+                <p className="font-bold text-2xl md:text-xl pr-5">Delivery address</p>
+                {result.userDeliveryAddress.map((delAdd, index) => (
+                  <div key={index}>
+                    <p className="text-xl md:text-lg">
+                      {delAdd.firstName} {delAdd.lastName}
+                    </p>
+                    <p className="text-xl md:text-lg">{delAdd.addressFull}</p>
+                    <p className="text-xl md:text-lg">
+                      {delAdd.cp} {delAdd.city}
+                    </p>
+                    <p className="text-xl md:text-lg">{delAdd.country}</p>
+                    <p className="text-xl md:text-lg">{delAdd.phoneNumber}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="pt-4 border-solid border-black border-b-4 pb-4">
+                <p className="font-bold text-2xl md:text-xl pr-5">Billing address</p>
+                {result.userBillingAddress.map((bilAdd, index) => (
+                  <div key={index}>
+                    <p className="text-xl md:text-lg">
+                      {bilAdd.firstName} {bilAdd.lastName}
+                    </p>
+                    <p className="text-xl md:text-lg">{bilAdd.addressFull}</p>
+                    <p className="text-xl md:text-lg">
+                      {bilAdd.cp} {bilAdd.city}
+                    </p>
+                    <p className="text-xl md:text-lg">{bilAdd.country}</p>
+                    <p className="text-xl md:text-lg">{bilAdd.phoneNumber}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="pt-4">
+                <p className="font-bold text-2xl pr-5 md:text-xl">Method of payment</p>
+              </div>
             </div>
           </div>
         </div>
