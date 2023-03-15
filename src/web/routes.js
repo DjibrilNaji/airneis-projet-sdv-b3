@@ -31,6 +31,8 @@ const routes = {
     orders: {
       collection: (userId, query) =>
         createRouteWithQueryParams(`/users/${userId}/allOrdersUser`, query),
+      single: (numberOrder, query) =>
+        createRouteWithQueryParams(`/users/order/${numberOrder}`, query),
     },
   },
 }
