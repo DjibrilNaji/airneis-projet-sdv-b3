@@ -4,6 +4,7 @@ import * as yup from "yup"
 export const boolValidator = yup.bool()
 export const stringValidator = yup.string()
 export const idValidator = yup.number().integer().min(1)
+export const integerValidator = yup.number().integer().min(1)
 
 // users
 export const emailValidator = yup.string().email()
