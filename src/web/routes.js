@@ -21,6 +21,10 @@ const routes = {
     signUp: () => "/register",
     signIn: () => "/login",
     contact: () => "/contact",
+    users: {
+      validate: (email, query) =>
+        createRouteWithQueryParams(`/users/confirmation/${email}`, query),
+    },
     categoriesAndProducts: {
       collection: () => "/categories-and-products",
     },
