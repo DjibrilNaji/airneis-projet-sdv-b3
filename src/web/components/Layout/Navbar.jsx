@@ -98,12 +98,6 @@ const Navbar = () => {
       icon: <FontAwesomeIcon icon={faRightFromBracket} />,
       onClick: handleSignOut,
     },
-    {
-      href: "/admin",
-      title: "Admin",
-      icon: <FontAwesomeIcon icon={faLock} />,
-      onClick: handleIsOpenClick,
-    },
   ]
 
   const navItemsNotConnected = [
@@ -222,6 +216,21 @@ const Navbar = () => {
                   </li>
                 </Link>
               ))}
+
+              {session.user.isAdmin && (
+                <Link
+                  href={"/admin"}
+                  className="bg-white p-4 border-2 rounded-lg hover:bg-stone-200"
+                  onClick={handleIsOpenClick}
+                >
+                  <li className="w-full flex gap-3 items-center">
+                    <p className="w-4">
+                      <FontAwesomeIcon icon={faLock} />
+                    </p>
+                    <p>{"Admin"}</p>
+                  </li>
+                </Link>
+              )}
             </ul>
           </>
         ) : (
