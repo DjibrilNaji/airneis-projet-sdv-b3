@@ -27,6 +27,7 @@ const routes = {
     users: {
       single: (userId, query) =>
         createRouteWithQueryParams(`/users/${userId}/personnalData`, query),
+      update: (userId) => `/users/${userId}/personnalData`,
     },
     categoriesAndProducts: {
       collection: () => "/categories-and-products",

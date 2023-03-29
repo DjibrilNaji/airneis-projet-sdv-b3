@@ -2,6 +2,7 @@ import UserForm from "@/web/components/Auth/UserForm"
 import axios from "axios"
 import routes from "@/web/routes"
 import cookie from "cookie"
+import { useCallback, useState } from "react"
 
 export const getServerSideProps = async ({ params, req, req: { url } }) => {
   const userId = params.userId
@@ -22,6 +23,8 @@ export const getServerSideProps = async ({ params, req, req: { url } }) => {
   return {
     props: {
       user: data,
+      userId: userId,
+      token: token,
     },
   }
 }
@@ -29,7 +32,33 @@ export const getServerSideProps = async ({ params, req, req: { url } }) => {
 const MyAccount = (props) => {
   const {
     user: { result },
+    userId,
+    token,
   } = props
+
+  const [user, setUser] = useState(result)
+
+  const handleSubmit = useCallback(
+    async ({ firstName, lastName, email, userName }) => {
+      const {
+        data: { result },
+      } = await axios.patch(
+        `http://localhost:3000/api${routes.api.users.update(userId)}`,
+        {
+          firstName,
+          lastName,
+          email,
+          userName,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+
+      setUser(result)
+    },
+    [token, userId]
+  )
 
   return (
     <>
@@ -37,7 +66,7 @@ const MyAccount = (props) => {
         <h1 className="font-semibold text-2xl text-center uppercase">
           My Account
         </h1>
-        <UserForm initialValues={result} />
+        <UserForm initialValues={user} onSubmit={handleSubmit} />
       </div>
     </>
   )
