@@ -3,13 +3,13 @@ import Link from "next/link"
 import axios from "axios"
 
 export const getServerSideProps = async ({ query, req: { url } }) => {
-  const email = query.email
+  const token = query.token
   const queryUrl = Object.fromEntries(
     new URL(`http://example.com/${url}`).searchParams.entries()
   )
 
   const { data } = await axios.patch(
-    `http://localhost:3000/api${routes.api.users.validate(email, queryUrl)}`
+    `http://localhost:3000/api${routes.api.users.validate(token, queryUrl)}`
   )
 
   return {
