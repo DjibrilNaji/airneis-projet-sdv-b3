@@ -12,7 +12,7 @@ exports.seed = async function (knex) {
   const billingAddress = []
   const address = []
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 30; i++) {
     const [passwordHash, passwordSalt] = await hashPassword("Testmdp123?")
     users.push({
       id: i + 1,
