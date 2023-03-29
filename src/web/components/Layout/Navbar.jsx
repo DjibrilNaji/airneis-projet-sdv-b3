@@ -54,7 +54,10 @@ const Navbar = () => {
 
   const navItemsConnected = [
     {
-      href: "/",
+      href:
+        (session !== false) & (session !== null)
+          ? routes.users.single(session.user.id)
+          : "/",
       title: "Mes paramètres",
       icon: <FontAwesomeIcon icon={faGear} />,
       onClick: handleIsOpenClick,
