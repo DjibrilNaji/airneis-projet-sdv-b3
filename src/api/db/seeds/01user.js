@@ -14,7 +14,9 @@ exports.seed = async function (knex) {
 
   for (let i = 0; i < 30; i++) {
     const [passwordHash, passwordSalt] = await hashPassword("Testmdp123?")
-    const isAdmin = Math.random() < 0.5
+
+    const booleanRandom = Math.random() < 0.5
+
     users.push({
       id: i + 1,
       userName: faker.internet.userName(),
@@ -23,7 +25,8 @@ exports.seed = async function (knex) {
       email: faker.internet.email(),
       passwordHash: passwordHash,
       passwordSalt: passwordSalt,
-      isAdmin: isAdmin,
+      isAdmin: booleanRandom,
+      isDelete: booleanRandom,
     })
   }
   await knex("users").insert(users)
