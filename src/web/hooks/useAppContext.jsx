@@ -24,6 +24,9 @@ export const AppContextProvider = (props) => {
   const signOut = useCallback(() => {
     localStorage.removeItem(config.session.localStorageKey)
     setSession(false)
+    const date = new Date()
+    date.setDate(date.getDate() - 100)
+    document.cookie = `token=; expires=${date}; path=/;`
   }, [])
 
   useEffect(() => {
