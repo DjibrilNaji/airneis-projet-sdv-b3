@@ -2,44 +2,37 @@
 
 import Button from "@/web/components/Button"
 import Link from "@/web/components/Link"
-import { useEffect, useState } from "react"
+import routes from "@/web/routes"
+import { useEffect } from "react"
 import axios from "axios"
 
-export const getServerSideProps = ({ params }) => ({
-  props: {
-    params: {
-      trackingNumber: params.trackingNumber,
+export const getServerSideProps = async ({ params }) => {
+  const numberOrder = params.orderNumber
+
+  const { data } = await axios.get(
+    `http://localhost:3000/api${routes.api.orders.single(numberOrder)}`
+  )
+
+  return {
+    props: {
+      order: data,
+      numberOrder: numberOrder,
     },
-  },
-})
+  }
+}
 
 const Confirmation = (props) => {
-  const [OrderNumber, setOrderNumber] = useState([])
-
   const {
-    params: { trackingNumber },
+    order: { result },
+    numberOrder,
   } = props
 
-  const OrderStatus = async () => {
-    getServerSideProps({ params: `localhost:3000/users/order/` })
-    const result = await axios.get("/api/orders")
-
-    if (result.data.map((order) => order.status) === "paid") {
-      setOrderNumber(
-        result.data.find((order) => order.trackingNumber === trackingNumber)
-          .trackingNumber
-      )
-    }
-
-    console.log(
-      "Command number",
-      result.data.find((order) => order.trackingNumber === trackingNumber)
-        .trackingNumber
-    )
-  }
+  const OrderNumber = result.order.find(
+    (order) => order.numberOrder === numberOrder
+  ).numberOrder
 
   useEffect(() => {
-    OrderStatus()
+    getServerSideProps()
   })
   //Pour l'affichage comme ça vient après le paiement faut voir comment l'API de paiement intergait avec la BDD pour changer le statut de la commande
   //cette fonction est à faire également dans la page BDD
@@ -66,6 +59,7 @@ const Confirmation = (props) => {
   )
 }
 
+// seulement pour test puis à enlever car seulement quand l'utilisateur est connecté
 Confirmation.isPublic = true
 
 export default Confirmation
