@@ -1,4 +1,4 @@
-import LayoutAdmin from "@/web/components/LayoutAdmin/LayoutAdmin"
+import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
 import axios from "axios"
 import Link from "next/link"
 import { useEffect, useState } from "react"

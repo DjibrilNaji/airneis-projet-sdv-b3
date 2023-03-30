@@ -15,6 +15,9 @@ const signIn =
 
       setSession(parseSession(jwt))
       setJWT(jwt)
+      const date = new Date()
+      date.setDate(date.getDate() + 1)
+      document.cookie = `token=${jwt}; expires=${date}; path=/;`
       localStorage.setItem(config.session.localStorageKey, jwt)
 
       return [null, true]
