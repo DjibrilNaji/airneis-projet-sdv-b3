@@ -2,7 +2,7 @@ import BaseModel from "./BaseModel.js"
 import ProductModel from "./ProductModel.js"
 
 class ImageProductModel extends BaseModel {
-  static tableName = "imageProduct"
+  static tableName = "image_product"
 
   static relationMappings() {
     return {
@@ -10,7 +10,7 @@ class ImageProductModel extends BaseModel {
         relation: BaseModel.BelongsToOneRelation,
         modelClass: ProductModel,
         join: {
-          from: "imageProduct.productId",
+          from: "image_product.productId",
           to: "products.id",
         },
       },
