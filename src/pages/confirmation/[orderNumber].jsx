@@ -2,34 +2,20 @@
 
 import Button from "@/web/components/Button"
 import Link from "@/web/components/Link"
-import routes from "@/web/routes"
 import { useEffect } from "react"
-import axios from "axios"
 
 export const getServerSideProps = async ({ params }) => {
   const numberOrder = params.orderNumber
 
-  const { data } = await axios.get(
-    `http://localhost:3000/api${routes.api.orders.single(numberOrder)}`
-  )
-
   return {
     props: {
-      order: data,
       numberOrder: numberOrder,
     },
   }
 }
 
 const Confirmation = (props) => {
-  const {
-    order: { result },
-    numberOrder,
-  } = props
-
-  const OrderNumber = result.order.find(
-    (order) => order.numberOrder === numberOrder
-  ).numberOrder
+  const { numberOrder } = props
 
   useEffect(() => {
     getServerSideProps()
@@ -44,7 +30,7 @@ const Confirmation = (props) => {
       </h1>
       <div>
         <p className="flex justify-center items-center md:w-auto">
-          Votre commande a bien été enregistrée sous le numéro {OrderNumber}.
+          Votre commande a bien été enregistrée sous le numéro {numberOrder}.
         </p>
         <p className="flex justify-center items-center md:w-auto">
           Vous pouvez suivre son état depuis votre espace client.
