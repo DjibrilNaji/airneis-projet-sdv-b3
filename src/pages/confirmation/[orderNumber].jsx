@@ -2,7 +2,6 @@
 
 import Button from "@/web/components/Button"
 import Link from "@/web/components/Link"
-import { useEffect } from "react"
 
 export const getServerSideProps = async ({ params }) => {
   const numberOrder = params.orderNumber
@@ -17,9 +16,6 @@ export const getServerSideProps = async ({ params }) => {
 const Confirmation = (props) => {
   const { numberOrder } = props
 
-  useEffect(() => {
-    getServerSideProps()
-  })
   //Pour l'affichage comme ça vient après le paiement faut voir comment l'API de paiement intergait avec la BDD pour changer le statut de la commande
   //cette fonction est à faire également dans la page BDD
 
