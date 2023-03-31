@@ -14,15 +14,11 @@ const handler = mw({
     }),
     async ({
       locals: {
-        query: { limit, page, order },
+        query: { limit, page, order, sortColumn },
       },
       res,
     }) => {
       const query = UserModel.query().modify("paginate", limit, page)
-
-      if (!query) {
-        res.send({ result: "An error occurred while retrieving users" })
-      }
 
       const [countResult] = await query
         .clone()
@@ -33,7 +29,7 @@ const handler = mw({
 
       const count = Number.parseInt(countResult.count, 10)
 
-      const users = await query.orderBy("id", order)
+      const users = await query.orderBy(sortColumn, order)
 
       res.send({
         result: {
