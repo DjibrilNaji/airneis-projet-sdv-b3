@@ -14,23 +14,16 @@ const UsersAdmin = () => {
   const [data, setData] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState()
-  const [sortColumn, setSortColumn] = useState("id")
-  const [order, setOrder] = useState("asc")
 
-  const fetchData = useCallback(
-    async (page) => {
-      const limit = 10
-      const result = await axios.get(
-        `/api/users?limit=${limit}&page=${page}&sortColumn=${sortColumn}&order=${order}`
-      )
+  const fetchData = useCallback(async (page) => {
+    const limit = 10
+    const result = await axios.get(`/api/users?limit=${limit}&page=${page}`)
 
-      const totalUsers = result.data.result.meta.count
-      const totalPages = Math.ceil(totalUsers / limit)
-      setTotalPages(totalPages)
-      setData(result.data.result)
-    },
-    [order, sortColumn]
-  )
+    const totalUsers = result.data.result.meta.count
+    const totalPages = Math.ceil(totalUsers / limit)
+    setTotalPages(totalPages)
+    setData(result.data.result)
+  }, [])
 
   useEffect(() => {
     fetchData(currentPage)
@@ -42,20 +35,6 @@ const UsersAdmin = () => {
       fetchData(newPage)
     },
     [fetchData]
-  )
-
-  const handleSortChange = useCallback(
-    (column) => {
-      if (column === sortColumn) {
-        setOrder(order === "asc" ? "desc" : "asc")
-      } else {
-        setSortColumn(column)
-        setOrder("asc")
-      }
-
-      fetchData(currentPage)
-    },
-    [fetchData, currentPage, order, sortColumn]
   )
 
   const pagination = []
@@ -105,31 +84,15 @@ const UsersAdmin = () => {
         <thead className="text-xs text-left uppercase bg-gray-50 text-gray-700">
           <tr>
             <th className="py-2 px-4">Select</th>
-            <TableHeadField
-              displayName="Id"
-              handleSortChange={handleSortChange}
-              fieldName="id"
-            />
-            <TableHeadField
-              displayName="Email"
-              handleSortChange={handleSortChange}
-              fieldName="email"
-            />
-            <TableHeadField
-              displayName="Username"
-              handleSortChange={handleSortChange}
-              fieldName="userName"
-            />
+            <TableHeadField displayName="Id" />
+            <TableHeadField displayName="Email" fieldName="email" />
+            <TableHeadField displayName="Username" />
             <TableHeadField
               displayName="First name"
-              handleSortChange={handleSortChange}
-              fieldName="firstName"
               className="hidden md:table-cell"
             />
             <TableHeadField
               displayName="Last name"
-              handleSortChange={handleSortChange}
-              fieldName="lastName"
               className="hidden md:table-cell"
             />
             <th className="py-2 px-4">More</th>

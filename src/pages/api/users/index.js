@@ -14,7 +14,7 @@ const handler = mw({
     }),
     async ({
       locals: {
-        query: { limit, page, order, sortColumn },
+        query: { limit, page, order },
       },
       res,
     }) => {
@@ -33,7 +33,7 @@ const handler = mw({
 
       const count = Number.parseInt(countResult.count, 10)
 
-      const users = await query.orderBy(sortColumn, order)
+      const users = await query.orderBy("id", order)
 
       res.send({
         result: {

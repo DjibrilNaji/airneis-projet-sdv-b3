@@ -1,21 +1,7 @@
-import { faArrowDownWideShort } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import classNames from "classnames"
 
-const TableHeadField = ({
-  fieldName,
-  displayName,
-  handleSortChange,
-  className,
-}) => {
-  return (
-    <th className={classNames(className)}>
-      {displayName}
-      <button onClick={() => handleSortChange(fieldName)}>
-        <FontAwesomeIcon icon={faArrowDownWideShort} className="ml-2" />
-      </button>
-    </th>
-  )
+const TableHeadField = ({ displayName, className }) => {
+  return <th className={classNames(className)}>{displayName}</th>
 }
 
 export default TableHeadField
