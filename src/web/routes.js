@@ -28,6 +28,10 @@ const routes = {
       single: (userId, query) =>
         createRouteWithQueryParams(`/users/${userId}/personnalData`, query),
       update: (userId) => `/users/${userId}/personnalData`,
+      address: (userId, query) =>
+        createRouteWithQueryParams(`/users/${userId}/address`, query),
+      addressSingle: (userId, add) =>
+        createRouteWithQueryParams(`/users/${userId}/addressSingle?add=${add}`),
     },
     categoriesAndProducts: {
       collection: () => "/categories-and-products",
