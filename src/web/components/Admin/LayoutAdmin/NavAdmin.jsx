@@ -35,7 +35,7 @@ const NavAdmin = () => {
       icon: <UserIcon />,
     },
   ]
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
 
   const handleIsOpenClick = () => {
     setIsOpen(!isOpen)

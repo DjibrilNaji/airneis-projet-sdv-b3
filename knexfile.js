@@ -19,6 +19,13 @@ const knexfile = {
   seeds: {
     directory: resolve("src/api/db/seeds"),
   },
+  pagination: {
+    limit: {
+      min: 1,
+      max: 100,
+      default: 2,
+    },
+  },
 }
 
 module.exports = knexfile

@@ -1,3 +1,4 @@
+import knexfile from "@@/knexfile"
 import * as yup from "yup"
 
 // generic
@@ -19,7 +20,12 @@ export const passwordValidator = yup
   .label("Password")
 
 // collection (pagination, order, etc.)
-export const limitValidator = yup.number().integer().min(1).max(100).default(5)
+export const limitValidator = yup
+  .number()
+  .integer()
+  .min(knexfile.pagination.limit.min)
+  .max(knexfile.pagination.limit.max)
+  .default(knexfile.pagination.limit.default)
 
 export const pageValidator = yup.number().integer().min(1).default(1)
 
