@@ -6,7 +6,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faArrowLeft,
   faArrowRight,
+  faCheck,
   faPlus,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons"
 import TableHeadField from "@/web/components/Admin/TableHeadField"
 
@@ -95,6 +97,10 @@ const UsersAdmin = () => {
               displayName="Last name"
               className="hidden md:table-cell"
             />
+            <TableHeadField
+              displayName="Active"
+              className="hidden md:table-cell"
+            />
             <th className="py-2 px-4">More</th>
           </tr>
         </thead>
@@ -102,36 +108,44 @@ const UsersAdmin = () => {
         <tbody>
           {data.users?.map((user) => (
             <>
-              {!user.isDelete && (
-                <tr key={user.id} className="border-b text-sm border-gray-300">
-                  <td className="py-2 px-4">
-                    <input
-                      type="checkbox"
-                      className="h-5 w-5 border-2 appearance-none checked:bg-stone-500 cursor-pointer"
+              <tr key={user.id} className="border-b text-sm border-gray-300">
+                <td className="py-2 px-4">
+                  <input
+                    type="checkbox"
+                    className="h-5 w-5 border-2 appearance-none checked:bg-stone-500 cursor-pointer"
+                  />
+                </td>
+                <td className="py-2 px-4">{user.id} </td>
+                <td className="py-2 px-4">{user.email}</td>
+                <td className="py-2 px-4">{user.userName}</td>
+                <td className="py-2 px-4 hidden md:table-cell">
+                  {user.firstName}
+                </td>
+                <td className="py-2 px-4 hidden md:table-cell">
+                  {user.lastName}
+                </td>
+                <td className="py-2 px-4 hidden md:table-cell">
+                  {user.isDelete ? (
+                    <FontAwesomeIcon
+                      icon={faXmark}
+                      className="h-6 text-red-500"
                     />
-                  </td>
-                  <td className="py-2 px-4">{user.id} </td>
-                  <td className="py-2 px-4">{user.email}</td>
-                  <td className="py-2 px-4">{user.userName}</td>
-                  <td className="py-2 px-4 hidden md:table-cell">
-                    {user.firstName}
-                  </td>
-                  <td className="py-2 px-4 hidden md:table-cell">
-                    {user.lastName}
-                  </td>
-                  <td className="py-2 px-4 flex justify-center">
-                    <Link
-                      href={""}
-                      className="border-2 px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200"
-                    >
-                      <FontAwesomeIcon
-                        icon={faPlus}
-                        className="text-stone-400"
-                      />
-                    </Link>
-                  </td>
-                </tr>
-              )}
+                  ) : (
+                    <FontAwesomeIcon
+                      icon={faCheck}
+                      className="h-6 text-green-500"
+                    />
+                  )}
+                </td>
+                <td className="py-2 px-4 flex justify-center">
+                  <Link
+                    href={""}
+                    className="border-2 px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200"
+                  >
+                    <FontAwesomeIcon icon={faPlus} className="text-stone-400" />
+                  </Link>
+                </td>
+              </tr>
             </>
           ))}
         </tbody>
