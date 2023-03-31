@@ -1,5 +1,3 @@
-// Interactions à voir selon l'utilisation du module de paiement (exemple récup d'un paiement définitf)
-
 import Button from "@/web/components/Button"
 import Link from "@/web/components/Link"
 
@@ -15,9 +13,6 @@ export const getServerSideProps = async ({ params }) => {
 
 const Confirmation = (props) => {
   const { numberOrder } = props
-
-  //Pour l'affichage comme ça vient après le paiement faut voir comment l'API de paiement intergait avec la BDD pour changer le statut de la commande
-  //cette fonction est à faire également dans la page BDD
 
   return (
     <>
@@ -40,8 +35,5 @@ const Confirmation = (props) => {
     </>
   )
 }
-
-// seulement pour test puis à enlever car seulement quand l'utilisateur est connecté
-Confirmation.isPublic = true
 
 export default Confirmation
