@@ -21,11 +21,13 @@ const UsersAdmin = () => {
   const [sortColumn, setSortColumn] = useState("id")
   const [order, setOrder] = useState("asc")
   const [limit, setLimit] = useState(10)
+  const [searchTerm, setSearchTerm] = useState(null)
 
   const fetchData = useCallback(
     async (page) => {
       const result = await axios.get(
-        `/api/users?limit=${limit}&page=${page}&sortColumn=${sortColumn}&order=${order}`
+        `/api/users?limit=${limit}&page=${page}&sortColumn=${sortColumn}&order=${order}` +
+          (searchTerm === null ? "" : `&searchTerm=${searchTerm}`)
       )
 
       const totalUsers = result.data.result.meta.count
@@ -33,7 +35,7 @@ const UsersAdmin = () => {
       setTotalPages(totalPages)
       setData(result.data.result)
     },
-    [order, sortColumn, limit]
+    [order, sortColumn, limit, searchTerm]
   )
 
   useEffect(() => {
@@ -86,12 +88,12 @@ const UsersAdmin = () => {
 
   return (
     <>
-      <div className="flex w-[100%] justify-center mb-5">
+      <div className="flex w-full justify-center mb-5">
         <span className="font-extrabold text-3xl text-stone-500 uppercase">
           Users
         </span>
       </div>
-      <div className="flex w-[100%] justify-center my-3">
+      <div className="flex justify-center my-5">
         <div className="flex">
           <button
             className={
@@ -113,12 +115,12 @@ const UsersAdmin = () => {
         </div>
       </div>
 
-      <div className="flex">
+      <div className="flex items-center justify-between">
         <div className="flex gap-2 my-6">
           <span>Show</span>
           <select
-            name="user"
-            className="border-2 rounded-lg px-2  text-right"
+            name="country"
+            className="border-2 rounded-lg px-3 text-right"
             value={limit}
             onChange={handleLimitChange}
           >
@@ -130,6 +132,15 @@ const UsersAdmin = () => {
             <option value="30">30</option>
           </select>
           <span>users per page</span>
+        </div>
+        <div className="flex gap-2">
+          <input
+            type="text"
+            placeholder="Search"
+            className="border-2 border-stone-500 rounded-lg px-2 focus:outline-none"
+            value={searchTerm == null ? "" : searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
       </div>
 
@@ -164,7 +175,6 @@ const UsersAdmin = () => {
               fieldName="lastName"
               className="hidden md:table-cell"
             />
-            <th className="py-2 px-4 hidden md:table-cell">Active</th>
             <th className="py-2 px-4">More</th>
           </tr>
         </thead>
