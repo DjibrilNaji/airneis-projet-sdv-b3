@@ -175,6 +175,7 @@ const UsersAdmin = () => {
               fieldName="lastName"
               className="hidden md:table-cell"
             />
+            <th className="py-2 px-4 hidden md:table-cell">Active</th>
             <th className="py-2 px-4">More</th>
           </tr>
         </thead>
