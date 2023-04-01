@@ -1,9 +1,9 @@
 import UserForm from "@/web/components/Auth/UserForm"
-import AddressForm from "@/web/components/Auth/AddressForm"
 import axios from "axios"
 import routes from "@/web/routes"
 import cookie from "cookie"
 import { useCallback, useState } from "react"
+import TableAddress from "@/web/components/Auth/TableAddress"
 
 export const getServerSideProps = async ({ params, req, req: { url } }) => {
   const userId = params.userId
@@ -83,17 +83,12 @@ const MyAccount = (props) => {
           My Account
         </h1>
         <div className="flex flex-wrap justify-center">
-          <UserForm
-            initialValues={user}
-            onSubmit={handleSubmit}
-            hidden={seeData === "users" ? false : true}
-          />
-          <AddressForm
-            addressUser={allAddressUser}
-            token={token}
-            userId={userId}
-            hidden={seeData === "address" ? false : true}
-          />
+          <div hidden={seeData === "users" ? false : true}>
+            <UserForm initialValues={user} onSubmit={handleSubmit} />
+          </div>
+          <div hidden={seeData === "address" ? false : true}>
+            <TableAddress address={allAddressUser}></TableAddress>
+          </div>
           <select
             name="typeData"
             className="top-0 h-full border-2 border-solid rounded-lg text-xl px-4 border-black mt-4 ml-10"
