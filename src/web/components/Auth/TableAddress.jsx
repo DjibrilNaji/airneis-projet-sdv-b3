@@ -1,4 +1,5 @@
-import { faPlus } from "@fortawesome/free-solid-svg-icons"
+import routes from "@/web/routes"
+import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import classNames from "classnames"
 import Link from "next/link"
@@ -11,7 +12,6 @@ const TableAddress = (props) => {
     <table className={classNames("w-full", className)}>
       <thead className="text-xs text-left uppercase bg-gray-50 text-gray-700">
         <tr>
-          <th className="py-2 px-4">Select</th>
           <TableHeadField displayName="ID" />
           <TableHeadField displayName="First name" />
           <TableHeadField displayName="Last name" />
@@ -33,7 +33,9 @@ const TableAddress = (props) => {
             displayName="Adress Optionnal"
             className="hidden md:table-cell"
           />
-          <th className="py-2 px-4">More</th>
+          <th colSpan={2} className="py-2 px-4">
+            Update / Delete
+          </th>
         </tr>
       </thead>
 
@@ -41,12 +43,6 @@ const TableAddress = (props) => {
         {address.map((add) => (
           <>
             <tr key={add.id} className="border-b text-sm border-gray-300">
-              <td className="py-2 px-4">
-                <input
-                  type="checkbox"
-                  className="h-5 w-5 border-2 appearance-none checked:bg-stone-500 cursor-pointer"
-                />
-              </td>
               <td className="py-2 px-4">{add.id} </td>
               <td className="py-2 px-4">{add.firstName}</td>
               <td className="py-2 px-4">{add.lastName}</td>
@@ -60,12 +56,20 @@ const TableAddress = (props) => {
               <td className="py-2 px-4 hidden md:table-cell">
                 {add.addressOptionnal}
               </td>
-              <td className="py-2 px-4 flex justify-center">
+              <td className="py-2 px-4">
+                <Link
+                  href={routes.users.addressSingle(add.id)}
+                  className="border-2 px-2 py-1 rounded-full flex justify-center bg-gray-100 hover:bg-gray-200"
+                >
+                  <FontAwesomeIcon icon={faPencil} className="text-stone-400" />
+                </Link>
+              </td>
+              <td className="py-2 px-4">
                 <Link
                   href={""}
-                  className="border-2 px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200"
+                  className="border-2 px-2 py-1 rounded-full flex justify-center bg-gray-100 hover:bg-gray-200"
                 >
-                  <FontAwesomeIcon icon={faPlus} className="text-stone-400" />
+                  <FontAwesomeIcon icon={faTrash} className="text-stone-400" />
                 </Link>
               </td>
             </tr>

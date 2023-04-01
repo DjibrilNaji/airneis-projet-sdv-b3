@@ -15,6 +15,7 @@ const routes = {
   product: (idProduct) => `/products/${idProduct}`,
   users: {
     single: (userId) => `/users/${userId}/myAccount`,
+    addressSingle: (addressId) => `/users/address/${addressId}/editAddress`,
   },
   orders: {
     collection: (idUser) => `/users/${idUser}/allOrdersUser`,
@@ -30,8 +31,11 @@ const routes = {
       update: (userId) => `/users/${userId}/personnalData`,
       address: (userId, query) =>
         createRouteWithQueryParams(`/users/${userId}/address`, query),
-      addressSingle: (userId, add) =>
-        createRouteWithQueryParams(`/users/${userId}/addressSingle?add=${add}`),
+      singleAddress: (addressId, query) =>
+        createRouteWithQueryParams(
+          `/users/address/${addressId}/addressSingle`,
+          query
+        ),
     },
     categoriesAndProducts: {
       collection: () => "/categories-and-products",

@@ -79,7 +79,7 @@ const MyAccount = (props) => {
   return (
     <>
       <div className="w-full mx-auto">
-        <h1 className="font-semibold text-2xl text-center uppercase">
+        <h1 className="font-semibold text-2xl mb-10 text-center uppercase">
           My Account
         </h1>
         <div className="flex flex-wrap justify-center">
