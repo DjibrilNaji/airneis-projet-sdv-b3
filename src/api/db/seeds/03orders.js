@@ -21,6 +21,10 @@ exports.seed = async function (knex) {
       numberOrder: faker.random.alphaNumeric(10),
       status: status[faker.datatype.number({ min: 0, max: 2 })],
       createdAt: dateCreation[i],
+      price: (100 * i).toFixed(2),
+      price_formatted: ((100 * i).toFixed(2)).toString() + " €",
+      amount_tva: ((100 * i)*0.21).toFixed(2),
+      amount_tva_formatted: (((100 * i)*0.21).toFixed(2)).toString() + " €",
       userId: i < 3 ? i + 1 : i === 3 ? i : i - 3,
       addressId: i < 3 ? i + 1 : i === 3 ? i : i - 3,
     })
