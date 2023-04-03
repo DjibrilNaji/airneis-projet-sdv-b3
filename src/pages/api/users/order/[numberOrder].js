@@ -27,28 +27,15 @@ const handler = mw({
       const order = await OrderModel.query()
         .where({ numberOrder: numberOrder })
         .orderBy("createdAt")
-        .innerJoin(
-          "rel_order_product",
-          "orders.id",
-          "=",
-          "rel_order_product.orderId"
-        )
-        .innerJoin(
-          "products",
-          "products.id",
-          "=",
-          "rel_order_product.productId"
-        )
         .select(
           "orders.id",
           "orders.userId",
           "orders.addressId",
           "orders.numberOrder",
           "orders.status",
-          "orders.createdAt"
-        )
-        .sum(
-          db.raw("?? * ??", ["rel_order_product.quantity", "products.price"])
+          "orders.createdAt",
+          "orders.price_formatted",
+          "orders.amount_tva_formatted"
         )
         .groupBy(
           "orders.id",
@@ -82,7 +69,7 @@ const handler = mw({
           "products.id",
           "products.name",
           "products.description",
-          "products.price",
+          "products.price_formatted",
           "rel_order_product.quantity",
           "products.quantity as quantityProduct",
           "imageProduct.urlImage"
@@ -141,12 +128,13 @@ const handler = mw({
           "rel_order_product.orderId"
         )
         .select("orders.id")
-
+        
       if (!order) {
         res.status(401).send({ error: "No orders found" })
 
         return
       }
+      
 
       let orderId
       order.map((o) => (orderId = o.id))
@@ -156,7 +144,8 @@ const handler = mw({
         .where({ productId: productId })
         .patch({ quantity: quantity })
 
-      const priceUpdated = await OrderModel.query()
+
+      const newPrice = await OrderModel.query()
         .where({ numberOrder: numberOrder })
         .innerJoin(
           "rel_order_product",
@@ -173,6 +162,14 @@ const handler = mw({
         .sum(
           db.raw("?? * ??", ["rel_order_product.quantity", "products.price"])
         )
+
+      const priceUpdated = await OrderModel.query().updateAndFetchById(orderId, 
+        {
+          price: (newPrice[0].sum).toFixed(2), 
+          price_formatted: (newPrice[0].sum).toFixed(2).toString(), 
+          amount_tva: (newPrice[0].sum * 0.21).toFixed(2), 
+          amount_tva_formatted: (newPrice[0].sum * 0.21).toFixed(2).toString()
+        })
 
       res.send({
         result: {

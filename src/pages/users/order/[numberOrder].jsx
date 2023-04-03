@@ -49,10 +49,9 @@ const Order = (props) => {
     query,
   } = props
 
-  const tva = 0.21
-  const [total, setTotal] = useState(result.order[0].sum.toFixed(2))
+  const [total, setTotal] = useState(result.order[0].price_formatted)
   const [totalTva, setTotalTva] = useState(
-    (result.order[0].sum * tva).toFixed(2)
+    result.order[0].amount_tva_formatted
   )
 
   const debouncedFetchData = useMemo(
@@ -72,11 +71,11 @@ const Order = (props) => {
             }
           )
           setTotal(
-            Object.values(result).map((tempo) => tempo[0].sum.toFixed(2))
+            Object.values(result).map((tempo) => tempo.price_formatted)
           )
           setTotalTva(
             Object.values(result).map((tempo) =>
-              (tempo[0].sum * tva).toFixed(2)
+              tempo.amount_tva_formatted
             )
           )
         }
@@ -132,7 +131,7 @@ const Order = (props) => {
                   </div>
                   <div className="w-1/5 lg:pl-8">
                     <p className="flex place-content-center font-bold text-sm md:text-base">
-                      {product.price.toFixed(2)} €
+                      {product.price_formatted}
                     </p>
                     <div className="flex place-content-center">
                       <input
@@ -172,7 +171,7 @@ const Order = (props) => {
                 </div>
                 <div className="grow">
                   <p className="font-bold text-2xl md:text-xl text-end">
-                    {total} €
+                    {total}
                   </p>
                   <p className="font-bold text-gray-400 text-lg md:text-base text-end">
                     {totalTva}
