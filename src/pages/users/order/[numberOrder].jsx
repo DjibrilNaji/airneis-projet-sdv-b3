@@ -5,6 +5,7 @@ import debounce from "@/debounce.js"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTrash } from "@fortawesome/free-solid-svg-icons"
 import { useCallback, useMemo, useState } from "react"
+import Button from "@/web/components/Button"
 
 export const getServerSideProps = async ({ params, req: { url } }) => {
   const numberOrder = params.numberOrder
@@ -97,6 +98,21 @@ const Order = (props) => {
   fetchDataDelete(productId)
 }, [allProducts, numberOrder, query])
 
+const handleCancelOrder = useCallback(() => {
+  async function fetchDataCancel() {
+  const {
+    data: { result },
+  } = await axios.patch(
+    `http://localhost:3000/api${routes.api.orders.cancelOrder(
+      numberOrder,
+      query
+    )}`,
+  )
+  setStatus(Object.values(result).map((tempo) => tempo.status))
+}
+fetchDataCancel()
+}, [numberOrder, query])
+
   const handleChangeQuantity = useCallback(
     (event) => {
       if (event.target.value === "") {
@@ -152,14 +168,14 @@ const Order = (props) => {
                         min={1}
                         max={product.quantityProduct}
                         data-id={product.id}
-                        disabled={order.status !== "On standby" ? true : false}
+                        disabled={status !== "On standby" ? true : false}
                         onChange={handleChangeQuantity}
                         placeholder={product.quantity}
                       />
                     </div>
                     <div className="flex place-content-center">
                       <button
-                        hidden={order.status !== "On standby" ? true : false}
+                        hidden={status !== "On standby" ? true : false}
                         data-id={product.id}
                         onClick={handleDeleteClick}
                       >
@@ -232,6 +248,9 @@ const Order = (props) => {
                 <p className="font-bold text-2xl pr-5 md:text-xl">
                   Method of payment
                 </p>
+              </div>
+              <div className="pt-4" hidden={status !== "On standby" ? true : false}>
+                <Button onClick={handleCancelOrder}>Cancelled Order</Button>
               </div>
             </div>
           </div>

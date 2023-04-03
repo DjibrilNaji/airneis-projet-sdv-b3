@@ -47,6 +47,7 @@ const routes = {
       patchQuantity: (numberOrder, query) =>
         createRouteWithQueryParams(`/users/order/${numberOrder}`, query),
       deleteProductOrder: (numberOrder, query) => createRouteWithQueryParams(`/users/order/${numberOrder}`, query),
+      cancelOrder: (numberOrder, query) => createRouteWithQueryParams(`/users/order/cancel/${numberOrder}`, query),
     },
   },
 }
