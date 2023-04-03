@@ -1,6 +1,7 @@
 import axios from "axios"
 import routes from "@/web/routes"
 import Image from "next/image"
+import debounce from "@/debounce.js"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTrash } from "@fortawesome/free-solid-svg-icons"
 import { useCallback, useMemo, useState } from "react"
@@ -22,23 +23,6 @@ export const getServerSideProps = async ({ params, req: { url } }) => {
       numberOrder: numberOrder,
       query: query,
     },
-  }
-}
-
-const debounce = (func) => {
-  let timer
-
-  return function (...args) {
-    const context = this
-
-    if (timer) {
-      clearTimeout(timer)
-    }
-
-    timer = setTimeout(() => {
-      timer = null
-      func.apply(context, args)
-    }, 500)
   }
 }
 
