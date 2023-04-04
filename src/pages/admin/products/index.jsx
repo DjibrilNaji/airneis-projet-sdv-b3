@@ -27,7 +27,7 @@ const UsersAdmin = () => {
   const fetchData = useCallback(
     async (page) => {
       const result = await axios.get(
-        `http://localhost:3000/api${routes.api.admin.products()}?limit=${limit}&page=${page}&sortColumn=${sortColumn}&order=${order}` +
+        `/api${routes.api.admin.products()}?limit=${limit}&page=${page}&sortColumn=${sortColumn}&order=${order}` +
           (searchTerm === null ? "" : `&searchTerm=${searchTerm}`)
       )
 
