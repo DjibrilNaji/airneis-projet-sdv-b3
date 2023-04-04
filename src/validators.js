@@ -6,6 +6,12 @@ export const boolValidator = yup.bool()
 export const stringValidator = yup.string()
 export const idValidator = yup.number().integer().min(1)
 export const integerValidator = yup.number().integer().min(1)
+export const urlSlugValidator = yup
+  .string()
+  .matches(
+    /^[a-z]+[a-z-]*$/,
+    "The URL cannot contain any capital letters, any numbers, any special characters except '-' to separate certain words"
+  )
 
 // users
 export const emailValidator = yup.string().email()
