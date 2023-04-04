@@ -25,7 +25,6 @@ const UsersAdmin = () => {
   const [searchTerm, setSearchTerm] = useState(null)
 
   const [selectedUsers, setSelectedUsers] = useState([])
-  const [users, setUsers] = useState()
 
   const fetchData = useCallback(
     async (page) => {
@@ -36,7 +35,7 @@ const UsersAdmin = () => {
 
       const totalUsers = result.data.result.meta.count
       const totalPages = Math.ceil(totalUsers / limit)
-      setUsers(result.data.result.users)
+
       setTotalPages(totalPages)
       setData(result.data.result)
     },
