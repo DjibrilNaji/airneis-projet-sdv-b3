@@ -5,6 +5,7 @@ import Link from "next/link"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons"
 import { useEffect, useState } from "react"
+import config from "@/web/config"
 
 export const getServerSideProps = async ({ req: { url } }) => {
   const query = Object.fromEntries(
@@ -12,7 +13,7 @@ export const getServerSideProps = async ({ req: { url } }) => {
   )
 
   const { data } = await axios.get(
-    `http://localhost:3000/api${routes.api.categoriesAndProducts.collection(
+    `${config.api.baseURL}${routes.api.categoriesAndProducts.collection(
       query
     )}`
   )
