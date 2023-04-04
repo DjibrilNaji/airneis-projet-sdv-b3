@@ -1,7 +1,12 @@
 import mw from "@/api/mw.js"
 import UserModel from "@/api/db/models/UserModel.js"
 import validate from "@/api/middlewares/validate.js"
-import { limitValidator, orderValidator, pageValidator } from "@/validators.js"
+import {
+  limitValidator,
+  orderValidator,
+  pageValidator,
+  stringValidator,
+} from "@/validators.js"
 
 const handler = mw({
   GET: [
@@ -10,6 +15,7 @@ const handler = mw({
         limit: limitValidator,
         page: pageValidator,
         order: orderValidator.default("asc"),
+        sortColumn: stringValidator.default("id"),
       },
     }),
     async ({
