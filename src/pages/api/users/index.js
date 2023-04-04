@@ -14,11 +14,25 @@ const handler = mw({
     }),
     async ({
       locals: {
-        query: { limit, page, order, sortColumn },
+        query: { limit, page, order, sortColumn, searchTerm },
       },
       res,
     }) => {
-      const query = UserModel.query().modify("paginate", limit, page)
+      const searchTermModified = `%${searchTerm}%`
+
+      const query = UserModel.query()
+
+      if (searchTerm) {
+        query
+          .whereRaw("UPPER(email) LIKE ?", [searchTermModified.toUpperCase()])
+          .modify("paginate", limit, page)
+      } else {
+        query.modify("paginate", limit, page)
+      }
+
+      if (!query) {
+        res.send({ result: "An error occurred while retrieving users" })
+      }
 
       const [countResult] = await query
         .clone()
