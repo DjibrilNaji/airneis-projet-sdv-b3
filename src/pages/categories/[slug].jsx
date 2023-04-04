@@ -4,17 +4,14 @@ import Image from "next/image"
 import ListProduct from "@/web/components/ListProduct.jsx"
 import config from "@/web/config"
 
-export const getServerSideProps = async ({ params, req: { url} }) => {
-  const idCategory = params.idCategory
+export const getServerSideProps = async ({ params, req: { url } }) => {
+  const slugCategory = params.slug
   const query = Object.fromEntries(
     new URL(`http://example.com/${url}`).searchParams.entries()
   )
 
   const { data } = await axios.get(
-    `${config.api.baseURL}${routes.api.categories.single(
-      idCategory,
-      query
-    )}`
+    `${config.api.baseURL}${routes.api.categories.single(slugCategory, query)}`
   )
 
   return {
