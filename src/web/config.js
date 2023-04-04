@@ -1,6 +1,6 @@
 const config = {
   api: {
-    baseURL: "/api",
+    baseURL: process.env.BASE_URL,
   },
   session: {
     localStorageKey: "airnes-session",
