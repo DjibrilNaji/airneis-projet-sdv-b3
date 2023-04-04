@@ -23,13 +23,13 @@ const handler = mw({
         throw new NotFoundError()
       }
 
-      const userUpdated = await UserModel.query()
+      const userDeleted = await UserModel.query()
         .patch({ isDelete: true })
         .where({ id: userId })
         .returning("*")
 
       res.send({
-        result: userUpdated,
+        result: userDeleted,
       })
     },
   ],
