@@ -49,19 +49,11 @@ const UsersAdmin = () => {
 
   const handleDelete = useCallback(
     async (userId) => {
-      const filteredUsers = users.filter((user) => user.id === userId)
-
-      const confirmed = window.confirm(
-        `Êtes-vous sûr de vouloir supprimer l'utilisateur : ${filteredUsers[0].lastName} ${filteredUsers[0].firstName} ?`
-      )
-
-      if (confirmed) {
-        await axios.patch(`/api/users/${userId}`)
-        fetchData(currentPage)
-        setSelectedUsers([])
-      }
+      await axios.patch(`/api/users/${userId}`)
+      fetchData(currentPage)
+      setSelectedUsers([])
     },
-    [fetchData, currentPage, users]
+    [fetchData, currentPage]
   )
 
   const handlePageChange = useCallback(
