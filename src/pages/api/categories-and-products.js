@@ -21,6 +21,7 @@ const handler = mw({
         .select(
           "products.id",
           "products.name",
+          "products.slug",
           "products.price",
           "products.quantity",
           "products.highlander",
