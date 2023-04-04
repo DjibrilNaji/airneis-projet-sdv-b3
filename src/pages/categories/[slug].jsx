@@ -4,14 +4,14 @@ import Image from "next/image"
 import ListProduct from "@/web/components/ListProduct.jsx"
 
 export const getServerSideProps = async ({ params, req: { url } }) => {
-  const idCategory = params.idCategory
+  const slugCategory = params.slug
   const query = Object.fromEntries(
     new URL(`http://example.com/${url}`).searchParams.entries()
   )
 
   const { data } = await axios.get(
     `http://localhost:3000/api${routes.api.categories.single(
-      idCategory,
+      slugCategory,
       query
     )}`
   )
