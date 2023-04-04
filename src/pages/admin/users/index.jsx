@@ -49,7 +49,7 @@ const UsersAdmin = () => {
 
   const handleDelete = useCallback(
     async (userId) => {
-      await axios.patch(`/api/users/${userId}`)
+      await axios.patch(`/api/users/${userId}/delete`)
       fetchData(currentPage)
       setSelectedUsers([])
     },
