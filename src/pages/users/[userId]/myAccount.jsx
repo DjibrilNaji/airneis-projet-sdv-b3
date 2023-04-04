@@ -3,8 +3,9 @@ import axios from "axios"
 import routes from "@/web/routes"
 import cookie from "cookie"
 import { useCallback, useState } from "react"
+import config from "@/web/config"
 
-export const getServerSideProps = async ({ params, req, req: { url } }) => {
+export const getServerSideProps = async ({ params, req, req: { url} }) => {
   const userId = params.userId
   const { token } = cookie.parse(
     req ? req.headers.cookie || "" : document.cookie
@@ -14,7 +15,7 @@ export const getServerSideProps = async ({ params, req, req: { url } }) => {
   )
 
   const { data } = await axios.get(
-    `http://localhost:3000/api${routes.api.users.single(userId, query)}`,
+    `${config.api.baseURL}${routes.api.users.single(userId, query)}`,
     {
       headers: { Authorization: `Bearer ${token}` },
     }
@@ -43,7 +44,7 @@ const MyAccount = (props) => {
       const {
         data: { result },
       } = await axios.patch(
-        `http://localhost:3000/api${routes.api.users.update(userId)}`,
+        `${config.api.baseURL}${routes.api.users.update(userId)}`,
         {
           firstName,
           lastName,

@@ -4,6 +4,7 @@ import Image from "next/image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTrash } from "@fortawesome/free-solid-svg-icons"
 import { useCallback, useMemo, useState } from "react"
+import config from "@/web/config"
 
 export const getServerSideProps = async ({ params, req: { url } }) => {
   const numberOrder = params.numberOrder
@@ -13,7 +14,7 @@ export const getServerSideProps = async ({ params, req: { url } }) => {
   )
 
   const { data } = await axios.get(
-    `http://localhost:3000/api${routes.api.orders.single(numberOrder, query)}`
+    `${config.api.baseURL}${routes.api.orders.single(numberOrder, query)}`
   )
 
   return {
@@ -62,7 +63,7 @@ const Order = (props) => {
           const {
             data: { result },
           } = await axios.patch(
-            `http://localhost:3000/api${routes.api.orders.patchQuantity(
+            `/api${routes.api.orders.patchQuantity(
               numberOrder,
               query
             )}`,
