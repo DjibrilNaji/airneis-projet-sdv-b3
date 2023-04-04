@@ -63,7 +63,7 @@ const Order = (props) => {
           const {
             data: { result },
           } = await axios.patch(
-            `${config.api.baseURL}${routes.api.orders.patchQuantity(
+            `/api${routes.api.orders.patchQuantity(
               numberOrder,
               query
             )}`,
