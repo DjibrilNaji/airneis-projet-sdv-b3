@@ -1,9 +1,11 @@
 import axios from "axios"
 import routes from "@/web/routes"
 import Image from "next/image"
+import debounce from "@/debounce.js"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTrash } from "@fortawesome/free-solid-svg-icons"
 import { useCallback, useMemo, useState } from "react"
+import Button from "@/web/components/Button"
 import config from "@/web/config"
 
 export const getServerSideProps = async ({ params, req: { url } }) => {
@@ -26,23 +28,6 @@ export const getServerSideProps = async ({ params, req: { url } }) => {
   }
 }
 
-const debounce = (func) => {
-  let timer
-
-  return function (...args) {
-    const context = this
-
-    if (timer) {
-      clearTimeout(timer)
-    }
-
-    timer = setTimeout(() => {
-      timer = null
-      func.apply(context, args)
-    }, 500)
-  }
-}
-
 const Order = (props) => {
   const {
     order: { result },
@@ -50,11 +35,10 @@ const Order = (props) => {
     query,
   } = props
 
-  const tva = 0.21
-  const [total, setTotal] = useState(result.order[0].sum.toFixed(2))
-  const [totalTva, setTotalTva] = useState(
-    (result.order[0].sum * tva).toFixed(2)
-  )
+  const [allProducts, setProducts] = useState(result.allProductsOrder)
+  const [status, setStatus] = useState(result.order[0].status)
+  const [total, setTotal] = useState(result.order[0].price_formatted)
+  const [totalTva, setTotalTva] = useState(result.order[0].amount_tva_formatted)
 
   const debouncedFetchData = useMemo(
     () =>
@@ -63,22 +47,15 @@ const Order = (props) => {
           const {
             data: { result },
           } = await axios.patch(
-            `/api${routes.api.orders.patchQuantity(
-              numberOrder,
-              query
-            )}`,
+            `/api${routes.api.orders.patchQuantity(numberOrder, query)}`,
             {
               productId,
               quantity,
             }
           )
-          setTotal(
-            Object.values(result).map((tempo) => tempo[0].sum.toFixed(2))
-          )
+          setTotal(Object.values(result).map((tempo) => tempo.price_formatted))
           setTotalTva(
-            Object.values(result).map((tempo) =>
-              (tempo[0].sum * tva).toFixed(2)
-            )
+            Object.values(result).map((tempo) => tempo.amount_tva_formatted)
           )
         }
 
@@ -86,6 +63,45 @@ const Order = (props) => {
       }),
     [numberOrder, query]
   )
+
+  const handleDeleteClick = useCallback(
+    (event) => {
+      async function fetchDataDelete(productId) {
+        const {
+          data: { result },
+        } = await axios.delete(
+          `/api${routes.api.orders.deleteProductOrder(
+            numberOrder,
+            { productId: productId },
+            query
+          )}`
+        )
+        setProducts(
+          allProducts.filter((product) => product.id !== parseInt(productId))
+        )
+        Object.values(result).map((tempo) => setStatus(tempo.status))
+        setTotal(Object.values(result).map((tempo) => tempo.price_formatted))
+        setTotalTva(
+          Object.values(result).map((tempo) => tempo.amount_tva_formatted)
+        )
+      }
+      const productId = event.currentTarget.dataset.id
+      fetchDataDelete(productId)
+    },
+    [allProducts, numberOrder, query]
+  )
+
+  const handleCancelOrder = useCallback(() => {
+    async function fetchDataCancel() {
+      const {
+        data: { result },
+      } = await axios.patch(
+        `/api${routes.api.orders.cancelOrder(numberOrder, query)}`
+      )
+      setStatus(Object.values(result).map((tempo) => tempo.status))
+    }
+    fetchDataCancel()
+  }, [numberOrder, query])
 
   const handleChangeQuantity = useCallback(
     (event) => {
@@ -108,13 +124,12 @@ const Order = (props) => {
           <div className="h-40 flex items-center self-center justify-center">
             <span className="pl-10 md:pl-0 text-black uppercase font-bold text-2xl">
               Order #{order.numberOrder} -{" "}
-              {new Date(order.createdAt).toLocaleDateString("fr")} -{" "}
-              {order.status}
+              {new Date(order.createdAt).toLocaleDateString("fr")} - {status}
             </span>
           </div>
           <div className="grid px-2 gap-7 grid-cols-1 md:pb-10 md:grid-cols-2">
             <div className="order-1">
-              {result.allProductsOrder.map((product) => (
+              {allProducts.map((product) => (
                 <div key={product.id} className="flex pb-8 lg:pl-10">
                   <Image
                     src={product.urlImage}
@@ -133,23 +148,25 @@ const Order = (props) => {
                   </div>
                   <div className="w-1/5 lg:pl-8">
                     <p className="flex place-content-center font-bold text-sm md:text-base">
-                      {product.price.toFixed(2)} €
+                      {product.price_formatted}
                     </p>
                     <div className="flex place-content-center">
                       <input
                         type="number"
                         className="w-6 h-6 text-sm md:w-16 md:h-10 md:text-base text-center"
-                        min="1"
+                        min={1}
                         max={product.quantityProduct}
                         data-id={product.id}
-                        disabled={order.status !== "On standby" ? true : false}
+                        disabled={status !== "On standby" ? true : false}
                         onChange={handleChangeQuantity}
                         placeholder={product.quantity}
                       />
                     </div>
                     <div className="flex place-content-center">
                       <button
-                        hidden={order.status !== "On standby" ? true : false}
+                        hidden={status !== "On standby" ? true : false}
+                        data-id={product.id}
+                        onClick={handleDeleteClick}
                       >
                         <FontAwesomeIcon
                           icon={faTrash}
@@ -173,7 +190,7 @@ const Order = (props) => {
                 </div>
                 <div className="grow">
                   <p className="font-bold text-2xl md:text-xl text-end">
-                    {total} €
+                    {total}
                   </p>
                   <p className="font-bold text-gray-400 text-lg md:text-base text-end">
                     {totalTva}
@@ -220,6 +237,12 @@ const Order = (props) => {
                 <p className="font-bold text-2xl pr-5 md:text-xl">
                   Method of payment
                 </p>
+              </div>
+              <div
+                className="pt-4"
+                hidden={status !== "On standby" ? true : false}
+              >
+                <Button onClick={handleCancelOrder}>Cancelled Order</Button>
               </div>
             </div>
           </div>
