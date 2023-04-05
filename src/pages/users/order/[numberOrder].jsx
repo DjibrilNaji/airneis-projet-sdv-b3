@@ -70,7 +70,7 @@ const Order = (props) => {
         const {
           data: { result },
         } = await axios.delete(
-          `http://localhost:3000/api${routes.api.orders.deleteProductOrder(
+          `/api${routes.api.orders.deleteProductOrder(
             numberOrder,
             { productId: productId },
             query
@@ -96,10 +96,7 @@ const Order = (props) => {
       const {
         data: { result },
       } = await axios.patch(
-        `http://localhost:3000/api${routes.api.orders.cancelOrder(
-          numberOrder,
-          query
-        )}`
+        `/api${routes.api.orders.cancelOrder(numberOrder, query)}`
       )
       setStatus(Object.values(result).map((tempo) => tempo.status))
     }
