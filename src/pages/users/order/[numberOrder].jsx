@@ -79,7 +79,7 @@ const Order = (props) => {
         setProducts(
           allProducts.filter((product) => product.id !== parseInt(productId))
         )
-        setStatus(Object.values(result).map((tempo) => tempo.status))
+        Object.values(result).map((tempo) => setStatus(tempo.status))
         setTotal(Object.values(result).map((tempo) => tempo.price_formatted))
         setTotalTva(
           Object.values(result).map((tempo) => tempo.amount_tva_formatted)

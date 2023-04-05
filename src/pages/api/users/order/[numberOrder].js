@@ -128,13 +128,12 @@ const handler = mw({
           "rel_order_product.orderId"
         )
         .select("orders.id")
-        
+
       if (!order) {
         res.status(401).send({ error: "No orders found" })
 
         return
       }
-      
 
       let orderId
       order.map((o) => (orderId = o.id))
@@ -143,7 +142,6 @@ const handler = mw({
         .where({ orderId: orderId })
         .where({ productId: productId })
         .patch({ quantity: quantity })
-
 
       const newPrice = await OrderModel.query()
         .where({ numberOrder: numberOrder })
@@ -163,13 +161,15 @@ const handler = mw({
           db.raw("?? * ??", ["rel_order_product.quantity", "products.price"])
         )
 
-      const priceUpdated = await OrderModel.query().updateAndFetchById(orderId, 
+      const priceUpdated = await OrderModel.query().updateAndFetchById(
+        orderId,
         {
-          price: (newPrice[0].sum).toFixed(2), 
-          price_formatted: (newPrice[0].sum).toFixed(2).toString(), 
-          amount_tva: (newPrice[0].sum * 0.21).toFixed(2), 
-          amount_tva_formatted: (newPrice[0].sum * 0.21).toFixed(2).toString()
-        })
+          price: newPrice[0].sum.toFixed(2),
+          price_formatted: newPrice[0].sum.toFixed(2).toString(),
+          amount_tva: (newPrice[0].sum * 0.21).toFixed(2),
+          amount_tva_formatted: (newPrice[0].sum * 0.21).toFixed(2).toString(),
+        }
+      )
 
       res.send({
         result: {
@@ -182,7 +182,7 @@ const handler = mw({
     validate({
       query: {
         numberOrder: stringValidator.required(),
-        productId: idValidator.required()
+        productId: idValidator.required(),
       },
     }),
     async ({
@@ -200,13 +200,13 @@ const handler = mw({
           "=",
           "rel_order_product.orderId"
         )
-        .select("orders.id")        
-        
+        .select("orders.id")
+
       if (!order) {
         res.status(401).send({ error: "No orders found" })
 
         return
-      }      
+      }
 
       let orderId
       let priceUpdated
@@ -216,7 +216,6 @@ const handler = mw({
         .delete()
         .where({ orderId: orderId })
         .where({ productId: productId })
-
 
       const newPrice = await OrderModel.query()
         .where({ numberOrder: numberOrder })
@@ -236,23 +235,21 @@ const handler = mw({
           db.raw("?? * ??", ["rel_order_product.quantity", "products.price"])
         )
 
-      if(newPrice[0].sum === null) {
-         priceUpdated = await OrderModel.query().updateAndFetchById(orderId, 
-          {
-            price: (0).toFixed(2), 
-            price_formatted: (0).toFixed(2).toString(), 
-            amount_tva: (0).toFixed(2), 
-            amount_tva_formatted: (0).toFixed(2).toString(),
-            status: "Cancelled"
-          })
+      if (newPrice[0].sum === null) {
+        priceUpdated = await OrderModel.query().updateAndFetchById(orderId, {
+          price: (0).toFixed(2),
+          price_formatted: (0).toFixed(2).toString(),
+          amount_tva: (0).toFixed(2),
+          amount_tva_formatted: (0).toFixed(2).toString(),
+          status: "Cancelled",
+        })
       } else {
-        priceUpdated = await OrderModel.query().updateAndFetchById(orderId, 
-        {
-          price: (newPrice[0].sum).toFixed(2), 
-          price_formatted: (newPrice[0].sum).toFixed(2).toString(), 
-          amount_tva: (newPrice[0].sum * 0.21).toFixed(2), 
+        priceUpdated = await OrderModel.query().updateAndFetchById(orderId, {
+          price: newPrice[0].sum.toFixed(2),
+          price_formatted: newPrice[0].sum.toFixed(2).toString(),
+          amount_tva: (newPrice[0].sum * 0.21).toFixed(2),
           amount_tva_formatted: (newPrice[0].sum * 0.21).toFixed(2).toString(),
-          status: "On standby"
+          status: "On standby",
         })
       }
 
