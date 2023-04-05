@@ -38,9 +38,7 @@ const Order = (props) => {
   const [allProducts, setProducts] = useState(result.allProductsOrder)
   const [status, setStatus] = useState(result.order[0].status)
   const [total, setTotal] = useState(result.order[0].price_formatted)
-  const [totalTva, setTotalTva] = useState(
-    result.order[0].amount_tva_formatted
-  )
+  const [totalTva, setTotalTva] = useState(result.order[0].amount_tva_formatted)
 
   const debouncedFetchData = useMemo(
     () =>
@@ -49,22 +47,15 @@ const Order = (props) => {
           const {
             data: { result },
           } = await axios.patch(
-            `/api${routes.api.orders.patchQuantity(
-              numberOrder,
-              query
-            )}`,
+            `/api${routes.api.orders.patchQuantity(numberOrder, query)}`,
             {
               productId,
               quantity,
             }
           )
-          setTotal(
-            Object.values(result).map((tempo) => tempo.price_formatted)
-          )
+          setTotal(Object.values(result).map((tempo) => tempo.price_formatted))
           setTotalTva(
-            Object.values(result).map((tempo) =>
-              tempo.amount_tva_formatted
-            )
+            Object.values(result).map((tempo) => tempo.amount_tva_formatted)
           )
         }
 
@@ -73,46 +64,47 @@ const Order = (props) => {
     [numberOrder, query]
   )
 
-  const handleDeleteClick = useCallback( (event) => {
-    async function fetchDataDelete(productId) {
-    const {
-      data: { result },
-    } = await axios.delete(
-      `http://localhost:3000/api${routes.api.orders.deleteProductOrder(
-        numberOrder,
-        {productId: productId},
-        query
-      )}`,
-    )
-    setProducts(allProducts.filter((product) => product.id !== parseInt(productId)))
-    setStatus(Object.values(result).map((tempo) => tempo.status))
-    setTotal(
-      Object.values(result).map((tempo) => tempo.price_formatted)
-    )
-    setTotalTva(
-      Object.values(result).map((tempo) =>
-        tempo.amount_tva_formatted
-      )
-    )
-  }
-  const productId = event.currentTarget.dataset.id
-  fetchDataDelete(productId)
-}, [allProducts, numberOrder, query])
-
-const handleCancelOrder = useCallback(() => {
-  async function fetchDataCancel() {
-  const {
-    data: { result },
-  } = await axios.patch(
-    `http://localhost:3000/api${routes.api.orders.cancelOrder(
-      numberOrder,
-      query
-    )}`,
+  const handleDeleteClick = useCallback(
+    (event) => {
+      async function fetchDataDelete(productId) {
+        const {
+          data: { result },
+        } = await axios.delete(
+          `http://localhost:3000/api${routes.api.orders.deleteProductOrder(
+            numberOrder,
+            { productId: productId },
+            query
+          )}`
+        )
+        setProducts(
+          allProducts.filter((product) => product.id !== parseInt(productId))
+        )
+        setStatus(Object.values(result).map((tempo) => tempo.status))
+        setTotal(Object.values(result).map((tempo) => tempo.price_formatted))
+        setTotalTva(
+          Object.values(result).map((tempo) => tempo.amount_tva_formatted)
+        )
+      }
+      const productId = event.currentTarget.dataset.id
+      fetchDataDelete(productId)
+    },
+    [allProducts, numberOrder, query]
   )
-  setStatus(Object.values(result).map((tempo) => tempo.status))
-}
-fetchDataCancel()
-}, [numberOrder, query])
+
+  const handleCancelOrder = useCallback(() => {
+    async function fetchDataCancel() {
+      const {
+        data: { result },
+      } = await axios.patch(
+        `http://localhost:3000/api${routes.api.orders.cancelOrder(
+          numberOrder,
+          query
+        )}`
+      )
+      setStatus(Object.values(result).map((tempo) => tempo.status))
+    }
+    fetchDataCancel()
+  }, [numberOrder, query])
 
   const handleChangeQuantity = useCallback(
     (event) => {
@@ -135,8 +127,7 @@ fetchDataCancel()
           <div className="h-40 flex items-center self-center justify-center">
             <span className="pl-10 md:pl-0 text-black uppercase font-bold text-2xl">
               Order #{order.numberOrder} -{" "}
-              {new Date(order.createdAt).toLocaleDateString("fr")} -{" "}
-              {status}
+              {new Date(order.createdAt).toLocaleDateString("fr")} - {status}
             </span>
           </div>
           <div className="grid px-2 gap-7 grid-cols-1 md:pb-10 md:grid-cols-2">
@@ -250,7 +241,10 @@ fetchDataCancel()
                   Method of payment
                 </p>
               </div>
-              <div className="pt-4" hidden={status !== "On standby" ? true : false}>
+              <div
+                className="pt-4"
+                hidden={status !== "On standby" ? true : false}
+              >
                 <Button onClick={handleCancelOrder}>Cancelled Order</Button>
               </div>
             </div>
