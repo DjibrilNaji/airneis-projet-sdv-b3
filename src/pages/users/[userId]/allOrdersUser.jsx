@@ -1,6 +1,7 @@
 import axios from "axios"
 import routes from "@/web/routes"
 import ListOrders from "@/web/components/ListOrders"
+import config from "@/web/config"
 
 export const getServerSideProps = async ({ params, req: { url } }) => {
   const userId = params.userId
@@ -9,7 +10,7 @@ export const getServerSideProps = async ({ params, req: { url } }) => {
   )
 
   const { data } = await axios.get(
-    `http://localhost:3000/api${routes.api.orders.collection(userId, query)}`
+    `${config.api.baseURL}${routes.api.orders.collection(userId, query)}`
   )
 
   return {

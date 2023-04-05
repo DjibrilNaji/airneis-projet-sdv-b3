@@ -2,6 +2,7 @@ import axios from "axios"
 import routes from "@/web/routes.js"
 import Image from "next/image"
 import ListProduct from "@/web/components/ListProduct.jsx"
+import config from "@/web/config"
 
 export const getServerSideProps = async ({ params, req: { url } }) => {
   const slugCategory = params.slug
@@ -10,10 +11,7 @@ export const getServerSideProps = async ({ params, req: { url } }) => {
   )
 
   const { data } = await axios.get(
-    `http://localhost:3000/api${routes.api.categories.single(
-      slugCategory,
-      query
-    )}`
+    `${config.api.baseURL}${routes.api.categories.single(slugCategory, query)}`
   )
 
   return {
