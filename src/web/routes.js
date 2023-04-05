@@ -26,6 +26,8 @@ const routes = {
     signIn: () => "/login",
     contact: () => "/contact",
     users: {
+      validate: (token, query) =>
+        createRouteWithQueryParams(`/users/confirmation/${token}`, query),
       single: (userId, query) =>
         createRouteWithQueryParams(`/users/${userId}/personnalData`, query),
       update: (userId) => `/users/${userId}/personnalData`,
@@ -41,8 +43,8 @@ const routes = {
       collection: () => "/categories-and-products",
     },
     categories: {
-      single: (idCategory, query) =>
-        createRouteWithQueryParams(`/categories/${idCategory}`, query),
+      single: (slug, query) =>
+        createRouteWithQueryParams(`/categories/${slug}`, query),
     },
     orders: {
       collection: (userId, query) =>

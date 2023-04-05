@@ -5,8 +5,8 @@ const LayoutAdmin = ({ children }) => {
     <>
       <div className="flex">
         <NavAdmin />
-        <div className="m-5 mt-6">{children}</div>
       </div>
+      <div className="min-w-max">{children}</div>
     </>
   )
 }

@@ -40,6 +40,7 @@ exports.seed = async function (knex) {
   for (let i = 0; i < categorieName.length; i++) {
     categories.push({
       name: categorieName[i],
+      slug: faker.lorem.slug(),
       description: faker.lorem.sentence(),
       urlImage: categorieName[i].toLowerCase().replace(" ", "") + ".jpg",
     })
@@ -50,6 +51,7 @@ exports.seed = async function (knex) {
   for (let i = 0; i < 14; i++) {
     products.push({
       name: productName[i],
+      slug: faker.lorem.slug(),
       description: faker.commerce.productDescription(),
       price: faker.commerce.price(),
       quantity: faker.datatype.number(100),

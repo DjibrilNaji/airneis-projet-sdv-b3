@@ -2,6 +2,9 @@ import hashPassword from "@/api/db/hashPassword.js"
 import UserModel from "@/api/db/models/UserModel.js"
 import validate from "@/api/middlewares/validate.js"
 import mw from "@/api/mw.js"
+import sgMail from "@sendgrid/mail"
+import jsonwebtoken from "jsonwebtoken"
+import config from "@/api/config"
 import {
   stringValidator,
   emailValidator,
@@ -35,16 +38,48 @@ const handler = mw({
 
       const [passwordHash, passwordSalt] = await hashPassword(password)
 
-      await UserModel.query().insertAndFetch({
-        userName,
-        firstName,
-        lastName,
-        email,
-        passwordHash,
-        passwordSalt,
-      })
+      const newUser = await UserModel.query()
+        .insert({
+          userName,
+          firstName,
+          lastName,
+          email,
+          passwordHash,
+          passwordSalt,
+        })
+        .returning("users.firstName", "users.lastName", "users.email")
 
-      res.send({ result: true })
+      const jwt = jsonwebtoken.sign(
+        {
+          payload: {
+            user: {
+              email: newUser.email,
+            },
+          },
+        },
+        config.security.jwt.secret,
+        { expiresIn: "1 day" }
+      )
+
+      sgMail.setApiKey(process.env.KEY_SEND_GRID)
+
+      const sendGridMail = {
+        to: newUser.email,
+        from: "airnesMATD@gmail.com",
+        templateId: "d-1f800864e3ef4697812547f4734628ab",
+        dynamic_template_data: {
+          firstName: newUser.firstName,
+          lastName: newUser.lastName,
+          token: jwt,
+        },
+      }
+
+      try {
+        await sgMail.send(sendGridMail)
+        res.send({ result: true })
+      } catch {
+        res.send("OK..")
+      }
     },
   ],
 })
