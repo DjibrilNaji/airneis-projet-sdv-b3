@@ -46,7 +46,9 @@ const handler = mw({
         throw new InvalidAccessError()
       }
 
-      const address = await AddressModel.query().where({ userId: userId })
+      const address = await AddressModel.query()
+        .where({ userId: userId })
+        .where({ isDelete: false })
 
       if (!address) {
         res.status(401).send({ error: "No user found" })

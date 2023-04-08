@@ -8,10 +8,11 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import classNames from "classnames"
 import Link from "next/link"
+import Button from "../Button"
 import TableHeadField from "../TableHeadField"
 
 const TableAddress = (props) => {
-  const { address, className } = props
+  const { address, className, onClick } = props
 
   return (
     <table className={classNames("w-full", className)}>
@@ -83,12 +84,15 @@ const TableAddress = (props) => {
               </Link>
             </td>
             <td className="py-2 px-4">
-              <Link
-                href={""}
-                className="border-2 px-2 py-1 rounded-full flex justify-center bg-gray-100 hover:bg-gray-200"
+              <Button
+                variant="third"
+                color="gray"
+                size="normal"
+                data-id={add.id}
+                onClick={onClick}
               >
                 <FontAwesomeIcon icon={faTrash} className="text-stone-400" />
-              </Link>
+              </Button>
             </td>
           </tr>
         ))}
