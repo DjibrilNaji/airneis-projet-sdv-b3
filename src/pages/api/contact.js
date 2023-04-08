@@ -39,11 +39,12 @@ const handler = mw({
         limit: limitValidator,
         page: pageValidator,
         order: orderValidator.default("asc"),
+        sortColumn: stringValidator.default("id"),
       },
     }),
     async ({
       locals: {
-        query: { limit, page },
+        query: { limit, page, order, sortColumn },
       },
       res,
     }) => {
@@ -62,7 +63,9 @@ const handler = mw({
 
       const count = Number.parseInt(countResult.count, 10)
 
-      const contacts = await query.modify("paginate", limit, page)
+      const contacts = await query
+        .modify("paginate", limit, page)
+        .orderBy(sortColumn, order)
 
       res.send({
         result: {
