@@ -2,10 +2,6 @@ import OrderModel from "@/api/db/models/OrderModel"
 import validate from "@/api/middlewares/validate.js"
 import mw from "@/api/mw.js"
 import { idValidator } from "@/validators"
-import knex from "knex"
-import config from "@/api/config"
-
-const db = knex(config.db)
 
 const handler = mw({
   GET: [
@@ -29,18 +25,9 @@ const handler = mw({
           "=",
           "rel_order_product.orderId"
         )
-        .innerJoin(
-          "products",
-          "products.id",
-          "=",
-          "rel_order_product.productId"
-        )
-        .select("orders.numberOrder", "orders.status", "orders.createdAt")
+        .select("orders.numberOrder", "orders.status", "orders.createdAt", "orders.price_formatted")
         .sum("rel_order_product.quantity as quantity")
-        .sum(
-          db.raw("?? * ??", ["rel_order_product.quantity", "products.price"])
-        )
-        .groupBy("orders.numberOrder", "orders.status", "orders.createdAt")
+        .groupBy("orders.numberOrder", "orders.status", "orders.createdAt", "orders.price_formatted")
 
       if (!orders) {
         res.status(401).send({ error: "No orders found" })

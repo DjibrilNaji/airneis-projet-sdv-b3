@@ -27,7 +27,7 @@ const ListOrders = (props) => {
               </div>
               <div className="pl-6">
                 <p className="text-black font-bold">{order.status}</p>
-                <p className="text-black font-bold">{order.sum.toFixed(2)} €</p>
+                <p className="text-black font-bold">{order.price_formatted}</p>
               </div>
             </div>
           </Link>
