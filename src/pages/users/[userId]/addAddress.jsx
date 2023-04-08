@@ -3,6 +3,7 @@ import routes from "@/web/routes"
 import cookie from "cookie"
 import { useCallback } from "react"
 import AddressForm from "@/web/components/Auth/AddressForm"
+import { useRouter } from "next/router"
 
 export const getServerSideProps = async ({ params, req }) => {
   const userId = params.userId
@@ -21,6 +22,7 @@ export const getServerSideProps = async ({ params, req }) => {
 
 const EditAddress = (props) => {
   const { userId, token } = props
+  const router = useRouter()
 
   const handleSubmit = useCallback(
     async ({
@@ -51,8 +53,9 @@ const EditAddress = (props) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       )
+      router.push(routes.users.single(userId))
     },
-    [token, userId]
+    [router, token, userId]
   )
 
   return (
@@ -62,7 +65,7 @@ const EditAddress = (props) => {
           My Address
         </h1>
         <div className="flex flex-wrap justify-center">
-          <AddressForm onSubmit={handleSubmit} />
+          <AddressForm onSubmit={handleSubmit} userId={userId} />
         </div>
       </div>
     </>

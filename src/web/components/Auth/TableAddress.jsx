@@ -63,7 +63,7 @@ const TableAddress = (props) => {
               {add.phoneNumber}
             </td>
             <td className="py-2 px-4 hidden md:table-cell">
-              {add.addressOptionnal}
+              {add.addressOptional}
             </td>
             <td className="py-2 px-4">
               {!add.address_default ? (
@@ -83,7 +83,10 @@ const TableAddress = (props) => {
                 <FontAwesomeIcon icon={faPencil} className="text-stone-400" />
               </Link>
             </td>
-            <td className="py-2 px-4">
+            <td
+              className="py-2 px-4"
+              hidden={add.address_default === true ? true : false}
+            >
               <Button
                 variant="third"
                 color="gray"

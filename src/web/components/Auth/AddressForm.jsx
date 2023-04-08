@@ -4,6 +4,9 @@ import * as yup from "yup"
 import { faPerson } from "@fortawesome/free-solid-svg-icons"
 import FormError from "../FormError.jsx"
 import SubmitButton from "../SubmitButton.jsx"
+import routes from "@/web/routes.js"
+import Link from "next/link.js"
+import Button from "../Button.jsx"
 
 const defaultInitialValues = {
   firstName: "",
@@ -28,7 +31,12 @@ const defaultValidationSchema = yup.object().shape({
   city: yup.string().required().label("city"),
   cp: yup.number().integer().required().label("cp"),
   country: yup.string().required().label("country"),
-  phoneNumber: yup.string().required().label("phoneNumber"),
+  phoneNumber: yup
+    .string()
+    .required()
+    .label("phoneNumber")
+    .matches(/[0-9]/)
+    .max(10),
   address_default: yup.boolean().label("address default"),
 })
 
@@ -37,6 +45,7 @@ const AddressForm = (props) => {
     onSubmit,
     validationSchema = defaultValidationSchema,
     initialValues = defaultInitialValues,
+    userId,
     error,
   } = props
 
@@ -71,11 +80,6 @@ const AddressForm = (props) => {
             name="addressOptional"
             type="text"
             label="addressOptional"
-            value={
-              initialValues.addressOptional === null
-                ? ""
-                : initialValues.addressOptional
-            }
             icon={faPerson}
           />
           <FormField name="city" type="text" label="city" icon={faPerson} />
@@ -97,7 +101,12 @@ const AddressForm = (props) => {
             Address default
             <Field name="address_default" type="checkbox" />
           </label>
-          <SubmitButton>Update</SubmitButton>
+          <div className="flex">
+            <SubmitButton className="mr-2">Update</SubmitButton>
+            <Link href={routes.users.single(userId)}>
+              <Button>Back</Button>
+            </Link>
+          </div>
         </Form>
       </>
     </Formik>

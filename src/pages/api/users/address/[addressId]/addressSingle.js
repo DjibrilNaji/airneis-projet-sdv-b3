@@ -123,12 +123,16 @@ const handler = mw({
 
       const addressDefault = await AddressModel.query()
         .where({ userId: address.userId })
+        .where("id", "!=", addressId)
         .where({ address_default: true })
+        .where({ isDelete: false })
 
-      if (addressDefault && address_default === true) {
+      if (addressDefault.length !== 0 && address_default === true) {
         await AddressModel.query()
           .patch({ address_default: false })
           .where({ id: addressDefault[0].id })
+      } else if (addressDefault.length === 0) {
+        address_default = true
       }
 
       const updateAddress = await AddressModel.query().updateAndFetchById(
@@ -142,7 +146,9 @@ const handler = mw({
           ...(cp ? { cp } : {}),
           ...(country ? { country } : {}),
           ...(phoneNumber ? { phoneNumber } : {}),
-          ...(address_default ? { address_default } : {}),
+          ...(address_default
+            ? { address_default }
+            : { address_default: false }),
         }
       )
 
@@ -182,7 +188,13 @@ const handler = mw({
       const address = await AddressModel.query().findById(addressId)
 
       if (!address) {
-        res.status(401).send({ error: "No user found" })
+        res.status(401).send({ error: "No address found" })
+
+        return
+      }
+
+      if (address.address_default === true) {
+        res.status(401).send({ error: "You can't delete your default address" })
 
         return
       }

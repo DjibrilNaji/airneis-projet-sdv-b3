@@ -118,11 +118,14 @@ const handler = mw({
       const addressDefault = await AddressModel.query()
         .where({ userId: userId })
         .where({ address_default: true })
+        .where({ isDelete: false })
 
-      if (addressDefault && address_default === true) {
+      if (addressDefault.length !== 0 && address_default === true) {
         await AddressModel.query()
           .patch({ address_default: false })
           .where({ id: addressDefault[0].id })
+      } else if (addressDefault.length === 0) {
+        address_default = true
       }
 
       await AddressModel.query().insert({

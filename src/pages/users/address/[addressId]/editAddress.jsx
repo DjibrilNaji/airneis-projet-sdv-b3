@@ -85,7 +85,11 @@ const EditAddress = (props) => {
           My Address
         </h1>
         <div className="flex flex-wrap justify-center">
-          <AddressForm initialValues={address} onSubmit={handleSubmit} />
+          <AddressForm
+            initialValues={address}
+            onSubmit={handleSubmit}
+            userId={address.userId}
+          />
         </div>
       </div>
     </>
