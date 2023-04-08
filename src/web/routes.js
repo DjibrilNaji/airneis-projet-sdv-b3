@@ -25,7 +25,8 @@ const routes = {
     signIn: () => "/login",
     contact: () => "/contact",
     admin: {
-      products: () => "/admin/products"
+      products: () => "/admin/products",
+      categories: () => "/admin/categories",
     },
     users: {
       validate: (token, query) =>
@@ -33,7 +34,6 @@ const routes = {
       single: (userId, query) =>
         createRouteWithQueryParams(`/users/${userId}/personnalData`, query),
       update: (userId) => `/users/${userId}/personnalData`,
-
     },
     categoriesAndProducts: {
       collection: () => "/categories-and-products",
@@ -49,8 +49,10 @@ const routes = {
         createRouteWithQueryParams(`/users/order/${numberOrder}`, query),
       patchQuantity: (numberOrder, query) =>
         createRouteWithQueryParams(`/users/order/${numberOrder}`, query),
-      deleteProductOrder: (numberOrder, query) => createRouteWithQueryParams(`/users/order/${numberOrder}`, query),
-      cancelOrder: (numberOrder, query) => createRouteWithQueryParams(`/users/order/cancel/${numberOrder}`, query),
+      deleteProductOrder: (numberOrder, query) =>
+        createRouteWithQueryParams(`/users/order/${numberOrder}`, query),
+      cancelOrder: (numberOrder, query) =>
+        createRouteWithQueryParams(`/users/order/cancel/${numberOrder}`, query),
     },
   },
 }
