@@ -1,5 +1,5 @@
 import FormField from "@/web/components/FormField.jsx"
-import { Form, Formik } from "formik"
+import { Form, Formik, Field } from "formik"
 import * as yup from "yup"
 import { faPerson } from "@fortawesome/free-solid-svg-icons"
 import FormError from "../FormError.jsx"
@@ -14,6 +14,7 @@ const defaultInitialValues = {
   cp: "",
   country: "",
   phoneNumber: "",
+  address_default: false,
 }
 
 const defaultValidationSchema = yup.object().shape({
@@ -23,11 +24,12 @@ const defaultValidationSchema = yup.object().shape({
     .label("firstname"),
   lastName: yup.string().required("Le nom est obligatoire").label("lastname"),
   addressFull: yup.string().required().label("addressFull"),
-  addressOptional: yup.string().label("addressOptional"),
+  addressOptional: yup.string().label("addressOptional").nullable(),
   city: yup.string().required().label("city"),
   cp: yup.number().integer().required().label("cp"),
   country: yup.string().required().label("country"),
   phoneNumber: yup.string().required().label("phoneNumber"),
+  address_default: yup.boolean().label("address default"),
 })
 
 const AddressForm = (props) => {
@@ -90,6 +92,11 @@ const AddressForm = (props) => {
             label="phoneNumber"
             icon={faPerson}
           />
+          <label className="flex flex-col gap-2">
+            {" "}
+            Address default
+            <Field name="address_default" type="checkbox" />
+          </label>
           <SubmitButton>Update</SubmitButton>
         </Form>
       </>

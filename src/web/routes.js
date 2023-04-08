@@ -26,7 +26,7 @@ const routes = {
     signIn: () => "/login",
     contact: () => "/contact",
     admin: {
-      products: () => "/admin/products"
+      products: () => "/admin/products",
     },
     users: {
       validate: (token, query) =>
@@ -56,8 +56,10 @@ const routes = {
         createRouteWithQueryParams(`/users/order/${numberOrder}`, query),
       patchQuantity: (numberOrder, query) =>
         createRouteWithQueryParams(`/users/order/${numberOrder}`, query),
-      deleteProductOrder: (numberOrder, query) => createRouteWithQueryParams(`/users/order/${numberOrder}`, query),
-      cancelOrder: (numberOrder, query) => createRouteWithQueryParams(`/users/order/cancel/${numberOrder}`, query),
+      deleteProductOrder: (numberOrder, query) =>
+        createRouteWithQueryParams(`/users/order/${numberOrder}`, query),
+      cancelOrder: (numberOrder, query) =>
+        createRouteWithQueryParams(`/users/order/cancel/${numberOrder}`, query),
     },
   },
 }

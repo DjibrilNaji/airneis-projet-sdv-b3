@@ -1,5 +1,10 @@
 import routes from "@/web/routes"
-import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons"
+import {
+  faCheck,
+  faPencil,
+  faTrash,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import classNames from "classnames"
 import Link from "next/link"
@@ -33,6 +38,10 @@ const TableAddress = (props) => {
             displayName="Adress Optionnal"
             className="hidden md:table-cell"
           />
+          <TableHeadField
+            displayName="Adress Default"
+            className="hidden md:table-cell"
+          />
           <th colSpan={2} className="py-2 px-4">
             Update / Delete
           </th>
@@ -41,39 +50,47 @@ const TableAddress = (props) => {
 
       <tbody>
         {address.map((add) => (
-          <>
-            <tr key={add.id} className="border-b text-sm border-gray-300">
-              <td className="py-2 px-4">{add.id} </td>
-              <td className="py-2 px-4">{add.firstName}</td>
-              <td className="py-2 px-4">{add.lastName}</td>
-              <td className="py-2 px-4">{add.addressFull}</td>
-              <td className="py-2 px-4">{add.city}</td>
-              <td className="py-2 px-4 hidden md:table-cell">{add.cp}</td>
-              <td className="py-2 px-4 hidden md:table-cell">{add.country}</td>
-              <td className="py-2 px-4 hidden md:table-cell">
-                {add.phoneNumber}
-              </td>
-              <td className="py-2 px-4 hidden md:table-cell">
-                {add.addressOptionnal}
-              </td>
-              <td className="py-2 px-4">
-                <Link
-                  href={routes.users.addressSingle(add.id)}
-                  className="border-2 px-2 py-1 rounded-full flex justify-center bg-gray-100 hover:bg-gray-200"
-                >
-                  <FontAwesomeIcon icon={faPencil} className="text-stone-400" />
-                </Link>
-              </td>
-              <td className="py-2 px-4">
-                <Link
-                  href={""}
-                  className="border-2 px-2 py-1 rounded-full flex justify-center bg-gray-100 hover:bg-gray-200"
-                >
-                  <FontAwesomeIcon icon={faTrash} className="text-stone-400" />
-                </Link>
-              </td>
-            </tr>
-          </>
+          <tr key={add.id} className="border-b text-sm border-gray-300">
+            <td className="py-2 px-4">{add.id} </td>
+            <td className="py-2 px-4">{add.firstName}</td>
+            <td className="py-2 px-4">{add.lastName}</td>
+            <td className="py-2 px-4">{add.addressFull}</td>
+            <td className="py-2 px-4">{add.city}</td>
+            <td className="py-2 px-4 hidden md:table-cell">{add.cp}</td>
+            <td className="py-2 px-4 hidden md:table-cell">{add.country}</td>
+            <td className="py-2 px-4 hidden md:table-cell">
+              {add.phoneNumber}
+            </td>
+            <td className="py-2 px-4 hidden md:table-cell">
+              {add.addressOptionnal}
+            </td>
+            <td className="py-2 px-4">
+              {!add.address_default ? (
+                <FontAwesomeIcon icon={faXmark} className="h-6 text-red-500" />
+              ) : (
+                <FontAwesomeIcon
+                  icon={faCheck}
+                  className="h-6 text-green-500"
+                />
+              )}
+            </td>
+            <td className="py-2 px-4">
+              <Link
+                href={routes.users.addressSingle(add.id)}
+                className="border-2 px-2 py-1 rounded-full flex justify-center bg-gray-100 hover:bg-gray-200"
+              >
+                <FontAwesomeIcon icon={faPencil} className="text-stone-400" />
+              </Link>
+            </td>
+            <td className="py-2 px-4">
+              <Link
+                href={""}
+                className="border-2 px-2 py-1 rounded-full flex justify-center bg-gray-100 hover:bg-gray-200"
+              >
+                <FontAwesomeIcon icon={faTrash} className="text-stone-400" />
+              </Link>
+            </td>
+          </tr>
         ))}
       </tbody>
     </table>

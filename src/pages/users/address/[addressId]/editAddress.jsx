@@ -42,14 +42,31 @@ const EditAddress = (props) => {
   const [address, setAddress] = useState(result)
 
   const handleSubmit = useCallback(
-    async ({ firstName, lastName }) => {
+    async ({
+      firstName,
+      lastName,
+      addressFull,
+      addressOptional,
+      country,
+      city,
+      cp,
+      phoneNumber,
+      address_default,
+    }) => {
       const {
         data: { result },
       } = await axios.patch(
-        `http://localhost:3000/api${routes.api.users.updateAddress(addressId)}`,
+        `http://localhost:3000/api${routes.api.users.singleAddress(addressId)}`,
         {
           firstName,
           lastName,
+          addressFull,
+          addressOptional,
+          country,
+          city,
+          cp,
+          phoneNumber,
+          address_default,
         },
         {
           headers: { Authorization: `Bearer ${token}` },
