@@ -18,11 +18,13 @@ const ContactAdmin = () => {
   const [sortColumn, setSortColumn] = useState("id")
   const [order, setOrder] = useState("asc")
   const [limit, setLimit] = useState(10)
+  const [searchTerm, setSearchTerm] = useState(null)
 
   const fetchData = useCallback(
     async (page) => {
       const result = await axios.get(
-        `/api/contact?limit=${limit}&page=${page}&sortColumn=${sortColumn}&order=${order}`
+        `/api/contact?limit=${limit}&page=${page}&sortColumn=${sortColumn}&order=${order}` +
+          (searchTerm === null ? "" : `&searchTerm=${searchTerm}`)
       )
 
       const totalMessages = result.data.result.meta.count
@@ -31,7 +33,7 @@ const ContactAdmin = () => {
       setTotalPages(totalPages)
       setData(result.data.result)
     },
-    [order, limit, sortColumn]
+    [order, limit, sortColumn, searchTerm]
   )
 
   useEffect(() => {
@@ -129,6 +131,15 @@ const ContactAdmin = () => {
             <option value="30">30</option>
           </select>
           <span>users per page</span>
+        </div>
+        <div className="mx-1">
+          <input
+            type="text"
+            placeholder="Search"
+            className="border-2 border-stone-500 rounded-lg px-2 focus:outline-none"
+            value={searchTerm == null ? "" : searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
       </div>
 
