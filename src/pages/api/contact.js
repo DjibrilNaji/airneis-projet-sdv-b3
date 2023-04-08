@@ -44,14 +44,24 @@ const handler = mw({
     }),
     async ({
       locals: {
-        query: { limit, page, order, sortColumn },
+        query: { limit, page, order, sortColumn, searchTerm },
       },
       res,
     }) => {
+      const searchTermModified = `%${searchTerm}%`
+
       const query = ContactModel.query()
 
+      if (searchTerm) {
+        query
+          .whereRaw("UPPER(email) LIKE ?", [searchTermModified.toUpperCase()])
+          .modify("paginate", limit, page)
+      } else {
+        query.modify("paginate", limit, page)
+      }
+
       if (!query) {
-        res.send({ result: "An error occurred while retrieving users" })
+        res.send({ result: "An error occurred while retrieving contacts" })
       }
 
       const [countResult] = await query
@@ -63,9 +73,7 @@ const handler = mw({
 
       const count = Number.parseInt(countResult.count, 10)
 
-      const contacts = await query
-        .modify("paginate", limit, page)
-        .orderBy(sortColumn, order)
+      const contacts = await query.orderBy(sortColumn, order)
 
       res.send({
         result: {
