@@ -1,12 +1,11 @@
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
 import axios from "axios"
-import Link from "next/link"
 import { useCallback, useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faArrowLeft,
   faArrowRight,
-  faPlus,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons"
 import TableHeadField from "@/web/components/Admin/TableHeadField"
 
@@ -19,6 +18,8 @@ const ContactAdmin = () => {
   const [order, setOrder] = useState("asc")
   const [limit, setLimit] = useState(10)
   const [searchTerm, setSearchTerm] = useState(null)
+
+  const [selectedContacts, setSelectedContacts] = useState([])
 
   const fetchData = useCallback(
     async (page) => {
@@ -39,6 +40,15 @@ const ContactAdmin = () => {
   useEffect(() => {
     fetchData(currentPage)
   }, [currentPage, fetchData])
+
+  const handleDelete = useCallback(
+    async (contactId) => {
+      await axios.delete(`/api/contact?contactId=${contactId}`)
+      fetchData(currentPage)
+      setSelectedContacts([])
+    },
+    [fetchData, currentPage]
+  )
 
   const handlePageChange = useCallback(
     (newPage) => {
@@ -69,6 +79,17 @@ const ContactAdmin = () => {
       fetchData(currentPage)
     },
     [fetchData, currentPage, order, sortColumn]
+  )
+
+  const handleSelectItem = useCallback(
+    (userId) => {
+      if (selectedContacts.includes(userId)) {
+        setSelectedContacts(selectedContacts.filter((id) => id !== userId))
+      } else {
+        setSelectedContacts([...selectedContacts, userId])
+      }
+    },
+    [selectedContacts]
   )
 
   const pagination = []
@@ -130,7 +151,7 @@ const ContactAdmin = () => {
             <option value="25">25</option>
             <option value="30">30</option>
           </select>
-          <span>users per page</span>
+          <span>messages per page</span>
         </div>
         <div className="mx-1">
           <input
@@ -158,7 +179,7 @@ const ContactAdmin = () => {
               fieldName="email"
             />
             <th className="py-2 px-4">Message</th>
-            <th className="py-2 px-4">More</th>
+            <th className="py-2 px-1">Actions</th>
           </tr>
         </thead>
 
@@ -169,24 +190,37 @@ const ContactAdmin = () => {
                 <input
                   type="checkbox"
                   className="h-5 w-5 border-2 appearance-none checked:bg-stone-500 cursor-pointer disabled:cursor-not-allowed"
+                  disabled={message.isDelete}
+                  checked={selectedContacts.includes(message.id)}
+                  onChange={() => handleSelectItem(message.id)}
                 />
               </td>
               <td className="py-2 px-4">{message.id} </td>
               <td className="py-2 px-4">{message.email}</td>
               <td className="py-2 px-4">{message.message}</td>
-
-              <td className="py-2 px-4 flex">
-                <Link
-                  href={""}
-                  className="border-2 px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200"
+              <td className="text-center">
+                <button
+                  className="disabled:opacity-30 disabled:cursor-not-allowed"
+                  onClick={() => handleDelete(message.id)}
                 >
-                  <FontAwesomeIcon icon={faPlus} className="text-stone-400" />
-                </Link>
+                  <FontAwesomeIcon
+                    icon={faTrash}
+                    className="text-stone-400 h-5"
+                  />
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      <button
+        className="border-2 rounded-lg mx-3 my-4 p-2 bg-red-500 text-white disabled:cursor-not-allowed disabled:bg-red-200"
+        onClick={() => selectedContacts.map((id) => handleDelete(id))}
+        disabled={selectedContacts.length === 0}
+      >
+        Supprimer tous les messages séléctionnés
+      </button>
     </>
   )
 }

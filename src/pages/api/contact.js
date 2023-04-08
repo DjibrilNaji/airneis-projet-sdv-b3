@@ -1,4 +1,5 @@
 import ContactModel from "@/api/db/models/ContactModel"
+import { NotFoundError } from "@/api/errors"
 import validate from "@/api/middlewares/validate.js"
 import mw from "@/api/mw.js"
 import {
@@ -7,6 +8,7 @@ import {
   limitValidator,
   pageValidator,
   orderValidator,
+  idValidator,
 } from "@/validators.js"
 
 const handler = mw({
@@ -82,6 +84,34 @@ const handler = mw({
             count,
           },
         },
+      })
+    },
+  ],
+  DELETE: [
+    validate({
+      query: {
+        contactId: idValidator.required(),
+      },
+    }),
+    async ({
+      locals: {
+        query: { contactId },
+      },
+      res,
+    }) => {
+      const contact = ContactModel.query().findById(contactId)
+
+      if (!contact) {
+        throw new NotFoundError()
+      }
+
+      const contactDeleted = await ContactModel.query()
+        .delete()
+        .where({ id: contactId })
+        .returning("*")
+
+      res.send({
+        result: contactDeleted,
       })
     },
   ],
