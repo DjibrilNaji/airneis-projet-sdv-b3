@@ -5,6 +5,8 @@ import cookie from "cookie"
 import { useCallback, useState } from "react"
 import TableAddress from "@/web/components/Auth/TableAddress"
 import config from "@/web/config"
+import Link from "next/link"
+import Button from "@/web/components/Button"
 
 export const getServerSideProps = async ({ params, req, req: { url } }) => {
   const userId = params.userId
@@ -89,6 +91,9 @@ const MyAccount = (props) => {
           </div>
           <div hidden={seeData === "address" ? false : true}>
             <TableAddress address={allAddressUser}></TableAddress>
+            <Link href={routes.users.addAddress(userId)}>
+              <Button className="my-5">Add address delivery</Button>
+            </Link>
           </div>
           <select
             name="typeData"

@@ -16,6 +16,7 @@ const routes = {
   users: {
     single: (userId) => `/users/${userId}/myAccount`,
     addressSingle: (addressId) => `/users/address/${addressId}/editAddress`,
+    addAddress: (userId) => `/users/${userId}/addAddress`,
   },
   orders: {
     collection: (idUser) => `/users/${idUser}/allOrdersUser`,
@@ -41,6 +42,7 @@ const routes = {
           `/users/address/${addressId}/addressSingle`,
           query
         ),
+      addAddress: (userId) => `/users/${userId}/address`,
     },
     categoriesAndProducts: {
       collection: () => "/categories-and-products",
