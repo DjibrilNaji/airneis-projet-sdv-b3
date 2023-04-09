@@ -5,7 +5,7 @@ import UserModel from "@/api/db/models/UserModel"
 import { NotFoundError } from "@/api/errors"
 import validate from "@/api/middlewares/validate.js"
 import mw from "@/api/mw.js"
-import { idValidator } from "@/validators"
+import { emailValidator, idValidator, stringValidator } from "@/validators"
 
 const handler = mw({
   GET: [
@@ -63,6 +63,44 @@ const handler = mw({
       }
 
       res.send({ result: { user, billingAddress, address, order } })
+    },
+  ],
+
+  PATCH: [
+    validate({
+      query: {
+        userId: idValidator.required(),
+      },
+      body: {
+        firstName: stringValidator,
+        lastName: stringValidator,
+        userName: stringValidator,
+        email: emailValidator,
+      },
+    }),
+    async ({
+      locals: {
+        query: { userId },
+        body: { firstName, lastName, userName, email },
+      },
+      res,
+    }) => {
+      const user = await UserModel.query().findById(userId)
+
+      if (!user) {
+        res.status(401).send({ error: "No user found" })
+
+        return
+      }
+
+      const updateUser = await UserModel.query().updateAndFetchById(userId, {
+        ...(firstName ? { firstName } : {}),
+        ...(lastName ? { lastName } : {}),
+        ...(email ? { email } : {}),
+        ...(userName ? { userName } : {}),
+      })
+
+      res.send({ result: updateUser })
     },
   ],
 })

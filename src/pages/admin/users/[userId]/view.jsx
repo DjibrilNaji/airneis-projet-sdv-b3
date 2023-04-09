@@ -11,7 +11,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import axios from "axios"
 import { useRouter } from "next/router"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 
 export const getServerSideProps = async ({ params, req: { url } }) => {
   const userId = params.userId
@@ -34,11 +34,33 @@ export const getServerSideProps = async ({ params, req: { url } }) => {
 const ViewUser = (props) => {
   const {
     userInfo: { result },
+    userId,
   } = props
 
   const router = useRouter()
   const [toggleUpdateUser, setToggleUpdateUser] = useState(true)
-  const [user] = useState(result.user[0])
+  const [user, setUser] = useState(result.user[0])
+
+  const handleSubmit = useCallback(
+    async ({ firstName, lastName, email, userName }) => {
+      const {
+        data: { result },
+      } = await axios.patch(
+        `${config.api.baseApiURL}${routes.api.admin.users.update(userId)}`,
+        {
+          userName,
+          firstName,
+          lastName,
+          email,
+        }
+      )
+
+      setUser(result)
+      setToggleUpdateUser(!toggleUpdateUser)
+    },
+
+    [userId, toggleUpdateUser]
+  )
 
   return (
     <div>
@@ -65,25 +87,29 @@ const ViewUser = (props) => {
             )}
           </div>
 
-          {toggleUpdateUser ? (
+          {!result.user[0].isDelete && (
             <button
               className="flex justify-end text-stone-500 font-bold text-lg rounded"
               onClick={() => setToggleUpdateUser(!toggleUpdateUser)}
-              title="Modifier l'utilisateur"
+              title={
+                toggleUpdateUser
+                  ? "Modifier l'utilisateur"
+                  : "Finir les modifications"
+              }
             >
-              <FontAwesomeIcon icon={faEdit} className="h-7" />
-            </button>
-          ) : (
-            <button
-              className="flex justify-end text-stone-500 font-bold text-lg rounded"
-              onClick={() => setToggleUpdateUser(!toggleUpdateUser)}
-              title="Finir les modifications"
-            >
-              <FontAwesomeIcon icon={faCheck} className="h-7" />
+              <FontAwesomeIcon
+                icon={toggleUpdateUser ? faEdit : faCheck}
+                className="h-7"
+              />
             </button>
           )}
         </div>
-        <UserForm initialValues={user} active={toggleUpdateUser} />
+
+        <UserForm
+          initialValues={user}
+          onSubmit={handleSubmit}
+          active={toggleUpdateUser}
+        />
       </div>
     </div>
   )
