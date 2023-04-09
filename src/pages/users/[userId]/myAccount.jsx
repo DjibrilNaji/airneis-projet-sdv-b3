@@ -84,7 +84,7 @@ const MyAccount = (props) => {
       const {
         data: { result },
       } = await axios.delete(
-        `${config.api.baseApiURL}${routes.api.users.singleAddress(
+        `${config.api.baseApiURL}${routes.api.users.address.single(
           parseInt(event.currentTarget.dataset.id)
         )}`,
         {
