@@ -11,7 +11,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import axios from "axios"
 import { useRouter } from "next/router"
-import { useCallback, useState } from "react"
+import { useState } from "react"
 
 export const getServerSideProps = async ({ params, req: { url } }) => {
   const userId = params.userId
@@ -34,31 +34,11 @@ export const getServerSideProps = async ({ params, req: { url } }) => {
 const ViewUser = (props) => {
   const {
     userInfo: { result },
-    userId,
   } = props
 
   const router = useRouter()
   const [toggleUpdateUser, setToggleUpdateUser] = useState(true)
-  const [user, setUser] = useState(result.user[0])
-
-  const handleSubmit = useCallback(
-    async ({ firstName, lastName, email, userName }) => {
-      const {
-        data: { result },
-      } = await axios.patch(
-        `${config.api.baseApiURL}${routes.api.admin.users.update(userId)}`,
-        {
-          userName,
-          firstName,
-          lastName,
-          email,
-        }
-      )
-
-      setUser(result)
-    },
-    [userId]
-  )
+  const [user] = useState(result.user[0])
 
   return (
     <div>
@@ -103,11 +83,7 @@ const ViewUser = (props) => {
             </button>
           )}
         </div>
-        <UserForm
-          initialValues={user}
-          onSubmit={handleSubmit}
-          active={toggleUpdateUser}
-        />
+        <UserForm initialValues={user} active={toggleUpdateUser} />
       </div>
     </div>
   )
