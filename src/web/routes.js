@@ -13,6 +13,11 @@ const routes = {
   signUp: () => "/register",
   signIn: () => "/login",
   product: (idProduct) => `/products/${idProduct}`,
+  admin: {
+    users: {
+      single: (userId) => `/admin/users/${userId}/view`,
+    },
+  },
   users: {
     single: (userId) => `/users/${userId}/myAccount`,
     addressSingle: (addressId) => `/users/address/${addressId}/editAddress`,

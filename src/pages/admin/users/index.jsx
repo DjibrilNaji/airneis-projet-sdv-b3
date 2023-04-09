@@ -7,12 +7,12 @@ import {
   faArrowLeft,
   faArrowRight,
   faCheck,
-  faPenToSquare,
   faPlus,
   faTrash,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons"
 import TableHeadField from "@/web/components/Admin/TableHeadField"
+import routes from "@/web/routes"
 
 const UsersAdmin = () => {
   const [data, setData] = useState([])
@@ -224,30 +224,21 @@ const UsersAdmin = () => {
               </td>
 
               <td className="text-center">
-                <div className="flex gap-2">
-                  <button
-                    className="disabled:opacity-30 disabled:cursor-not-allowed"
-                    onClick={() => handleDelete(user.id)}
-                    disabled={user.isDelete}
-                  >
-                    <FontAwesomeIcon
-                      icon={faTrash}
-                      className="text-stone-400 h-5"
-                    />
-                  </button>
-
-                  <button>
-                    <FontAwesomeIcon
-                      icon={faPenToSquare}
-                      className="text-stone-400 h-5"
-                    />
-                  </button>
-                </div>
+                <button
+                  className="disabled:opacity-30 disabled:cursor-not-allowed"
+                  onClick={() => handleDelete(user.id)}
+                  disabled={user.isDelete}
+                >
+                  <FontAwesomeIcon
+                    icon={faTrash}
+                    className="text-stone-400 h-5"
+                  />
+                </button>
               </td>
 
               <td className="py-2 px-4 flex">
                 <Link
-                  href={""}
+                  href={routes.admin.users.single(user.id)}
                   className="border-2 px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200"
                 >
                   <FontAwesomeIcon icon={faPlus} className="text-stone-400" />
