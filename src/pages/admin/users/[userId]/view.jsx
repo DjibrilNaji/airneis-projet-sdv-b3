@@ -1,3 +1,4 @@
+import UserForm from "@/web/components/Admin/Form/UserForm"
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
 import config from "@/web/config"
 import routes from "@/web/routes"
@@ -10,7 +11,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import axios from "axios"
 import { useRouter } from "next/router"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 
 export const getServerSideProps = async ({ params, req: { url } }) => {
   const userId = params.userId
@@ -38,6 +39,26 @@ const ViewUser = (props) => {
 
   const router = useRouter()
   const [toggleUpdateUser, setToggleUpdateUser] = useState(true)
+  const [user, setUser] = useState(result.user[0])
+
+  const handleSubmit = useCallback(
+    async ({ firstName, lastName, email, userName }) => {
+      const {
+        data: { result },
+      } = await axios.patch(
+        `${config.api.baseApiURL}${routes.api.admin.users.update(userId)}`,
+        {
+          userName,
+          firstName,
+          lastName,
+          email,
+        }
+      )
+
+      setUser(result)
+    },
+    [userId]
+  )
 
   return (
     <div>
@@ -82,6 +103,11 @@ const ViewUser = (props) => {
             </button>
           )}
         </div>
+        <UserForm
+          initialValues={user}
+          onSubmit={handleSubmit}
+          active={toggleUpdateUser}
+        />
       </div>
     </div>
   )
