@@ -1,4 +1,5 @@
 import RequiredSingnInPage from "./requiredSignIn/requiredSignInPage"
+import Loader from "@/web/components/LoadingSpinner"
 import React, { useEffect, useState } from "react"
 
 const LoadingPage = () => {
@@ -17,7 +18,7 @@ const LoadingPage = () => {
   })
 
   if (isLoading) {
-    return <div className="spinner">It's loading</div>
+    return <Loader />
   }
 
   return (
