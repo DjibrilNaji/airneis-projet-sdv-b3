@@ -6,7 +6,11 @@ import {
   integerValidator,
   stringValidator,
 } from "@/validators"
-import { InvalidAccessError, InvalidSessionError } from "@/api/errors"
+import {
+  InvalidAccessError,
+  InvalidSessionError,
+  NotFoundError,
+} from "@/api/errors"
 import config from "@/api/config"
 import jsonwebtoken from "jsonwebtoken"
 import AddressModel from "@/api/db/models/AddressModel"
@@ -49,11 +53,10 @@ const handler = mw({
       const address = await AddressModel.query()
         .where({ userId: userId })
         .where({ isDelete: false })
+        .orderBy("address.id")
 
       if (!address) {
-        res.status(401).send({ error: "No user found" })
-
-        return
+        throw new NotFoundError()
       }
 
       res.send({ result: address })

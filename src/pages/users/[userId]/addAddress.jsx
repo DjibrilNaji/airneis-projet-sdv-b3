@@ -20,7 +20,7 @@ export const getServerSideProps = async ({ params, req }) => {
   }
 }
 
-const EditAddress = (props) => {
+const AddAddress = (props) => {
   const { userId, token } = props
   const router = useRouter()
 
@@ -72,4 +72,4 @@ const EditAddress = (props) => {
   )
 }
 
-export default EditAddress
+export default AddAddress

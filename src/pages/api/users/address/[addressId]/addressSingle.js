@@ -6,7 +6,12 @@ import {
   integerValidator,
   boolValidator,
 } from "@/validators"
-import { InvalidAccessError, InvalidSessionError } from "@/api/errors"
+import {
+  InvalidAccessError,
+  InvalidCredentialsError,
+  InvalidSessionError,
+  NotFoundError,
+} from "@/api/errors"
 import config from "@/api/config"
 import jsonwebtoken from "jsonwebtoken"
 import AddressModel from "@/api/db/models/AddressModel"
@@ -45,9 +50,7 @@ const handler = mw({
       const address = await AddressModel.query().findById(addressId)
 
       if (!address) {
-        res.status(401).send({ error: "No user found" })
-
-        return
+        throw new NotFoundError()
       }
 
       if (sessionUser.id !== address.userId) {
@@ -112,9 +115,7 @@ const handler = mw({
       const address = await AddressModel.query().findById(addressId)
 
       if (!address) {
-        res.status(401).send({ error: "No user found" })
-
-        return
+        throw new NotFoundError()
       }
 
       if (sessionUser.id !== address.userId) {
@@ -188,15 +189,11 @@ const handler = mw({
       const address = await AddressModel.query().findById(addressId)
 
       if (!address) {
-        res.status(401).send({ error: "No address found" })
-
-        return
+        throw new NotFoundError()
       }
 
       if (address.address_default === true) {
-        res.status(401).send({ error: "You can't delete your default address" })
-
-        return
+        throw new InvalidCredentialsError()
       }
 
       const userId = address.userId
