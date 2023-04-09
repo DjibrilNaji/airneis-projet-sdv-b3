@@ -29,6 +29,10 @@ const routes = {
     admin: {
       products: () => "/admin/products",
       categories: () => "/admin/categories",
+      users: {
+        single: (userId, query) =>
+          createRouteWithQueryParams(`/admin/users/${userId}`, query),
+      },
     },
     users: {
       address: {
