@@ -6,7 +6,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faArrowLeft,
   faArrowRight,
+  faCheck,
   faPlus,
+  faTrash,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons"
 import TableHeadField from "@/web/components/Admin/TableHeadField"
 import routes from "@/web/routes"
@@ -69,6 +72,14 @@ const CategoriesAdmin = () => {
       fetchData(currentPage)
     },
     [fetchData, currentPage, order, sortColumn]
+  )
+
+  const handleDelete = useCallback(
+    async (categoryId) => {
+      await axios.patch(`/api/admin/${categoryId}/delete`)
+      fetchData(currentPage)
+    },
+    [fetchData, currentPage]
   )
 
   const pagination = []
@@ -169,6 +180,8 @@ const CategoriesAdmin = () => {
               fieldName="slug"
               className="hidden md:table-cell"
             />
+            <th className="py-2 px-4 hidden md:table-cell">Active</th>
+            <th className="py-2 px-1">Actions</th>
             <th className="py-2 px-4">More</th>
           </tr>
         </thead>
@@ -187,6 +200,33 @@ const CategoriesAdmin = () => {
               <td className="py-2 px-4">{category.description}</td>
               <td className="py-2 px-4 hidden md:table-cell">
                 {category.slug}
+              </td>
+              <td className="py-2 px-4 hidden md:table-cell">
+                {category.isDelete ? (
+                  <FontAwesomeIcon
+                    icon={faXmark}
+                    className="h-6 text-red-500"
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    icon={faCheck}
+                    className="h-6 text-green-500"
+                  />
+                )}
+              </td>
+              <td className="text-center">
+                <div className="flex gap-2">
+                  <button
+                    className="disabled:opacity-30 disabled:cursor-not-allowed"
+                    onClick={() => handleDelete(category.id)}
+                    disabled={category.isDelete}
+                  >
+                    <FontAwesomeIcon
+                      icon={faTrash}
+                      className="text-stone-400 h-5"
+                    />
+                  </button>
+                </div>
               </td>
               <td className="py-2 px-4 flex justify-center">
                 <Link
