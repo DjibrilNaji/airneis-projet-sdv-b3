@@ -2,7 +2,6 @@ import classNames from "classnames"
 import { useField } from "formik"
 import { forwardRef } from "react"
 
-// eslint-disable-next-line react/display-name
 const FormField = forwardRef((props, ref) => {
   const { className, label, name, active, ...otherProps } = props
   const [field, { error, touched }] = useField({ name })
@@ -28,5 +27,7 @@ const FormField = forwardRef((props, ref) => {
     </label>
   )
 })
+
+FormField.displayName = "FormField"
 
 export default FormField
