@@ -37,7 +37,7 @@ const EditAddress = (props) => {
       address_default,
     }) => {
       await axios.post(
-        `http://localhost:3000/api${routes.api.users.addAddress(userId)}`,
+        `http://localhost:3000/api${routes.api.users.address.add(userId)}`,
         {
           firstName,
           lastName,

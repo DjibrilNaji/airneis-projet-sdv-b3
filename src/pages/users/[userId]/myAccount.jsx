@@ -25,7 +25,10 @@ export const getServerSideProps = async ({ params, req, req: { url } }) => {
   )
 
   const addressUser = await axios.get(
-    `${config.api.baseURL}${routes.api.users.address(userId, query)}`,
+    `${config.api.baseURL}${routes.api.users.address.collection(
+      userId,
+      query
+    )}`,
     {
       headers: { Authorization: `Bearer ${token}` },
     }

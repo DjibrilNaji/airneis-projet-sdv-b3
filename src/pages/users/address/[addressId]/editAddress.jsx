@@ -14,7 +14,7 @@ export const getServerSideProps = async ({ params, req, req: { url } }) => {
   )
 
   const { data } = await axios.get(
-    `http://localhost:3000/api${routes.api.users.singleAddress(
+    `http://localhost:3000/api${routes.api.users.address.single(
       addressId,
       query
     )}`,
@@ -56,7 +56,9 @@ const EditAddress = (props) => {
       const {
         data: { result },
       } = await axios.patch(
-        `http://localhost:3000/api${routes.api.users.singleAddress(addressId)}`,
+        `http://localhost:3000/api${routes.api.users.address.single(
+          addressId
+        )}`,
         {
           firstName,
           lastName,

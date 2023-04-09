@@ -31,19 +31,21 @@ const routes = {
       categories: () => "/admin/categories",
     },
     users: {
+      address: {
+        collection: (userId, query) =>
+          createRouteWithQueryParams(`/users/${userId}/address`, query),
+        single: (addressId, query) =>
+          createRouteWithQueryParams(
+            `/users/address/${addressId}/addressSingle`,
+            query
+          ),
+        add: (userId) => `/users/${userId}/address`,
+      },
       validate: (token, query) =>
         createRouteWithQueryParams(`/users/confirmation/${token}`, query),
       single: (userId, query) =>
         createRouteWithQueryParams(`/users/${userId}/personnalData`, query),
       update: (userId) => `/users/${userId}/personnalData`,
-      address: (userId, query) =>
-        createRouteWithQueryParams(`/users/${userId}/address`, query),
-      singleAddress: (addressId, query) =>
-        createRouteWithQueryParams(
-          `/users/address/${addressId}/addressSingle`,
-          query
-        ),
-      addAddress: (userId) => `/users/${userId}/address`,
     },
     categoriesAndProducts: {
       collection: () => "/categories-and-products",
