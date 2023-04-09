@@ -142,6 +142,8 @@ const Navbar = () => {
     },
   ]
 
+  const username = localStorage.getItem("username")
+
   return (
     <nav className="flex items-center sticky top-0 bg-white border-b-2 border-stone-400 shadow-lg p-4 z-10">
       <Link href={"/"} legacyBehavior>
@@ -201,7 +203,7 @@ const Navbar = () => {
               </button>
 
               <p className="text-md text-white font-bold  whitespace-nowrap">
-                Bonjour "Prenom"
+                Bonjour {username}
               </p>
             </div>
 

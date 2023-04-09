@@ -40,7 +40,7 @@ const handler = mw({
         { expiresIn: config.security.jwt.expiresIn }
       )
 
-      res.send({ result: jwt })
+      res.send({ result: { jwt, user } })
     },
   ],
 })
