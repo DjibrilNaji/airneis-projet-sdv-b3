@@ -21,4 +21,6 @@ const RequiredSignInPage = () => {
   )
 }
 
+RequiredSignInPage.isPublic = true
+
 export default RequiredSignInPage
