@@ -28,6 +28,7 @@ const routes = {
     contact: () => "/contact",
     admin: {
       products: () => "/admin/products",
+      categories: () => "/admin/categories",
     },
     users: {
       validate: (token, query) =>
