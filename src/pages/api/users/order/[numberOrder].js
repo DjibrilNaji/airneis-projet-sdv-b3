@@ -64,7 +64,12 @@ const handler = mw({
           "=",
           "rel_order_product.productId"
         )
-        .innerJoin("imageProduct", "products.id", "=", "imageProduct.productId")
+        .innerJoin(
+          "image_product",
+          "products.id",
+          "=",
+          "image_product.productId"
+        )
         .select(
           "products.id",
           "products.name",
@@ -72,7 +77,7 @@ const handler = mw({
           "products.price_formatted",
           "rel_order_product.quantity",
           "products.quantity as quantityProduct",
-          "imageProduct.urlImage"
+          "image_product.urlImage"
         )
         .distinctOn("products.id")
 
@@ -85,8 +90,8 @@ const handler = mw({
 
       const userBillingAddress = await BillingAddressModel.query()
         .where({ userId: userId })
-        .innerJoin("users", "billingAddress.userId", "=", "users.id")
-        .select("billingAddress.*", "users.firstName", "users.lastName")
+        .innerJoin("users", "billing_address.userId", "=", "users.id")
+        .select("billing_address.*", "users.firstName", "users.lastName")
       const userDeliveryAddress = await AddressModel.query().where({
         id: addressId,
       })

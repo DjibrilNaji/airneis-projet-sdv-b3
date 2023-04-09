@@ -1,11 +1,11 @@
 const { faker } = require("@faker-js/faker")
 
 exports.seed = async function (knex) {
-  await knex("rel_material_product").del()
-  await knex("imageProduct").del()
-  await knex("materials").del()
-  await knex("products").del()
-  await knex("categories").del()
+  await knex.raw("TRUNCATE TABLE rel_material_product RESTART IDENTITY CASCADE")
+  await knex.raw("TRUNCATE TABLE image_product RESTART IDENTITY CASCADE")
+  await knex.raw("TRUNCATE TABLE materials RESTART IDENTITY CASCADE")
+  await knex.raw("TRUNCATE TABLE products RESTART IDENTITY CASCADE")
+  await knex.raw("TRUNCATE TABLE categories RESTART IDENTITY CASCADE")
 
   const categories = []
   const products = []
@@ -39,7 +39,6 @@ exports.seed = async function (knex) {
 
   for (let i = 0; i < categorieName.length; i++) {
     categories.push({
-      id: i + 1,
       name: categorieName[i],
       slug: faker.lorem.slug(),
       description: faker.lorem.sentence(),
@@ -51,7 +50,6 @@ exports.seed = async function (knex) {
 
   for (let i = 0; i < 14; i++) {
     products.push({
-      id: i + 1,
       name: productName[i],
       slug: faker.lorem.slug(),
       description: faker.commerce.productDescription(),
@@ -67,7 +65,6 @@ exports.seed = async function (knex) {
 
   for (let i = 0; i < 5; i++) {
     materials.push({
-      id: i + 1,
       nameMaterial: faker.commerce.productMaterial(),
     })
   }
@@ -76,13 +73,12 @@ exports.seed = async function (knex) {
 
   for (let i = 0; i < productName.length; i++) {
     imageProduct.push({
-      id: i + 1,
       urlImage: productName[i].toLowerCase().replace(" ", "") + ".jpg",
       productId: i < 14 ? i + 1 : faker.datatype.number({ min: 1, max: 14 }),
     })
   }
 
-  await knex("imageProduct").insert(imageProduct)
+  await knex("image_product").insert(imageProduct)
 
   for (let i = 0; i < productName.length; i++) {
     materialProduct.push({

@@ -17,7 +17,12 @@ const handler = mw({
       }
 
       const products = await ProductModel.query()
-        .innerJoin("imageProduct", "products.id", "=", "imageProduct.productId")
+        .innerJoin(
+          "image_product",
+          "products.id",
+          "=",
+          "image_product.productId"
+        )
         .select(
           "products.id",
           "products.name",
@@ -25,9 +30,9 @@ const handler = mw({
           "products.price",
           "products.quantity",
           "products.highlander",
-          "imageProduct.urlImage"
+          "image_product.urlImage"
         )
-        .distinctOn("imageProduct.productId")
+        .distinctOn("image_product.productId")
         .where({ highlander: true })
 
       if (!products) {

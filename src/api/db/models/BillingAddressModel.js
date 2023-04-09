@@ -2,7 +2,7 @@ import BaseModel from "./BaseModel.js"
 import UserModel from "./UserModel.js"
 
 class BillingAddressModel extends BaseModel {
-  static tableName = "billingAddress"
+  static tableName = "billing_address"
 
   static relationMappings() {
     return {
@@ -10,7 +10,7 @@ class BillingAddressModel extends BaseModel {
         relation: BaseModel.BelongsToOneRelation,
         modelClass: UserModel,
         join: {
-          from: "billingAddress.userId",
+          from: "billing_address.userId",
           to: "users.id",
         },
       },

@@ -15,6 +15,8 @@ const routes = {
   product: (idProduct) => `/products/${idProduct}`,
   users: {
     single: (userId) => `/users/${userId}/myAccount`,
+    addressSingle: (addressId) => `/users/address/${addressId}/editAddress`,
+    addAddress: (userId) => `/users/${userId}/addAddress`,
   },
   orders: {
     collection: (idUser) => `/users/${idUser}/allOrdersUser`,
@@ -29,6 +31,16 @@ const routes = {
       categories: () => "/admin/categories",
     },
     users: {
+      address: {
+        collection: (userId, query) =>
+          createRouteWithQueryParams(`/users/${userId}/address`, query),
+        single: (addressId, query) =>
+          createRouteWithQueryParams(
+            `/users/address/${addressId}/addressSingle`,
+            query
+          ),
+        add: (userId) => `/users/${userId}/address`,
+      },
       validate: (token, query) =>
         createRouteWithQueryParams(`/users/confirmation/${token}`, query),
       single: (userId, query) =>

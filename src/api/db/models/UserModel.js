@@ -27,7 +27,7 @@ class UserModel extends BaseModel {
         modelClass: BillingAddressModel,
         join: {
           from: "users.id",
-          to: "billingAddress.userId",
+          to: "billing_address.userId",
         },
       },
     }
