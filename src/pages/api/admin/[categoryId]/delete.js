@@ -3,6 +3,7 @@ import mw from "@/api/mw.js"
 import { idValidator } from "@/validators"
 import CategoryModel from "@/api/db/models/CategoryModel"
 import { NotFoundError } from "@/api/errors"
+import ProductModel from "@/api/db/models/ProductModel"
 
 const handler = mw({
   PATCH: [
@@ -27,6 +28,10 @@ const handler = mw({
         .patch({ isDelete: true })
         .where({ id: categoryId })
         .returning("*")
+
+      await ProductModel.query()
+        .patch({ isDelete: true })
+        .where({ categoryId: categoryId })
 
       res.send({
         result: categoryDeleted,
