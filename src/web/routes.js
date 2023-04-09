@@ -37,6 +37,7 @@ const routes = {
       users: {
         single: (userId, query) =>
           createRouteWithQueryParams(`/admin/users/${userId}`, query),
+        update: (userId) => `/admin/users/${userId}`,
       },
     },
     users: {
