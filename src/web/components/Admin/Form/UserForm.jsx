@@ -10,6 +10,7 @@ const defaultInitialValues = {
   firstName: "",
   lastName: "",
   email: "",
+  password: "",
 }
 
 const defaultValidationSchema = yup.object().shape({
@@ -27,6 +28,10 @@ const defaultValidationSchema = yup.object().shape({
     .email("L'email est invalide")
     .required("L'email est obligatoire")
     .label("Email"),
+  password: yup
+    .string()
+    .required("Le password est obligatoire")
+    .label("Password"),
 })
 
 const UserForm = (props) => {
@@ -50,26 +55,39 @@ const UserForm = (props) => {
           <FormField
             name="userName"
             type="text"
-            label="Nom d'utilisateur"
-            active={active}
-          />
-          <FormField
-            name="firstName"
-            type="text"
-            label="Prenom"
-            active={active}
-          />
-          <FormField name="lastName" type="text" label="Nom" active={active} />
-          <FormField
-            name="email"
-            type="email"
-            label="E-mail*"
+            label="Nom d'utilisateur :"
             active={active}
           />
 
-          <SubmitButton color="light" variant="secondary" size="sm">
-            Update
-          </SubmitButton>
+          <FormField
+            name="firstName"
+            type="text"
+            label="Prenom :"
+            active={active}
+          />
+
+          <FormField
+            name="lastName"
+            type="text"
+            label="Nom :"
+            active={active}
+          />
+
+          <FormField
+            name="email"
+            type="email"
+            label="E-mail* :"
+            active={active}
+          />
+
+          <FormField
+            name="password"
+            type="password"
+            label="Password :"
+            active={active}
+          />
+
+          <SubmitButton>Add</SubmitButton>
         </Form>
       </>
     </Formik>
