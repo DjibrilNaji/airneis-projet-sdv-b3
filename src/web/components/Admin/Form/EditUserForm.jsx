@@ -29,7 +29,14 @@ const defaultValidationSchema = yup.object().shape({
     .email("L'email est invalide")
     .required("L'email est obligatoire")
     .label("Email"),
-  password: yup.string().label("Password"),
+  password: yup
+    .string()
+    .min(8)
+    .matches(
+      /^(?=.*[\p{Ll}])(?=.*[\p{Lu}])(?=.*[0-9])(?=.*[^0-9\p{Lu}\p{Ll}]).*$/gu,
+      "Password must contain at least 1 upper & 1 lower case letters, 1 digit, 1 spe. character"
+    )
+    .label("Password"),
   isAdmin: yup.boolean().required().label("Admin"),
 })
 
