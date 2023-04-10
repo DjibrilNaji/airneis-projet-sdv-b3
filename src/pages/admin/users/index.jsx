@@ -249,13 +249,22 @@ const UsersAdmin = () => {
         </tbody>
       </table>
 
-      <button
-        className="border-2 rounded-lg mx-3 my-4 p-2 bg-red-500 text-white disabled:cursor-not-allowed disabled:bg-red-200"
-        onClick={() => selectedUsers.map((id) => handleDelete(id))}
-        disabled={selectedUsers.length === 0}
-      >
-        Supprimer tous les éléments séléctionnés
-      </button>
+      <div className="flex flex-col justify-start">
+        <button
+          className="border-2 rounded-lg mx-3 my-4 p-2 bg-red-500 text-white disabled:cursor-not-allowed disabled:bg-red-200 w-fit"
+          onClick={() => selectedUsers.map((id) => handleDelete(id))}
+          disabled={selectedUsers.length === 0}
+        >
+          Supprimer tous les éléments séléctionnés
+        </button>
+
+        <Link
+          href={routes.admin.users.create()}
+          className="border-2 rounded-lg mx-3 my-4 p-2 bg-blue-500 text-white w-fit"
+        >
+          Ajouter un utilisateur
+        </Link>
+      </div>
     </>
   )
 }

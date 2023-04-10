@@ -16,6 +16,8 @@ const routes = {
   admin: {
     users: {
       single: (userId) => `/admin/users/${userId}/view`,
+      collection: () => "/admin/users",
+      create: () => "/admin/users/create",
     },
   },
   users: {
@@ -37,6 +39,7 @@ const routes = {
       users: {
         single: (userId, query) =>
           createRouteWithQueryParams(`/admin/users/${userId}`, query),
+        create: () => `/admin/users`,
         update: (userId) => `/admin/users/${userId}`,
       },
     },
