@@ -3,7 +3,6 @@ import UserModel from "@/api/db/models/UserModel"
 import validate from "@/api/middlewares/validate.js"
 import mw from "@/api/mw.js"
 import {
-  boolValidator,
   emailValidator,
   passwordValidator,
   stringValidator,
@@ -18,12 +17,11 @@ const handler = mw({
         userName: stringValidator.required(),
         email: emailValidator.required(),
         password: passwordValidator.required(),
-        isAdmin: boolValidator.default(false),
       },
     }),
     async ({
       locals: {
-        body: { userName, firstName, lastName, email, password, isAdmin },
+        body: { userName, firstName, lastName, email, password },
       },
       res,
     }) => {
@@ -44,7 +42,6 @@ const handler = mw({
         email,
         passwordHash,
         passwordSalt,
-        isAdmin,
       })
 
       res.send({ result: true })
