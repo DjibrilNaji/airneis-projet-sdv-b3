@@ -75,6 +75,7 @@ exports.seed = async function (knex) {
     imageProduct.push({
       urlImage: productName[i].toLowerCase().replace(" ", "") + ".jpg",
       productId: i < 14 ? i + 1 : faker.datatype.number({ min: 1, max: 14 }),
+      isMain: true,
     })
   }
 
