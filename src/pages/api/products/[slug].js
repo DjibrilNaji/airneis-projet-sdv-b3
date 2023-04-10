@@ -40,10 +40,45 @@ const handler = mw({
         })
       })
 
+      const productsInCategory = await ProductModel.query()
+        .where({
+          categoryId: product[0].categoryId,
+        })
+        .whereNot({ slug: slug })
+
+      if (!productsInCategory) {
+        throw new NotFoundError()
+      }
+
+      const imageProductsInCategory = []
+
+      for (const product of productsInCategory) {
+        const images = await ImageProductModel.query().where({
+          productId: product.id,
+        })
+
+        if (!images) {
+          throw new NotFoundError()
+        }
+
+        for (const image of images) {
+          imageProductsInCategory.push(image)
+        }
+      }
+
+      imageProductsInCategory.map((image) => {
+        image.urlImage = s3.getSignedUrl("getObject", {
+          Bucket: "airness-matd",
+          Key: image.urlImage,
+        })
+      })
+
       res.send({
         result: {
           product,
           imageProduct,
+          productsInCategory,
+          imageProductsInCategory,
         },
       })
     },
