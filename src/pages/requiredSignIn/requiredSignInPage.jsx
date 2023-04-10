@@ -3,7 +3,7 @@ import Link from "@/web/components/Link"
 const RequiredSignInPage = () => {
   return (
     <>
-      <div className="py-64">
+      <div className="py-72">
         <p className="flex justify-center items-center md:w-auto">
           Cette page est accessible seulement aux utilisateurs.
         </p>
