@@ -1,3 +1,4 @@
+import hashPassword from "@/api/db/hashPassword"
 import AddressModel from "@/api/db/models/AddressModel"
 import BillingAddressModel from "@/api/db/models/BillingAddressModel"
 import OrderModel from "@/api/db/models/OrderModel"
@@ -5,7 +6,13 @@ import UserModel from "@/api/db/models/UserModel"
 import { NotFoundError } from "@/api/errors"
 import validate from "@/api/middlewares/validate.js"
 import mw from "@/api/mw.js"
-import { emailValidator, idValidator, stringValidator } from "@/validators"
+import {
+  boolValidator,
+  emailValidator,
+  idValidator,
+  passwordValidator,
+  stringValidator,
+} from "@/validators"
 
 const handler = mw({
   GET: [
@@ -66,7 +73,6 @@ const handler = mw({
       res.send({ result: { user, billingAddress, address, order } })
     },
   ],
-
   PATCH: [
     validate({
       query: {
@@ -77,28 +83,33 @@ const handler = mw({
         lastName: stringValidator,
         userName: stringValidator,
         email: emailValidator,
+        password: passwordValidator,
+        isAdmin: boolValidator,
       },
     }),
     async ({
       locals: {
         query: { userId },
-        body: { firstName, lastName, userName, email },
+        body: { firstName, lastName, userName, email, password, isAdmin },
       },
       res,
     }) => {
       const user = await UserModel.query().findById(userId)
 
       if (!user) {
-        res.status(401).send({ error: "No user found" })
-
-        return
+        throw new NotFoundError()
       }
+
+      const [passwordHash, passwordSalt] = await hashPassword(password)
 
       const updateUser = await UserModel.query().updateAndFetchById(userId, {
         ...(firstName ? { firstName } : {}),
         ...(lastName ? { lastName } : {}),
         ...(email ? { email } : {}),
         ...(userName ? { userName } : {}),
+        ...(isAdmin ? { isAdmin } : {}),
+        ...(passwordHash ? { passwordHash } : {}),
+        ...(passwordSalt ? { passwordSalt } : {}),
       })
 
       res.send({ result: updateUser })
