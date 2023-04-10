@@ -67,6 +67,10 @@ const routes = {
       single: (slug, query) =>
         createRouteWithQueryParams(`/categories/${slug}`, query),
     },
+    products: {
+      single: (slug, query) =>
+        createRouteWithQueryParams(`/products/${slug}`, query),
+    },
     orders: {
       collection: (userId, query) =>
         createRouteWithQueryParams(`/users/${userId}/allOrdersUser`, query),
