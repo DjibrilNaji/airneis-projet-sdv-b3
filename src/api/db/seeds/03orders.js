@@ -1,8 +1,8 @@
 const { faker } = require("@faker-js/faker")
 
 exports.seed = async function (knex) {
-  await knex("rel_order_product").del()
-  await knex("orders").del()
+  await knex.raw("TRUNCATE TABLE rel_order_product RESTART IDENTITY CASCADE")
+  await knex.raw("TRUNCATE TABLE orders RESTART IDENTITY CASCADE")
   const orders = []
   const relOrderProduct = []
   const status = ["Delivered", "On standby", "Cancelled"]
@@ -17,10 +17,13 @@ exports.seed = async function (knex) {
 
   for (let i = 0; i < 6; i++) {
     orders.push({
-      id: i + 1,
       numberOrder: faker.random.alphaNumeric(10),
       status: status[faker.datatype.number({ min: 0, max: 2 })],
       createdAt: dateCreation[i],
+      price: (100 * i).toFixed(2),
+      price_formatted: ((100 * i).toFixed(2)).toString() + " €",
+      amount_tva: ((100 * i)*0.21).toFixed(2),
+      amount_tva_formatted: (((100 * i)*0.21).toFixed(2)).toString() + " €",
       userId: i < 3 ? i + 1 : i === 3 ? i : i - 3,
       addressId: i < 3 ? i + 1 : i === 3 ? i : i - 3,
     })

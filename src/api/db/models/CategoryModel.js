@@ -4,6 +4,12 @@ import ProductModel from "./ProductModel.js"
 class CategoryModel extends BaseModel {
   static tableName = "categories"
 
+  static modifiers = {
+    paginate: (query, limit, page) => {
+      return query.limit(limit).offset((page - 1) * limit)
+    },
+  }
+
   static relationMappings() {
     return {
       product: {

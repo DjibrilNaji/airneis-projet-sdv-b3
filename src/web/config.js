@@ -1,5 +1,6 @@
 const config = {
   api: {
+    baseApiURL: "/api",
     baseURL: process.env.BASE_URL,
   },
   session: {

@@ -30,14 +30,19 @@ const handler = mw({
         .where({
           categoryId: category[0].id,
         })
-        .innerJoin("imageProduct", "products.id", "=", "imageProduct.productId")
+        .innerJoin(
+          "image_product",
+          "products.id",
+          "=",
+          "image_product.productId"
+        )
         .select(
           "products.id",
           "products.name",
           "products.slug",
           "products.price",
           "products.quantity",
-          "imageProduct.urlImage"
+          "image_product.urlImage"
         )
         .distinctOn("products.id")
 

@@ -3,11 +3,12 @@ const { pbkdf2, randomBytes } = require("node:crypto")
 const { promisify } = require("node:util")
 
 exports.seed = async function (knex) {
-  await knex("rel_order_product").del()
-  await knex("orders").del()
-  await knex("billingAddress").del()
-  await knex("address").del()
-  await knex("users").del()
+  await knex.raw("TRUNCATE TABLE rel_order_product RESTART IDENTITY CASCADE")
+  await knex.raw("TRUNCATE TABLE orders RESTART IDENTITY CASCADE")
+  await knex.raw("TRUNCATE TABLE billing_address RESTART IDENTITY CASCADE")
+  await knex.raw("TRUNCATE TABLE address RESTART IDENTITY CASCADE")
+  await knex.raw("TRUNCATE TABLE users RESTART IDENTITY CASCADE")
+
   const users = []
   const billingAddress = []
   const address = []
@@ -18,7 +19,6 @@ exports.seed = async function (knex) {
     const booleanRandom = Math.random() < 0.5
 
     users.push({
-      id: i + 1,
       userName: faker.internet.userName(),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
@@ -33,7 +33,6 @@ exports.seed = async function (knex) {
 
   for (let i = 0; i < 3; i++) {
     billingAddress.push({
-      id: i + 1,
       addressFull: faker.address.streetAddress(),
       city: faker.address.city(),
       cp: faker.datatype.number({ min: 0, max: 99999 }),
@@ -42,11 +41,10 @@ exports.seed = async function (knex) {
       userId: i + 1,
     })
   }
-  await knex("billingAddress").insert(billingAddress)
+  await knex("billing_address").insert(billingAddress)
 
   for (let i = 0; i < 5; i++) {
     address.push({
-      id: i + 1,
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
       addressFull: faker.address.streetAddress(),
