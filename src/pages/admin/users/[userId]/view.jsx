@@ -1,16 +1,11 @@
 import UserForm from "@/web/components/Admin/Form/UserForm"
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
+import BackButton from "@/web/components/BackButton"
 import config from "@/web/config"
 import routes from "@/web/routes"
-import {
-  faArrowLeft,
-  faCheck,
-  faEdit,
-  faPerson,
-} from "@fortawesome/free-solid-svg-icons"
+import { faCheck, faEdit, faPerson } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import axios from "axios"
-import { useRouter } from "next/router"
 import { useCallback, useState } from "react"
 
 export const getServerSideProps = async ({ params, req: { url } }) => {
@@ -37,7 +32,6 @@ const ViewUser = (props) => {
     userId,
   } = props
 
-  const router = useRouter()
   const [toggleUpdateUser, setToggleUpdateUser] = useState(true)
   const [user, setUser] = useState(result.user[0])
 
@@ -64,11 +58,7 @@ const ViewUser = (props) => {
 
   return (
     <div>
-      <div className="m-4">
-        <button onClick={() => router.back()}>
-          <FontAwesomeIcon icon={faArrowLeft} /> Retour
-        </button>
-      </div>
+      <BackButton />
 
       <div className="bg-stone-100 mx-2 my-6">
         <div className="flex items-center justify-between border-b-4 border-red-500 px-3 py-4 ">
