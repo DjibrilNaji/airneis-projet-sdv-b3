@@ -6,7 +6,6 @@ import routes from "@/web/routes"
 import {
   faAddressBook,
   faAddressCard,
-  faArrowLeft,
   faBagShopping,
   faCheck,
   faEdit,
