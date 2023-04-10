@@ -1,4 +1,4 @@
-import UserForm from "@/web/components/Admin/Form/UserForm"
+import EditUserForm from "@/web/components/Admin/Form/EditUserForm"
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
 import config from "@/web/config"
 import routes from "@/web/routes"
@@ -42,7 +42,7 @@ const ViewUser = (props) => {
   const [user, setUser] = useState(result.user[0])
 
   const handleSubmit = useCallback(
-    async ({ firstName, lastName, email, userName }) => {
+    async ({ firstName, lastName, email, userName, password, isAdmin }) => {
       const {
         data: { result },
       } = await axios.patch(
@@ -52,6 +52,8 @@ const ViewUser = (props) => {
           firstName,
           lastName,
           email,
+          password,
+          isAdmin,
         }
       )
 
@@ -105,7 +107,7 @@ const ViewUser = (props) => {
           )}
         </div>
 
-        <UserForm
+        <EditUserForm
           initialValues={user}
           onSubmit={handleSubmit}
           active={toggleUpdateUser}
