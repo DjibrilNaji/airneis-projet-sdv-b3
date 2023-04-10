@@ -55,7 +55,8 @@ const handler = mw({
           "address.city",
           "address.cp",
           "address.country",
-          "address.phoneNumber"
+          "address.phoneNumber",
+          "address.address_default"
         )
 
       if (!order) {
