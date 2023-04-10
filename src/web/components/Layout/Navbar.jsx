@@ -52,6 +52,9 @@ const Navbar = () => {
     router.push("/")
   }, [signOut, router])
 
+  const username =
+    typeof window !== "undefined" && localStorage.getItem("username")
+
   const navItemsConnected = [
     {
       href:
@@ -201,7 +204,7 @@ const Navbar = () => {
               </button>
 
               <p className="text-md text-white font-bold  whitespace-nowrap">
-                Bonjour "Prenom"
+                Bonjour {username}
               </p>
             </div>
 

@@ -10,16 +10,18 @@ const SubmitButton = (props) => {
     variant,
     size,
     color,
-    className,
   } = useFormikContext()
+  const { active, className } = props
+
+  const activeBool = active === "true" ? true : false
 
   return (
     <Button
       {...props}
-      disabled={isSubmitting || !isValid}
+      disabled={isSubmitting || !isValid || activeBool}
       className={classNames(variant, size, color, className)}
     >
-      {children}
+      {props.children ?? children}
     </Button>
   )
 }
