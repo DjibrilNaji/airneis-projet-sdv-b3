@@ -5,13 +5,13 @@ import {
   faArrowRight,
   faCartPlus,
   faHeart,
-  faShoppingBasket,
 } from "@fortawesome/free-solid-svg-icons"
 import axios from "axios"
 import config from "@/web/config"
 import routes from "@/web/routes"
 import { useRouter } from "next/router"
 import { useState } from "react"
+import Link from "next/link"
 
 export const getServerSideProps = async ({ params, req: { url } }) => {
   const productSlug = params.slug
@@ -68,7 +68,7 @@ const Product = (props) => {
         />
       </div>
 
-      <div className="hidden md:flex m-4 font-bold ">
+      <div className="hidden md:flex m-4 font-bold">
         <button
           onClick={() => router.back()}
           className="transform hover:scale-110 transition-all"
@@ -93,8 +93,9 @@ const Product = (props) => {
           ))}
         </div>
         <button
-          className="absolute top-[45%] text-stone-500 opacity-60 hover:opacity-100 left-0 transition-opacity ease-linear duration-300"
+          className="absolute top-[45%] text-stone-500 opacity-60 hover:opacity-100 left-0 transition-opacity ease-linear duration-300 disabled:opacity-20"
           onClick={handlePrevious}
+          disabled={result.imageProduct.length === 1}
         >
           <FontAwesomeIcon
             icon={faArrowLeft}
@@ -103,8 +104,9 @@ const Product = (props) => {
         </button>
 
         <button
-          className="absolute top-[45%] right-0 text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300"
+          className="absolute top-[45%] right-0 text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300 disabled:opacity-20"
           onClick={handleNext}
+          disabled={result.imageProduct.length === 1}
         >
           <FontAwesomeIcon
             icon={faArrowRight}
@@ -127,8 +129,8 @@ const Product = (props) => {
         ))}
       </div>
 
-      <div className="hidden md:flex ">
-        <div className="w-full md:w-2/5 md:pr-8">
+      <div className="flex">
+        <div className="hidden md:block w-full md:w-2/5 md:pr-8">
           <div className="relative">
             <div className="m-4 h-96 relative">
               {result.imageProduct.map((image, index) => (
@@ -147,20 +149,22 @@ const Product = (props) => {
 
             <div className="hidden md:block absolute top-1/2 transform -translate-y-1/2 left-0">
               <button
-                className="text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300"
+                className="text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300 disabled:opacity-20"
                 onClick={handlePrevious}
+                disabled={result.imageProduct.length === 1}
               >
                 <FontAwesomeIcon
                   icon={faArrowLeft}
-                  className="fa-2xl p-2 rounded-full bg-white"
+                  className="fa-2xl p-2 rounded-full bg-white "
                 />
               </button>
             </div>
 
             <div className="hidden md:block absolute top-1/2 transform -translate-y-1/2 right-0">
               <button
-                className="text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300"
+                className="text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300 disabled:opacity-20"
                 onClick={handleNext}
+                disabled={result.imageProduct.length === 1}
               >
                 <FontAwesomeIcon
                   icon={faArrowRight}
@@ -169,7 +173,7 @@ const Product = (props) => {
               </button>
             </div>
 
-            <div className=" flex justify-center">
+            <div className="flex justify-center">
               {result.imageProduct.map((image, index) => (
                 <button
                   onClick={() => setActiveIndex(index)}
@@ -185,8 +189,8 @@ const Product = (props) => {
           </div>
         </div>
 
-        <div className="w-full md:w-3/5">
-          <div className="flex flex-col m-4 ">
+        <div className="flex w-full md:w-3/5">
+          <div className="flex flex-col m-4 w-full">
             <div className="flex">
               <h1 className="text-lg font-bold">{result.product[0].name}</h1>
 
@@ -194,84 +198,75 @@ const Product = (props) => {
                 {result.product[0].price} €
               </span>
             </div>
-
             {result.product[0].quantity > 0 ? (
               <h2 className="flex text-stone-500 opacity-60 font-bold">
                 En stock
               </h2>
             ) : (
-              <h2 className="flex text-red-300 opacity-100 font-bold">
+              <h2 className="flex text-red-300 opacity-60 font-bold">
                 Out of stock
               </h2>
             )}
-
             <p className="text-lg font-semibold my-4">
               {result.product[0].description}
             </p>
-
             <div className="flex justify-end gap-10 items-center m-6">
               <button
                 className="transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
                 title="Ajouter aux favoris"
-                disabled={result.product[0].quantity == 0}
               >
-                <FontAwesomeIcon icon={faHeart} className="h-6 text-red-500" />
+                <FontAwesomeIcon icon={faHeart} className="h-5 text-red-500" />
               </button>
               <button
                 className="transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
                 title="Ajouter au panier"
                 disabled={result.product[0].quantity == 0}
               >
-                <FontAwesomeIcon icon={faCartPlus} className="h-6" />
+                <FontAwesomeIcon icon={faCartPlus} className="h-5" />
               </button>
+            </div>{" "}
+            <div className="border-b-2 border-t-2 py-4">
+              <span className="font-bold">Catégorie : </span>
+              <Link
+                href={routes.categorie(result.productCategory[0].slug)}
+                className="opacity-40 italic font-bold"
+              >
+                {result.productCategory[0].name}
+              </Link>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="md:hidden w-full md:w-3/5">
-        <div className="flex flex-col m-4 ">
-          <div className="flex">
-            <h1 className="text-lg font-bold">{result.product[0].name}</h1>
-
-            <span className="ml-auto mx-4 font-bold">
-              {result.product[0].price} €
-            </span>
-          </div>
-
-          {result.product[0].quantity > 0 ? (
-            <h2 className="flex text-stone-500 opacity-60 font-bold">
-              En stock
-            </h2>
-          ) : (
-            <h2 className="flex text-stone-500 opacity-60 font-bold">
-              Out of stock
-            </h2>
-          )}
-
-          <p className="text-lg font-semibold my-4">
-            {result.product[0].description}
-          </p>
-
-          <div className="flex justify-end gap-10 items-center m-6">
-            <button
-              className="transform hover:scale-125 transition-all"
-              title="Ajouter aux favoris"
-            >
-              <FontAwesomeIcon icon={faHeart} className="h-5 text-red-500" />
-            </button>
-            <button
-              className="transform hover:scale-125 transition-all"
-              title="Ajouter au panier"
-            >
-              <FontAwesomeIcon icon={faShoppingBasket} className="h-5" />
-            </button>
           </div>
         </div>
       </div>
 
       <div className="flex justify-center bg-stone-500 my-10">
         <p className="p-6 font-bold text-white text-xl">Produits similaires</p>
+      </div>
+
+      <div className="grid gap-12 pb-7 md:grid-cols-2 md:gap-8 md:px-4 lg:grid-cols-3">
+        {result.randomProducts.map((product) => {
+          const productImage = result.randomMainImage.find(
+            (image) => image.productId === product.id
+          )
+
+          return (
+            <Link
+              key={product._id}
+              href={routes.product(product.slug)}
+              className="flex items-center justify-center h-60 transition duration-800 hover:scale-105 hover:opacity-90"
+            >
+              <span className="absolute uppercase font-bold text-2xl bg-white text-stone-500 rounded-lg p-1 border-2 border-stone-500">
+                {product.name}
+              </span>
+              <Image
+                src={productImage.urlImage}
+                alt={product.name}
+                className="h-full w-[90vw] md:w-full object-cover rounded-2xl"
+                width="500"
+                height="500"
+              />
+            </Link>
+          )
+        })}
       </div>
     </>
   )
