@@ -59,7 +59,6 @@ const Home = (props) => {
   return (
     <>
       <div>
-        test
         <div className="relative">
           <div className="m-4 h-96 relative">
             {result.imageHomePage.map((image, index) => (
