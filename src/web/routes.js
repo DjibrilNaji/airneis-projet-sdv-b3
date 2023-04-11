@@ -12,7 +12,8 @@ const routes = {
   home: () => "/",
   signUp: () => "/register",
   signIn: () => "/login",
-  product: (idProduct) => `/products/${idProduct}`,
+  product: (slug) => `/products/${slug}`,
+  categorie: (slug) => `/categories/${slug}`,
   admin: {
     users: {
       single: (userId) => `/admin/users/${userId}/view`,
