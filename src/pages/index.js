@@ -13,9 +13,7 @@ export const getServerSideProps = async ({ req: { url } }) => {
   )
 
   const { data } = await axios.get(
-    `${config.api.baseURL}${routes.api.categoriesAndProducts.collection(
-      query
-    )}`
+    `${config.api.baseURL}${routes.api.categoriesAndProducts.collection(query)}`
   )
 
   return {
@@ -61,6 +59,7 @@ const Home = (props) => {
   return (
     <>
       <div>
+        test
         <div className="relative">
           <div className="m-4 h-96 relative">
             {result.imageHomePage.map((image, index) => (
@@ -87,7 +86,6 @@ const Home = (props) => {
             onClick={handleNext}
           />
         </div>
-
         <div className="flex justify-center">
           {result.imageHomePage.map((image, index) => (
             <button
