@@ -7,6 +7,7 @@ import {
   ShoppingCartIcon,
   HomeIcon,
   ListBulletIcon,
+  EnvelopeIcon,
 } from "@heroicons/react/24/outline"
 import { useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -34,8 +35,13 @@ const NavAdmin = () => {
       title: "Users",
       icon: <UserIcon />,
     },
+    {
+      href: "/admin/contacts",
+      title: "Contact",
+      icon: <EnvelopeIcon />,
+    },
   ]
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
 
   const handleIsOpenClick = () => {
     setIsOpen(!isOpen)

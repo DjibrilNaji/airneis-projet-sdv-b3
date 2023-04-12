@@ -23,7 +23,11 @@ export const AppContextProvider = (props) => {
   const signIn = signInService({ api, setSession, setJWT })
   const signOut = useCallback(() => {
     localStorage.removeItem(config.session.localStorageKey)
+    localStorage.removeItem("username")
     setSession(false)
+    const date = new Date()
+    date.setDate(date.getDate() - 100)
+    document.cookie = `token=; expires=${date}; path=/;`
   }, [])
 
   useEffect(() => {

@@ -2,34 +2,47 @@ import CategoryModel from "@/api/db/models/CategoryModel.js"
 import ProductModel from "@/api/db/models/ProductModel"
 import validate from "@/api/middlewares/validate.js"
 import mw from "@/api/mw.js"
-import { idValidator } from "@/validators"
+import { urlSlugValidator } from "@/validators"
 import s3 from "@@/configAWS.js"
 
 const handler = mw({
   GET: [
     validate({
       query: {
-        idCategory: idValidator.required(),
+        slug: urlSlugValidator.required(),
       },
     }),
     async ({
       locals: {
-        query: { idCategory },
+        query: { slug },
       },
       res,
     }) => {
-      const category = await CategoryModel.query().where({ id: idCategory })
+      const category = await CategoryModel.query().where({ slug: slug })
+
+      if (!category) {
+        res.status(401).send({ error: "No category found" })
+
+        return
+      }
+
       const products = await ProductModel.query()
         .where({
-          categoryId: idCategory,
+          categoryId: category[0].id,
         })
-        .innerJoin("imageProduct", "products.id", "=", "imageProduct.productId")
+        .innerJoin(
+          "image_product",
+          "products.id",
+          "=",
+          "image_product.productId"
+        )
         .select(
           "products.id",
           "products.name",
+          "products.slug",
           "products.price",
           "products.quantity",
-          "imageProduct.urlImage"
+          "image_product.urlImage"
         )
         .distinctOn("products.id")
 
@@ -46,12 +59,6 @@ const handler = mw({
         Bucket: "airness-matd",
         Key: imageUrl.toString(),
       })
-
-      if (!category) {
-        res.status(401).send({ error: "No category found" })
-
-        return
-      }
 
       res.send({ result: { category, data, products } })
     },

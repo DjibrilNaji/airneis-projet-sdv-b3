@@ -52,9 +52,15 @@ const Navbar = () => {
     router.push("/")
   }, [signOut, router])
 
+  const username =
+    typeof window !== "undefined" && localStorage.getItem("username")
+
   const navItemsConnected = [
     {
-      href: "/",
+      href:
+        (session !== false) & (session !== null)
+          ? routes.users.single(session.user.id)
+          : "/",
       title: "Mes paramètres",
       icon: <FontAwesomeIcon icon={faGear} />,
       onClick: handleIsOpenClick,
@@ -97,12 +103,6 @@ const Navbar = () => {
       title: "Se deconnecter",
       icon: <FontAwesomeIcon icon={faRightFromBracket} />,
       onClick: handleSignOut,
-    },
-    {
-      href: "/admin",
-      title: "Admin",
-      icon: <FontAwesomeIcon icon={faLock} />,
-      onClick: handleIsOpenClick,
     },
   ]
 
@@ -204,7 +204,7 @@ const Navbar = () => {
               </button>
 
               <p className="text-md text-white font-bold  whitespace-nowrap">
-                Bonjour "Prenom"
+                Bonjour {username}
               </p>
             </div>
 
@@ -222,6 +222,21 @@ const Navbar = () => {
                   </li>
                 </Link>
               ))}
+
+              {session.user.isAdmin && (
+                <Link
+                  href={"/admin"}
+                  className="bg-white p-4 border-2 rounded-lg hover:bg-stone-200"
+                  onClick={handleIsOpenClick}
+                >
+                  <li className="w-full flex gap-3 items-center">
+                    <p className="w-4">
+                      <FontAwesomeIcon icon={faLock} />
+                    </p>
+                    <p>{"Admin"}</p>
+                  </li>
+                </Link>
+              )}
             </ul>
           </>
         ) : (

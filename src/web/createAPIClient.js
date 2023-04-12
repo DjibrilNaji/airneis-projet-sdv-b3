@@ -3,7 +3,7 @@ import axios from "axios"
 
 const createAPIClient = ({ jwt } = {}) =>
   axios.create({
-    baseURL: config.api.baseURL,
+    baseURL: config.api.baseApiURL,
     headers: {
       ...(jwt ? { Authorization: `Bearer ${jwt}` } : {}),
     },

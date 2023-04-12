@@ -7,7 +7,9 @@ const signIn =
   async ({ email, password }) => {
     try {
       const {
-        data: { result: jwt },
+        data: {
+          result: { jwt, user },
+        },
       } = await api.post(routes.api.signIn(), {
         email,
         password,
@@ -15,7 +17,11 @@ const signIn =
 
       setSession(parseSession(jwt))
       setJWT(jwt)
+      const date = new Date()
+      date.setDate(date.getDate() + 1)
+      document.cookie = `token=${jwt}; expires=${date}; path=/;`
       localStorage.setItem(config.session.localStorageKey, jwt)
+      localStorage.setItem("username", user.userName)
 
       return [null, true]
     } catch (err) {

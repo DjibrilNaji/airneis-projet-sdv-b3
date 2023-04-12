@@ -7,6 +7,12 @@ import ImageProductModel from "./ImageProductModel.js"
 class ProductModel extends BaseModel {
   static tableName = "products"
 
+  static modifiers = {
+    paginate: (query, limit, page) => {
+      return query.limit(limit).offset((page - 1) * limit)
+    },
+  }
+
   static relationMappings() {
     return {
       category: {
@@ -38,7 +44,7 @@ class ProductModel extends BaseModel {
         modelClass: ImageProductModel,
         join: {
           from: "products.id",
-          to: "imageProduct.productId",
+          to: "image_product.productId",
         },
       },
     }
