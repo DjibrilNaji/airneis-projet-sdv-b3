@@ -91,9 +91,15 @@ const Favorite = (props) => {
                       {product.name}
                     </Link>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between ">
                     <span className="text-left px-2">{product.price}€</span>
-                    <div className="flex justify-end gap-5  items-center my-4 px-2">
+                    <div className="flex justify-end gap-5 px-2 items-center my-4 ">
+                      <button
+                        className="transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
+                        title="Ajouter au panier"
+                      >
+                        <FontAwesomeIcon icon={faCartPlus} className="h-6" />
+                      </button>
                       <button
                         className="transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
                         title="Ajouter aux favoris"
@@ -102,12 +108,6 @@ const Favorite = (props) => {
                           icon={faTrash}
                           className="h-6 text-red-500"
                         />
-                      </button>
-                      <button
-                        className="transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
-                        title="Ajouter au panier"
-                      >
-                        <FontAwesomeIcon icon={faCartPlus} className="h-6" />
                       </button>
                     </div>
                   </div>
