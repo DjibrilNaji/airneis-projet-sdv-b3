@@ -50,6 +50,7 @@ const handler = mw({
           "users.lastName",
           "users.email"
         )
+        .withGraphFetched("billingAddress")
 
       if (!user) {
         res.status(401).send({ error: "No user found" })

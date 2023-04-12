@@ -54,6 +54,9 @@ const routes = {
           ),
         add: (userId) => `/users/${userId}/address`,
       },
+      billingAddress: {
+        update: (billingAddressId) => `/users/billingAddress/${billingAddressId}/edit`
+      },
       validate: (token, query) =>
         createRouteWithQueryParams(`/users/confirmation/${token}`, query),
       single: (userId, query) =>

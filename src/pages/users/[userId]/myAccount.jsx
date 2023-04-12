@@ -7,6 +7,7 @@ import TableAddress from "@/web/components/Auth/TableAddress"
 import config from "@/web/config"
 import Link from "next/link"
 import Button from "@/web/components/Button"
+import BillingAddressForm from "@/web/components/Auth/BillingAddressForm"
 
 export const getServerSideProps = async ({ params, req, req: { url } }) => {
   const userId = params.userId
@@ -53,8 +54,9 @@ const MyAccount = (props) => {
   } = props
 
   const [user, setUser] = useState(result)
-  const [seeData, setSeeData] = useState("users")
-  const optionUser = ["users", "address"]
+  const [billingAddress, setBillingAddress] =useState(result.billingAddress[0])
+  const [seeData, setSeeData] = useState("Personnal Data")
+  const optionUser = ["Personnal Data", "Address", "Billing Address"]
   const [allAddress, setAllAddress] = useState(allAddressUser)
 
   const handleSubmit = useCallback(
@@ -62,7 +64,7 @@ const MyAccount = (props) => {
       const {
         data: { result },
       } = await axios.patch(
-        `${config.api.baseURL}${routes.api.users.update(userId)}`,
+        `${config.api.baseApiURL}${routes.api.users.update(userId)}`,
         {
           firstName,
           lastName,
@@ -78,6 +80,36 @@ const MyAccount = (props) => {
     },
     [token, userId]
   )
+
+  const handleSubmitBilling = useCallback(
+    async ({ 
+      addressFull, 
+      country,
+      city,
+      cp,
+      phoneNumber, 
+    }) => {
+      const {
+        data: { result },
+      } = await axios.patch(
+        `${config.api.baseApiURL}${routes.api.users.billingAddress.update(user.billingAddress[0].id)}`,
+        {
+          addressFull,
+          country,
+          city,
+          cp,
+          phoneNumber,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+
+      setBillingAddress(result)
+    },
+    [token, user.billingAddress]
+  )
+
 
   const handleDeleteAddress = useCallback(
     async (event) => {
@@ -108,10 +140,10 @@ const MyAccount = (props) => {
           My Account
         </h1>
         <div className="flex flex-wrap justify-center">
-          <div hidden={seeData === "users" ? false : true}>
+          <div hidden={seeData === "Personnal Data" ? false : true}>
             <UserForm initialValues={user} onSubmit={handleSubmit} />
           </div>
-          <div hidden={seeData === "address" ? false : true}>
+          <div hidden={seeData === "Address" ? false : true}>
             <TableAddress
               address={allAddress}
               onClick={handleDeleteAddress}
@@ -119,6 +151,10 @@ const MyAccount = (props) => {
             <Link href={routes.users.addAddress(userId)}>
               <Button className="my-5">Add address delivery</Button>
             </Link>
+          </div>
+          <div hidden={seeData === "Billing Address" ? false : true}>
+            <BillingAddressForm initialValues={billingAddress} onSubmit={handleSubmitBilling} />
+
           </div>
           <select
             name="typeData"
