@@ -19,6 +19,10 @@ const routes = {
       collection: () => "/admin/users",
       create: () => "/admin/users/create",
     },
+    products: {
+      single: (productId) => `/admin/products/${productId}/view`,
+      create: () => "/admin/products/create",
+    }
   },
   users: {
     single: (userId) => `/users/${userId}/myAccount`,
@@ -34,7 +38,11 @@ const routes = {
     signIn: () => "/login",
     contact: () => "/contact",
     admin: {
-      products: () => "/admin/products",
+      products: {
+        collection: () => "/admin/products/all",
+        single: (productId, query) =>
+          createRouteWithQueryParams(`/admin/products/${productId}/single`, query),
+      },
       categories: () => "/admin/categories",
       users: {
         single: (userId, query) =>
