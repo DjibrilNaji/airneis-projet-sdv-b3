@@ -92,7 +92,7 @@ exports.seed = async function (knex) {
 
   await knex("rel_material_product").insert(materialProduct)
 
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 10; i++) {
     favorites.push({
       userId: i < 3 ? i + 1 : i === 3 ? i : i - 3,
       productId: faker.datatype.number({ min: 1, max: 14 }),
