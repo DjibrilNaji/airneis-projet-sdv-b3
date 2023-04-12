@@ -7,6 +7,7 @@ import {
   faCircleInfo,
   faFileContract,
   faGear,
+  faHeart,
   faList,
   faLock,
   faMagnifyingGlass,
@@ -63,6 +64,15 @@ const Navbar = () => {
           : "/",
       title: "Mes paramètres",
       icon: <FontAwesomeIcon icon={faGear} />,
+      onClick: handleIsOpenClick,
+    },
+    {
+      href:
+        (session !== false) & (session !== null)
+          ? routes.users.favorites(session.user.id)
+          : "/",
+      title: "Mes favoris",
+      icon: <FontAwesomeIcon icon={faHeart} />,
       onClick: handleIsOpenClick,
     },
     {
