@@ -24,6 +24,7 @@ const routes = {
     single: (userId) => `/users/${userId}/myAccount`,
     addressSingle: (addressId) => `/users/address/${addressId}/editAddress`,
     addAddress: (userId) => `/users/${userId}/addAddress`,
+    addBillingAddress: (userId) => `/users/${userId}/addBillingAddress`,
   },
   orders: {
     collection: (idUser) => `/users/${idUser}/allOrdersUser`,
@@ -55,7 +56,8 @@ const routes = {
         add: (userId) => `/users/${userId}/address`,
       },
       billingAddress: {
-        update: (billingAddressId) => `/users/billingAddress/${billingAddressId}/edit`
+        update: (billingAddressId) => `/users/billingAddress/${billingAddressId}/edit`,
+        add: (userId) => `/users/${userId}/billingAddress`,
       },
       validate: (token, query) =>
         createRouteWithQueryParams(`/users/confirmation/${token}`, query),

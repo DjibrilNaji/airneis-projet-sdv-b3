@@ -5,7 +5,7 @@ import cookie from "cookie"
 import { useCallback, useState } from "react"
 import TableAddress from "@/web/components/Auth/TableAddress"
 import config from "@/web/config"
-import Link from "next/link"
+import Link from "@/web/components/Link"
 import Button from "@/web/components/Button"
 import BillingAddressForm from "@/web/components/Auth/BillingAddressForm"
 
@@ -152,9 +152,9 @@ const MyAccount = (props) => {
               <Button className="my-5">Add address delivery</Button>
             </Link>
           </div>
-          <div hidden={seeData === "Billing Address" ? false : true}>
-            <BillingAddressForm initialValues={billingAddress} onSubmit={handleSubmitBilling} />
-
+          <div hidden={seeData === "Billing Address" ? false : true} className="mt-5">
+            <BillingAddressForm initialValues={billingAddress} onSubmit={handleSubmitBilling} hidden={!billingAddress ? true : false}/>
+            <Link href={routes.users.addBillingAddress(user.id)} hidden={!billingAddress ? false : true}><Button>Add Billing Address</Button></Link>
           </div>
           <select
             name="typeData"

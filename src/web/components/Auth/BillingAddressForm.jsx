@@ -32,9 +32,11 @@ const BillingAddressForm = (props) => {
     validationSchema = defaultValidationSchema,
     initialValues = defaultInitialValues,
     error,
+    hidden
   } = props
 
   return (
+    <div hidden={hidden}>
     <Formik
       onSubmit={onSubmit}
       initialValues={initialValues}
@@ -67,6 +69,7 @@ const BillingAddressForm = (props) => {
         </Form>
       </>
     </Formik>
+    </div>
   )
 }
 export default BillingAddressForm
