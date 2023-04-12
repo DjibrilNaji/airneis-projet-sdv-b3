@@ -65,7 +65,7 @@ const BillingAddressForm = (props) => {
             label="phoneNumber"
             icon={faPerson}
           />
-        <SubmitButton className="mr-2">Update</SubmitButton>
+        <SubmitButton className="mr-2">Submit</SubmitButton>
         </Form>
       </>
     </Formik>
