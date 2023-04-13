@@ -21,7 +21,7 @@ const handler = mw({
       res,
     }) => {
       const product = await ProductModel.query()
-        .where({ slug })
+        .findOne({ slug: slug })
         .where({ isDelete: false })
 
       if (!product) {
@@ -29,7 +29,7 @@ const handler = mw({
       }
 
       const imageProduct = await ImageProductModel.query().where({
-        productId: product[0].id,
+        productId: product.id,
       })
 
       if (!imageProduct) {
@@ -44,7 +44,7 @@ const handler = mw({
       })
 
       const productCategory = await CategoryModel.query().where({
-        id: product[0].categoryId,
+        id: product.categoryId,
       })
 
       const productsInCategory = await ProductModel.query()
