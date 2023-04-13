@@ -13,6 +13,7 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import Error from "@/pages/_error"
+import BackButton from "@/web/components/BackButton"
 
 export const getServerSideProps = async ({ params, req: { url } }) => {
   const productSlug = params.slug
@@ -96,12 +97,7 @@ const Product = (props) => {
       </div>
 
       <div className="hidden md:flex m-4 font-bold">
-        <button
-          onClick={() => router.back()}
-          className="transform hover:scale-110 transition-all"
-        >
-          <FontAwesomeIcon icon={faArrowLeft} /> Retour
-        </button>
+        <BackButton />
       </div>
 
       <div className="md:hidden relative">
