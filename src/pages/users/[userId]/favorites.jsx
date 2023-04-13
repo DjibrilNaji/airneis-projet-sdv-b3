@@ -46,7 +46,7 @@ const Favorite = (props) => {
   return (
     <>
       {result.length === 0 ? (
-        <div className="flex flex-col justify-between md:jus items-center h-[70vh]">
+        <div className="flex flex-col justify-between items-center h-[80vh] md:h-96">
           <h1 className="text-2xl font-bold my-2">My Favourits</h1>
 
           <div className="flex flex-col justify-center">
@@ -70,7 +70,7 @@ const Favorite = (props) => {
           <h1 className="flex text-stone-400 text-3xl font-bold justify-center my-6">
             My Favourits
           </h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mx-4 my-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mx-4 my-4">
             {result.map((product) => (
               <div key={product.slug}>
                 <div className="border shadow-lg rounded-xl h-full px-2">
@@ -92,7 +92,9 @@ const Favorite = (props) => {
                     </Link>
                   </div>
                   <div className="flex justify-between ">
-                    <span className="text-left px-2">{product.price}€</span>
+                    <span className="text-left px-2 text-lg">
+                      {product.price}€
+                    </span>
                     <div className="flex justify-end gap-5 px-2 items-center my-4 ">
                       <button
                         className="transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
