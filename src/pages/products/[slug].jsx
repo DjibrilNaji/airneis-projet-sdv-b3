@@ -9,7 +9,6 @@ import {
 import axios from "axios"
 import config from "@/web/config"
 import routes from "@/web/routes"
-import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import Error from "@/pages/_error"
@@ -43,7 +42,6 @@ export const getServerSideProps = async ({ params, req: { url } }) => {
 const Product = (props) => {
   const { product: data, errorCode } = props
 
-  const router = useRouter()
   const [activeIndex, setActiveIndex] = useState(0)
 
   if (errorCode) {
