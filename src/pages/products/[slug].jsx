@@ -10,8 +10,9 @@ import axios from "axios"
 import config from "@/web/config"
 import routes from "@/web/routes"
 import { useRouter } from "next/router"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
+import Error from "@/pages/_error"
 
 export const getServerSideProps = async ({ params, req: { url } }) => {
   const productSlug = params.slug
@@ -19,45 +20,71 @@ export const getServerSideProps = async ({ params, req: { url } }) => {
     new URL(`http://example.com/${url}`).searchParams.entries()
   )
 
-  const { data } = await axios.get(
-    `${config.api.baseURL}${routes.api.products.single(productSlug, query)}`
-  )
+  try {
+    const { data } = await axios.get(
+      `${config.api.baseURL}${routes.api.products.single(productSlug, query)}`
+    )
 
-  return {
-    props: {
-      product: data,
-    },
+    return {
+      props: {
+        product: data,
+      },
+    }
+  } catch (error) {
+    const errorCode = error.response.status
+
+    return {
+      props: { errorCode: errorCode },
+    }
   }
 }
 
 const Product = (props) => {
-  const {
-    product: { result },
-  } = props
+  const { product: data, errorCode } = props
 
   const router = useRouter()
-  const mainImage = result.imageProduct.find((objet) => objet.isMain)
   const [activeIndex, setActiveIndex] = useState(0)
+
+  if (errorCode) {
+    return <Error statusCode={errorCode} />
+  }
+
+  const mainImage = data.result.imageProduct.find((objet) => objet.isMain)
 
   const handlePrevious = () => {
     setActiveIndex(
       (prevActiveIndex) =>
-        (prevActiveIndex - 1 + result.imageProduct.length) %
-        result.imageProduct.length
+        (prevActiveIndex - 1 + data.result.imageProduct.length) %
+        data.result.imageProduct.length
     )
   }
 
   const handleNext = () => {
     setActiveIndex(
-      (prevActiveIndex) => (prevActiveIndex + 1) % result.imageProduct.length
+      (prevActiveIndex) =>
+        (prevActiveIndex + 1) % data.result.imageProduct.length
     )
   }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setActiveIndex(
+        (prevActiveIndex) =>
+          (prevActiveIndex + 1) % data.result.imageProduct.length
+      )
+    }, 5000)
+
+    return () => {
+      clearInterval(intervalId)
+    }
+  }, [data.result.imageProduct.length])
 
   return (
     <>
       <div className="hidden md:flex items-center justify-center">
         <span className="absolute uppercase text-2xl font-bold text-stone-500 border-2 border-stone-500 bg-white rounded-xl p-2">
-          {result.product[0].name}
+          {data.result.product.name}
         </span>
         <Image
           src={mainImage.urlImage}
@@ -79,7 +106,7 @@ const Product = (props) => {
 
       <div className="md:hidden relative">
         <div className="m-4 h-96 relative">
-          {result.imageProduct.map((image, index) => (
+          {data.result.imageProduct.map((image, index) => (
             <Image
               key={image.id}
               src={image.urlImage}
@@ -95,7 +122,7 @@ const Product = (props) => {
         <button
           className="absolute top-[45%] text-stone-500 opacity-60 hover:opacity-100 left-0 transition-opacity ease-linear duration-300 disabled:opacity-20"
           onClick={handlePrevious}
-          disabled={result.imageProduct.length === 1}
+          disabled={data.result.imageProduct.length === 1}
         >
           <FontAwesomeIcon
             icon={faArrowLeft}
@@ -106,7 +133,7 @@ const Product = (props) => {
         <button
           className="absolute top-[45%] right-0 text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300 disabled:opacity-20"
           onClick={handleNext}
-          disabled={result.imageProduct.length === 1}
+          disabled={data.result.imageProduct.length === 1}
         >
           <FontAwesomeIcon
             icon={faArrowRight}
@@ -116,7 +143,7 @@ const Product = (props) => {
       </div>
 
       <div className="md:hidden flex justify-center">
-        {result.imageProduct.map((image, index) => (
+        {data.result.imageProduct.map((image, index) => (
           <button
             onClick={() => setActiveIndex(index)}
             key={image.id}
@@ -133,7 +160,7 @@ const Product = (props) => {
         <div className="hidden md:block w-full md:w-2/5 md:pr-8">
           <div className="relative">
             <div className="m-4 h-96 relative">
-              {result.imageProduct.map((image, index) => (
+              {data.result.imageProduct.map((image, index) => (
                 <Image
                   key={image.id}
                   src={image.urlImage}
@@ -151,7 +178,7 @@ const Product = (props) => {
               <button
                 className="text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300 disabled:opacity-20"
                 onClick={handlePrevious}
-                disabled={result.imageProduct.length === 1}
+                disabled={data.result.imageProduct.length === 1}
               >
                 <FontAwesomeIcon
                   icon={faArrowLeft}
@@ -164,7 +191,7 @@ const Product = (props) => {
               <button
                 className="text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300 disabled:opacity-20"
                 onClick={handleNext}
-                disabled={result.imageProduct.length === 1}
+                disabled={data.result.imageProduct.length === 1}
               >
                 <FontAwesomeIcon
                   icon={faArrowRight}
@@ -174,7 +201,7 @@ const Product = (props) => {
             </div>
 
             <div className="flex justify-center">
-              {result.imageProduct.map((image, index) => (
+              {data.result.imageProduct.map((image, index) => (
                 <button
                   onClick={() => setActiveIndex(index)}
                   key={image.id}
@@ -192,13 +219,13 @@ const Product = (props) => {
         <div className="flex w-full md:w-3/5">
           <div className="flex flex-col m-4 w-full">
             <div className="flex">
-              <h1 className="text-lg font-bold">{result.product[0].name}</h1>
+              <h1 className="text-lg font-bold">{data.result.product.name}</h1>
 
               <span className="ml-auto mx-4 font-bold">
-                {result.product[0].price} €
+                {data.result.product.price} €
               </span>
             </div>
-            {result.product[0].quantity > 0 ? (
+            {data.result.product.quantity > 0 ? (
               <h2 className="flex text-stone-500 opacity-60 font-bold">
                 En stock
               </h2>
@@ -208,7 +235,7 @@ const Product = (props) => {
               </h2>
             )}
             <p className="text-lg font-semibold my-4">
-              {result.product[0].description}
+              {data.result.product.description}
             </p>
             <div className="flex justify-end gap-10 items-center m-6">
               <button
@@ -220,18 +247,18 @@ const Product = (props) => {
               <button
                 className="transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
                 title="Ajouter au panier"
-                disabled={result.product[0].quantity == 0}
+                disabled={data.result.product.quantity == 0}
               >
                 <FontAwesomeIcon icon={faCartPlus} className="h-5" />
               </button>
-            </div>{" "}
+            </div>
             <div className="border-b-2 border-t-2 py-4">
               <span className="font-bold">Catégorie : </span>
               <Link
-                href={routes.categorie(result.productCategory[0].slug)}
+                href={routes.categorie(data.result.productCategory[0].slug)}
                 className="opacity-40 italic font-bold"
               >
-                {result.productCategory[0].name}
+                {data.result.productCategory[0].name}
               </Link>
             </div>
           </div>
@@ -243,8 +270,8 @@ const Product = (props) => {
       </div>
 
       <div className="grid gap-12 pb-7 md:grid-cols-2 md:gap-8 md:px-4 lg:grid-cols-3">
-        {result.randomProducts.map((product) => {
-          const productImage = result.randomMainImage.find(
+        {data.result.randomProducts.map((product) => {
+          const productImage = data.result.randomMainImage.find(
             (image) => image.productId === product.id
           )
 
