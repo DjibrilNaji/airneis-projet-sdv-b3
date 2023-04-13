@@ -2,7 +2,7 @@ import Link from "next/link"
 
 function Error({ statusCode }) {
   return (
-    <div className="h-screen md:h-fit flex flex-col items-center justify-center">
+    <div className="h-[90vh] md:h-fit flex flex-col items-center justify-center">
       <p className="text-xl font-bold">
         {statusCode
           ? `An error ${statusCode} occurred on server`
