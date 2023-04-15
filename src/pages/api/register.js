@@ -28,7 +28,7 @@ const handler = mw({
       },
       res,
     }) => {
-      const user = await UserModel.query().findOne({ email })
+      const user = await UserModel.query().findOne({ email }).where({isDelete : false})
 
       if (user) {
         res.send({ result: true })
