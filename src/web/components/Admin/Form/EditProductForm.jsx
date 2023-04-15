@@ -6,16 +6,16 @@ import SubmitButton from "@/web/components/SubmitButton"
 import FormField from "@/web/components/Admin/FormField"
 
 const defaultInitialValues = {
-    name: "",
-    description: "",
-    price: "",
-    quantity: "",
-    highlander: "",
-    slug: "",
+  name: "",
+  description: "",
+  price: "",
+  quantity: "",
+  highlander: "",
+  slug: "",
 }
 
 const defaultValidationSchema = yup.object().shape({
-    name: yup
+  name: yup
     .string()
     .required("Le nom du produit est obligatoire")
     .label("Name"),
@@ -23,17 +23,18 @@ const defaultValidationSchema = yup.object().shape({
     .string()
     .required("La description est obligatoire")
     .label("description"),
-  price: yup.number().integer().required("Le prix est obligatoire").label("price"),
-  highlander: yup
-    .boolean()
-    .required()
-    .label("Highlander"),
+  price: yup
+    .number()
+    .integer()
+    .required("Le prix est obligatoire")
+    .label("price"),
+  highlander: yup.boolean().required().label("Highlander"),
   slug: yup
     .string()
     .matches(
       /^[a-z]+[a-z-]*$/,
       "The URL cannot contain any capital letters, any numbers, any special characters except '-' to separate certain words"
-      )
+    )
     .label("Slug"),
 })
 
@@ -76,14 +77,9 @@ const EditProductForm = (props) => {
           <label className="flex flex-col gap-2">
             {" "}
             Highlander
-            <Field name="highlander" type="checkbox" />
+            <Field name="highlander" type="checkbox" disabled={active} />
           </label>
-          <FormField
-            name="slug"
-            type="text"
-            label="Slug :"
-            active={active}
-          />
+          <FormField name="slug" type="text" label="Slug :" active={active} />
           <SubmitButton
             active={active.toString()}
             color="light"
