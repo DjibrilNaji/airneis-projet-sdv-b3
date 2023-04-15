@@ -12,6 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons"
 import TableHeadField from "@/web/components/Admin/TableHeadField"
 import routes from "@/web/routes"
+import config from "@/web/config"
 
 const UsersAdmin = () => {
   const [data, setData] = useState([])
@@ -27,7 +28,7 @@ const UsersAdmin = () => {
   const fetchData = useCallback(
     async (page) => {
       const result = await axios.get(
-        `/api${routes.api.admin.products()}?limit=${limit}&page=${page}&sortColumn=${sortColumn}&order=${order}` +
+        `${config.api.baseApiURL}${routes.api.admin.products.collection()}?limit=${limit}&page=${page}&sortColumn=${sortColumn}&order=${order}` +
           (searchTerm === null ? "" : `&searchTerm=${searchTerm}`)
       )
 
@@ -201,7 +202,7 @@ const UsersAdmin = () => {
                 {product.quantity}
               </td>
               <td className="py-2 px-4 hidden md:table-cell">
-                {product.highlander ? (
+                {!product.highlander ? (
                   <FontAwesomeIcon
                     icon={faXmark}
                     className="h-6 text-red-500"
@@ -228,7 +229,7 @@ const UsersAdmin = () => {
               </td>
               <td className="py-2 px-4 flex justify-center">
                 <Link
-                  href={""}
+                  href={routes.admin.products.single(product.id)}
                   className="border-2 px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200"
                 >
                   <FontAwesomeIcon icon={faPlus} className="text-stone-400" />
