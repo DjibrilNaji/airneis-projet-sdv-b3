@@ -47,6 +47,7 @@ const handler = mw({
       }
 
       const favoritesWithImages = await FavoriteModel.query()
+        .where({ userId: userId })
         .innerJoin("products", "favorites.productId", "=", "products.id")
         .where({ isDelete: false })
         .innerJoin(
