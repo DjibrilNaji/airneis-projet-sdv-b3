@@ -46,23 +46,29 @@ const Favorite = (props) => {
   return (
     <>
       {result.length === 0 ? (
-        <div className="flex flex-col justify-between items-center h-[80vh] md:h-96">
-          <h1 className="text-2xl font-bold my-2">My Favourits</h1>
-
-          <div className="flex flex-col justify-center">
-            <FontAwesomeIcon icon={faBoxOpen} className="h-20 text-stone-500" />
-            <span className="font-semibold">
-              Your favorites list is empty !
-            </span>
-          </div>
-
-          <div>
-            <Link
-              href={"/"}
-              className="bg-stone-500 px-4 text-xl py-2 rounded-md text-white"
-            >
-              Go home
-            </Link>
+        <div className="fixed inset-0">
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="bg-gray-500"></div>
+            <div className="flex flex-col items-center gap-20 bg-white rounded-lg">
+              <div className="mb-4">
+                <h3 className="font-bold text-2xl">My Favourits</h3>
+              </div>
+              <div className="flex flex-col items-center mb-4">
+                <FontAwesomeIcon
+                  icon={faBoxOpen}
+                  className="h-20 text-stone-500"
+                />
+                <p>Your favorites list is empty !</p>
+              </div>
+              <div className="">
+                <Link
+                  href={"/"}
+                  className="bg-stone-500 px-4 text-xl py-2 rounded-md text-white"
+                >
+                  Go home
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       ) : (
