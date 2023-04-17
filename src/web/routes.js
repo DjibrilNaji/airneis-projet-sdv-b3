@@ -29,6 +29,7 @@ const routes = {
     single: (userId) => `/users/${userId}/myAccount`,
     addressSingle: (addressId) => `/users/address/${addressId}/editAddress`,
     addAddress: (userId) => `/users/${userId}/addAddress`,
+    favorites: (idUser) => `/users/${idUser}/favorites`,
   },
   orders: {
     collection: (idUser) => `/users/${idUser}/allOrdersUser`,
@@ -68,6 +69,10 @@ const routes = {
       single: (userId, query) =>
         createRouteWithQueryParams(`/users/${userId}/personnalData`, query),
       update: (userId) => `/users/${userId}/personnalData`,
+      favorites: {
+        collection: (userId, query) =>
+          createRouteWithQueryParams(`/users/${userId}/favorites`, query),
+      },
     },
     categoriesAndProducts: {
       collection: () => "/categories-and-products",
