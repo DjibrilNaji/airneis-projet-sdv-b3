@@ -70,7 +70,8 @@ const routes = {
         createRouteWithQueryParams(`/users/${userId}/personnalData`, query),
       update: (userId) => `/users/${userId}/personnalData`,
       favorites: {
-        collection: (userId, query) =>
+        collection: (userId) => `/users/${userId}/favorites`,
+        single: (userId, query) =>
           createRouteWithQueryParams(`/users/${userId}/favorites`, query),
       },
     },

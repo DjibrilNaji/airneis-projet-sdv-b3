@@ -10,6 +10,7 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons"
 import cookie from "cookie"
+import { useCallback, useState } from "react"
 
 export const getServerSideProps = async ({ params, req, req: { url } }) => {
   const userId = params.userId
@@ -34,6 +35,8 @@ export const getServerSideProps = async ({ params, req, req: { url } }) => {
   return {
     props: {
       favorites: data,
+      userId,
+      token,
     },
   }
 }
@@ -41,11 +44,40 @@ export const getServerSideProps = async ({ params, req, req: { url } }) => {
 const Favorite = (props) => {
   const {
     favorites: { result },
+    userId,
+    token,
   } = props
+
+  const [favorite, setFavorite] = useState(result)
+
+  const handleDeleteFavorite = useCallback(
+    async (favoriteId) => {
+      await axios.delete(
+        `${config.api.baseApiURL}${routes.api.users.favorites.single(userId, {
+          favoriteId: favoriteId,
+        })}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+
+      const { data } = await axios.get(
+        `${config.api.baseApiURL}${routes.api.users.favorites.collection(
+          userId
+        )}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+
+      setFavorite(data.result)
+    },
+    [token, userId]
+  )
 
   return (
     <>
-      {result.length === 0 ? (
+      {favorite.length === 0 ? (
         <div className="fixed inset-0">
           <div className="flex items-center justify-center min-h-screen">
             <div className="bg-gray-500"></div>
@@ -77,7 +109,7 @@ const Favorite = (props) => {
             My Favourits
           </h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mx-4 my-4">
-            {result.map((product) => (
+            {favorite.map((product) => (
               <div key={product.slug}>
                 <div className="border shadow-lg rounded-xl h-full px-2">
                   <Link href={routes.product(product.slug)}>
@@ -110,7 +142,8 @@ const Favorite = (props) => {
                       </button>
                       <button
                         className="transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
-                        title="Ajouter aux favoris"
+                        title="Supprimer"
+                        onClick={() => handleDeleteFavorite(product.id)}
                       >
                         <FontAwesomeIcon
                           icon={faTrash}
