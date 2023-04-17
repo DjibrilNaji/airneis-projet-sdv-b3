@@ -99,7 +99,11 @@ const OrderAdmin = () => {
           <tr>
             <TableHeadField displayName="Id" fieldName="id" />
             <TableHeadField displayName="Email" fieldName="email" />
-            <TableHeadField displayName="Price" fieldName="price_formatted" />
+            <TableHeadField
+              className="px-10"
+              displayName="Price"
+              fieldName="price_formatted"
+            />
             <th className="text-center py-2 px-1">Status</th>
             <th className="text-center py-2 px-1">Actions</th>
             <th className="text-center py-2 px-1">More</th>
@@ -153,6 +157,21 @@ const OrderAdmin = () => {
           ))}
         </tbody>
       </table>
+
+      <div className="flex justify-center gap-14 my-14">
+        <span className="flex gap-2 items-center">
+          <FontAwesomeIcon icon={faCircle} className="h-5 text-green-400" />
+          <h3>Delivered</h3>
+        </span>
+        <span className="flex gap-2 items-center">
+          <FontAwesomeIcon icon={faCircle} className="h-5 text-orange-400" />
+          <h3>On standby</h3>
+        </span>
+        <span className="flex gap-2 items-center">
+          <FontAwesomeIcon icon={faCircle} className="h-5 text-red-400" />
+          <h3>Cancelled</h3>
+        </span>
+      </div>
     </>
   )
 }
