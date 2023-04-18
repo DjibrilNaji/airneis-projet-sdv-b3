@@ -14,10 +14,12 @@ const handler = mw({
     }),
     async ({
       locals: {
-        query: { limit, page, order },
+        query: { limit, page, order, searchTerm },
       },
       res,
     }) => {
+      const searchTermModified = `%${searchTerm}%`
+
       const query = OrderModel.query()
         .innerJoin("users", "orders.userId", "=", "users.id")
         .select(
@@ -27,7 +29,14 @@ const handler = mw({
           "orders.price_formatted",
           "users.email"
         )
-        .modify("paginate", limit, page)
+
+      if (searchTerm) {
+        query
+          .whereRaw("UPPER(email) LIKE ?", [searchTermModified.toUpperCase()])
+          .modify("paginate", limit, page)
+      } else {
+        query.modify("paginate", limit, page)
+      }
 
       if (!query) {
         res.send({ result: "An error occurred while retrieving users" })
