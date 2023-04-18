@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import Image from "next/image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
@@ -9,16 +10,24 @@ import {
 import axios from "axios"
 import config from "@/web/config"
 import routes from "@/web/routes"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import Link from "next/link"
 import Error from "@/pages/_error"
 import BackButton from "@/web/components/BackButton"
+import cookie from "cookie"
+import Dialog from "@/web/components/Dialog"
 
-export const getServerSideProps = async ({ params, req: { url } }) => {
+export const getServerSideProps = async ({ params, req, req: { url } }) => {
   const productSlug = params.slug
   const query = Object.fromEntries(
     new URL(`http://example.com/${url}`).searchParams.entries()
   )
+
+  const cookies = req.headers.cookie
+    ? cookie.parse(req.headers.cookie || "")
+    : null
+  const token = cookies ? cookies.token : null
+  const userId = cookies ? cookies.userId : null
 
   try {
     const { data } = await axios.get(
@@ -28,6 +37,8 @@ export const getServerSideProps = async ({ params, req: { url } }) => {
     return {
       props: {
         product: data,
+        token,
+        userId,
       },
     }
   } catch (error) {
@@ -40,12 +51,19 @@ export const getServerSideProps = async ({ params, req: { url } }) => {
 }
 
 const Product = (props) => {
-  const { product: data, errorCode } = props
+  const { product: data, token, userId, errorCode } = props
 
   const [activeIndex, setActiveIndex] = useState(0)
 
   if (errorCode) {
     return <Error statusCode={errorCode} />
+  }
+
+  const [isOpen, setIsOpen] = useState(false)
+  const [contentModal, setContentModal] = useState()
+
+  const closeModal = () => {
+    setIsOpen(false)
   }
 
   const mainImage = data.result.imageProduct.find((objet) => objet.isMain)
@@ -65,7 +83,6 @@ const Product = (props) => {
     )
   }
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     const intervalId = setInterval(() => {
       setActiveIndex(
@@ -79,12 +96,38 @@ const Product = (props) => {
     }
   }, [data.result.imageProduct.length])
 
+  const handleAddFavorites = useCallback(
+    async (productId) => {
+      await axios.post(
+        `${config.api.baseApiURL}${routes.api.users.favorites.single(userId, {
+          productId: productId,
+        })}`,
+        null,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      setContentModal("Votre produit a bien été ajouté aux favoris")
+      setIsOpen(true)
+    },
+    [token, userId]
+  )
+
   return (
     <>
+      <Dialog
+        isOpen={isOpen}
+        closeModal={closeModal}
+        modalTitle="Informations"
+        content={contentModal}
+        buttonCloseTitle="Close"
+      />
+
       <div className="hidden md:flex items-center justify-center">
         <span className="absolute uppercase text-2xl font-bold text-stone-500 border-2 border-stone-500 bg-white rounded-xl p-2">
           {data.result.product.name}
         </span>
+
         <Image
           src={mainImage.urlImage}
           alt="slide 1"
@@ -113,6 +156,7 @@ const Product = (props) => {
             />
           ))}
         </div>
+
         <button
           className="absolute top-[45%] text-stone-500 opacity-60 hover:opacity-100 left-0 transition-opacity ease-linear duration-300 disabled:opacity-20"
           onClick={handlePrevious}
@@ -219,6 +263,7 @@ const Product = (props) => {
                 {data.result.product.price} €
               </span>
             </div>
+
             {data.result.product.quantity > 0 ? (
               <h2 className="flex text-stone-500 opacity-60 font-bold">
                 En stock
@@ -228,16 +273,25 @@ const Product = (props) => {
                 Out of stock
               </h2>
             )}
+
             <p className="text-lg font-semibold my-4">
               {data.result.product.description}
             </p>
+
             <div className="flex justify-end gap-10 items-center m-6">
-              <button
-                className="transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
-                title="Ajouter aux favoris"
-              >
-                <FontAwesomeIcon icon={faHeart} className="h-5 text-red-500" />
-              </button>
+              {token && (
+                <button
+                  className="transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
+                  title="Ajouter aux favoris"
+                >
+                  <FontAwesomeIcon
+                    icon={faHeart}
+                    className="h-5 text-red-500"
+                    onClick={() => handleAddFavorites(data.result.product.id)}
+                  />
+                </button>
+              )}
+
               <button
                 className="transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
                 title="Ajouter au panier"
@@ -246,6 +300,7 @@ const Product = (props) => {
                 <FontAwesomeIcon icon={faCartPlus} className="h-5" />
               </button>
             </div>
+
             <div className="border-b-2 border-t-2 py-4">
               <span className="font-bold">Catégorie : </span>
               <Link
