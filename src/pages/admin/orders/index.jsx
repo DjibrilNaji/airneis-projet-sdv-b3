@@ -75,7 +75,7 @@ const OrderAdmin = () => {
         </span>
       </div>
 
-      {data.orders.length > 0 && (
+      {data.orders?.length > 0 && (
         <div className="flex justify-center my-5">
           <div className="flex">
             <button
@@ -112,7 +112,7 @@ const OrderAdmin = () => {
         </div>
       </div>
 
-      {data.orders.length > 0 ? (
+      {data.orders?.length > 0 && (
         <>
           <table className="w-[100vw]">
             <thead className="text-xs text-left uppercase bg-gray-50 text-gray-700">
@@ -199,13 +199,21 @@ const OrderAdmin = () => {
             </span>
           </div>
         </>
-      ) : (
-        <div className="flex item-center justify-center mb-5">
-          <span className="font-bold text-3xl text-black ">
-            There are no orders
-          </span>
-        </div>
       )}
+
+      <div
+        className={`${
+          data.orders?.length > 0
+            ? "hidden"
+            : typeof data.orders === "undefined"
+            ? "hidden"
+            : "flex"
+        } items-center justify-center mb-5`}
+      >
+        <span className="font-bold text-3xl text-black ">
+          There are no orders
+        </span>
+      </div>
     </>
   )
 }
