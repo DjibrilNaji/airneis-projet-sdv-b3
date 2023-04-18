@@ -23,7 +23,7 @@ const routes = {
     products: {
       single: (productId) => `/admin/products/${productId}/view`,
       create: () => "/admin/products/create",
-    }
+    },
   },
   users: {
     single: (userId) => `/users/${userId}/myAccount`,
@@ -43,7 +43,10 @@ const routes = {
       products: {
         collection: () => "/admin/products/all",
         single: (productId, query) =>
-          createRouteWithQueryParams(`/admin/products/${productId}/single`, query),
+          createRouteWithQueryParams(
+            `/admin/products/${productId}/single`,
+            query
+          ),
       },
       categories: () => "/admin/categories",
       users: {
@@ -51,6 +54,9 @@ const routes = {
           createRouteWithQueryParams(`/admin/users/${userId}`, query),
         create: () => `/admin/users`,
         update: (userId) => `/admin/users/${userId}`,
+      },
+      orders: {
+        collection: () => `/admin/orders`,
       },
     },
     users: {

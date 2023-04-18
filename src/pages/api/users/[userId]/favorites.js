@@ -134,6 +134,59 @@ const handler = mw({
       })
     },
   ],
+  POST: [
+    validate({
+      query: {
+        userId: idValidator.required(),
+        productId: idValidator.required(),
+      },
+    }),
+    async ({
+      locals: {
+        query: { userId, productId },
+      },
+      req,
+      res,
+    }) => {
+      const { authorization } = req.headers
+
+      if (!authorization) {
+        throw new InvalidSessionError()
+      } else {
+        const { payload } = jsonwebtoken.verify(
+          authorization.slice(7),
+          config.security.jwt.secret
+        )
+
+        req.session = payload
+      }
+
+      const {
+        session: { user: sessionUser },
+      } = req
+
+      if (sessionUser.id !== userId) {
+        throw new InvalidAccessError()
+      }
+
+      const favorite = await FavoriteModel.query()
+        .findOne({ userId: userId })
+        .where({ productId: productId })
+
+      if (favorite) {
+        res.send({ result: "OK" })
+
+        return
+      }
+
+      await FavoriteModel.query().insert({
+        userId,
+        productId,
+      })
+
+      res.send({ result: "OK" })
+    },
+  ],
 })
 
 export default handler
