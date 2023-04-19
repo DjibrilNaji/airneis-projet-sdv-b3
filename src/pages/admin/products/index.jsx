@@ -28,7 +28,9 @@ const UsersAdmin = () => {
   const fetchData = useCallback(
     async (page) => {
       const result = await axios.get(
-        `${config.api.baseApiURL}${routes.api.admin.products.collection()}?limit=${limit}&page=${page}&sortColumn=${sortColumn}&order=${order}` +
+        `${
+          config.api.baseApiURL
+        }${routes.api.admin.products.collection()}?limit=${limit}&page=${page}&sortColumn=${sortColumn}&order=${order}` +
           (searchTerm === null ? "" : `&searchTerm=${searchTerm}`)
       )
 
@@ -239,6 +241,14 @@ const UsersAdmin = () => {
           ))}
         </tbody>
       </table>
+      <div className="flex flex-col justify-start">
+        <Link
+          href={routes.admin.products.create()}
+          className="border-2 rounded-lg mx-3 my-4 p-2 bg-blue-500 text-white w-fit"
+        >
+          Ajouter un Produit
+        </Link>
+      </div>
     </>
   )
 }

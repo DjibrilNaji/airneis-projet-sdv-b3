@@ -22,8 +22,9 @@ const routes = {
     },
     products: {
       single: (productId) => `/admin/products/${productId}/view`,
+      collection: () => "/admin/products",
       create: () => "/admin/products/create",
-    }
+    },
   },
   users: {
     single: (userId) => `/users/${userId}/myAccount`,
@@ -43,7 +44,12 @@ const routes = {
       products: {
         collection: () => "/admin/products/all",
         single: (productId, query) =>
-          createRouteWithQueryParams(`/admin/products/${productId}/single`, query),
+          createRouteWithQueryParams(
+            `/admin/products/${productId}/single`,
+            query
+          ),
+        create: () => `/admin/products/all`,
+        uploadFile: () => `/admin/products/upload`,
       },
       categories: () => "/admin/categories",
       users: {
@@ -80,6 +86,7 @@ const routes = {
     categories: {
       single: (slug, query) =>
         createRouteWithQueryParams(`/categories/${slug}`, query),
+      collection: () => "/categories",
     },
     products: {
       single: (slug, query) =>

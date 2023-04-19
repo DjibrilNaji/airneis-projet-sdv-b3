@@ -6,16 +6,14 @@ import { stringValidator } from "@/validators"
 const handler = mw({
   GET: [
     async ({ res }) => {
-      const categories = await CategoryModel.query()
+      const categories = await CategoryModel.query().where({ isDelete: false })
 
       if (!categories) {
         res.send({ result: "An error occurred while retrieving categories" })
       }
 
       res.send({
-        result: {
-          categories,
-        },
+        result: categories,
       })
     },
   ],
