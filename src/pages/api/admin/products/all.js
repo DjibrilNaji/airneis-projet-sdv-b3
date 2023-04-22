@@ -30,7 +30,7 @@ const handler = mw({
     }) => {
       const searchTermModified = `%${searchTerm}%`
 
-      const query = ProductModel.query()
+      const query = ProductModel.query().withGraphFetched("category")
 
       if (searchTerm) {
         query
@@ -47,6 +47,7 @@ const handler = mw({
       const [countResult] = await query
         .clone()
         .clearSelect()
+        .clearWithGraph()
         .limit(1)
         .offset(0)
         .count()

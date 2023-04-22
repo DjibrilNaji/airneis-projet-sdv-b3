@@ -168,6 +168,11 @@ const UsersAdmin = () => {
               fieldName="description"
             />
             <TableHeadField
+              displayName="Category"
+              handleSortChange={handleSortChange}
+              fieldName="category"
+            />
+            <TableHeadField
               displayName="Price"
               handleSortChange={handleSortChange}
               fieldName="price"
@@ -197,6 +202,7 @@ const UsersAdmin = () => {
               <td className="py-2 px-4">{product.id} </td>
               <td className="py-2 px-4">{product.name}</td>
               <td className="py-2 px-4">{product.description}</td>
+              <td className="py-2 px-4">{product.category[0].name}</td>
               <td className="py-2 px-4 hidden md:table-cell">
                 {product.price}
               </td>
