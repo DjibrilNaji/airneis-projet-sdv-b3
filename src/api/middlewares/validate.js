@@ -1,3 +1,4 @@
+import { NotFoundError } from "@/api/errors"
 import * as yup from "yup"
 
 const validate = ({ body, params, query }) => {
@@ -30,6 +31,12 @@ const validate = ({ body, params, query }) => {
     } catch (err) {
       if (err instanceof yup.ValidationError) {
         res.status(422).send({ error: err.errors })
+
+        return
+      }
+
+      if (err instanceof NotFoundError) {
+        res.status(404).send({ error: err.errors[0] })
 
         return
       }

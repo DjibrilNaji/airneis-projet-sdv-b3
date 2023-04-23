@@ -8,6 +8,7 @@ import {
   HomeIcon,
   ListBulletIcon,
   EnvelopeIcon,
+  ShoppingBagIcon,
 } from "@heroicons/react/24/outline"
 import { useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -34,6 +35,11 @@ const NavAdmin = () => {
       href: "/admin/users",
       title: "Users",
       icon: <UserIcon />,
+    },
+    {
+      href: "/admin/orders",
+      title: "Orders",
+      icon: <ShoppingBagIcon />,
     },
     {
       href: "/admin/contacts",

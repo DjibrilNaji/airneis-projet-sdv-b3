@@ -1,6 +1,7 @@
 const { faker } = require("@faker-js/faker")
 
 exports.seed = async function (knex) {
+  await knex.raw("TRUNCATE TABLE favorites RESTART IDENTITY CASCADE")
   await knex.raw("TRUNCATE TABLE rel_material_product RESTART IDENTITY CASCADE")
   await knex.raw("TRUNCATE TABLE image_product RESTART IDENTITY CASCADE")
   await knex.raw("TRUNCATE TABLE materials RESTART IDENTITY CASCADE")
@@ -12,6 +13,7 @@ exports.seed = async function (knex) {
   const imageProduct = []
   const materialProduct = []
   const materials = []
+  const favorites = []
 
   const categorieName = ["Bedding", "Storage Sand", "Table"]
   const productName = [
@@ -54,7 +56,7 @@ exports.seed = async function (knex) {
       slug: faker.lorem.slug(),
       description: faker.commerce.productDescription(),
       price: (100 * i).toFixed(2),
-      price_formatted: ((100 * i).toFixed(2)).toString() + " €",
+      price_formatted: (100 * i).toFixed(2).toString() + " €",
       quantity: faker.datatype.number(100),
       highlander: faker.datatype.number({ min: 0, max: 1 }),
       categoryId: faker.datatype.number({ min: 1, max: 3 }),
@@ -89,4 +91,13 @@ exports.seed = async function (knex) {
   }
 
   await knex("rel_material_product").insert(materialProduct)
+
+  for (let i = 0; i < 10; i++) {
+    favorites.push({
+      userId: i < 3 ? i + 1 : i === 3 ? i : i - 3,
+      productId: faker.datatype.number({ min: 1, max: 14 }),
+    })
+  }
+
+  await knex("favorites").insert(favorites)
 }

@@ -12,12 +12,17 @@ const routes = {
   home: () => "/",
   signUp: () => "/register",
   signIn: () => "/login",
-  product: (idProduct) => `/products/${idProduct}`,
+  product: (slug) => `/products/${slug}`,
+  categorie: (slug) => `/categories/${slug}`,
   admin: {
     users: {
       single: (userId) => `/admin/users/${userId}/view`,
       collection: () => "/admin/users",
       create: () => "/admin/users/create",
+    },
+    products: {
+      single: (productId) => `/admin/products/${productId}/view`,
+      create: () => "/admin/products/create",
     },
   },
   users: {
@@ -25,6 +30,7 @@ const routes = {
     addressSingle: (addressId) => `/users/address/${addressId}/editAddress`,
     addAddress: (userId) => `/users/${userId}/addAddress`,
     addBillingAddress: (userId) => `/users/${userId}/addBillingAddress`,
+    favorites: (idUser) => `/users/${idUser}/favorites`,
   },
   orders: {
     collection: (idUser) => `/users/${idUser}/allOrdersUser`,
@@ -35,13 +41,23 @@ const routes = {
     signIn: () => "/login",
     contact: () => "/contact",
     admin: {
-      products: () => "/admin/products",
+      products: {
+        collection: () => "/admin/products/all",
+        single: (productId, query) =>
+          createRouteWithQueryParams(
+            `/admin/products/${productId}/single`,
+            query
+          ),
+      },
       categories: () => "/admin/categories",
       users: {
         single: (userId, query) =>
           createRouteWithQueryParams(`/admin/users/${userId}`, query),
         create: () => `/admin/users`,
         update: (userId) => `/admin/users/${userId}`,
+      },
+      orders: {
+        collection: () => `/admin/orders`,
       },
     },
     users: {
@@ -64,6 +80,11 @@ const routes = {
       single: (userId, query) =>
         createRouteWithQueryParams(`/users/${userId}/personnalData`, query),
       update: (userId) => `/users/${userId}/personnalData`,
+      favorites: {
+        collection: (userId) => `/users/${userId}/favorites`,
+        single: (userId, query) =>
+          createRouteWithQueryParams(`/users/${userId}/favorites`, query),
+      },
     },
     categoriesAndProducts: {
       collection: () => "/categories-and-products",

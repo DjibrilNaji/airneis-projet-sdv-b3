@@ -16,7 +16,7 @@ class ProductModel extends BaseModel {
   static relationMappings() {
     return {
       category: {
-        relation: BaseModel.HasManyRelation,
+        relation: BaseModel.HasOneRelation,
         modelClass: CategoryModel,
         join: {
           from: "products.categoryId",

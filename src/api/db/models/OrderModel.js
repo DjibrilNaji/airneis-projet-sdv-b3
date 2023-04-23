@@ -6,10 +6,16 @@ import RelOrderProductModel from "./RelOrderProduct.js"
 class OrderModel extends BaseModel {
   static tableName = "orders"
 
+  static modifiers = {
+    paginate: (query, limit, page) => {
+      return query.limit(limit).offset((page - 1) * limit)
+    },
+  }
+
   static relationMappings() {
     return {
       user: {
-        relation: BaseModel.HasManyRelation,
+        relation: BaseModel.BelongsToOneRelation,
         modelClass: UserModel,
         join: {
           from: "orders.userId",
