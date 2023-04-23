@@ -20,6 +20,7 @@ const signIn =
       const date = new Date()
       date.setDate(date.getDate() + 1)
       document.cookie = `token=${jwt}; expires=${date}; path=/;`
+      document.cookie = `userId=${user.id}; expires=${date};  path=/;`
       localStorage.setItem(config.session.localStorageKey, jwt)
       localStorage.setItem("username", user.userName)
 
