@@ -16,11 +16,11 @@ class ProductModel extends BaseModel {
   static relationMappings() {
     return {
       category: {
-        relation: BaseModel.HasOneRelation,
+        relation: BaseModel.HasManyRelation,
         modelClass: CategoryModel,
         join: {
           from: "products.categoryId",
-          to: "category.id",
+          to: "categories.id",
         },
       },
       relationToMaterial: {

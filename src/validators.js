@@ -2,10 +2,11 @@ import knexfile from "@@/knexfile"
 import * as yup from "yup"
 
 // generic
-export const boolValidator = yup.bool()
+export const boolValidator = yup.boolean().default(false)
 export const stringValidator = yup.string()
 export const idValidator = yup.number().integer().min(1)
 export const integerValidator = yup.number().integer().min(1)
+export const numberValidator = yup.number()
 export const urlSlugValidator = yup
   .string()
   .matches(

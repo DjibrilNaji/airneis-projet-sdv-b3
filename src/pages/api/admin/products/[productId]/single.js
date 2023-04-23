@@ -3,9 +3,7 @@ import { NotFoundError } from "@/api/errors"
 import validate from "@/api/middlewares/validate.js"
 import s3 from "@@/configAWS.js"
 import mw from "@/api/mw.js"
-import {
-  idValidator,
-} from "@/validators"
+import { idValidator } from "@/validators"
 
 const handler = mw({
   GET: [
@@ -20,7 +18,9 @@ const handler = mw({
       },
       res,
     }) => {
-      const product = await ProductModel.query().where({id: productId}).withGraphFetched("image")
+      const product = await ProductModel.query()
+        .where({ id: productId })
+        .withGraphFetched("image")
 
       if (!product) {
         throw new NotFoundError()
