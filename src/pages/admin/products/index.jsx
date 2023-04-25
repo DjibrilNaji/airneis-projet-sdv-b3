@@ -173,6 +173,11 @@ const UsersAdmin = () => {
               fieldName="category"
             />
             <TableHeadField
+              displayName="Materials"
+              handleSortChange={handleSortChange}
+              fieldName="material"
+            />
+            <TableHeadField
               displayName="Price"
               handleSortChange={handleSortChange}
               fieldName="price"
@@ -203,6 +208,13 @@ const UsersAdmin = () => {
               <td className="py-2 px-4">{product.name}</td>
               <td className="py-2 px-4">{product.description}</td>
               <td className="py-2 px-4">{product.category[0].name}</td>
+              <td className="py-2 px-4">
+                {product.material.map((mat, index) => (
+                  <ul key={index}>
+                    <li>{mat.nameMaterial}</li>
+                  </ul>
+                ))}
+              </td>
               <td className="py-2 px-4 hidden md:table-cell">
                 {product.price}
               </td>

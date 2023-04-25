@@ -30,7 +30,9 @@ const handler = mw({
     }) => {
       const searchTermModified = `%${searchTerm}%`
 
-      const query = ProductModel.query().withGraphFetched("category")
+      const query = ProductModel.query()
+        .withGraphFetched("category")
+        .withGraphFetched("material")
 
       if (searchTerm) {
         query
