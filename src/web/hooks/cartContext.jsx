@@ -37,7 +37,7 @@ export const CartContextProvider = (props) => {
     } else {
       setCart((prevItems) => [
         ...prevItems,
-        { ...product, img: image, quantity: quantity },
+        { ...product, urlImage: image, quantity: quantity },
       ])
     }
   }
