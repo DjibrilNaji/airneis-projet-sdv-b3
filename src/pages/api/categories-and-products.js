@@ -28,7 +28,7 @@ const handler = mw({
           "products.name",
           "products.slug",
           "products.price",
-          "products.quantity",
+          "products.stock",
           "products.highlander",
           "image_product.urlImage"
         )

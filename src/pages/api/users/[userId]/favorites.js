@@ -61,7 +61,7 @@ const handler = mw({
           "products.description",
           "products.slug",
           "products.price",
-          "products.quantity",
+          "products.stock",
           "image_product.urlImage",
           "favorites.id"
         )
