@@ -9,3 +9,18 @@
     font-family: Quicksand, system-ui, sans-serif;
   }
 }
+
+.truncate-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 3;
+  line-height: 1.5em;
+  max-height: 4.5em;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
