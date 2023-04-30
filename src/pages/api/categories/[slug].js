@@ -41,7 +41,7 @@ const handler = mw({
           "products.name",
           "products.slug",
           "products.price",
-          "products.quantity",
+          "products.stock",
           "image_product.urlImage"
         )
         .distinctOn("products.id")

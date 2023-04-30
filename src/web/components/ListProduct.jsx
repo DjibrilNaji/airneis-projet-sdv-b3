@@ -21,7 +21,7 @@ const ListProduct = (props) => {
           width={1000}
           height={1000}
         />
-        {product.quantity > 0 ? (
+        {product.stock > 0 ? (
           <div
             className="flex absolute uppercase font-bold top-44
          text-2xl bg-white text-stone-500 rounded-lg p-1 border-2 border-stone-500 px-2"
