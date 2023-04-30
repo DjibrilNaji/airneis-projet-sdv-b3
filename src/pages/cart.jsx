@@ -8,7 +8,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react"
 
 const Cart = () => {
   const {
-    actions: { addToCart, removeQuantity, removeOneProduct },
+    actions: { addToCart, removeQuantity, removeOneProduct, removeAllFromCart },
     state: { cart },
   } = useContext(CartContext)
 
@@ -130,6 +130,13 @@ const Cart = () => {
                 <div className="flex justify-between items-center py-2"></div>
               </div>
             ))}
+
+            <button
+              className="flex justify-center w-1/4 rounded-lg p-2 bg-red-500 text-white shadow-lg duration-300 hover:bg-red-600"
+              onClick={() => removeAllFromCart()}
+            >
+              Remove all
+            </button>
           </div>
 
           <div className="flex flex-col w-full md:w-screen md:min-w-md md:max-w-sm border  h-fit rounded-lg p-4 shadow-xl">
