@@ -1,91 +1,146 @@
-import Image from "next/image"
-import React, { useEffect, useState } from "react"
+import { CartContext } from "@/web/hooks/cartContext"
+import routes from "@/web/routes"
+import { faCartShopping } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faShoppingBasket, faTrash } from "@fortawesome/free-solid-svg-icons"
+import Image from "next/image"
 import Link from "next/link"
-import axios from "axios"
+import React, { useContext, useEffect, useState } from "react"
 
 const Cart = () => {
-  const [productInCart, setproductInCart] = useState([])
+  const {
+    state: { cart },
+  } = useContext(CartContext)
+
+  const [cartItems, setCartItems] = useState([])
+  const [totalPrice, setTotalPrice] = useState()
+  const [totalTva, setTotalTva] = useState()
 
   useEffect(() => {
-    async function fetchData() {
-      const result = await axios.get("/api/products")
-      setproductInCart(result.data)
-    }
+    setCartItems(cart)
+  }, [cart])
 
-    fetchData()
-  }, [])
+  useEffect(() => {
+    const total = cartItems.reduce(
+      (acc, item) => acc + item.price * item.quantity,
+      0
+    )
+
+    setTotalPrice(total)
+  }, [cartItems])
+
+  useEffect(() => {
+    const total = totalPrice * (20 / 100)
+
+    setTotalTva(total)
+  }, [totalPrice])
 
   return (
     <>
-      <h1 className="flex text-stone-400 text-3xl font-bold md:justify-center">
-        Panier
-      </h1>
-      <section className="container mx-auto">
-        {productInCart.map((product) => (
-          <div className="pb-4 lg:col-start-1 " key={product.id}>
-            <div className="flex items-center  border shadow-lg rounded-xl p-2">
-              <Link href={`/products/${product.slug}`}>
-                <Image
-                  src={`/assets/img/products/${product.img}`}
-                  alt="slide 2"
-                  className=" h-full w-full object-cover"
-                  width="100"
-                  height="100"
+      {cartItems.length > 0 ? (
+        <div className="flex flex-1 flex-col md:flex-row gap-6 p-4">
+          <div className="flex flex-col gap-4 items-left md:w-screen">
+            {cartItems.map((product) => (
+              <div key={product.id} className="flex flex-col md:p-4 border-b">
+                <div className="flex">
+                  <div className="flex flex-col gap-2 items-center">
+                    <Image
+                      src={product.urlImage}
+                      alt="slide 2"
+                      className="w-28 h-28 md:w-32 md:h-32 object-cover rounded-md"
+                      width="200"
+                      height="200"
+                    />
+                    <div className="flex  items-center justify-between h-6">
+                      <button className="flex items-center justify-center w-8 h-6 bg-gray-200 rounded-md hover:scale-110 duration-300">
+                        -
+                      </button>
+
+                      <span className="p-2 font-semibold">
+                        {product.quantity}
+                      </span>
+
+                      <button
+                        className="flex items-center justify-center w-8 h-6 border bg-gray-200 rounded-md hover:scale-110 duration-300 disabled:cursor-not-allowed disabled:opacity-30"
+                        disabled={product.quantity == product.stock}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col mx-2 w-full justify-between">
+                    <div>
+                      <Link
+                        href={routes.product(product.slug)}
+                        className="flex items-center font-bold text-black uppercase"
+                      >
+                        {product.name}
+                      </Link>
+
+                      <div className="flex items-center justify-between">
+                        <p className="truncate-3 w-[90%]">
+                          {product.description}
+                        </p>
+                      </div>
+                    </div>
+
+                    <span className="flex justify-end text-sm font-bold">
+                      {product.price * product.quantity} €
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center py-2"></div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-col w-full md:w-screen md:min-w-md md:max-w-sm border  h-fit rounded-lg p-4 shadow-xl">
+            <p className="flex text-sm justify-between font-bold">
+              <span>Subtotal</span>
+              <span>{totalPrice} €</span>
+            </p>
+
+            <p className="flex justify-between text-xs text-stone-400 font-bold">
+              <span>TVA</span>
+              <span>{totalTva} €</span>
+            </p>
+
+            <p className="flex justify-between mt-4 text-lg font-bold  whitespace-nowrap">
+              <span>TOTAL</span>
+              <span>{totalPrice + totalTva} €</span>
+            </p>
+
+            <button className="border bg-stone-500 rounded-lg p-2 mt-4 whitespace-nowrap">
+              Passer la commande
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="fixed inset-0">
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="flex flex-col items-center gap-10 bg-white rounded-lg">
+              <div className="flex flex-col items-center gap-10">
+                <FontAwesomeIcon
+                  icon={faCartShopping}
+                  className="h-20 text-stone-500"
                 />
+                <p className="font-bold">Votre panier est tristement vide !</p>
+              </div>
+              <Link
+                href={"/"}
+                className="bg-stone-500 px-4 text-xl py-2 rounded-md text-white"
+              >
+                Go home
               </Link>
-              <div className="px-2 md:pl-6">
-                <Link
-                  href={`/products/${product.slug}`}
-                  className="font-semibold uppercase"
-                >
-                  {product.name}
-                </Link>
-                <p className="">{product.description}</p>
-              </div>
-
-              <div className="flex flex-col ml-auto">
-                <span className="text-right pb-2">{product.price}</span>
-                {/*Gérer le onChange*/}
-                <input
-                  type="number"
-                  min="0"
-                  value={product.quantity}
-                  className="border-2 border-black w-8 h-6 md:w-16 md:p-1"
-                />
-
-                <button className="text-right">
-                  <FontAwesomeIcon
-                    icon={faTrash}
-                    className="pt-3 h-5 text-stone-400"
-                  />
-                </button>
-              </div>
             </div>
           </div>
-        ))}
-
-        <div className="col-start-2 row-start-1">
-          <div className="flex flex-col px-3 pb-8 lg:col-start-2 lg:row-span-1">
-            <h3 className="flex text-lg font-bold">
-              Total <span className="ml-auto">4800€</span>
-            </h3>
-            <h4 className="flex text-md font-semibold text-stone-400">
-              Tva <span className="ml-auto">800€</span>
-            </h4>
-          </div>
-          <button className="flex bg-stone-200 items-center mx-auto text-lg rounded-full py-1 px-3">
-            <FontAwesomeIcon
-              icon={faShoppingBasket}
-              className="mr-3 bg-white rounded-full p-2"
-            />{" "}
-            Passer la commande
-          </button>
         </div>
-      </section>
+      )}
     </>
   )
 }
+
+Cart.isPublic = true
 
 export default Cart
