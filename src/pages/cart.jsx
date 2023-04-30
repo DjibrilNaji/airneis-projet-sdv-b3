@@ -1,6 +1,6 @@
 import { CartContext } from "@/web/hooks/cartContext"
 import routes from "@/web/routes"
-import { faCartShopping } from "@fortawesome/free-solid-svg-icons"
+import { faCartShopping, faTrash } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Image from "next/image"
 import Link from "next/link"
@@ -8,7 +8,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react"
 
 const Cart = () => {
   const {
-    actions: { addToCart, removeQuantity },
+    actions: { addToCart, removeQuantity, removeOneProduct },
     state: { cart },
   } = useContext(CartContext)
 
@@ -47,6 +47,13 @@ const Cart = () => {
       addToCart(product, 1)
     },
     [addToCart]
+  )
+
+  const handleClickDeleteOne = useCallback(
+    (product) => {
+      removeOneProduct(product.id)
+    },
+    [removeOneProduct]
   )
 
   return (
@@ -89,13 +96,24 @@ const Cart = () => {
 
                   <div className="flex flex-col mx-2 w-full justify-between">
                     <div>
-                      <Link
-                        href={routes.product(product.slug)}
-                        className="flex items-center font-bold text-black uppercase"
-                      >
-                        {product.name}
-                      </Link>
+                      <span className="flex justify-between">
+                        <Link
+                          href={routes.product(product.slug)}
+                          className="flex items-center font-bold text-black uppercase"
+                        >
+                          {product.name}
+                        </Link>
 
+                        <button
+                          className="duration-300 hover:scale-125"
+                          onClick={() => handleClickDeleteOne(product)}
+                        >
+                          <FontAwesomeIcon
+                            icon={faTrash}
+                            className="text-stone-500"
+                          />
+                        </button>
+                      </span>
                       <div className="flex items-center justify-between">
                         <p className="truncate-3 w-[90%]">
                           {product.description}
