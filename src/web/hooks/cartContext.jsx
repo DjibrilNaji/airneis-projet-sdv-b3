@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react"
 
 export const CartContext = createContext()
 
@@ -29,7 +35,7 @@ export const CartContextProvider = (props) => {
         setCart((prevItems) =>
           prevItems.map((item) =>
             item.id === product.id
-              ? { ...item, quantity: item.quantity + quantity }
+              ? { ...item, quantity: item.quantity + (quantity ? quantity : 1) }
               : item
           )
         )
@@ -42,11 +48,32 @@ export const CartContextProvider = (props) => {
     }
   }
 
+  const removeQuantity = useCallback(
+    (product) => {
+      const existingItem = cart.find((item) => item.id === product.id)
+
+      if (existingItem.quantity - 1 === 0) {
+        setCart((prevItems) =>
+          prevItems.filter((item) => item.id !== product.id)
+        )
+      } else {
+        setCart((prevItems) =>
+          prevItems.map((item) =>
+            item.id === product.id
+              ? { ...item, quantity: item.quantity - 1 }
+              : item
+          )
+        )
+      }
+    },
+    [cart]
+  )
+
   return (
     <CartContext.Provider
       {...props}
       value={{
-        actions: { addToCart },
+        actions: { addToCart, removeQuantity },
         state: { cart },
       }}
     />
