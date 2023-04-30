@@ -69,11 +69,15 @@ export const CartContextProvider = (props) => {
     [cart]
   )
 
+  const removeOneProduct = useCallback((productId) => {
+    setCart((products) => products.filter(({ id }) => id !== productId))
+  }, [])
+
   return (
     <CartContext.Provider
       {...props}
       value={{
-        actions: { addToCart, removeQuantity },
+        actions: { addToCart, removeQuantity, removeOneProduct },
         state: { cart },
       }}
     />
