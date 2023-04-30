@@ -4,10 +4,11 @@ import { faCartShopping } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Image from "next/image"
 import Link from "next/link"
-import React, { useContext, useEffect, useState } from "react"
+import React, { useCallback, useContext, useEffect, useState } from "react"
 
 const Cart = () => {
   const {
+    actions: { addToCart, removeQuantity },
     state: { cart },
   } = useContext(CartContext)
 
@@ -34,6 +35,20 @@ const Cart = () => {
     setTotalTva(total)
   }, [totalPrice])
 
+  const handleClickReduceQuantity = useCallback(
+    (product) => {
+      removeQuantity(product)
+    },
+    [removeQuantity]
+  )
+
+  const handleClickIncreaseQuantity = useCallback(
+    (product) => {
+      addToCart(product, 1)
+    },
+    [addToCart]
+  )
+
   return (
     <>
       {cartItems.length > 0 ? (
@@ -51,7 +66,10 @@ const Cart = () => {
                       height="200"
                     />
                     <div className="flex  items-center justify-between h-6">
-                      <button className="flex items-center justify-center w-8 h-6 bg-gray-200 rounded-md hover:scale-110 duration-300">
+                      <button
+                        className="flex items-center justify-center w-8 h-6 bg-gray-200 rounded-md hover:scale-110 duration-300"
+                        onClick={() => handleClickReduceQuantity(product)}
+                      >
                         -
                       </button>
 
@@ -61,6 +79,7 @@ const Cart = () => {
 
                       <button
                         className="flex items-center justify-center w-8 h-6 border bg-gray-200 rounded-md hover:scale-110 duration-300 disabled:cursor-not-allowed disabled:opacity-30"
+                        onClick={() => handleClickIncreaseQuantity(product)}
                         disabled={product.quantity == product.stock}
                       >
                         +
