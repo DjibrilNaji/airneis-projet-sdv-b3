@@ -16,6 +16,7 @@ exports.seed = async function (knex) {
   const favorites = []
 
   const categorieName = ["Bedding", "Storage Sand", "Table"]
+  const materialName = ["Wood", "Metal", "Marble", "Glass", "Leather"]
   const productName = [
     "Buffet",
     "Coffee Table",
@@ -67,7 +68,7 @@ exports.seed = async function (knex) {
 
   for (let i = 0; i < 5; i++) {
     materials.push({
-      nameMaterial: faker.commerce.productMaterial(),
+      nameMaterial: materialName[i],
     })
   }
 
