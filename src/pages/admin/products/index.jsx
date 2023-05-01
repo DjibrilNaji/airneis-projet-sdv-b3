@@ -184,9 +184,9 @@ const ProductAdmin = () => {
               className="hidden md:table-cell"
             />
             <TableHeadField
-              displayName="Quantity"
+              displayName="Stock"
               handleSortChange={handleSortChange}
-              fieldName="quantity"
+              fieldName="stock"
               className="hidden md:table-cell"
             />
             <th className="py-2 px-4 hidden md:table-cell">Highlander</th>
@@ -209,7 +209,7 @@ const ProductAdmin = () => {
               <td className="py-2 px-4">{product.description}</td>
               <td className="py-2 px-4">{product.category[0].name}</td>
               <td className="py-2 px-4">
-                {product.material.map((mat, index) => (
+                {product.materials.map((mat, index) => (
                   <ul key={index}>
                     <li>{mat.nameMaterial}</li>
                   </ul>
@@ -219,7 +219,7 @@ const ProductAdmin = () => {
                 {product.price}
               </td>
               <td className="py-2 px-4 hidden md:table-cell">
-                {product.quantity}
+                {product.stock}
               </td>
               <td className="py-2 px-4 hidden md:table-cell">
                 {!product.highlander ? (

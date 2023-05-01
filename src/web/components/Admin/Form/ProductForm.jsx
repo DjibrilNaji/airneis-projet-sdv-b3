@@ -8,7 +8,7 @@ const defaultInitialValues = {
   name: "",
   description: "",
   price: "",
-  quantity: "",
+  stock: "",
   highlander: "",
   slug: "",
   categoryId: "",
@@ -25,6 +25,11 @@ const defaultValidationSchema = yup.object().shape({
     .required("La description est obligatoire")
     .label("description"),
   price: yup.number().required("Le prix est obligatoire").label("price"),
+  stock: yup
+    .number()
+    .integer()
+    .required("La quantité en stock est obligatoire")
+    .label("stock"),
   highlander: yup.boolean().required().label("Highlander").default(false),
   slug: yup
     .string()
@@ -63,7 +68,7 @@ const ProductForm = (props) => {
           <FormField name="name" type="text" label="Nom du Produit :" />
           <FormField name="description" type="text" label="Description :" />
           <FormField name="price" type="number" label="Prix :" />
-          <FormField name="quantity" type="number" label="Quantity :" />
+          <FormField name="stock" type="number" label="Stock :" />
           <label className="flex flex-col gap-2">
             {" "}
             Highlander

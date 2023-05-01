@@ -54,12 +54,15 @@ const ViewUser = (props) => {
       name,
       description,
       price,
-      quantity,
+      stock,
       highlander,
       slug,
-      material,
+      materials,
     }) => {
-      console.log(material)
+      if (highlander === "") {
+        highlander = false
+      }
+
       const {
         data: { result },
       } = await axios.patch(
@@ -70,10 +73,10 @@ const ViewUser = (props) => {
           name,
           description,
           price,
-          quantity,
+          stock,
           highlander,
           slug,
-          material,
+          materials,
         }
       )
 

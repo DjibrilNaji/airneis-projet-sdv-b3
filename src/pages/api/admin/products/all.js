@@ -38,7 +38,7 @@ const handler = mw({
 
       const query = ProductModel.query()
         .withGraphFetched("category")
-        .withGraphFetched("material")
+        .withGraphFetched("materials")
 
       if (searchTerm) {
         query
@@ -80,7 +80,7 @@ const handler = mw({
         name: stringValidator.required(),
         description: stringValidator.required(),
         price: numberValidator.required(),
-        quantity: integerValidator.required(),
+        stock: integerValidator.required(),
         highlander: boolValidator.required(),
         slug: urlSlugValidator.required(),
         urlImages: stringValidator.nullable(),
@@ -94,7 +94,7 @@ const handler = mw({
           name,
           description,
           price,
-          quantity,
+          stock,
           highlander,
           slug,
           categorieId,
@@ -118,7 +118,7 @@ const handler = mw({
         name,
         description,
         price,
-        quantity,
+        stock,
         highlander,
         categoryId,
         slug,

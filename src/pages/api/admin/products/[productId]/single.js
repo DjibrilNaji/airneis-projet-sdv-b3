@@ -34,8 +34,8 @@ const handler = mw({
       const product = await ProductModel.query()
         .where({ id: productId })
         .withGraphFetched("image")
-        .withGraphFetched("material")
-        .modifyGraph("material", (builder) => {
+        .withGraphFetched("materials")
+        .modifyGraph("materials", (builder) => {
           builder.select("nameMaterial")
         })
 
@@ -43,8 +43,8 @@ const handler = mw({
         throw new NotFoundError()
       }
 
-      product[0].material.map((mat, index) => {
-        product[0].material.splice(index, 1, mat.nameMaterial)
+      product[0].materials.map((mat, index) => {
+        product[0].materials.splice(index, 1, mat.nameMaterial)
       })
 
       product[0].image.map((imageProduct) => {
@@ -66,24 +66,16 @@ const handler = mw({
         name: stringValidator,
         description: stringValidator,
         price: numberValidator,
-        quantity: integerValidator,
+        stock: integerValidator,
         highlander: boolValidator,
         slug: urlSlugValidator,
-        material: materialValidator,
+        materials: materialValidator,
       },
     }),
     async ({
       locals: {
         query: { productId },
-        body: {
-          name,
-          description,
-          price,
-          quantity,
-          highlander,
-          slug,
-          material,
-        },
+        body: { name, description, price, stock, highlander, slug, materials },
       },
       res,
     }) => {
@@ -98,16 +90,16 @@ const handler = mw({
           ...(name ? { name } : {}),
           ...(description ? { description } : {}),
           ...(price ? { price } : {}),
-          ...(quantity ? { quantity } : {}),
+          ...(stock ? { stock } : {}),
           ...(highlander ? { highlander } : {}),
           ...(slug ? { slug } : {}),
         })
         .withGraphFetched("image")
-        .withGraphFetched("material")
+        .withGraphFetched("materials")
 
       await db("rel_material_product").where({ productId: productId }).del()
 
-      material.map(async (mat) => {
+      materials.map(async (mat) => {
         const materialId = await MaterialModel.query()
           .select("materials.id")
           .findOne({ nameMaterial: mat })

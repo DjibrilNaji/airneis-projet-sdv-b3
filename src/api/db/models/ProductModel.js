@@ -23,7 +23,7 @@ class ProductModel extends BaseModel {
           to: "categories.id",
         },
       },
-      material: {
+      materials: {
         relation: BaseModel.ManyToManyRelation,
         modelClass: MaterialModel,
         join: {
