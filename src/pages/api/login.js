@@ -19,7 +19,9 @@ const handler = mw({
       },
       res,
     }) => {
-      const query = UserModel.query().findOne({ email }).where({isDelete: false})
+      const query = UserModel.query()
+        .findOne({ email })
+        .where({ isDelete: false })
       const user = await query
 
       if (!user || !(await user.checkPassword(password))) {
@@ -28,10 +30,12 @@ const handler = mw({
         return
       }
 
-      const userValidate = await query.where({validate : true})
+      const userValidate = await query.where({ validate: true })
 
-      if(!userValidate) {
-        res.status(401).send({ error: "Validate your account, check your email ! " })
+      if (!userValidate) {
+        res
+          .status(401)
+          .send({ error: "Validate your account, check your email ! " })
 
         return
       }

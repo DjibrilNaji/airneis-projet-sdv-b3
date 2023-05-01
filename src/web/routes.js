@@ -42,6 +42,9 @@ const routes = {
     signIn: () => "/login",
     contact: () => "/contact",
     admin: {
+      materials: {
+        collection: () => "/admin/materials/all",
+      },
       products: {
         collection: () => "/admin/products/all",
         single: (productId, query) =>
@@ -50,6 +53,7 @@ const routes = {
             query
           ),
         create: () => `/admin/products/all`,
+        update: (productId) => `/admin/products/${productId}/single`,
         uploadFile: () => `/admin/products/upload`,
       },
       categories: () => "/admin/categories",
@@ -75,7 +79,8 @@ const routes = {
         add: (userId) => `/users/${userId}/address`,
       },
       billingAddress: {
-        update: (billingAddressId) => `/users/billingAddress/${billingAddressId}/edit`,
+        update: (billingAddressId) =>
+          `/users/billingAddress/${billingAddressId}/edit`,
         add: (userId) => `/users/${userId}/billingAddress`,
       },
       validate: (token, query) =>

@@ -12,6 +12,7 @@ const defaultInitialValues = {
   highlander: "",
   slug: "",
   categoryId: "",
+  materials: [],
 }
 
 const defaultValidationSchema = yup.object().shape({
@@ -45,6 +46,7 @@ const ProductForm = (props) => {
     onChange,
     initialValues = defaultInitialValues,
     validationSchema = defaultValidationSchema,
+    materials,
     categories,
     error,
   } = props
@@ -79,6 +81,20 @@ const ProductForm = (props) => {
             </Field>
           </label>
           <FormField name="slug" type="text" label="Slug :" />
+          <div id="checkbox-group">Material</div>
+          <div role="group" aria-labelledby="checkbox-group">
+            {materials.map((mat) => (
+              <label key={mat.id}>
+                <Field
+                  type="checkbox"
+                  name="materials"
+                  className="m-2"
+                  value={mat.nameMaterial}
+                />
+                {mat.nameMaterial}
+              </label>
+            ))}
+          </div>
           <FormField
             name="file"
             type="file"

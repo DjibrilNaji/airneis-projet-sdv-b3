@@ -14,7 +14,7 @@ import TableHeadField from "@/web/components/Admin/TableHeadField"
 import routes from "@/web/routes"
 import config from "@/web/config"
 
-const UsersAdmin = () => {
+const ProductAdmin = () => {
   const [data, setData] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
 
@@ -271,8 +271,8 @@ const UsersAdmin = () => {
   )
 }
 
-UsersAdmin.getLayout = function (page) {
+ProductAdmin.getLayout = function (page) {
   return <LayoutAdmin>{page}</LayoutAdmin>
 }
 
-export default UsersAdmin
+export default ProductAdmin

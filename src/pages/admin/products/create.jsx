@@ -12,9 +12,14 @@ export const getServerSideProps = async () => {
     `${config.api.baseURL}${routes.api.categories.collection()}`
   )
 
+  const materials = await axios.get(
+    `${config.api.baseURL}${routes.api.admin.materials.collection()}`
+  )
+
   return {
     props: {
       categories: data,
+      materials: materials.data.result,
     },
   }
 }
@@ -22,6 +27,7 @@ export const getServerSideProps = async () => {
 const CreateProduct = (props) => {
   const {
     categories: { result },
+    materials,
   } = props
   const router = useRouter()
 
@@ -44,6 +50,7 @@ const CreateProduct = (props) => {
       highlander,
       slug,
       categorieId,
+      materials,
     }) => {
       if (highlander === "") {
         highlander = false
@@ -60,6 +67,7 @@ const CreateProduct = (props) => {
           slug,
           categorieId,
           urlImage,
+          materials,
         },
         {
           headers: {
@@ -116,6 +124,7 @@ const CreateProduct = (props) => {
             categories={result}
             onSubmit={handleSubmit}
             onChange={handleFileInput}
+            materials={materials}
           />
         </div>
       </div>
