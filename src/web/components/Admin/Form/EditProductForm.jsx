@@ -9,7 +9,7 @@ const defaultInitialValues = {
   name: "",
   description: "",
   price: "",
-  quantity: "",
+  stock: "",
   highlander: "",
   slug: "",
   material: [],

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import Link from "next/link"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
@@ -29,10 +29,21 @@ import useAppContext from "@/web/hooks/useAppContext"
 import { useRouter } from "next/router.js"
 import { useCallback } from "react"
 import { UserIcon } from "@heroicons/react/24/outline"
+import { CartContext } from "@/web/hooks/cartContext"
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [showSearch, setShowSearch] = useState(false)
+
+  const {
+    state: { cart },
+  } = useContext(CartContext)
+
+  const [cartItems, setCartItems] = useState([])
+
+  useEffect(() => {
+    setCartItems(cart)
+  }, [cart])
 
   const handleShowSearchClick = () => {
     setShowSearch(!showSearch)
@@ -41,12 +52,15 @@ const Navbar = () => {
     setIsOpen(!isOpen)
   }
   const router = useRouter()
+
   const {
     state: { session },
   } = useAppContext()
+
   const {
     actions: { signOut },
   } = useAppContext()
+
   const handleSignOut = useCallback(async () => {
     await signOut()
 
@@ -160,8 +174,7 @@ const Navbar = () => {
       <Link href={"/"} legacyBehavior>
         <Image src={logo} alt="logo" />
       </Link>
-
-      <div className="flex items-center ml-auto transition-all transition-duration-200 ">
+      <div className="flex items-center ml-auto transition-all transition-duration-200">
         {showSearch ? (
           <>
             <button>
@@ -186,11 +199,16 @@ const Navbar = () => {
           </button>
         )}
 
-        <Link href={`/cart`} className="px-2 py-1">
+        <Link href={`/cart`} className="px-2 py-1 relative">
           <FontAwesomeIcon
             icon={faShoppingCart}
             className="h-6 text-stone-400"
           />
+          {cartItems.length > 0 && (
+            <span className="absolute top-0 right-0 inline-flex items-center justify-center p-1 text-xs font-bold leading-none text-white bg-black rounded-full">
+              {cartItems.length}
+            </span>
+          )}
         </Link>
 
         <button
