@@ -10,7 +10,9 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons"
 import cookie from "cookie"
-import { useCallback, useState } from "react"
+import { useCallback, useContext, useState } from "react"
+import { CartContext } from "@/web/hooks/cartContext"
+import Dialog from "@/web/components/Dialog"
 
 export const getServerSideProps = async ({ params, req, req: { url } }) => {
   const userId = params.userId
@@ -48,7 +50,13 @@ const Favorite = (props) => {
     token,
   } = props
 
+  const {
+    actions: { addToCart },
+  } = useContext(CartContext)
+
   const [favorite, setFavorite] = useState(result)
+  const [isOpen, setIsOpen] = useState(false)
+  const [contentDialog, setContentDialog] = useState()
 
   const handleDeleteFavorite = useCallback(
     async (favoriteId) => {
@@ -75,31 +83,41 @@ const Favorite = (props) => {
     [token, userId]
   )
 
+  const handleAddToCart = useCallback(
+    (product, image) => {
+      addToCart(product, image, 1)
+      setContentDialog("Votre produit a bien été ajouté aux panier")
+      setIsOpen(true)
+      setTimeout(() => setIsOpen(false), 2500)
+    },
+    [addToCart]
+  )
+
   return (
     <>
+      <Dialog
+        isOpen={isOpen}
+        dialogTitle="Informations"
+        content={contentDialog}
+      />
+
       {favorite.length === 0 ? (
         <div className="fixed inset-0">
           <div className="flex items-center justify-center min-h-screen">
-            <div className="bg-gray-500"></div>
-            <div className="flex flex-col items-center gap-20 bg-white rounded-lg">
-              <div className="mb-4">
-                <h3 className="font-bold text-2xl">My Favourits</h3>
-              </div>
-              <div className="flex flex-col items-center mb-4">
+            <div className="flex flex-col items-center gap-10 bg-white rounded-lg">
+              <div className="flex flex-col items-center gap-10">
                 <FontAwesomeIcon
                   icon={faBoxOpen}
                   className="h-20 text-stone-500"
                 />
-                <p>Your favorites list is empty !</p>
+                <p className="font-bold">Your favorites list is empty !</p>
               </div>
-              <div className="">
-                <Link
-                  href={"/"}
-                  className="bg-stone-500 px-4 text-xl py-2 rounded-md text-white"
-                >
-                  Go home
-                </Link>
-              </div>
+              <Link
+                href={"/"}
+                className="bg-stone-500 px-4 text-xl py-2 rounded-md text-white"
+              >
+                Go home
+              </Link>
             </div>
           </div>
         </div>
@@ -138,7 +156,13 @@ const Favorite = (props) => {
                         className="transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
                         title="Ajouter au panier"
                       >
-                        <FontAwesomeIcon icon={faCartPlus} className="h-6" />
+                        <FontAwesomeIcon
+                          icon={faCartPlus}
+                          className="h-6"
+                          onClick={() =>
+                            handleAddToCart(product, product.urlImage)
+                          }
+                        />
                       </button>
                       <button
                         className="transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
