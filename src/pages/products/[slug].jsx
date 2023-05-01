@@ -5,6 +5,7 @@ import {
   faArrowLeft,
   faArrowRight,
   faHeart,
+  faHeartBroken,
 } from "@fortawesome/free-solid-svg-icons"
 import axios from "axios"
 import config from "@/web/config"
@@ -35,11 +36,19 @@ export const getServerSideProps = async ({ params, req, req: { url } }) => {
       `${config.api.baseURL}${routes.api.products.single(productSlug, query)}`
     )
 
+    const inFavorite = await axios.get(
+      `${config.api.baseURL}/users/${userId}/favorites/${data.result.product.id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
+
     return {
       props: {
         product: data,
         token,
         userId,
+        favorite: inFavorite.data.result,
       },
     }
   } catch (error) {
@@ -52,7 +61,7 @@ export const getServerSideProps = async ({ params, req, req: { url } }) => {
 }
 
 const Product = (props) => {
-  const { product: data, token, userId, errorCode } = props
+  const { product: data, token, userId, errorCode, favorite } = props
 
   if (errorCode) {
     return <Error statusCode={errorCode} />
@@ -65,8 +74,13 @@ const Product = (props) => {
 
   const [activeIndex, setActiveIndex] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
-  const [contentDialog, setContentDialog] = useState()
+  const [contentModal, setContentModal] = useState()
   const [quantity, setQuantity] = useState(1)
+  const [isFavorite, setIsFavorite] = useState()
+
+  useEffect(() => {
+    setIsFavorite(favorite.length > 0 ? true : false)
+  }, [favorite.length])
 
   const cartItems = cart.find((item) => item.slug === data.result.product.slug)
 
@@ -106,20 +120,28 @@ const Product = (props) => {
 
   const handleAddFavorites = useCallback(
     async (productId) => {
-      await axios.post(
-        `${config.api.baseApiURL}${routes.api.users.favorites.single(userId, {
-          productId: productId,
-        })}`,
-        null,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      setContentDialog("Votre produit a bien été ajouté aux favoris")
-      setIsOpen(true)
-      setTimeout(() => setIsOpen(false), 2500)
+      if (isFavorite) {
+        setContentModal("Ce produit est déjà dans vos favoris")
+        setIsOpen(true)
+        setTimeout(() => setIsOpen(false), 2500)
+      } else {
+        await axios.post(
+          `${config.api.baseApiURL}${routes.api.users.favorites.single(userId, {
+            productId: productId,
+          })}`,
+          null,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+        setContentModal("Votre produit a bien été ajouté aux favoris")
+        setIsOpen(true)
+        setTimeout(() => setIsOpen(false), 2500)
+      }
+
+      setIsFavorite(true)
     },
-    [token, userId]
+    [token, userId, isFavorite]
   )
 
   const [selectedQuantity, setSelectedQuantity] = useState(1)
@@ -127,7 +149,7 @@ const Product = (props) => {
   const handleAddProduct = useCallback(
     (product, image) => {
       addToCart(product, image, parseInt(quantity))
-      setContentDialog("Votre produit a bien été ajouté aux panier")
+      setContentModal("Votre produit a bien été ajouté aux panier")
       setIsOpen(true)
       setTimeout(() => setIsOpen(false), 2500)
       setQuantity(1)
@@ -160,7 +182,7 @@ const Product = (props) => {
       <Dialog
         isOpen={isOpen}
         dialogTitle="Informations"
-        content={contentDialog}
+        content={contentModal}
       />
 
       <div className="hidden md:flex items-center justify-center">
@@ -296,7 +318,7 @@ const Product = (props) => {
 
         <div className="flex w-full md:w-3/5">
           <div className="flex flex-col m-4 w-full">
-            <div className="flex gap-4">
+            <div className="flex gap-4 items-center">
               <h1 className="text-lg font-bold">{data.result.product.name}</h1>
 
               {token && (
@@ -305,8 +327,10 @@ const Product = (props) => {
                   title="Ajouter aux favoris"
                 >
                   <FontAwesomeIcon
-                    icon={faHeart}
-                    className="h-5 text-red-500"
+                    icon={isFavorite ? faHeart : faHeartBroken}
+                    className={`h-5 ${
+                      isFavorite ? " text-red-500" : "text-yellow-500"
+                    }`}
                     onClick={() => handleAddFavorites(data.result.product.id)}
                   />
                 </button>
