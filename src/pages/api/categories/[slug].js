@@ -45,6 +45,7 @@ const handler = mw({
           "image_product.urlImage"
         )
         .distinctOn("products.id")
+        .where({ isDelete: false })
 
       products.map((product) => {
         product.urlImage = s3.getSignedUrl("getObject", {

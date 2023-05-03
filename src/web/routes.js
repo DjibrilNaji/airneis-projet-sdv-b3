@@ -54,6 +54,7 @@ const routes = {
           ),
         create: () => `/admin/products/all`,
         update: (productId) => `/admin/products/${productId}/single`,
+        delete: (productId) => `/admin/products/${productId}/delete`,
         uploadFile: () => `/admin/products/upload`,
       },
       categories: () => "/admin/categories",
