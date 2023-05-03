@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
@@ -10,7 +10,6 @@ import {
   faHeart,
   faList,
   faLock,
-  faMagnifyingGlass,
   faMessage,
   faRightFromBracket,
   faRightToBracket,
@@ -29,24 +28,39 @@ import useAppContext from "@/web/hooks/useAppContext"
 import { useRouter } from "next/router.js"
 import { useCallback } from "react"
 import { UserIcon } from "@heroicons/react/24/outline"
+import axios from "axios"
+import config from "@/web/config"
+import SearchBar from "../SearchBar"
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [showSearch, setShowSearch] = useState(false)
+  const [data, setData] = useState([])
 
-  const handleShowSearchClick = () => {
-    setShowSearch(!showSearch)
-  }
+  const fetchData = useCallback(async () => {
+    const result = await axios.get(
+      `${config.api.baseApiURL}${routes.api.products.collection()}`
+    )
+    setData(result.data.result)
+  }, [])
+
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
+
   const handleIsOpenClick = () => {
     setIsOpen(!isOpen)
   }
+
   const router = useRouter()
+
   const {
     state: { session },
   } = useAppContext()
+
   const {
     actions: { signOut },
   } = useAppContext()
+
   const handleSignOut = useCallback(async () => {
     await signOut()
 
@@ -161,31 +175,8 @@ const Navbar = () => {
         <Image src={logo} alt="logo" />
       </Link>
 
-      <div className="flex items-center ml-auto transition-all transition-duration-200 ">
-        {showSearch ? (
-          <>
-            <button>
-              <FontAwesomeIcon
-                icon={faXmark}
-                className="h-6 text-stone-400 mr-4"
-                onClick={handleShowSearchClick}
-              />
-            </button>
-            <input
-              type="search"
-              placeholder="Rechercher..."
-              className="focus:outline-none focus:border-stone-400 focus:border-2 rounded placeholder-stone-400"
-            />
-          </>
-        ) : (
-          <button className="px-2 py-1" onClick={handleShowSearchClick}>
-            <FontAwesomeIcon
-              icon={faMagnifyingGlass}
-              className="h-6 text-stone-400"
-            />
-          </button>
-        )}
-
+      <div className="flex items-center ml-auto transition-all transition-duration-200">
+        <SearchBar data={data} />
         <Link href={`/cart`} className="px-2 py-1">
           <FontAwesomeIcon
             icon={faShoppingCart}
