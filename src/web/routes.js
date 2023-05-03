@@ -75,7 +75,8 @@ const routes = {
         add: (userId) => `/users/${userId}/address`,
       },
       billingAddress: {
-        update: (billingAddressId) => `/users/billingAddress/${billingAddressId}/edit`,
+        update: (billingAddressId) =>
+          `/users/billingAddress/${billingAddressId}/edit`,
         add: (userId) => `/users/${userId}/billingAddress`,
       },
       validate: (token, query) =>
@@ -98,8 +99,12 @@ const routes = {
       collection: () => "/categories",
     },
     products: {
+      collection: () => "/products",
       single: (slug, query) =>
         createRouteWithQueryParams(`/products/${slug}`, query),
+    },
+    search: {
+      collection: (query) => createRouteWithQueryParams(`/search`, query),
     },
     orders: {
       collection: (userId, query) =>
