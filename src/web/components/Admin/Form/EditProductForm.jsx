@@ -1,6 +1,5 @@
 import { Field, Form, Formik } from "formik"
 import * as yup from "yup"
-import React from "react"
 import FormError from "@/web/components/FormError"
 import SubmitButton from "@/web/components/SubmitButton"
 import FormField from "@/web/components/Admin/FormField"
@@ -12,6 +11,7 @@ const defaultInitialValues = {
   stock: "",
   highlander: "",
   slug: "",
+  materials: [],
 }
 
 const defaultValidationSchema = yup.object().shape({
@@ -28,6 +28,11 @@ const defaultValidationSchema = yup.object().shape({
     .integer()
     .required("Le prix est obligatoire")
     .label("price"),
+  stock: yup
+    .number()
+    .integer()
+    .required("La quantité en stock est obligatoire")
+    .label("stock"),
   highlander: yup.boolean().required().label("Highlander"),
   slug: yup
     .string()
@@ -43,6 +48,7 @@ const EditProductForm = (props) => {
     onSubmit,
     initialValues = defaultInitialValues,
     validationSchema = defaultValidationSchema,
+    material,
     active,
     error,
   } = props
@@ -74,12 +80,33 @@ const EditProductForm = (props) => {
             label="Prix :"
             active={active}
           />
+          <FormField
+            name="stock"
+            type="number"
+            label="stock :"
+            active={active}
+          />
           <label className="flex flex-col gap-2">
             {" "}
             Highlander
             <Field name="highlander" type="checkbox" disabled={active} />
           </label>
           <FormField name="slug" type="text" label="Slug :" active={active} />
+          <div id="checkbox-group">Material</div>
+          <div role="group" aria-labelledby="checkbox-group">
+            {material.map((mat) => (
+              <label key={mat.id}>
+                <Field
+                  type="checkbox"
+                  className="m-2"
+                  disabled={active}
+                  name="materials"
+                  value={mat.nameMaterial}
+                />
+                {mat.nameMaterial}
+              </label>
+            ))}
+          </div>
           <SubmitButton
             active={active.toString()}
             color="light"

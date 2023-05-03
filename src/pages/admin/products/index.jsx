@@ -14,7 +14,7 @@ import TableHeadField from "@/web/components/Admin/TableHeadField"
 import routes from "@/web/routes"
 import config from "@/web/config"
 
-const UsersAdmin = () => {
+const ProductAdmin = () => {
   const [data, setData] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
 
@@ -173,15 +173,20 @@ const UsersAdmin = () => {
               fieldName="category"
             />
             <TableHeadField
+              displayName="Materials"
+              handleSortChange={handleSortChange}
+              fieldName="material"
+            />
+            <TableHeadField
               displayName="Price"
               handleSortChange={handleSortChange}
               fieldName="price"
               className="hidden md:table-cell"
             />
             <TableHeadField
-              displayName="Quantity"
+              displayName="Stock"
               handleSortChange={handleSortChange}
-              fieldName="quantity"
+              fieldName="stock"
               className="hidden md:table-cell"
             />
             <th className="py-2 px-4 hidden md:table-cell">Highlander</th>
@@ -203,11 +208,18 @@ const UsersAdmin = () => {
               <td className="py-2 px-4">{product.name}</td>
               <td className="py-2 px-4">{product.description}</td>
               <td className="py-2 px-4">{product.category[0].name}</td>
+              <td className="py-2 px-4">
+                {product.materials.map((mat, index) => (
+                  <ul key={index}>
+                    <li>{mat.nameMaterial}</li>
+                  </ul>
+                ))}
+              </td>
               <td className="py-2 px-4 hidden md:table-cell">
                 {product.price}
               </td>
               <td className="py-2 px-4 hidden md:table-cell">
-                {product.quantity}
+                {product.stock}
               </td>
               <td className="py-2 px-4 hidden md:table-cell">
                 {!product.highlander ? (
@@ -259,8 +271,8 @@ const UsersAdmin = () => {
   )
 }
 
-UsersAdmin.getLayout = function (page) {
+ProductAdmin.getLayout = function (page) {
   return <LayoutAdmin>{page}</LayoutAdmin>
 }
 
-export default UsersAdmin
+export default ProductAdmin
