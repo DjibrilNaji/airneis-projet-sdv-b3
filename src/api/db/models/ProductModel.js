@@ -1,6 +1,6 @@
 import BaseModel from "./BaseModel.js"
 import CategoryModel from "./CategoryModel.js"
-import RelOrderProductModel from "./RelOrderProduct.js"
+import RelOrderProductModel from "./RelOrderProductModel.js"
 import ImageProductModel from "./ImageProductModel.js"
 import MaterialModel from "./MaterialModel.js"
 
