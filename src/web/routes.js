@@ -25,6 +25,9 @@ const routes = {
       collection: () => "/admin/products",
       create: () => "/admin/products/create",
     },
+    orders: {
+      single: (orderId) => `/admin/orders/${orderId}/view`,
+    },
   },
   users: {
     single: (userId) => `/users/${userId}/myAccount`,
@@ -65,6 +68,7 @@ const routes = {
       },
       orders: {
         collection: () => `/admin/orders`,
+        single: (userId) => `/admin/orders/${userId}`,
       },
     },
     users: {

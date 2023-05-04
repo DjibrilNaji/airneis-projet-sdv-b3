@@ -168,7 +168,7 @@ const OrderAdmin = () => {
                   </td>
                   <td>
                     <Link
-                      href={"/"}
+                      href={routes.admin.orders.single(order.id)}
                       className="border-2 px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200"
                     >
                       <FontAwesomeIcon
