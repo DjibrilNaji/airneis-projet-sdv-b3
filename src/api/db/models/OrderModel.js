@@ -1,7 +1,7 @@
 import BaseModel from "./BaseModel.js"
 import UserModel from "./UserModel.js"
 import AddressModel from "./AddressModel.js"
-import RelOrderProductModel from "./RelOrderProduct.js"
+import RelOrderProductModel from "./RelOrderProductModel.js"
 
 class OrderModel extends BaseModel {
   static tableName = "orders"
