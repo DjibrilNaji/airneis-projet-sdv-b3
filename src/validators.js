@@ -3,6 +3,7 @@ import * as yup from "yup"
 
 // generic
 export const boolValidator = yup.boolean().default(false)
+export const materialValidator = yup.array().of(yup.string())
 export const stringValidator = yup.string()
 export const idValidator = yup.number().integer().min(1)
 export const integerValidator = yup.number().integer().min(1)

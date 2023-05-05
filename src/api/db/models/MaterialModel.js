@@ -1,17 +1,21 @@
 import BaseModel from "./BaseModel.js"
-import RelMaterialProductModel from "./RelMaterialProductModel.js"
+import ProductModel from "./ProductModel.js"
 
 class MaterialModel extends BaseModel {
   static tableName = "materials"
 
   static relationMappings() {
     return {
-      relation: {
-        relation: BaseModel.HasManyRelation,
-        modelClass: RelMaterialProductModel,
+      product: {
+        relation: BaseModel.ManyToManyRelation,
+        modelClass: ProductModel,
         join: {
           from: "materials.id",
-          to: "rel_material_product.materialId",
+          through: {
+            from: "rel_material_product.materialId",
+            to: "rel_material_product.productId",
+          },
+          to: "products.id",
         },
       },
     }

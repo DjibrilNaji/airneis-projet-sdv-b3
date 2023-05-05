@@ -4,17 +4,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faArrowLeft,
   faArrowRight,
-  faCartPlus,
   faHeart,
+  faHeartBroken,
 } from "@fortawesome/free-solid-svg-icons"
 import axios from "axios"
 import config from "@/web/config"
 import routes from "@/web/routes"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import Link from "next/link"
 import Error from "@/pages/_error"
 import BackButton from "@/web/components/BackButton"
 import cookie from "cookie"
+import Button from "@/web/components/Button"
+import { CartContext } from "@/web/hooks/cartContext"
 import Dialog from "@/web/components/Dialog"
 
 export const getServerSideProps = async ({ params, req, req: { url } }) => {
@@ -34,11 +36,19 @@ export const getServerSideProps = async ({ params, req, req: { url } }) => {
       `${config.api.baseURL}${routes.api.products.single(productSlug, query)}`
     )
 
+    const inFavorite = await axios.get(
+      `${config.api.baseURL}/users/${userId}/favorites/${data.result.product.id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
+
     return {
       props: {
         product: data,
         token,
         userId,
+        favorite: inFavorite.data.result,
       },
     }
   } catch (error) {
@@ -51,20 +61,32 @@ export const getServerSideProps = async ({ params, req, req: { url } }) => {
 }
 
 const Product = (props) => {
-  const { product: data, token, userId, errorCode } = props
-
-  const [activeIndex, setActiveIndex] = useState(0)
+  const { product: data, token, userId, errorCode, favorite } = props
 
   if (errorCode) {
     return <Error statusCode={errorCode} />
   }
 
+  const {
+    actions: { addToCart },
+    state: { cart },
+  } = useContext(CartContext)
+
+  const [activeIndex, setActiveIndex] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
   const [contentModal, setContentModal] = useState()
+  const [quantity, setQuantity] = useState(1)
+  const [isFavorite, setIsFavorite] = useState()
 
-  const closeModal = () => {
-    setIsOpen(false)
-  }
+  useEffect(() => {
+    setIsFavorite(favorite.length > 0 ? true : false)
+  }, [favorite.length])
+
+  const cartItems = cart.find((item) => item.slug === data.result.product.slug)
+
+  const currentInventory = cartItems
+    ? data.result.product.stock - cartItems.quantity
+    : data.result.product.stock
 
   const mainImage = data.result.imageProduct.find((objet) => objet.isMain)
 
@@ -98,29 +120,69 @@ const Product = (props) => {
 
   const handleAddFavorites = useCallback(
     async (productId) => {
-      await axios.post(
-        `${config.api.baseApiURL}${routes.api.users.favorites.single(userId, {
-          productId: productId,
-        })}`,
-        null,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      setContentModal("Votre produit a bien été ajouté aux favoris")
-      setIsOpen(true)
+      if (isFavorite) {
+        setContentModal("Ce produit est déjà dans vos favoris")
+        setIsOpen(true)
+        setTimeout(() => setIsOpen(false), 2500)
+      } else {
+        await axios.post(
+          `${config.api.baseApiURL}${routes.api.users.favorites.single(userId, {
+            productId: productId,
+          })}`,
+          null,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+        setContentModal("Votre produit a bien été ajouté aux favoris")
+        setIsOpen(true)
+        setTimeout(() => setIsOpen(false), 2500)
+      }
+
+      setIsFavorite(true)
     },
-    [token, userId]
+    [token, userId, isFavorite]
   )
+
+  const [selectedQuantity, setSelectedQuantity] = useState(1)
+
+  const handleAddProduct = useCallback(
+    (product, image) => {
+      addToCart(product, image, parseInt(quantity))
+      setContentModal("Votre produit a bien été ajouté aux panier")
+      setIsOpen(true)
+      setTimeout(() => setIsOpen(false), 2500)
+      setQuantity(1)
+      setSelectedQuantity(1)
+    },
+    [addToCart, quantity]
+  )
+
+  const handleQuantityChange = useCallback((e) => {
+    setQuantity(e.target.value)
+    setSelectedQuantity(e.target.value)
+  }, [])
+
+  const [quantityDisplay, setQuantityDisplay] = useState([])
+
+  useEffect(() => {
+    const newQuantityDisplay = []
+    for (let i = 1; i <= currentInventory; i++) {
+      newQuantityDisplay.push(
+        <option key={i} value={i}>
+          {i}
+        </option>
+      )
+    }
+    setQuantityDisplay(newQuantityDisplay)
+  }, [currentInventory])
 
   return (
     <>
       <Dialog
         isOpen={isOpen}
-        closeModal={closeModal}
-        modalTitle="Informations"
+        dialogTitle="Informations"
         content={contentModal}
-        buttonCloseTitle="Close"
       />
 
       <div className="hidden md:flex items-center justify-center">
@@ -256,15 +318,30 @@ const Product = (props) => {
 
         <div className="flex w-full md:w-3/5">
           <div className="flex flex-col m-4 w-full">
-            <div className="flex">
+            <div className="flex gap-4 items-center">
               <h1 className="text-lg font-bold">{data.result.product.name}</h1>
+
+              {token && (
+                <button
+                  className="flex items-center transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
+                  title="Ajouter aux favoris"
+                >
+                  <FontAwesomeIcon
+                    icon={isFavorite ? faHeart : faHeartBroken}
+                    className={`h-5 ${
+                      isFavorite ? " text-red-500" : "text-yellow-500"
+                    }`}
+                    onClick={() => handleAddFavorites(data.result.product.id)}
+                  />
+                </button>
+              )}
 
               <span className="ml-auto mx-4 font-bold">
                 {data.result.product.price} €
               </span>
             </div>
 
-            {data.result.product.quantity > 0 ? (
+            {data.result.product.stock > 0 ? (
               <h2 className="flex text-stone-500 opacity-60 font-bold">
                 En stock
               </h2>
@@ -278,27 +355,30 @@ const Product = (props) => {
               {data.result.product.description}
             </p>
 
-            <div className="flex justify-end gap-10 items-center m-6">
-              {token && (
-                <button
-                  className="transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
-                  title="Ajouter aux favoris"
-                >
-                  <FontAwesomeIcon
-                    icon={faHeart}
-                    className="h-5 text-red-500"
-                    onClick={() => handleAddFavorites(data.result.product.id)}
-                  />
-                </button>
-              )}
+            <div className="flex my-4">
+              <div className="flex flex-col gap-4 ml-auto">
+                <div className="flex justify-center gap-2">
+                  <span>Quantity</span>
 
-              <button
-                className="transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
-                title="Ajouter au panier"
-                disabled={data.result.product.quantity == 0}
-              >
-                <FontAwesomeIcon icon={faCartPlus} className="h-5" />
-              </button>
+                  <select
+                    className="border-2 rounded-lg px-2 focus:outline-none"
+                    onChange={handleQuantityChange}
+                    value={selectedQuantity}
+                  >
+                    {quantityDisplay}
+                  </select>
+                </div>
+
+                <Button
+                  onClick={() =>
+                    handleAddProduct(data.result.product, mainImage.urlImage)
+                  }
+                  className="disabled:cursor-not-allowed disabled:bg-stone-300"
+                  disabled={currentInventory === 0}
+                >
+                  Add to cart
+                </Button>
+              </div>
             </div>
 
             <div className="border-b-2 border-t-2 py-4">
@@ -326,7 +406,7 @@ const Product = (props) => {
 
           return (
             <Link
-              key={product._id}
+              key={product.id}
               href={routes.product(product.slug)}
               className="flex items-center justify-center h-60 transition duration-800 hover:scale-105 hover:opacity-90"
             >

@@ -1,29 +1,17 @@
-import Button from "@/web/components/Button"
-
 const Dialog = (props) => {
-  const { isOpen, modalTitle, content, closeModal, buttonCloseTitle } = props
+  const { isOpen, dialogTitle, content } = props
 
   return (
     <>
       <div
-        className={`fixed z-50 inset-0 overflow-y-auto transform hover:scale-110 transition-all  ${
+        className={`fixed px-4 py-6 top-1/2 left-1/2 w-2/3 md:w-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 bg-black opacity-90 rounded-lg ${
           isOpen ? "" : "hidden"
         }`}
       >
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="fixed inset-0 bg-gray-500 opacity-75"></div>
-          <div className="bg-white rounded-lg z-20 p-6">
-            <div className="mb-4">
-              <h3 className="font-bold text-2xl">{modalTitle}</h3>
-            </div>
-            <div className="mb-4">{content}</div>
-            <div className="flex justify-end">
-              <Button onClick={closeModal} size="sm" className="rounded-lg">
-                {buttonCloseTitle}
-              </Button>
-            </div>
-          </div>
-        </div>
+        <h1 className="text-white text-lg md:text-xl font-bold underline pb-2">
+          {dialogTitle}
+        </h1>
+        <p className="flex text-white text-lg md:text-xl">{content}</p>
       </div>
     </>
   )

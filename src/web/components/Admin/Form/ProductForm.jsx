@@ -8,10 +8,11 @@ const defaultInitialValues = {
   name: "",
   description: "",
   price: "",
-  quantity: "",
+  stock: "",
   highlander: "",
   slug: "",
   categoryId: "",
+  materials: [],
 }
 
 const defaultValidationSchema = yup.object().shape({
@@ -24,6 +25,11 @@ const defaultValidationSchema = yup.object().shape({
     .required("La description est obligatoire")
     .label("description"),
   price: yup.number().required("Le prix est obligatoire").label("price"),
+  stock: yup
+    .number()
+    .integer()
+    .required("La quantité en stock est obligatoire")
+    .label("stock"),
   highlander: yup.boolean().required().label("Highlander").default(false),
   slug: yup
     .string()
@@ -45,6 +51,7 @@ const ProductForm = (props) => {
     onChange,
     initialValues = defaultInitialValues,
     validationSchema = defaultValidationSchema,
+    materials,
     categories,
     error,
   } = props
@@ -61,7 +68,7 @@ const ProductForm = (props) => {
           <FormField name="name" type="text" label="Nom du Produit :" />
           <FormField name="description" type="text" label="Description :" />
           <FormField name="price" type="number" label="Prix :" />
-          <FormField name="quantity" type="number" label="Quantity :" />
+          <FormField name="stock" type="number" label="Stock :" />
           <label className="flex flex-col gap-2">
             {" "}
             Highlander
@@ -79,6 +86,20 @@ const ProductForm = (props) => {
             </Field>
           </label>
           <FormField name="slug" type="text" label="Slug :" />
+          <div id="checkbox-group">Material</div>
+          <div role="group" aria-labelledby="checkbox-group">
+            {materials.map((mat) => (
+              <label key={mat.id}>
+                <Field
+                  type="checkbox"
+                  name="materials"
+                  className="m-2"
+                  value={mat.nameMaterial}
+                />
+                {mat.nameMaterial}
+              </label>
+            ))}
+          </div>
           <FormField
             name="file"
             type="file"

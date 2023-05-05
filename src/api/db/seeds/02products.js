@@ -16,6 +16,7 @@ exports.seed = async function (knex) {
   const favorites = []
 
   const categorieName = ["Bedding", "Storage Sand", "Table"]
+  const materialName = ["Wood", "Metal", "Marble", "Glass", "Leather"]
   const productName = [
     "Buffet",
     "Coffee Table",
@@ -57,7 +58,7 @@ exports.seed = async function (knex) {
       description: faker.commerce.productDescription(),
       price: (100 * i).toFixed(2),
       price_formatted: (100 * i).toFixed(2).toString() + " €",
-      quantity: faker.datatype.number(100),
+      stock: faker.datatype.number(100),
       highlander: faker.datatype.number({ min: 0, max: 1 }),
       categoryId: faker.datatype.number({ min: 1, max: 3 }),
     })
@@ -67,7 +68,7 @@ exports.seed = async function (knex) {
 
   for (let i = 0; i < 5; i++) {
     materials.push({
-      nameMaterial: faker.commerce.productMaterial(),
+      nameMaterial: materialName[i],
     })
   }
 

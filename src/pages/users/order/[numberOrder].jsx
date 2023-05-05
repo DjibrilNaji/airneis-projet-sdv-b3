@@ -159,7 +159,7 @@ const Order = (props) => {
                         data-id={product.id}
                         disabled={status !== "On standby" ? true : false}
                         onChange={handleChangeQuantity}
-                        placeholder={product.quantity}
+                        placeholder={product.stock}
                       />
                     </div>
                     <div className="flex place-content-center">

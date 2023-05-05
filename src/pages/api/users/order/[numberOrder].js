@@ -76,7 +76,7 @@ const handler = mw({
           "products.description",
           "products.price_formatted",
           "rel_order_product.quantity",
-          "products.quantity as quantityProduct",
+          "products.stock as quantityProduct",
           "image_product.urlImage"
         )
         .distinctOn("products.id")
