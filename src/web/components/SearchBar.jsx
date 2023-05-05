@@ -108,7 +108,7 @@ const SearchBar = (props) => {
                       <div className="flex shadow-lg rounded-xl m-4 w-13 ml-4 items-center hover:scale-105">
                         <div className="w-3/12 h-16">
                           <Image
-                            src={product.urlImage}
+                            src={product.image[0].urlImage}
                             alt={product.name}
                             className="object-cover w-full h-full rounded-l-lg"
                             width="100"

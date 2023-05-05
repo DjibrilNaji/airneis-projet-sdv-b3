@@ -91,7 +91,7 @@ const Search = () => {
                 {product.name}
               </span>
               <Image
-                src={product.urlImage}
+                src={product.image[0].urlImage}
                 alt={product.name}
                 className="h-full w-full object-cover rounded-2xl"
                 width="500"
@@ -115,7 +115,7 @@ const Search = () => {
                   {product.name}
                 </span>
                 <Image
-                  src={product.urlImage}
+                  src={product.image[0].urlImage}
                   alt={product.name}
                   className="h-full w-full object-cover rounded-2xl"
                   width="500"

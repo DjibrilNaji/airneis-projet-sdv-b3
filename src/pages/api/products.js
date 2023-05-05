@@ -10,36 +10,21 @@ const handler = mw({
         display: true,
       })
 
-      const products = await ProductModel.query()
-        .innerJoin(
-          "image_product",
-          "products.id",
-          "=",
-          "image_product.productId"
-        )
-        .select(
-          "products.id",
-          "products.name",
-          "products.slug",
-          "products.price",
-          "products.quantity",
-          "products.highlander",
-
-          "image_product.urlImage"
-        )
-
-        .distinctOn("image_product.productId")
+      const products = await ProductModel.query().withGraphFetched("image")
 
       if (!products) {
         res.send({ result: "An error occurred while retrieving products" })
       }
 
-      products.map((product) => {
-        product.urlImage = s3.getSignedUrl("getObject", {
-          Bucket: "airness-matd",
-          Key: product.urlImage,
-        })
-      })
+      products.map((product) =>
+        product.image.map(
+          (image) =>
+            (image.urlImage = s3.getSignedUrl("getObject", {
+              Bucket: "airness-matd",
+              Key: image.urlImage,
+            }))
+        )
+      )
 
       imageHomePage.map((image) => {
         image.urlImage = s3.getSignedUrl("getObject", {
