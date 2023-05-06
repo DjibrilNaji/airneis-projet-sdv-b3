@@ -103,7 +103,7 @@ const Search = () => {
           <p className="text-xl font-semibold mb-4 mt-4">No results found</p>
           <h2 className="text-2xl font-semibold mb-4">Other products:</h2>
           <div className="grid gap-12 pb-7 md:grid-cols-2 md:gap-8 md:px-4 lg:grid-cols-3">
-            {data?.products?.slice(0, 5).map((product) => (
+            {data?.products?.slice(0, 6).map((product) => (
               <Link
                 key={product._id}
                 href={`/products/${product.slug}`}
@@ -121,15 +121,6 @@ const Search = () => {
                 />
               </Link>
             ))}
-            <Link
-              href="/products"
-              className="flex items-center justify-center h-60 transition duration-800 hover:scale-105 hover:opacity-90"
-            >
-              <span className="absolute uppercase font-bold text-2xl bg-white text-stone-500 rounded-lg p-1 border-2 border-stone-500">
-                See more
-              </span>
-              <div className="h-full w-full object-cover rounded-2xl bg-gray-200" />
-            </Link>
           </div>
         </div>
       )}
