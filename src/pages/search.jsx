@@ -64,24 +64,22 @@ const Search = () => {
             </button>
           </form>
         </div>
-        {countProducts === "" ? (
+
+        {countProducts > 0 && (
           <div className="flex justify-center items-center mt-4">
             <p className="text-center">
               {countProducts} results for :{" "}
               <span className="font-bold">"{searchTerm}"</span>
             </p>
           </div>
-        ) : (
-          <p> </p>
         )}
       </div>
-      <div
-        className={`grid gap-12 pb-7 mt-8 m-4 md:grid-cols-2 md:gap-8 md:px-4 lg:grid-cols-3 ${
-          countProducts === 0 ? "hidden" : "visible"
-        }`}
-      >
-        {countProducts > 0 &&
-          filteredProducts.map((product) => (
+
+      {countProducts > 0 ? (
+        <div
+          className={`grid gap-12 pb-7 mt-8 m-4 md:grid-cols-2 md:gap-8 md:px-4 lg:grid-cols-3`}
+        >
+          {filteredProducts.map((product) => (
             <Link
               key={product._id}
               href={`/products/${product.slug}`}
@@ -99,8 +97,8 @@ const Search = () => {
               />
             </Link>
           ))}
-      </div>
-      {countProducts === 0 && (
+        </div>
+      ) : (
         <div className="flex flex-col items-center justify-center w-full">
           <p className="text-xl font-semibold mb-4 mt-4">No results found</p>
           <h2 className="text-2xl font-semibold mb-4">Other products:</h2>

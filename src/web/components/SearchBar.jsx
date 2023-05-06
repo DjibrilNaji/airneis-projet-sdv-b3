@@ -18,11 +18,9 @@ const SearchBar = (props) => {
   const handleSearchChange = (searchItem) => {
     setSearchTerm(searchItem.target.value)
 
-    if (searchItem.target.value.trim() === "") {
-      setIsInputEmpty(true)
-    } else {
-      setIsInputEmpty(false)
-    }
+    searchItem.target.value.trim() == ""
+      ? setIsInputEmpty(true)
+      : setIsInputEmpty(false)
   }
 
   const resetSearch = () => {
@@ -52,15 +50,17 @@ const SearchBar = (props) => {
 
     return (
       <span>
-        {parts.map((part, i) =>
-          part.toLowerCase() === highlight.toLowerCase() ? (
-            <span className="font-semibold bg-stone-100 rounded-sm" key={i}>
-              {part}
-            </span>
-          ) : (
-            <span key={i}>{part}</span>
-          )
-        )}
+        {parts.map((part, i) => (
+          <span
+            className={`${
+              part.toLowerCase() === highlight.toLowerCase() &&
+              "font-semibold bg-stone-100 rounded-sm"
+            }`}
+            key={i}
+          >
+            {part}
+          </span>
+        ))}
       </span>
     )
   }
