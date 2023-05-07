@@ -32,6 +32,7 @@ import axios from "axios"
 import config from "@/web/config"
 import SearchBar from "../SearchBar"
 import { CartContext } from "@/web/hooks/cartContext"
+import SwitchLanguage from "../SwitchLanguage"
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -305,6 +306,7 @@ const Navbar = () => {
               className="fa-xl text-stone-500"
             />
           </Link>
+          <SwitchLanguage />
         </div>
       </div>
     </nav>
