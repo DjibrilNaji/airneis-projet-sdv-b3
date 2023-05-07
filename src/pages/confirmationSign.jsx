@@ -2,8 +2,9 @@ import routes from "@/web/routes"
 import Link from "next/link"
 import axios from "axios"
 import config from "@/web/config"
+import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 
-export const getServerSideProps = async ({ query, req: { url} }) => {
+export const getServerSideProps = async ({ locale, query, req: { url } }) => {
   const token = query.token
   const queryUrl = Object.fromEntries(
     new URL(`http://example.com/${url}`).searchParams.entries()
@@ -16,6 +17,7 @@ export const getServerSideProps = async ({ query, req: { url} }) => {
   return {
     props: {
       user: data,
+      ...(await serverSideTranslations(locale, ["common"])),
     },
   }
 }

@@ -8,8 +8,14 @@ import config from "@/web/config"
 import Link from "@/web/components/Link"
 import Button from "@/web/components/Button"
 import BillingAddressForm from "@/web/components/Auth/BillingAddressForm"
+import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 
-export const getServerSideProps = async ({ params, req, req: { url } }) => {
+export const getServerSideProps = async ({
+  locale,
+  params,
+  req,
+  req: { url },
+}) => {
   const userId = params.userId
   const { token } = cookie.parse(
     req ? req.headers.cookie || "" : document.cookie
@@ -41,6 +47,7 @@ export const getServerSideProps = async ({ params, req, req: { url } }) => {
       userId: userId,
       token: token,
       allAddressUser: addressUser.data.result,
+      ...(await serverSideTranslations(locale, ["common"])),
     },
   }
 }
@@ -54,7 +61,7 @@ const MyAccount = (props) => {
   } = props
 
   const [user, setUser] = useState(result)
-  const [billingAddress, setBillingAddress] =useState(result.billingAddress[0])
+  const [billingAddress, setBillingAddress] = useState(result.billingAddress[0])
   const [seeData, setSeeData] = useState("Personnal Data")
   const optionUser = ["Personnal Data", "Address", "Billing Address"]
   const [allAddress, setAllAddress] = useState(allAddressUser)
@@ -82,17 +89,13 @@ const MyAccount = (props) => {
   )
 
   const handleSubmitBilling = useCallback(
-    async ({ 
-      addressFull, 
-      country,
-      city,
-      cp,
-      phoneNumber, 
-    }) => {
+    async ({ addressFull, country, city, cp, phoneNumber }) => {
       const {
         data: { result },
       } = await axios.patch(
-        `${config.api.baseApiURL}${routes.api.users.billingAddress.update(user.billingAddress[0].id)}`,
+        `${config.api.baseApiURL}${routes.api.users.billingAddress.update(
+          user.billingAddress[0].id
+        )}`,
         {
           addressFull,
           country,
@@ -109,7 +112,6 @@ const MyAccount = (props) => {
     },
     [token, user.billingAddress]
   )
-
 
   const handleDeleteAddress = useCallback(
     async (event) => {
@@ -152,9 +154,21 @@ const MyAccount = (props) => {
               <Button className="my-5">Add address delivery</Button>
             </Link>
           </div>
-          <div hidden={seeData === "Billing Address" ? false : true} className="mt-5">
-            <BillingAddressForm initialValues={billingAddress} onSubmit={handleSubmitBilling} hidden={!billingAddress ? true : false}/>
-            <Link href={routes.users.addBillingAddress(user.id)} hidden={!billingAddress ? false : true}><Button>Add Billing Address</Button></Link>
+          <div
+            hidden={seeData === "Billing Address" ? false : true}
+            className="mt-5"
+          >
+            <BillingAddressForm
+              initialValues={billingAddress}
+              onSubmit={handleSubmitBilling}
+              hidden={!billingAddress ? true : false}
+            />
+            <Link
+              href={routes.users.addBillingAddress(user.id)}
+              hidden={!billingAddress ? false : true}
+            >
+              <Button>Add Billing Address</Button>
+            </Link>
           </div>
           <select
             name="typeData"

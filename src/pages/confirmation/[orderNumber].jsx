@@ -1,12 +1,14 @@
 import Button from "@/web/components/Button"
 import Link from "@/web/components/Link"
+import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 
-export const getServerSideProps = async ({ params }) => {
+export const getServerSideProps = async ({ locale, params }) => {
   const numberOrder = params.orderNumber
 
   return {
     props: {
       numberOrder: numberOrder,
+      ...(await serverSideTranslations(locale, ["common"])),
     },
   }
 }

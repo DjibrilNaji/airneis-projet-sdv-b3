@@ -4,8 +4,9 @@ import cookie from "cookie"
 import { useCallback } from "react"
 import { useRouter } from "next/router"
 import BillingAddressForm from "@/web/components/Auth/BillingAddressForm"
+import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 
-export const getServerSideProps = async ({ params, req }) => {
+export const getServerSideProps = async ({ locale, params, req }) => {
   const userId = params.userId
 
   const { token } = cookie.parse(
@@ -16,6 +17,7 @@ export const getServerSideProps = async ({ params, req }) => {
     props: {
       userId: userId,
       token: token,
+      ...(await serverSideTranslations(locale, ["common"])),
     },
   }
 }
@@ -25,15 +27,11 @@ const AddBillingAddress = (props) => {
   const router = useRouter()
 
   const handleSubmit = useCallback(
-    async ({
-      addressFull,
-      country,
-      city,
-      cp,
-      phoneNumber,
-    }) => {
+    async ({ addressFull, country, city, cp, phoneNumber }) => {
       await axios.post(
-        `http://localhost:3000/api${routes.api.users.billingAddress.add(userId)}`,
+        `http://localhost:3000/api${routes.api.users.billingAddress.add(
+          userId
+        )}`,
         {
           addressFull,
           country,
@@ -57,7 +55,7 @@ const AddBillingAddress = (props) => {
           My Billing Address
         </h1>
         <div className="flex flex-wrap justify-center">
-          <BillingAddressForm onSubmit={handleSubmit}/>
+          <BillingAddressForm onSubmit={handleSubmit} />
         </div>
       </div>
     </>

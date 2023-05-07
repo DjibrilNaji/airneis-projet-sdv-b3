@@ -18,8 +18,15 @@ import cookie from "cookie"
 import Button from "@/web/components/Button"
 import { CartContext } from "@/web/hooks/cartContext"
 import Dialog from "@/web/components/Dialog"
+import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import { useTranslation } from "next-i18next"
 
-export const getServerSideProps = async ({ params, req, req: { url } }) => {
+export const getServerSideProps = async ({
+  locale,
+  params,
+  req,
+  req: { url },
+}) => {
   const productSlug = params.slug
   const query = Object.fromEntries(
     new URL(`http://example.com/${url}`).searchParams.entries()
@@ -49,6 +56,7 @@ export const getServerSideProps = async ({ params, req, req: { url } }) => {
         token,
         userId,
         favorite: inFavorite.data.result,
+        ...(await serverSideTranslations(locale, ["common"])),
       },
     }
   } catch (error) {
@@ -71,6 +79,8 @@ const Product = (props) => {
     actions: { addToCart },
     state: { cart },
   } = useContext(CartContext)
+
+  const { t } = useTranslation("common")
 
   const [activeIndex, setActiveIndex] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
@@ -395,7 +405,9 @@ const Product = (props) => {
       </div>
 
       <div className="flex justify-center bg-stone-500 my-10">
-        <p className="p-6 font-bold text-white text-xl">Produits similaires</p>
+        <p className="p-6 font-bold text-white text-xl">
+          {t("product_similar")}
+        </p>
       </div>
 
       <div className="grid gap-12 pb-7 md:grid-cols-2 md:gap-8 md:px-4 lg:grid-cols-3">

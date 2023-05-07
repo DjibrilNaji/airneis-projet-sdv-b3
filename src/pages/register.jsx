@@ -2,7 +2,15 @@ import RegisterForm from "@/web/components/Auth/RegisterForm"
 import useAppContext from "@/web/hooks/useAppContext"
 import { useRouter } from "next/router.js"
 import { useCallback, useState } from "react"
+import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 
+export async function getServerSideProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["common"])),
+    },
+  }
+}
 
 const Register = () => {
   const router = useRouter()
