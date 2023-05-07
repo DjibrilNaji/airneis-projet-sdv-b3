@@ -4,8 +4,15 @@ import React from "react"
 import Layout from "@/web/components/Layout/Layout"
 import { AppContextProvider } from "@/web/hooks/useAppContext"
 import { CartContextProvider } from "@/web/hooks/cartContext"
+import { appWithTranslation } from "next-i18next"
+import { useRouter } from "next/router"
+import { useTranslation } from "next-i18next"
 
-export default function App({ Component, pageProps }) {
+function App({ Component, pageProps }) {
+  const { locale } = useRouter()
+  const { t } = useTranslation()
+  const direction = t("direction", { locale })
+
   const renderWithLayout =
     Component.getLayout ||
     function (page) {
@@ -14,12 +21,13 @@ export default function App({ Component, pageProps }) {
           <Head>
             <title>Airneis</title>
           </Head>
-
-          <CartContextProvider>
-            <AppContextProvider isPublicPage={Component.isPublic}>
-              <Layout>{page}</Layout>
-            </AppContextProvider>
-          </CartContextProvider>
+          <div dir={direction}>
+            <CartContextProvider>
+              <AppContextProvider isPublicPage={Component.isPublic}>
+                <Layout>{page}</Layout>
+              </AppContextProvider>
+            </CartContextProvider>
+          </div>
         </>
       )
     }
@@ -29,7 +37,11 @@ export default function App({ Component, pageProps }) {
       <Head>
         <title>Airneis</title>
       </Head>
-      <Component {...pageProps} />
+      <div dir={direction}>
+        <Component {...pageProps} />
+      </div>
     </>
   )
 }
+
+export default appWithTranslation(App)
