@@ -118,7 +118,8 @@ const Home = (props) => {
           className="p-6 text-center font-bold text-stone-400 text-xl"
           dir={direction}
         >
-          {t("home_description")}
+          Venant des hautes terres d'écosse <br />
+          nos meubles sont immortels
         </p>
       </div>
 

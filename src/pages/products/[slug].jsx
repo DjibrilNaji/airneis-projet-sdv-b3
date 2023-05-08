@@ -19,7 +19,6 @@ import Button from "@/web/components/Button"
 import { CartContext } from "@/web/hooks/cartContext"
 import Dialog from "@/web/components/Dialog"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import { useTranslation } from "next-i18next"
 
 export const getServerSideProps = async ({
   locale,
@@ -79,8 +78,6 @@ const Product = (props) => {
     actions: { addToCart },
     state: { cart },
   } = useContext(CartContext)
-
-  const { t } = useTranslation("common")
 
   const [activeIndex, setActiveIndex] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
@@ -406,7 +403,9 @@ const Product = (props) => {
 
       <div className="flex justify-center bg-stone-500 my-10">
         <p className="p-6 font-bold text-white text-xl">
-          {t("product_similar")}
+          <p className="p-6 font-bold text-white text-xl">
+            Produits similaires
+          </p>
         </p>
       </div>
 
