@@ -101,20 +101,20 @@ const Product = (props) => {
     ? data.result.product.stock - cartItems.quantity
     : data.result.product.stock
 
-  const mainImage = data.result.imageProduct.find((objet) => objet.isMain)
+  const mainImage = data.result.product.image.find((objet) => objet.isMain)
 
   const handlePrevious = () => {
     setActiveIndex(
       (prevActiveIndex) =>
-        (prevActiveIndex - 1 + data.result.imageProduct.length) %
-        data.result.imageProduct.length
+        (prevActiveIndex - 1 + data.result.product.image.length) %
+        data.result.product.image.length
     )
   }
 
   const handleNext = () => {
     setActiveIndex(
       (prevActiveIndex) =>
-        (prevActiveIndex + 1) % data.result.imageProduct.length
+        (prevActiveIndex + 1) % data.result.product.image.length
     )
   }
 
@@ -122,14 +122,14 @@ const Product = (props) => {
     const intervalId = setInterval(() => {
       setActiveIndex(
         (prevActiveIndex) =>
-          (prevActiveIndex + 1) % data.result.imageProduct.length
+          (prevActiveIndex + 1) % data.result.product.image.length
       )
     }, 5000)
 
     return () => {
       clearInterval(intervalId)
     }
-  }, [data.result.imageProduct.length])
+  }, [data.result.product.image.length])
 
   const handleAddFavorites = useCallback(
     async (productId) => {
@@ -216,7 +216,7 @@ const Product = (props) => {
 
       <div className="md:hidden relative">
         <div className="m-4 h-96 relative">
-          {data.result.imageProduct.map((image, index) => (
+          {data.result.product.image.map((image, index) => (
             <Image
               key={image.id}
               src={image.urlImage}
@@ -233,7 +233,7 @@ const Product = (props) => {
         <button
           className="absolute top-[45%] text-stone-500 opacity-60 hover:opacity-100 left-0 transition-opacity ease-linear duration-300 disabled:opacity-20"
           onClick={handlePrevious}
-          disabled={data.result.imageProduct.length === 1}
+          disabled={data.result.product.image.length === 1}
         >
           <FontAwesomeIcon
             icon={faArrowLeft}
@@ -244,7 +244,7 @@ const Product = (props) => {
         <button
           className="absolute top-[45%] right-0 text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300 disabled:opacity-20"
           onClick={handleNext}
-          disabled={data.result.imageProduct.length === 1}
+          disabled={data.result.product.image.length === 1}
         >
           <FontAwesomeIcon
             icon={faArrowRight}
@@ -254,7 +254,7 @@ const Product = (props) => {
       </div>
 
       <div className="md:hidden flex justify-center">
-        {data.result.imageProduct.map((image, index) => (
+        {data.result.product.image.map((image, index) => (
           <button
             onClick={() => setActiveIndex(index)}
             key={image.id}
@@ -271,7 +271,7 @@ const Product = (props) => {
         <div className="hidden md:block w-full md:w-2/5 md:pr-8">
           <div className="relative">
             <div className="m-4 h-96 relative">
-              {data.result.imageProduct.map((image, index) => (
+              {data.result.product.image.map((image, index) => (
                 <Image
                   key={image.id}
                   src={image.urlImage}
@@ -289,7 +289,7 @@ const Product = (props) => {
               <button
                 className="text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300 disabled:opacity-20"
                 onClick={handlePrevious}
-                disabled={data.result.imageProduct.length === 1}
+                disabled={data.result.product.image.length === 1}
               >
                 <FontAwesomeIcon
                   icon={faArrowLeft}
@@ -302,7 +302,7 @@ const Product = (props) => {
               <button
                 className="text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300 disabled:opacity-20"
                 onClick={handleNext}
-                disabled={data.result.imageProduct.length === 1}
+                disabled={data.result.product.image.length === 1}
               >
                 <FontAwesomeIcon
                   icon={faArrowRight}
@@ -312,7 +312,7 @@ const Product = (props) => {
             </div>
 
             <div className="flex justify-center">
-              {data.result.imageProduct.map((image, index) => (
+              {data.result.product.image.map((image, index) => (
                 <button
                   onClick={() => setActiveIndex(index)}
                   key={image.id}
@@ -395,10 +395,10 @@ const Product = (props) => {
             <div className="border-b-2 border-t-2 py-4">
               <span className="font-bold">Catégorie : </span>
               <Link
-                href={routes.categorie(data.result.productCategory[0].slug)}
+                href={routes.categorie(data.result.product.category[0].slug)}
                 className="opacity-40 italic font-bold"
               >
-                {data.result.productCategory[0].name}
+                {data.result.product.category[0].name}
               </Link>
             </div>
           </div>
@@ -411,10 +411,6 @@ const Product = (props) => {
 
       <div className="grid gap-12 pb-7 md:grid-cols-2 md:gap-8 md:px-4 lg:grid-cols-3">
         {data.result.randomProducts.map((product) => {
-          const productImage = data.result.randomMainImage.find(
-            (image) => image.productId === product.id
-          )
-
           return (
             <Link
               key={product.id}
@@ -425,7 +421,7 @@ const Product = (props) => {
                 {product.name}
               </span>
               <Image
-                src={productImage.urlImage}
+                src={product.image.find((img) => img.isMain).urlImage}
                 alt={product.name}
                 className="h-full w-[90vw] md:w-full object-cover rounded-2xl"
                 width="500"
