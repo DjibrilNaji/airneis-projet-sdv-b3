@@ -135,11 +135,11 @@ const Favorite = (props) => {
           </h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mx-4 my-4">
             {favorite.map((product) => (
-              <div key={product.slug}>
+              <div key={product.product.slug}>
                 <div className="border shadow-lg rounded-xl h-full px-2">
-                  <Link href={routes.product(product.slug)}>
+                  <Link href={routes.product(product.product.slug)}>
                     <Image
-                      src={product.urlImage}
+                      src={product.product.image[0].urlImage}
                       alt="slide 2"
                       className="object-cover rounded-lg w-full h-72 pt-2"
                       width="300"
@@ -148,15 +148,15 @@ const Favorite = (props) => {
                   </Link>
                   <div className="px-2 py-4">
                     <Link
-                      href={routes.product(product.slug)}
+                      href={routes.product(product.product.slug)}
                       className="font-bold uppercase text-md"
                     >
-                      {product.name}
+                      {product.product.name}
                     </Link>
                   </div>
                   <div className="flex justify-between ">
                     <span className="text-left px-2 text-lg">
-                      {product.price}€
+                      {product.product.price}€
                     </span>
                     <div className="flex justify-end gap-5 px-2 items-center my-4 ">
                       <button
@@ -167,14 +167,14 @@ const Favorite = (props) => {
                           icon={faCartPlus}
                           className="h-6"
                           onClick={() =>
-                            handleAddToCart(product, product.urlImage)
+                            handleAddToCart(product, product.product.urlImage)
                           }
                         />
                       </button>
                       <button
                         className="transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
                         title="Supprimer"
-                        onClick={() => handleDeleteFavorite(product.id)}
+                        onClick={() => handleDeleteFavorite(product.product.id)}
                       >
                         <FontAwesomeIcon
                           icon={faTrash}

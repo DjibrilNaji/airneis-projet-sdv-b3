@@ -120,8 +120,8 @@ const ViewUser = (props) => {
           <h1 className="font-bold">Carnet d'adresses</h1>
         </div>
 
-        {result.address.length > 0 ? (
-          result.address.map((address, index) => (
+        {result.user[0].address.length > 0 ? (
+          result.user[0].address.map((address, index) => (
             <div
               className="flex flex-col my-3 border-b-2 border-stone-500 px-2 pb-2"
               key={address.id}
@@ -173,8 +173,8 @@ const ViewUser = (props) => {
           <h1 className="font-bold">Adresse de facturation</h1>
         </div>
 
-        {result.billingAddress.length > 0 ? (
-          result.billingAddress.map((address) => (
+        {result.user[0].billingAddress.length > 0 ? (
+          result.user[0].billingAddress.map((address) => (
             <div
               className="flex flex-col my-3 border-b-2 border-stone-500 px-2 pb-2"
               key={address.id}
@@ -224,14 +224,14 @@ const ViewUser = (props) => {
 
               <div className="flex flex-col my-3 italic">
                 <h3 className="font-bold underline">Address de livraison :</h3>
-                <span>{order.phoneNumber}</span>
+                <span>{order.address[0].phoneNumber}</span>
                 <span>
-                  {order.addressFull} {order.lastName}
+                  {order.address[0].addressFull} {order.address[0].lastName}
                 </span>
                 <span>
-                  {order.cp} {order.city}
+                  {order.address[0].cp} {order.address[0].city}
                 </span>
-                <span>{order.country}</span>
+                <span>{order.address[0].country}</span>
               </div>
             </div>
           ))
