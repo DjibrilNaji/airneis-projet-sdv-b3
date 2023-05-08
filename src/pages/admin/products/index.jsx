@@ -8,6 +8,7 @@ import {
   faArrowRight,
   faCheck,
   faPlus,
+  faTrash,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons"
 import TableHeadField from "@/web/components/Admin/TableHeadField"
@@ -24,6 +25,8 @@ const ProductAdmin = () => {
   const [order, setOrder] = useState("asc")
   const [limit, setLimit] = useState(10)
   const [searchTerm, setSearchTerm] = useState(null)
+
+  const [selectedProducts, setSelectedProducts] = useState([])
 
   const fetchData = useCallback(
     async (page) => {
@@ -42,6 +45,17 @@ const ProductAdmin = () => {
     [order, sortColumn, limit, searchTerm]
   )
 
+  const handleDelete = useCallback(
+    async (productId) => {
+      await axios.patch(
+        `${config.api.baseApiURL}${routes.api.admin.products.delete(productId)}`
+      )
+      fetchData(currentPage)
+      setSelectedProducts([])
+    },
+    [fetchData, currentPage]
+  )
+
   useEffect(() => {
     fetchData(currentPage)
   }, [currentPage, fetchData])
@@ -52,6 +66,17 @@ const ProductAdmin = () => {
       fetchData(newPage)
     },
     [fetchData]
+  )
+
+  const handleSelectItem = useCallback(
+    (productId) => {
+      if (selectedProducts.includes(productId)) {
+        setSelectedProducts(selectedProducts.filter((id) => id !== productId))
+      } else {
+        setSelectedProducts([...selectedProducts, productId])
+      }
+    },
+    [selectedProducts]
   )
 
   const handleLimitChange = useCallback(
@@ -191,6 +216,7 @@ const ProductAdmin = () => {
             />
             <th className="py-2 px-4 hidden md:table-cell">Highlander</th>
             <th className="py-2 px-4 hidden md:table-cell">Active</th>
+            <th className="py-2 px-1">Actions</th>
             <th className="py-2 px-4">More</th>
           </tr>
         </thead>
@@ -202,6 +228,9 @@ const ProductAdmin = () => {
                 <input
                   type="checkbox"
                   className="h-5 w-5 border-2 appearance-none checked:bg-stone-500 cursor-pointer"
+                  disabled={product.isDelete}
+                  checked={selectedProducts.includes(product.id)}
+                  onChange={() => handleSelectItem(product.id)}
                 />
               </td>
               <td className="py-2 px-4">{product.id} </td>
@@ -247,6 +276,18 @@ const ProductAdmin = () => {
                   />
                 )}
               </td>
+              <td className="text-center">
+                <button
+                  className="disabled:opacity-30 disabled:cursor-not-allowed"
+                  onClick={() => handleDelete(product.id)}
+                  disabled={product.isDelete}
+                >
+                  <FontAwesomeIcon
+                    icon={faTrash}
+                    className="text-stone-400 h-5"
+                  />
+                </button>
+              </td>
               <td className="py-2 px-4 flex justify-center">
                 <Link
                   href={routes.admin.products.single(product.id)}
@@ -260,6 +301,13 @@ const ProductAdmin = () => {
         </tbody>
       </table>
       <div className="flex flex-col justify-start">
+        <button
+          className="border-2 rounded-lg mx-3 my-4 p-2 bg-red-500 text-white disabled:cursor-not-allowed disabled:bg-red-200 w-fit"
+          onClick={() => selectedProducts.map((id) => handleDelete(id))}
+          disabled={selectedProducts.length === 0}
+        >
+          Supprimer tous les éléments séléctionnés
+        </button>
         <Link
           href={routes.admin.products.create()}
           className="border-2 rounded-lg mx-3 my-4 p-2 bg-blue-500 text-white w-fit"

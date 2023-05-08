@@ -42,19 +42,11 @@ export const getServerSideProps = async ({
       `${config.api.baseURL}${routes.api.products.single(productSlug, query)}`
     )
 
-    const inFavorite = await axios.get(
-      `${config.api.baseURL}/users/${userId}/favorites/${data.result.product.id}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    )
-
     return {
       props: {
         product: data,
         token,
         userId,
-        favorite: inFavorite.data.result,
         ...(await serverSideTranslations(locale, ["common"])),
       },
     }
@@ -68,7 +60,7 @@ export const getServerSideProps = async ({
 }
 
 const Product = (props) => {
-  const { product: data, token, userId, errorCode, favorite } = props
+  const { product: data, token, userId, errorCode } = props
 
   if (errorCode) {
     return <Error statusCode={errorCode} />
@@ -85,9 +77,23 @@ const Product = (props) => {
   const [quantity, setQuantity] = useState(1)
   const [isFavorite, setIsFavorite] = useState()
 
-  useEffect(() => {
-    setIsFavorite(favorite.length > 0 ? true : false)
-  }, [favorite.length])
+  {
+    token &&
+      userId &&
+      useEffect(() => {
+        async function fetchData() {
+          const favorite = await axios.get(
+            `${config.api.baseApiURL}/users/${userId}/favorites/${data.result.product.id}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          )
+
+          setIsFavorite(favorite.data.result.length > 0 ? true : false)
+        }
+        fetchData()
+      }, [data.result.product.id, token, userId])
+  }
 
   const cartItems = cart.find((item) => item.slug === data.result.product.slug)
 
@@ -129,8 +135,6 @@ const Product = (props) => {
     async (productId) => {
       if (isFavorite) {
         setContentModal("Ce produit est déjà dans vos favoris")
-        setIsOpen(true)
-        setTimeout(() => setIsOpen(false), 2500)
       } else {
         await axios.post(
           `${config.api.baseApiURL}${routes.api.users.favorites.single(userId, {
@@ -141,12 +145,12 @@ const Product = (props) => {
             headers: { Authorization: `Bearer ${token}` },
           }
         )
+        setIsFavorite(true)
         setContentModal("Votre produit a bien été ajouté aux favoris")
-        setIsOpen(true)
-        setTimeout(() => setIsOpen(false), 2500)
       }
 
-      setIsFavorite(true)
+      setIsOpen(true)
+      setTimeout(() => setIsOpen(false), 2500)
     },
     [token, userId, isFavorite]
   )
