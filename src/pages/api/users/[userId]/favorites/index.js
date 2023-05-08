@@ -106,8 +106,8 @@ const handler = mw({
         throw new InvalidAccessError()
       }
 
-      const favorite = FavoriteModel.query()
-        .findById(favoriteId)
+      const favorite = await FavoriteModel.query()
+        .findOne({ productId: favoriteId })
         .where({ userId: userId })
 
       if (!favorite) {
@@ -116,7 +116,8 @@ const handler = mw({
 
       const favoriteDeleted = await FavoriteModel.query()
         .delete()
-        .where({ id: favoriteId })
+        .where({ productId: favoriteId })
+        .where({ userId: userId })
         .returning("*")
 
       res.send({

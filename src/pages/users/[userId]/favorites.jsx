@@ -136,6 +136,7 @@ const Favorite = (props) => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mx-4 my-4">
             {favorite.map((product) => (
               <div key={product.product.slug}>
+                {product.product.id}
                 <div className="border shadow-lg rounded-xl h-full px-2">
                   <Link href={routes.product(product.product.slug)}>
                     <Image
