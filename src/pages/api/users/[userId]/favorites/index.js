@@ -47,37 +47,27 @@ const handler = mw({
       }
 
       const favoritesWithImages = await FavoriteModel.query()
-        .where({ userId: userId })
-        .innerJoin("products", "favorites.productId", "=", "products.id")
-        .where({ isDelete: false })
-        .innerJoin(
-          "image_product",
-          "products.id",
-          "=",
-          "image_product.productId"
-        )
-        .select(
-          "products.name",
-          "products.description",
-          "products.slug",
-          "products.price",
-          "products.stock",
-          "image_product.urlImage",
-          "favorites.id"
-        )
-        .distinctOn("products.id")
+        .where({
+          userId: userId,
+        })
+        .withGraphFetched("product")
+        .modifyGraph("product", (builder) => {
+          builder.withGraphFetched("image")
+        })
 
       if (!favoritesWithImages) {
         throw new NotFoundError()
       }
 
-      favoritesWithImages.map((product) => {
-        product.urlImage = s3.getSignedUrl("getObject", {
-          Bucket: "airness-matd",
-          Key: product.urlImage,
-        })
-      })
-
+      favoritesWithImages.map((products) =>
+        products.product.image.map(
+          (img) =>
+            (img.urlImage = s3.getSignedUrl("getObject", {
+              Bucket: "airness-matd",
+              Key: img.urlImage,
+            }))
+        )
+      )
       res.send({ result: favoritesWithImages })
     },
   ],
