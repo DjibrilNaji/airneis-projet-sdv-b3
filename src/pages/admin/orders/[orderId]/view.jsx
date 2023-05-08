@@ -19,7 +19,7 @@ export const getServerSideProps = async ({ params }) => {
     props: {
       order: data.order,
       products: data.products,
-      address: data.address,
+      address: data.order.address[0],
       orderId,
     },
   }
@@ -122,7 +122,7 @@ const ViewUser = (props) => {
 
                   <div className="flex flex-col w-full items-end md:flex-col">
                     <span className="text-stone-500 italic">
-                      Quantity : x{item.product.quantity}
+                      Quantity : x{item.quantity}
                     </span>
 
                     <span className="font-bold text-stone-500">

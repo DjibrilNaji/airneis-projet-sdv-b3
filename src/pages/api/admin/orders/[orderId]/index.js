@@ -1,4 +1,3 @@
-import AddressModel from "@/api/db/models/AddressModel"
 import OrderModel from "@/api/db/models/OrderModel"
 import RelOrderProductModel from "@/api/db/models/RelOrderProductModel"
 import { NotFoundError } from "@/api/errors"
@@ -20,17 +19,11 @@ const handler = mw({
       },
       res,
     }) => {
-      const order = await OrderModel.query().findOne({ id: orderId })
+      const order = await OrderModel.query()
+        .findOne({ id: orderId })
+        .withGraphFetched("address")
 
       if (!order) {
-        throw new NotFoundError()
-      }
-
-      const address = await AddressModel.query().findOne({
-        id: order.addressId,
-      })
-
-      if (!address) {
         throw new NotFoundError()
       }
 
@@ -60,7 +53,6 @@ const handler = mw({
       res.send({
         order,
         products,
-        address,
       })
     },
   ],
