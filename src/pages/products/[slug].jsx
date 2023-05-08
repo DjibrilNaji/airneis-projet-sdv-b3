@@ -406,11 +406,7 @@ const Product = (props) => {
       </div>
 
       <div className="flex justify-center bg-stone-500 my-10">
-        <p className="p-6 font-bold text-white text-xl">
-          <p className="p-6 font-bold text-white text-xl">
-            Produits similaires
-          </p>
-        </p>
+        <p className="p-6 font-bold text-white text-xl">Produits similaires</p>
       </div>
 
       <div className="grid gap-12 pb-7 md:grid-cols-2 md:gap-8 md:px-4 lg:grid-cols-3">
