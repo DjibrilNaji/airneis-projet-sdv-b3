@@ -5,14 +5,8 @@ import Layout from "@/web/components/Layout/Layout"
 import { AppContextProvider } from "@/web/hooks/useAppContext"
 import { CartContextProvider } from "@/web/hooks/cartContext"
 import { appWithTranslation } from "next-i18next"
-import { useRouter } from "next/router"
-import { useTranslation } from "next-i18next"
 
 function App({ Component, pageProps }) {
-  const { locale } = useRouter()
-  const { t } = useTranslation()
-  const direction = t("direction", { locale })
-
   const renderWithLayout =
     Component.getLayout ||
     function (page) {
@@ -21,13 +15,11 @@ function App({ Component, pageProps }) {
           <Head>
             <title>Airneis</title>
           </Head>
-          <div dir={direction}>
-            <CartContextProvider>
-              <AppContextProvider isPublicPage={Component.isPublic}>
-                <Layout>{page}</Layout>
-              </AppContextProvider>
-            </CartContextProvider>
-          </div>
+          <CartContextProvider>
+            <AppContextProvider isPublicPage={Component.isPublic}>
+              <Layout>{page}</Layout>
+            </AppContextProvider>
+          </CartContextProvider>
         </>
       )
     }
@@ -37,9 +29,7 @@ function App({ Component, pageProps }) {
       <Head>
         <title>Airneis</title>
       </Head>
-      <div dir={direction}>
-        <Component {...pageProps} />
-      </div>
+      <Component {...pageProps} />
     </>
   )
 }
