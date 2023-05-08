@@ -137,7 +137,7 @@ const OrderAdmin = () => {
                   className="border-b text-sm border-gray-300 py-2 px-4 text-center"
                 >
                   <td className="py-2 px-4">{order.id} </td>
-                  <td className="py-2 px-4">{order.email} </td>
+                  <td className="py-2 px-4">{order.user.email} </td>
                   <td className="py-2 px-4">{order.price_formatted} </td>
                   <td className="py-2 px-4">
                     <FontAwesomeIcon

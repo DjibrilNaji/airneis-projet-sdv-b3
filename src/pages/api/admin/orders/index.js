@@ -20,19 +20,11 @@ const handler = mw({
     }) => {
       const searchTermModified = `%${searchTerm}%`
 
-      const query = OrderModel.query()
-        .innerJoin("users", "orders.userId", "=", "users.id")
-        .select(
-          "orders.id",
-          "orders.numberOrder",
-          "orders.status",
-          "orders.price_formatted",
-          "users.email"
-        )
+      const query = OrderModel.query().withGraphFetched("user")
 
       if (searchTerm) {
         query
-          .whereRaw("UPPER(email) LIKE ?", [searchTermModified.toUpperCase()])
+          .whereRaw("UPPER(status) LIKE ?", [searchTermModified.toUpperCase()])
           .modify("paginate", limit, page)
       } else {
         query.modify("paginate", limit, page)
@@ -45,6 +37,7 @@ const handler = mw({
       const [countResult] = await query
         .clone()
         .clearSelect()
+        .clearWithGraph()
         .limit(1)
         .offset(0)
         .count()
