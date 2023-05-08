@@ -8,6 +8,7 @@ import { useEffect, useState } from "react"
 import config from "@/web/config"
 import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import { useRouter } from "next/router"
 
 export const getServerSideProps = async (context) => {
   const {
@@ -66,6 +67,9 @@ const Home = (props) => {
     }
   }, [result.imageHomePage.length])
 
+  const { locale } = useRouter()
+  const direction = t("direction", { locale })
+
   return (
     <>
       <div>
@@ -110,7 +114,10 @@ const Home = (props) => {
         </div>
       </div>
       <div className="flex justify-center my-4">
-        <p className="p-6 text-center font-bold text-stone-400 text-xl">
+        <p
+          className="p-6 text-center font-bold text-stone-400 text-xl"
+          dir={direction}
+        >
           {t("home_description")}
         </p>
       </div>
