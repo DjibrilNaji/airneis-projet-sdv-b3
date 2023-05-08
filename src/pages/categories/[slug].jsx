@@ -3,8 +3,9 @@ import routes from "@/web/routes.js"
 import Image from "next/image"
 import ListProduct from "@/web/components/ListProduct.jsx"
 import config from "@/web/config"
+import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 
-export const getServerSideProps = async ({ params, req: { url } }) => {
+export const getServerSideProps = async ({ locale, params, req: { url } }) => {
   const slugCategory = params.slug
   const query = Object.fromEntries(
     new URL(`http://example.com/${url}`).searchParams.entries()
@@ -17,6 +18,7 @@ export const getServerSideProps = async ({ params, req: { url } }) => {
   return {
     props: {
       category: data,
+      ...(await serverSideTranslations(locale, ["common"])),
     },
   }
 }

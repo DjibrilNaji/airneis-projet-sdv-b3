@@ -6,8 +6,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons"
 import { useEffect, useState } from "react"
 import config from "@/web/config"
+import { useTranslation } from "next-i18next"
+import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import { useRouter } from "next/router"
 
-export const getServerSideProps = async ({ req: { url } }) => {
+export const getServerSideProps = async (context) => {
+  const {
+    req: { url },
+    locale,
+  } = context
+
   const query = Object.fromEntries(
     new URL(`http://example.com/${url}`).searchParams.entries()
   )
@@ -18,6 +26,7 @@ export const getServerSideProps = async ({ req: { url } }) => {
 
   return {
     props: {
+      ...(await serverSideTranslations(locale, ["common"])),
       categoriesAndProducts: data,
     },
   }
@@ -29,6 +38,8 @@ const Home = (props) => {
   } = props
 
   const [activeIndex, setActiveIndex] = useState(0)
+
+  const { t } = useTranslation("common")
 
   const handlePrevious = () => {
     setActiveIndex(
@@ -55,6 +66,9 @@ const Home = (props) => {
       clearInterval(intervalId)
     }
   }, [result.imageHomePage.length])
+
+  const { locale } = useRouter()
+  const direction = t("direction", { locale })
 
   return (
     <>
@@ -100,7 +114,10 @@ const Home = (props) => {
         </div>
       </div>
       <div className="flex justify-center my-4">
-        <p className="p-6 text-center font-bold text-stone-400 text-xl">
+        <p
+          className="p-6 text-center font-bold text-stone-400 text-xl"
+          dir={direction}
+        >
           Venant des hautes terres d'écosse <br />
           nos meubles sont immortels
         </p>

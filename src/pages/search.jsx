@@ -5,6 +5,15 @@ import config from "@/web/config"
 import routes from "@/web/routes"
 import Link from "next/link"
 import Image from "next/image"
+import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+
+export async function getServerSideProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ["common"])),
+    },
+  }
+}
 
 const Search = () => {
   const router = useRouter()

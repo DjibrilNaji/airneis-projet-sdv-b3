@@ -13,8 +13,14 @@ import cookie from "cookie"
 import { useCallback, useContext, useState } from "react"
 import { CartContext } from "@/web/hooks/cartContext"
 import Dialog from "@/web/components/Dialog"
+import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 
-export const getServerSideProps = async ({ params, req, req: { url } }) => {
+export const getServerSideProps = async ({
+  locale,
+  params,
+  req,
+  req: { url },
+}) => {
   const userId = params.userId
 
   const { token } = cookie.parse(
@@ -39,6 +45,7 @@ export const getServerSideProps = async ({ params, req, req: { url } }) => {
       favorites: data,
       userId,
       token,
+      ...(await serverSideTranslations(locale, ["common"])),
     },
   }
 }

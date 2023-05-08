@@ -7,8 +7,9 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons"
 import { useCallback, useMemo, useState } from "react"
 import Button from "@/web/components/Button"
 import config from "@/web/config"
+import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 
-export const getServerSideProps = async ({ params, req: { url } }) => {
+export const getServerSideProps = async ({ locale, params, req: { url } }) => {
   const numberOrder = params.numberOrder
 
   const query = Object.fromEntries(
@@ -24,6 +25,7 @@ export const getServerSideProps = async ({ params, req: { url } }) => {
       order: data,
       numberOrder: numberOrder,
       query: query,
+      ...(await serverSideTranslations(locale, ["common"])),
     },
   }
 }

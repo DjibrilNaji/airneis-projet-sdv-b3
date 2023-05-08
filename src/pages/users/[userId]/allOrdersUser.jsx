@@ -2,8 +2,9 @@ import axios from "axios"
 import routes from "@/web/routes"
 import ListOrders from "@/web/components/ListOrders"
 import config from "@/web/config"
+import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 
-export const getServerSideProps = async ({ params, req: { url } }) => {
+export const getServerSideProps = async ({ locale, params, req: { url } }) => {
   const userId = params.userId
   const query = Object.fromEntries(
     new URL(`http://example.com/${url}`).searchParams.entries()
@@ -16,6 +17,7 @@ export const getServerSideProps = async ({ params, req: { url } }) => {
   return {
     props: {
       orders: data,
+      ...(await serverSideTranslations(locale, ["common"])),
     },
   }
 }

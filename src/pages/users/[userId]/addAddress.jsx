@@ -4,8 +4,9 @@ import cookie from "cookie"
 import { useCallback } from "react"
 import AddressForm from "@/web/components/Auth/AddressForm"
 import { useRouter } from "next/router"
+import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 
-export const getServerSideProps = async ({ params, req }) => {
+export const getServerSideProps = async ({ locale, params, req }) => {
   const userId = params.userId
 
   const { token } = cookie.parse(
@@ -16,6 +17,7 @@ export const getServerSideProps = async ({ params, req }) => {
     props: {
       userId: userId,
       token: token,
+      ...(await serverSideTranslations(locale, ["common"])),
     },
   }
 }

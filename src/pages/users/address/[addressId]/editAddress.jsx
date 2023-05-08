@@ -3,8 +3,14 @@ import routes from "@/web/routes"
 import cookie from "cookie"
 import { useCallback, useState } from "react"
 import AddressForm from "@/web/components/Auth/AddressForm"
+import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 
-export const getServerSideProps = async ({ params, req, req: { url } }) => {
+export const getServerSideProps = async ({
+  locale,
+  params,
+  req,
+  req: { url },
+}) => {
   const addressId = params.addressId
   const { token } = cookie.parse(
     req ? req.headers.cookie || "" : document.cookie
@@ -28,6 +34,7 @@ export const getServerSideProps = async ({ params, req, req: { url } }) => {
       address: data,
       addressId: addressId,
       token: token,
+      ...(await serverSideTranslations(locale, ["common"])),
     },
   }
 }

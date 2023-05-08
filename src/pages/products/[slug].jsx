@@ -18,8 +18,14 @@ import cookie from "cookie"
 import Button from "@/web/components/Button"
 import { CartContext } from "@/web/hooks/cartContext"
 import Dialog from "@/web/components/Dialog"
+import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 
-export const getServerSideProps = async ({ params, req, req: { url } }) => {
+export const getServerSideProps = async ({
+  locale,
+  params,
+  req,
+  req: { url },
+}) => {
   const productSlug = params.slug
   const query = Object.fromEntries(
     new URL(`http://example.com/${url}`).searchParams.entries()
@@ -41,6 +47,7 @@ export const getServerSideProps = async ({ params, req, req: { url } }) => {
         product: data,
         token,
         userId,
+        ...(await serverSideTranslations(locale, ["common"])),
       },
     }
   } catch (error) {
