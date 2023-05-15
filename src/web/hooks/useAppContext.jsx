@@ -3,6 +3,7 @@ import createAPIClient from "@/web/createAPIClient.js"
 import parseSession from "@/web/parseSession.js"
 import signInService from "@/web/services/signIn.js"
 import signUpService from "@/web/services/signUp.js"
+import RequiredSingnInPage from "../../pages/requiredSignIn/requiredSignInPage"
 import {
   createContext,
   useCallback,
@@ -46,9 +47,9 @@ export const AppContextProvider = (props) => {
 
   if (!isPublicPage && session === null) {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-white text-4xl font-bold">
-        <span className="animate-bounce">Loading...</span>
-      </div>
+      <>
+        <RequiredSingnInPage />
+      </>
     )
   }
 
