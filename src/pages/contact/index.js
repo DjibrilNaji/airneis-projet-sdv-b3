@@ -2,7 +2,8 @@ import ContactForm from "@/web/components/ContactForm"
 import routes from "@/web/routes"
 import axios from "axios"
 import { useRouter } from "next/router.js"
-import { useCallback } from "react"
+import { useCallback, useState, useEffect } from "react"
+import Loader from "@/web/components/LoadingSpinner"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 
 export async function getServerSideProps({ locale }) {
@@ -28,6 +29,21 @@ const Contact = () => {
     },
     [router]
   )
+
+  const [isLoading, setIsLoading] = useState(true)
+  const publicState = Contact.isPublic
+
+  useEffect(() => {
+    if (publicState === true) {
+      setTimeout(() => {
+        setIsLoading(false)
+      }, 3000)
+    }
+  })
+
+  if (isLoading) {
+    return <Loader />
+  }
 
   return (
     <>

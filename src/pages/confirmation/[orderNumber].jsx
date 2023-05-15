@@ -1,5 +1,7 @@
 import Button from "@/web/components/Button"
 import Link from "@/web/components/Link"
+import { useState, useEffect } from "react"
+import Loader from "@/web/components/LoadingSpinner"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 
 export const getServerSideProps = async ({ locale, params }) => {
@@ -15,6 +17,21 @@ export const getServerSideProps = async ({ locale, params }) => {
 
 const Confirmation = (props) => {
   const { numberOrder } = props
+
+  const [isLoading, setIsLoading] = useState(true)
+  const publicState = Confirmation.isPublic
+
+  useEffect(() => {
+    if (publicState === true) {
+      setTimeout(() => {
+        setIsLoading(false)
+      }, 3000)
+    }
+  })
+
+  if (isLoading) {
+    return <Loader />
+  }
 
   return (
     <>

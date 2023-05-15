@@ -1,7 +1,8 @@
 import LoginForm from "@/web/components/Auth/LoginForm"
 import useAppContext from "@/web/hooks/useAppContext.jsx"
 import { useRouter } from "next/router.js"
-import { useCallback, useState } from "react"
+import { useCallback, useState, useEffect } from "react"
+import Loader from "@/web/components/LoadingSpinner"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 
 export async function getServerSideProps({ locale }) {
@@ -34,6 +35,21 @@ const Login = () => {
     },
     [signIn, router]
   )
+
+  const [isLoading, setIsLoading] = useState(true)
+  const publicState = Login.isPublic
+
+  useEffect(() => {
+    if (publicState === true) {
+      setTimeout(() => {
+        setIsLoading(false)
+      }, 3000)
+    }
+  })
+
+  if (isLoading) {
+    return <Loader />
+  }
 
   return (
     <>

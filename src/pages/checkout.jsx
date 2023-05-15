@@ -1,9 +1,26 @@
 import Input from "@/web/components/Input"
 import Button from "@/web/components/Button"
 import Select from "@/web/components/Select"
+import { useState, useEffect } from "react"
+import Loader from "@/web/components/LoadingSpinner"
 // import axios from "axios"
 
 const Checkout = () => {
+  const [isLoading, setIsLoading] = useState(true)
+  const publicState = Checkout.isPublic
+
+  useEffect(() => {
+    if (publicState === true) {
+      setTimeout(() => {
+        setIsLoading(false)
+      }, 3000)
+    }
+  })
+
+  if (isLoading) {
+    return <Loader />
+  }
+
   return (
     <>
       <h1 className="flex text-stone-400 text-3xl justify-center py-5 font-bold md:justify-center">
