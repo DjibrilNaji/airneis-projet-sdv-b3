@@ -19,6 +19,8 @@ import Button from "@/web/components/Button"
 import { CartContext } from "@/web/hooks/cartContext"
 import Dialog from "@/web/components/Dialog"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import { useTranslation } from "next-i18next"
+import { useRouter } from "next/router"
 
 export const getServerSideProps = async ({
   locale,
@@ -47,7 +49,7 @@ export const getServerSideProps = async ({
         product: data,
         token,
         userId,
-        ...(await serverSideTranslations(locale, ["common"])),
+        ...(await serverSideTranslations(locale, ["product"])),
       },
     }
   } catch (error) {
@@ -70,6 +72,10 @@ const Product = (props) => {
     actions: { addToCart },
     state: { cart },
   } = useContext(CartContext)
+
+  const { t } = useTranslation("product")
+  const { locale } = useRouter()
+  const direction = t("direction", { locale })
 
   const [activeIndex, setActiveIndex] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
@@ -134,7 +140,7 @@ const Product = (props) => {
   const handleAddFavorites = useCallback(
     async (productId) => {
       if (isFavorite) {
-        setContentModal("Ce produit est déjà dans vos favoris")
+        setContentModal(t("pop_already_in_favorite"))
       } else {
         await axios.post(
           `${config.api.baseApiURL}${routes.api.users.favorites.single(userId, {
@@ -146,13 +152,13 @@ const Product = (props) => {
           }
         )
         setIsFavorite(true)
-        setContentModal("Votre produit a bien été ajouté aux favoris")
+        setContentModal(t("pop_add_to_favorite"))
       }
 
       setIsOpen(true)
       setTimeout(() => setIsOpen(false), 2500)
     },
-    [token, userId, isFavorite]
+    [token, userId, isFavorite, t]
   )
 
   const [selectedQuantity, setSelectedQuantity] = useState(1)
@@ -160,13 +166,13 @@ const Product = (props) => {
   const handleAddProduct = useCallback(
     (product, image) => {
       addToCart(product, image, parseInt(quantity))
-      setContentModal("Votre produit a bien été ajouté aux panier")
+      setContentModal(t("pop_add_to_cart"))
       setIsOpen(true)
       setTimeout(() => setIsOpen(false), 2500)
       setQuantity(1)
       setSelectedQuantity(1)
     },
-    [addToCart, quantity]
+    [addToCart, quantity, t]
   )
 
   const handleQuantityChange = useCallback((e) => {
@@ -192,8 +198,9 @@ const Product = (props) => {
     <>
       <Dialog
         isOpen={isOpen}
-        dialogTitle="Informations"
+        dialogTitle={t("pop_title")}
         content={contentModal}
+        dir={direction}
       />
 
       <div className="hidden md:flex items-center justify-center">
@@ -354,11 +361,11 @@ const Product = (props) => {
 
             {data.result.product.stock > 0 ? (
               <h2 className="flex text-stone-500 opacity-60 font-bold">
-                En stock
+                {t("in_stock")}
               </h2>
             ) : (
               <h2 className="flex text-red-300 opacity-60 font-bold">
-                Out of stock
+                {t("out_of_stock")}
               </h2>
             )}
 
@@ -369,7 +376,7 @@ const Product = (props) => {
             <div className="flex my-4">
               <div className="flex flex-col gap-4 ml-auto">
                 <div className="flex justify-center gap-2">
-                  <span>Quantity</span>
+                  <span>{t("quantity")}</span>
 
                   <select
                     className="border-2 rounded-lg px-2 focus:outline-none"
@@ -387,13 +394,13 @@ const Product = (props) => {
                   className="disabled:cursor-not-allowed disabled:bg-stone-300"
                   disabled={currentInventory === 0}
                 >
-                  Add to cart
+                  {t("add_to_cart")}
                 </Button>
               </div>
             </div>
 
-            <div className="border-b-2 border-t-2 py-4">
-              <span className="font-bold">Catégorie : </span>
+            <div className="border-b-2 border-t-2 py-4" dir={direction}>
+              <span className="font-bold">{t("category")} : </span>
               <Link
                 href={routes.categorie(data.result.product.category[0].slug)}
                 className="opacity-40 italic font-bold"
@@ -406,7 +413,9 @@ const Product = (props) => {
       </div>
 
       <div className="flex justify-center bg-stone-500 my-10">
-        <p className="p-6 font-bold text-white text-xl">Produits similaires</p>
+        <p className="p-6 font-bold text-white text-xl">
+          {t("similar_products")}
+        </p>
       </div>
 
       <div className="grid gap-12 pb-7 md:grid-cols-2 md:gap-8 md:px-4 lg:grid-cols-3">
