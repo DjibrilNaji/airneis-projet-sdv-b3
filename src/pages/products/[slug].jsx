@@ -36,8 +36,8 @@ export const getServerSideProps = async ({
   const cookies = req.headers.cookie
     ? cookie.parse(req.headers.cookie || "")
     : null
-  const token = cookies ? cookies.token : null
-  const userId = cookies ? cookies.userId : null
+  const token = cookies.token ? cookies.token : null
+  const userId = cookies.userId ? cookies.userId : null
 
   try {
     const { data } = await axios.get(
