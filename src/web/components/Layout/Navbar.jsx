@@ -33,8 +33,13 @@ import config from "@/web/config"
 import SearchBar from "../SearchBar"
 import { CartContext } from "@/web/hooks/cartContext"
 import SwitchLanguage from "../SwitchLanguage"
+import { useTranslation } from "next-i18next"
 
 const Navbar = () => {
+  const { t } = useTranslation("navigation")
+  const { locale } = useRouter()
+  const direction = t("direction", { locale })
+
   const [isOpen, setIsOpen] = useState(false)
   const [data, setData] = useState([])
 
@@ -88,7 +93,7 @@ const Navbar = () => {
         (session !== false) & (session !== null)
           ? routes.users.single(session.user.id)
           : "/",
-      title: "Mes paramètres",
+      title: t("menu_settings"),
       icon: <FontAwesomeIcon icon={faGear} />,
       onClick: handleIsOpenClick,
     },
@@ -97,7 +102,7 @@ const Navbar = () => {
         (session !== false) & (session !== null)
           ? routes.users.favorites(session.user.id)
           : "/",
-      title: "Mes favoris",
+      title: t("menu_favourites"),
       icon: <FontAwesomeIcon icon={faHeart} />,
       onClick: handleIsOpenClick,
     },
@@ -106,37 +111,37 @@ const Navbar = () => {
         (session !== false) & (session !== null)
           ? routes.orders.collection(session.user.id)
           : "/",
-      title: "Mes commandes",
+      title: t("menu_orders"),
       icon: <FontAwesomeIcon icon={faCircleCheck} />,
       onClick: handleIsOpenClick,
     },
     {
       href: "/",
-      title: "CGU",
+      title: t("menu_conditions"),
       icon: <FontAwesomeIcon icon={faList} />,
       onClick: handleIsOpenClick,
     },
     {
       href: "/",
-      title: "Mentions légales",
+      title: t("menu_privacy"),
       icon: <FontAwesomeIcon icon={faFileContract} />,
       onClick: handleIsOpenClick,
     },
     {
       href: "/contact",
-      title: "Contact",
+      title: t("menu_contact"),
       icon: <FontAwesomeIcon icon={faMessage} />,
       onClick: handleIsOpenClick,
     },
     {
       href: "/",
-      title: "À propos d'ÀIRNEIS",
+      title: t("menu_about"),
       icon: <FontAwesomeIcon icon={faCircleInfo} />,
       onClick: handleIsOpenClick,
     },
     {
       href: "/",
-      title: "Se deconnecter",
+      title: t("menu_logout"),
       icon: <FontAwesomeIcon icon={faRightFromBracket} />,
       onClick: handleSignOut,
     },
@@ -145,37 +150,37 @@ const Navbar = () => {
   const navItemsNotConnected = [
     {
       href: routes.signIn(),
-      title: "Se connecter",
+      title: t("menu_login"),
       icon: <FontAwesomeIcon icon={faRightToBracket} />,
       onClick: handleIsOpenClick,
     },
     {
       href: routes.signUp(),
-      title: "S'inscrire",
+      title: t("menu_register"),
       icon: <UserIcon />,
       onClick: handleIsOpenClick,
     },
     {
       href: "/",
-      title: "CGU",
+      title: t("menu_conditions"),
       icon: <FontAwesomeIcon icon={faList} />,
       onClick: handleIsOpenClick,
     },
     {
       href: "/",
-      title: "Mentions légales",
+      title: t("menu_privacy"),
       icon: <FontAwesomeIcon icon={faFileContract} />,
       onClick: handleIsOpenClick,
     },
     {
       href: "/contact",
-      title: "Contact",
+      title: t("menu_contact"),
       icon: <FontAwesomeIcon icon={faMessage} />,
       onClick: handleIsOpenClick,
     },
     {
       href: "/",
-      title: "À propos d'ÀIRNEIS",
+      title: t("menu_about"),
       icon: <FontAwesomeIcon icon={faCircleInfo} />,
       onClick: handleIsOpenClick,
     },
@@ -216,17 +221,20 @@ const Navbar = () => {
       >
         {(session !== false) & (session !== null) ? (
           <>
-            <div className="flex justify-center gap-3 p-6 bg-stone-500">
+            <div
+              className="flex justify-center gap-3 p-6 bg-stone-500"
+              dir={direction}
+            >
               <button onClick={handleIsOpenClick}>
                 <FontAwesomeIcon icon={faXmark} className="h-6 text-white" />
               </button>
 
               <p className="text-md text-white font-bold  whitespace-nowrap">
-                Bonjour {username}
+                {t("menu_hello")} {username}
               </p>
             </div>
 
-            <ul className="flex flex-col gap-4 m-5">
+            <ul className="flex flex-col gap-4 m-5" dir={direction}>
               {navItemsConnected.map((items) => (
                 <Link
                   key={items.title}
@@ -251,7 +259,7 @@ const Navbar = () => {
                     <p className="w-4">
                       <FontAwesomeIcon icon={faLock} />
                     </p>
-                    <p>{"Admin"}</p>
+                    <p>{t("menu_admin")}</p>
                   </li>
                 </Link>
               )}

@@ -9,7 +9,7 @@ import { useRouter } from "next/router"
 export async function getServerSideProps({ locale }) {
   return {
     props: {
-      ...(await serverSideTranslations(locale, ["contact"])),
+      ...(await serverSideTranslations(locale, ["contact", "navigation"])),
     },
   }
 }

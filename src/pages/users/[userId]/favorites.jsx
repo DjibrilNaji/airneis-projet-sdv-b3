@@ -45,7 +45,7 @@ export const getServerSideProps = async ({
       favorites: data,
       userId,
       token,
-      ...(await serverSideTranslations(locale, ["common"])),
+      ...(await serverSideTranslations(locale, ["common", "navigation"])),
     },
   }
 }

@@ -11,7 +11,7 @@ import { useTranslation } from "next-i18next"
 export async function getServerSideProps({ locale }) {
   return {
     props: {
-      ...(await serverSideTranslations(locale, ["cart"])),
+      ...(await serverSideTranslations(locale, ["cart", "navigation"])),
     },
   }
 }

@@ -47,7 +47,7 @@ export const getServerSideProps = async ({
       userId: userId,
       token: token,
       allAddressUser: addressUser.data.result,
-      ...(await serverSideTranslations(locale, ["common"])),
+      ...(await serverSideTranslations(locale, ["common", "navigation"])),
     },
   }
 }

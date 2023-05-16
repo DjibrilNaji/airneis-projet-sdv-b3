@@ -8,7 +8,7 @@ export const getServerSideProps = async ({ locale, params }) => {
   return {
     props: {
       numberOrder: numberOrder,
-      ...(await serverSideTranslations(locale, ["common"])),
+      ...(await serverSideTranslations(locale, ["common", "navigation"])),
     },
   }
 }

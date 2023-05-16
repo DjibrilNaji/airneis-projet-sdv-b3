@@ -26,7 +26,7 @@ export const getServerSideProps = async (context) => {
 
   return {
     props: {
-      ...(await serverSideTranslations(locale, ["home-page"])),
+      ...(await serverSideTranslations(locale, ["home-page", "navigation"])),
       categoriesAndProducts: data,
     },
   }

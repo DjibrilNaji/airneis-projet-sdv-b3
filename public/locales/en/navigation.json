@@ -1,0 +1,14 @@
+{
+  "menu_hello": "Hello",
+  "menu_settings": "My Settings",
+  "menu_favourites": "My Favourites",
+  "menu_orders": "My Orders",
+  "menu_conditions": "Terms & Conditions",
+  "menu_privacy": "Privacy Policy",
+  "menu_contact": "Contact Us",
+  "menu_about": "About Us at Airneis",
+  "menu_logout": "Logout",
+  "menu_login": "Login",
+  "menu_register": "Register",
+  "menu_admin": "Admin"
+}

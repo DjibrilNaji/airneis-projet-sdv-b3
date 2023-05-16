@@ -17,7 +17,7 @@ export const getServerSideProps = async ({ locale, params, req: { url } }) => {
   return {
     props: {
       orders: data,
-      ...(await serverSideTranslations(locale, ["common"])),
+      ...(await serverSideTranslations(locale, ["common", "navigation"])),
     },
   }
 }

@@ -49,7 +49,7 @@ export const getServerSideProps = async ({
         product: data,
         token,
         userId,
-        ...(await serverSideTranslations(locale, ["product"])),
+        ...(await serverSideTranslations(locale, ["product", "navigation"])),
       },
     }
   } catch (error) {
