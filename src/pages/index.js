@@ -26,7 +26,7 @@ export const getServerSideProps = async (context) => {
 
   return {
     props: {
-      ...(await serverSideTranslations(locale, ["common"])),
+      ...(await serverSideTranslations(locale, ["home-page"])),
       categoriesAndProducts: data,
     },
   }
@@ -39,7 +39,7 @@ const Home = (props) => {
 
   const [activeIndex, setActiveIndex] = useState(0)
 
-  const { t } = useTranslation("common")
+  const { t } = useTranslation("home-page")
 
   const handlePrevious = () => {
     setActiveIndex(
@@ -118,8 +118,8 @@ const Home = (props) => {
           className="p-6 text-center font-bold text-stone-400 text-xl"
           dir={direction}
         >
-          Venant des hautes terres d'écosse <br />
-          nos meubles sont immortels
+          {t("home_description_first")} <br />
+          {t("home_description_second")}
         </p>
       </div>
 
@@ -144,9 +144,7 @@ const Home = (props) => {
         ))}
       </div>
       <div className="flex justify-center bg-stone-500 my-10">
-        <p className="p-6 font-bold text-white text-xl">
-          Les Highlanders du moment
-        </p>
+        <p className="p-6 font-bold text-white text-xl">{t("highlander")}</p>
       </div>
 
       <div className="grid gap-12 pb-7 md:grid-cols-2 md:gap-8 md:px-4 lg:grid-cols-3">
