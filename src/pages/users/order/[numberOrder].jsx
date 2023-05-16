@@ -25,7 +25,7 @@ export const getServerSideProps = async ({ locale, params, req: { url } }) => {
       order: data,
       numberOrder: numberOrder,
       query: query,
-      ...(await serverSideTranslations(locale, ["common"])),
+      ...(await serverSideTranslations(locale, ["common", "navigation"])),
     },
   }
 }

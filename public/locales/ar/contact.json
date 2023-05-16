@@ -1,0 +1,18 @@
+{
+  "direction": "rtl",
+  "contact_us": "اتصل بنا",
+  "email": "رسالة إلكترونية",
+  "subject": "موضوع",
+  "message": "رسالة",
+  "send_message": "أرسل الرسالة",
+  "sent": "! مرسل",
+  "confirmation": "تم إرسال رسالتك مع العنوان",
+  "not_email_return_message": "إذا كنت ترغب في الاتصال بنا ، ارجع إلى صفحة الاتصال هنا",
+  "go_home": "العودة إلى المنزل",
+  "yup_email": "بريد إلكتروني خاطئ",
+  "yup_email_required": "البريد الالكتروني مطلوب",
+  "yup_email_label": "رسالة إلكترونية",
+  "yup_subject_label": "موضوع",
+  "yup_message_required": "الرسالة مطلوبة",
+  "yup_message_label": "رسالة"
+}

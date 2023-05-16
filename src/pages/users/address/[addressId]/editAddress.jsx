@@ -34,7 +34,7 @@ export const getServerSideProps = async ({
       address: data,
       addressId: addressId,
       token: token,
-      ...(await serverSideTranslations(locale, ["common"])),
+      ...(await serverSideTranslations(locale, ["common", "navigation"])),
     },
   }
 }

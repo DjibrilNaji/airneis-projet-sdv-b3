@@ -1,0 +1,12 @@
+{
+  "in_stock": "En stock",
+  "out_of_stock": "Agotado",
+  "category": "Categoría",
+  "quantity": "Cantidad",
+  "add_to_cart": "Añadir a la cesta",
+  "similar_products": "Productos similares",
+  "pop_title": "Información",
+  "pop_add_to_cart": "Su producto ha sido agregado al carrito",
+  "pop_already_in_favorite": "Este producto ya está en tus favoritos",
+  "pop_add_to_favorite": "Su producto ha sido agregado a favoritos"
+}
