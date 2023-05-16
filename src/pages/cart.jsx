@@ -6,11 +6,12 @@ import Image from "next/image"
 import Link from "next/link"
 import React, { useCallback, useContext, useEffect, useState } from "react"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import { useTranslation } from "next-i18next"
 
 export async function getServerSideProps({ locale }) {
   return {
     props: {
-      ...(await serverSideTranslations(locale, ["common"])),
+      ...(await serverSideTranslations(locale, ["cart"])),
     },
   }
 }
@@ -20,6 +21,8 @@ const Cart = () => {
     actions: { addToCart, removeQuantity, removeOneProduct, removeAllFromCart },
     state: { cart },
   } = useContext(CartContext)
+
+  const { t } = useTranslation("cart")
 
   const [cartItems, setCartItems] = useState([])
   const [totalPrice, setTotalPrice] = useState()
@@ -144,28 +147,28 @@ const Cart = () => {
               className="flex justify-center w-1/4 rounded-lg p-2 bg-red-500 text-white shadow-lg duration-300 hover:bg-red-600"
               onClick={() => removeAllFromCart()}
             >
-              Remove all
+              {t("remove")}
             </button>
           </div>
 
           <div className="flex flex-col w-full md:w-screen md:min-w-md md:max-w-sm border  h-fit rounded-lg p-4 shadow-xl">
             <p className="flex text-sm justify-between font-bold">
-              <span>Subtotal</span>
+              <span>{t("subtotal")}</span>
               <span>{totalPrice} €</span>
             </p>
 
             <p className="flex justify-between text-xs text-stone-400 font-bold">
-              <span>TVA</span>
+              <span>{t("tva")}</span>
               <span>{totalTva} €</span>
             </p>
 
             <p className="flex justify-between mt-4 text-lg font-bold  whitespace-nowrap">
-              <span>TOTAL</span>
+              <span>{t("total")}</span>
               <span>{totalPrice + totalTva} €</span>
             </p>
 
             <button className="border bg-stone-500 rounded-lg p-2 mt-4 whitespace-nowrap">
-              Passer la commande
+              {t("to_order")}
             </button>
           </div>
         </div>
@@ -178,13 +181,13 @@ const Cart = () => {
                   icon={faCartShopping}
                   className="h-20 text-stone-500"
                 />
-                <p className="font-bold">Votre panier est tristement vide !</p>
+                <p className="font-bold">{t("empty_cart")}</p>
               </div>
               <Link
                 href={"/"}
                 className="bg-stone-500 px-4 text-xl py-2 rounded-md text-white"
               >
-                Go home
+                {t("go_home")}
               </Link>
             </div>
           </div>
