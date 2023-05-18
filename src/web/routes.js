@@ -118,13 +118,11 @@ const routes = {
     orders: {
       collection: (userId, query) =>
         createRouteWithQueryParams(`/users/${userId}/allOrdersUser`, query),
-      single: (numberOrder, query) =>
-        createRouteWithQueryParams(`/users/order/${numberOrder}`, query),
+      single: (numberOrder) => `/users/order/${numberOrder}`,
       patchQuantity: (numberOrder) => `/users/order/${numberOrder}`,
       deleteProductOrder: (numberOrder, query) =>
         createRouteWithQueryParams(`/users/order/${numberOrder}`, query),
-      cancelOrder: (numberOrder, query) =>
-        createRouteWithQueryParams(`/users/order/cancel/${numberOrder}`, query),
+      cancelOrder: (numberOrder) => `/users/order/cancel/${numberOrder}`,
     },
   },
 }

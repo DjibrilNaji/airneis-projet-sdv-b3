@@ -8,6 +8,7 @@ import RelOrderProductModel from "@/api/db/models/RelOrderProductModel"
 import s3 from "@@/configAWS.js"
 import BillingAddressModel from "@/api/db/models/BillingAddressModel"
 import AddressModel from "@/api/db/models/AddressModel"
+import ProductModel from "@/api/db/models/ProductModel"
 
 const db = knex(config.db)
 
@@ -50,36 +51,20 @@ const handler = mw({
         return
       }
 
-      let orderId = null
-      let userId = null
-      let addressId = null
-      order.map((odr) => {
-        ;(orderId = odr.id), (userId = odr.userId), (addressId = odr.addressId)
-      })
-      const allProductsOrder = await RelOrderProductModel.query()
-        .where({ orderId: orderId })
-        .innerJoin(
-          "products",
-          "products.id",
-          "=",
-          "rel_order_product.productId"
-        )
-        .innerJoin(
-          "image_product",
-          "products.id",
-          "=",
-          "image_product.productId"
-        )
+      const allProductsOrder = await ProductModel.query()
+        .withGraphFetched("image")
+        .withGraphJoined("order")
+        .where("order_join.orderId", order[0].id)
+        .distinctOn("products.id")
         .select(
-          "products.id",
+          "image.urlImage",
           "products.name",
           "products.description",
           "products.price_formatted",
-          "rel_order_product.quantity",
-          "products.stock as quantityProduct",
-          "image_product.urlImage"
+          "products.id",
+          "products.stock",
+          "order_join.quantity"
         )
-        .distinctOn("products.id")
 
       allProductsOrder.map((product) => {
         product.urlImage = s3.getSignedUrl("getObject", {
@@ -89,11 +74,11 @@ const handler = mw({
       })
 
       const userBillingAddress = await BillingAddressModel.query()
-        .where({ userId: userId })
+        .where({ userId: order[0].userId })
         .innerJoin("users", "billing_address.userId", "=", "users.id")
         .select("billing_address.*", "users.firstName", "users.lastName")
       const userDeliveryAddress = await AddressModel.query().where({
-        id: addressId,
+        id: order[0].addressId,
       })
 
       res.send({
