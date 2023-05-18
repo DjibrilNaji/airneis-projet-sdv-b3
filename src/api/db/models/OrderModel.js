@@ -1,7 +1,7 @@
 import BaseModel from "./BaseModel.js"
 import UserModel from "./UserModel.js"
 import AddressModel from "./AddressModel.js"
-import RelOrderProductModel from "./RelOrderProductModel.js"
+import ProductModel from "./ProductModel.js"
 
 class OrderModel extends BaseModel {
   static tableName = "orders"
@@ -30,12 +30,16 @@ class OrderModel extends BaseModel {
           to: "address.id",
         },
       },
-      relation: {
-        relation: BaseModel.HasManyRelation,
-        modelClass: RelOrderProductModel,
+      product: {
+        relation: BaseModel.ManyToManyRelation,
+        modelClass: ProductModel,
         join: {
           from: "orders.id",
-          to: "rel_order_product.orderId",
+          through: {
+            from: "rel_order_product.orderId",
+            to: "rel_order_product.productId",
+          },
+          to: "products.id",
         },
       },
     }

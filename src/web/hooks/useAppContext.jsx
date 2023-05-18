@@ -3,6 +3,8 @@ import createAPIClient from "@/web/createAPIClient.js"
 import parseSession from "@/web/parseSession.js"
 import signInService from "@/web/services/signIn.js"
 import signUpService from "@/web/services/signUp.js"
+import patchOrderQuantityService from "../services/order/patchOrderQuantity"
+import deleteProductOrderService from "../services/order/deleteProductOrder"
 import {
   createContext,
   useCallback,
@@ -21,6 +23,8 @@ export const AppContextProvider = (props) => {
 
   const signUp = signUpService({ api })
   const signIn = signInService({ api, setSession, setJWT })
+  const patchOrderQuantity = patchOrderQuantityService({ api })
+  const deleteProductOrder = deleteProductOrderService({ api })
   const signOut = useCallback(() => {
     localStorage.removeItem(config.session.localStorageKey)
     localStorage.removeItem("username")
@@ -60,6 +64,8 @@ export const AppContextProvider = (props) => {
           signUp,
           signOut,
           signIn,
+          patchOrderQuantity,
+          deleteProductOrder,
         },
         state: {
           session,
