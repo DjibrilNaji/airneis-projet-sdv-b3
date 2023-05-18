@@ -116,8 +116,7 @@ const routes = {
       collection: (query) => createRouteWithQueryParams(`/search`, query),
     },
     orders: {
-      collection: (userId, query) =>
-        createRouteWithQueryParams(`/users/${userId}/allOrdersUser`, query),
+      collection: (userId) => `/users/${userId}/allOrdersUser`,
       single: (numberOrder) => `/users/order/${numberOrder}`,
       patchQuantity: (numberOrder) => `/users/order/${numberOrder}`,
       deleteProductOrder: (numberOrder, query) =>

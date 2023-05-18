@@ -7,6 +7,7 @@ import patchOrderQuantityService from "../services/order/patchOrderQuantity"
 import deleteProductOrderService from "../services/order/deleteProductOrder"
 import cancelOrderService from "../services/order/cancelOrder"
 import getOrderDetailService from "../services/order/getOrderDetail"
+import allOrderUserService from "../services/order/allOrderUser"
 import {
   createContext,
   useCallback,
@@ -29,6 +30,7 @@ export const AppContextProvider = (props) => {
   const deleteProductOrder = deleteProductOrderService({ api })
   const cancelOrder = cancelOrderService({ api })
   const getOrderDetail = getOrderDetailService({ api })
+  const allOrderUser = allOrderUserService({ api })
   const signOut = useCallback(() => {
     localStorage.removeItem(config.session.localStorageKey)
     localStorage.removeItem("username")
@@ -72,6 +74,7 @@ export const AppContextProvider = (props) => {
           deleteProductOrder,
           cancelOrder,
           getOrderDetail,
+          allOrderUser,
         },
         state: {
           session,
