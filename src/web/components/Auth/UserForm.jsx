@@ -51,20 +51,25 @@ const UserForm = (props) => {
           <FormField
             name="userName"
             type="text"
-            label="Identifiant"
+            label="Identifiant :"
             icon={faPerson}
           />
           <FormField
             name="firstName"
             type="text"
-            label="Prenom"
+            label="First name :"
             icon={faPerson}
           />
-          <FormField name="lastName" type="text" label="Nom" icon={faPerson} />
+          <FormField
+            name="lastName"
+            type="text"
+            label="Last name ;"
+            icon={faPerson}
+          />
           <FormField
             name="email"
             type="email"
-            label="E-mail*"
+            label="E-mail* :"
             icon={faEnvelope}
           />
           <SubmitButton>Update</SubmitButton>

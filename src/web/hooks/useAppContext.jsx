@@ -17,6 +17,7 @@ import getPersonnalDataService from "../services/user/getPersonnalData"
 import updatePersonnalDataService from "../services/user/updatePersonnalData"
 import updateBillingAddressService from "../services/address/updateBillingAddress"
 import getAllAddressService from "../services/address/getAllAddress"
+import getSingleCategorieService from "../services/categories/getSingleCategorie"
 import {
   createContext,
   useCallback,
@@ -61,6 +62,7 @@ export const AppContextProvider = (props) => {
   const updatePersonnalData = updatePersonnalDataService({ api })
   const updateBillingAddress = updateBillingAddressService({ api })
   const getAllAddress = getAllAddressService({ api })
+  const getSingleCategorie = getSingleCategorieService({ api })
   const signOut = useCallback(() => {
     localStorage.removeItem(config.session.localStorageKey)
     localStorage.removeItem("username")
@@ -101,6 +103,7 @@ export const AppContextProvider = (props) => {
           updatePersonnalData,
           updateBillingAddress,
           getAllAddress,
+          getSingleCategorie,
         },
         state: {
           session,

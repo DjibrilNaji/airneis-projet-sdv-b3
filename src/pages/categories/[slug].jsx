@@ -1,40 +1,57 @@
-import axios from "axios"
-import routes from "@/web/routes.js"
 import Image from "next/image"
 import ListProduct from "@/web/components/ListProduct.jsx"
-import config from "@/web/config"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import useAppContext from "@/web/hooks/useAppContext"
+import { useEffect, useState } from "react"
+import FormError from "@/web/components/FormError"
 
-export const getServerSideProps = async ({ locale, params, req: { url } }) => {
-  const slugCategory = params.slug
-  const query = Object.fromEntries(
-    new URL(`http://example.com/${url}`).searchParams.entries()
-  )
-
-  const { data } = await axios.get(
-    `${config.api.baseURL}${routes.api.categories.single(slugCategory, query)}`
-  )
+export const getServerSideProps = async ({ locale, params }) => {
+  const slug = params.slug
 
   return {
     props: {
-      category: data,
+      slug: slug,
       ...(await serverSideTranslations(locale, ["common", "navigation"])),
     },
   }
 }
 
 const Category = (props) => {
+  const { slug } = props
   const {
-    category: { result },
-  } = props
+    actions: { getSingleCategorie },
+  } = useAppContext()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const [err, data] = await getSingleCategorie(slug)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setCategorie(data.result.category)
+      setProducts(data.result.products)
+      setImage(data.result.data)
+    }
+    fetchData()
+  }, [getSingleCategorie, slug])
+
+  const [error, setError] = useState(null)
+  const [categorie, setCategorie] = useState([])
+  const [products, setProducts] = useState([])
+  const [image, setImage] = useState()
 
   return (
     <>
-      {result.category.map((cat) => (
+      {error ? <FormError error={error} /> : ""}
+      {categorie.map((cat) => (
         <div key={cat.id}>
           <div className="m-4 h-96 flex justify-center items-center relative">
             <Image
-              src={result.data}
+              src={image}
               width={1000}
               height={1000}
               alt={cat.urlImage}
@@ -53,7 +70,7 @@ const Category = (props) => {
         </p>
       </div>
       <div className="grid px-2 gap-7 md:pb-10 md:grid-cols-2 lg:grid-cols-3">
-        {result.products.map((product) => (
+        {products.map((product) => (
           <ListProduct key={product.id} product={product}></ListProduct>
         ))}
       </div>

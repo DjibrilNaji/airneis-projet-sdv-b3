@@ -97,8 +97,7 @@ const routes = {
       collection: () => "/categories-and-products",
     },
     categories: {
-      single: (slug, query) =>
-        createRouteWithQueryParams(`/categories/${slug}`, query),
+      single: (slug) => `/categories/${slug}`,
       collection: () => "/categories",
     },
     products: {
