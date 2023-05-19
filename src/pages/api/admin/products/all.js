@@ -23,9 +23,9 @@ const handler = mw({
   GET: [
     validate({
       query: {
-        limit: limitValidator,
-        page: pageValidator,
-        order: orderValidator.default("asc"),
+        limit: limitValidator.nullable(),
+        page: pageValidator.nullable(),
+        order: orderValidator.default("asc").nullable(),
       },
     }),
     async ({
