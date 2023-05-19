@@ -74,8 +74,7 @@ const routes = {
     },
     users: {
       address: {
-        collection: (userId, query) =>
-          createRouteWithQueryParams(`/users/${userId}/address`, query),
+        collection: (userId) => `/users/${userId}/address`,
         single: (addressId) => `/users/address/${addressId}/addressSingle`,
         add: (userId) => `/users/${userId}/address`,
       },
@@ -86,8 +85,7 @@ const routes = {
       },
       validate: (token, query) =>
         createRouteWithQueryParams(`/users/confirmation/${token}`, query),
-      single: (userId, query) =>
-        createRouteWithQueryParams(`/users/${userId}/personnalData`, query),
+      single: (userId) => `/users/${userId}/personnalData`,
       update: (userId) => `/users/${userId}/personnalData`,
       favorites: {
         collection: (userId) => `/users/${userId}/favorites`,

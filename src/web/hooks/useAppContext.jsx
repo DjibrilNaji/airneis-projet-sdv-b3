@@ -13,6 +13,10 @@ import modifyAddressService from "../services/address/modifyAddress"
 import deleteAddressService from "../services/address/deleteAddress"
 import addAddressService from "../services/address/addNewAddress"
 import addNewBillingAddressService from "../services/address/addNewBillingAddress"
+import getPersonnalDataService from "../services/user/getPersonnalData"
+import updatePersonnalDataService from "../services/user/updatePersonnalData"
+import updateBillingAddressService from "../services/address/updateBillingAddress"
+import getAllAddressService from "../services/address/getAllAddress"
 import {
   createContext,
   useCallback,
@@ -53,6 +57,10 @@ export const AppContextProvider = (props) => {
   const deleteAddress = deleteAddressService({ api })
   const addNewAddress = addAddressService({ api })
   const addNewBillingAddress = addNewBillingAddressService({ api })
+  const getPersonnalData = getPersonnalDataService({ api })
+  const updatePersonnalData = updatePersonnalDataService({ api })
+  const updateBillingAddress = updateBillingAddressService({ api })
+  const getAllAddress = getAllAddressService({ api })
   const signOut = useCallback(() => {
     localStorage.removeItem(config.session.localStorageKey)
     localStorage.removeItem("username")
@@ -89,6 +97,10 @@ export const AppContextProvider = (props) => {
           deleteAddress,
           addNewAddress,
           addNewBillingAddress,
+          getPersonnalData,
+          updatePersonnalData,
+          updateBillingAddress,
+          getAllAddress,
         },
         state: {
           session,

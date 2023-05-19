@@ -1,10 +1,7 @@
 import UserForm from "@/web/components/Auth/UserForm"
-import axios from "axios"
 import routes from "@/web/routes"
-import cookie from "cookie"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import TableAddress from "@/web/components/Auth/TableAddress"
-import config from "@/web/config"
 import Link from "@/web/components/Link"
 import Button from "@/web/components/Button"
 import BillingAddressForm from "@/web/components/Auth/BillingAddressForm"
@@ -12,112 +9,98 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import useAppContext from "@/web/hooks/useAppContext"
 import FormError from "@/web/components/FormError"
 
-export const getServerSideProps = async ({
-  locale,
-  params,
-  req,
-  req: { url },
-}) => {
+export const getServerSideProps = async ({ locale, params }) => {
   const userId = params.userId
-  const { token } = cookie.parse(
-    req ? req.headers.cookie || "" : document.cookie
-  )
-  const query = Object.fromEntries(
-    new URL(`http://example.com/${url}`).searchParams.entries()
-  )
-
-  const { data } = await axios.get(
-    `${config.api.baseURL}${routes.api.users.single(userId, query)}`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  )
-
-  const addressUser = await axios.get(
-    `${config.api.baseURL}${routes.api.users.address.collection(
-      userId,
-      query
-    )}`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  )
 
   return {
     props: {
-      user: data,
       userId: userId,
-      token: token,
-      allAddressUser: addressUser.data.result,
       ...(await serverSideTranslations(locale, ["common", "navigation"])),
     },
   }
 }
 
 const MyAccount = (props) => {
-  const {
-    user: { result },
-    userId,
-    token,
-    allAddressUser,
-  } = props
+  const { userId } = props
 
   const {
-    actions: { deleteAddress },
+    actions: {
+      deleteAddress,
+      getPersonnalData,
+      updatePersonnalData,
+      updateBillingAddress,
+      getAllAddress,
+    },
   } = useAppContext()
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const [err, data] = await getPersonnalData(userId)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setUser(data.result)
+      setBillingAddress(data.result.billingAddress[0])
+      setBillingAddressId(data.result.billingAddress[0].id)
+    }
+    fetchData()
+  }, [getPersonnalData, userId])
+
+  useEffect(() => {
+    const fetchAddressData = async () => {
+      const [err, data] = await getAllAddress(userId)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setAllAddress(data.result)
+    }
+    fetchAddressData()
+  }, [getAllAddress, userId])
+
   const [error, setError] = useState(null)
-  const [user, setUser] = useState(result)
-  const [billingAddress, setBillingAddress] = useState(result.billingAddress[0])
+  const [user, setUser] = useState()
+  const [billingAddress, setBillingAddress] = useState()
+  const [billingAddressId, setBillingAddressId] = useState()
   const [seeData, setSeeData] = useState("Personnal Data")
   const optionUser = ["Personnal Data", "Address", "Billing Address"]
-  const [allAddress, setAllAddress] = useState(allAddressUser)
+  const [allAddress, setAllAddress] = useState([])
 
   const handleSubmit = useCallback(
-    async ({ firstName, lastName, email, userName }) => {
-      const {
-        data: { result },
-      } = await axios.patch(
-        `${config.api.baseApiURL}${routes.api.users.update(userId)}`,
-        {
-          firstName,
-          lastName,
-          email,
-          userName,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
+    async (values) => {
+      const [err, data] = await updatePersonnalData(userId, values)
 
-      setUser(result)
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setUser(data.result)
     },
-    [token, userId]
+    [updatePersonnalData, userId]
   )
 
   const handleSubmitBilling = useCallback(
-    async ({ addressFull, country, city, cp, phoneNumber }) => {
-      const {
-        data: { result },
-      } = await axios.patch(
-        `${config.api.baseApiURL}${routes.api.users.billingAddress.update(
-          user.billingAddress[0].id
-        )}`,
-        {
-          addressFull,
-          country,
-          city,
-          cp,
-          phoneNumber,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
+    async (values) => {
+      const [err, data] = await updateBillingAddress(billingAddressId, values)
 
-      setBillingAddress(result)
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setBillingAddress(data.result)
     },
-    [token, user.billingAddress]
+    [billingAddressId, updateBillingAddress]
   )
 
   const handleDeleteAddress = useCallback(
@@ -171,7 +154,7 @@ const MyAccount = (props) => {
               hidden={!billingAddress ? true : false}
             />
             <Link
-              href={routes.users.addBillingAddress(user.id)}
+              href={routes.users.addBillingAddress(userId)}
               hidden={!billingAddress ? false : true}
             >
               <Button>Add Billing Address</Button>
