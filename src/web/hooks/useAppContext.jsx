@@ -23,6 +23,9 @@ import deleteProductsService from "../services/admin/products/deleteProducts"
 import getSingleProductService from "../services/admin/products/getSingleProduct"
 import updateProductService from "../services/admin/products/updateProduct"
 import getMaterialsService from "../services/materials/getMaterials"
+import getCategoriesService from "../services/categories/getCategories"
+import addNewProductService from "../services/admin/products/addNewProduct"
+import addMainImageService from "../services/admin/products/addMainImage"
 import {
   createContext,
   useCallback,
@@ -73,6 +76,9 @@ export const AppContextProvider = (props) => {
   const getSingleProduct = getSingleProductService({ api })
   const updateProduct = updateProductService({ api })
   const getMaterials = getMaterialsService({ api })
+  const getCategories = getCategoriesService({ api })
+  const addNewProduct = addNewProductService({ api })
+  const addMainImage = addMainImageService({ api })
   const signOut = useCallback(() => {
     localStorage.removeItem(config.session.localStorageKey)
     localStorage.removeItem("username")
@@ -119,6 +125,9 @@ export const AppContextProvider = (props) => {
           getSingleProduct,
           updateProduct,
           getMaterials,
+          getCategories,
+          addNewProduct,
+          addMainImage,
         },
         state: {
           session,

@@ -1,38 +1,46 @@
 import Error from "@/pages/_error"
 import ProductForm from "@/web/components/Admin/Form/ProductForm"
 import BackButton from "@/web/components/BackButton"
-import config from "@/web/config"
+import FormError from "@/web/components/FormError"
+import useAppContext from "@/web/hooks/useAppContext"
 import routes from "@/web/routes"
-import axios from "axios"
 import { useRouter } from "next/router"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
-export const getServerSideProps = async () => {
-  const { data } = await axios.get(
-    `${config.api.baseURL}${routes.api.categories.collection()}`
-  )
-
-  const materials = await axios.get(
-    `${config.api.baseURL}${routes.api.admin.materials.collection()}`
-  )
-
-  return {
-    props: {
-      categories: data,
-      materials: materials.data.result,
-    },
-  }
-}
-
-const CreateProduct = (props) => {
-  const {
-    categories: { result },
-    materials,
-  } = props
+const CreateProduct = () => {
   const router = useRouter()
+  const {
+    actions: { getMaterials, getCategories, addNewProduct, addMainImage },
+  } = useAppContext()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const [err, data] = await getMaterials()
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setMaterials(data.result)
+      const [erreur, dataCategories] = await getCategories()
+
+      if (erreur) {
+        setError(erreur)
+
+        return
+      }
+
+      setCategories(dataCategories.result)
+    }
+    fetchData()
+  }, [getCategories, getMaterials])
 
   const [errorCode, setErrorCode] = useState()
-
+  const [error, setError] = useState(null)
+  const [materials, setMaterials] = useState([])
+  const [categories, setCategories] = useState([])
   const [file, setFile] = useState(null)
   const [urlImage, setUrlImage] = useState(null)
 
@@ -42,50 +50,11 @@ const CreateProduct = (props) => {
   }
 
   const handleSubmit = useCallback(
-    async ({
-      name,
-      description,
-      price,
-      stock,
-      highlander,
-      slug,
-      categorieId,
-      materials,
-    }) => {
-      if (highlander === "") {
-        highlander = false
-      }
-
-      const addProduct = await axios.post(
-        `${config.api.baseApiURL}${routes.api.admin.products.create()}`,
-        {
-          name,
-          description,
-          price,
-          stock,
-          highlander,
-          slug,
-          categorieId,
-          urlImage,
-          materials,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
+    async (values) => {
+      const addProduct = await addNewProduct(values, urlImage)
       const formData = new FormData()
       formData.append("file", file)
-      const uploadImage = await axios.post(
-        `${config.api.baseApiURL}${routes.api.admin.products.uploadFile()}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      )
+      const uploadImage = await addMainImage(formData)
 
       Promise.allSettled([addProduct, uploadImage])
         .then((results) => {
@@ -104,7 +73,7 @@ const CreateProduct = (props) => {
           setErrorCode(error.response.status)
         })
     },
-    [file, urlImage, router]
+    [addNewProduct, urlImage, file, addMainImage, router]
   )
 
   if (errorCode) {
@@ -113,6 +82,7 @@ const CreateProduct = (props) => {
 
   return (
     <>
+      {error ? <FormError error={error} /> : ""}
       <div className="w-full mx-auto">
         <BackButton />
         <h1 className="font-semibold text-2xl mb-10 text-center uppercase">
@@ -121,7 +91,7 @@ const CreateProduct = (props) => {
 
         <div className="flex flex-wrap justify-center">
           <ProductForm
-            categories={result}
+            categories={categories}
             onSubmit={handleSubmit}
             onChange={handleFileInput}
             materials={materials}
