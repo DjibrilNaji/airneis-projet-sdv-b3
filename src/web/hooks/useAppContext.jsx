@@ -8,6 +8,7 @@ import deleteProductOrderService from "../services/order/deleteProductOrder"
 import cancelOrderService from "../services/order/cancelOrder"
 import getOrderDetailService from "../services/order/getOrderDetail"
 import allOrderUserService from "../services/order/allOrderUser"
+import getSingleAddressService from "../services/address/getSingleAddress"
 import {
   createContext,
   useCallback,
@@ -20,27 +21,6 @@ const AppContext = createContext()
 
 export const AppContextProvider = (props) => {
   const { isPublicPage, ...otherProps } = props
-  const [session, setSession] = useState(null)
-  const [jwt, setJWT] = useState(null)
-  const api = createAPIClient({ jwt })
-
-  const signUp = signUpService({ api })
-  const signIn = signInService({ api, setSession, setJWT })
-  const patchOrderQuantity = patchOrderQuantityService({ api })
-  const deleteProductOrder = deleteProductOrderService({ api })
-  const cancelOrder = cancelOrderService({ api })
-  const getOrderDetail = getOrderDetailService({ api })
-  const allOrderUser = allOrderUserService({ api })
-  const signOut = useCallback(() => {
-    localStorage.removeItem(config.session.localStorageKey)
-    localStorage.removeItem("username")
-    setSession(false)
-    const date = new Date()
-    date.setDate(date.getDate() - 100)
-    document.cookie = `token=; expires=${date}; path=/;`
-    document.cookie = `userId=; expires=${date}; path=/;`
-  }, [])
-
   useEffect(() => {
     const jwt = localStorage.getItem(config.session.localStorageKey)
 
@@ -51,7 +31,28 @@ export const AppContextProvider = (props) => {
     const session = parseSession(jwt)
 
     setSession(session)
-    setJWT({ jwt })
+    setJWT(jwt)
+  }, [])
+
+  const [session, setSession] = useState(null)
+  const [jwt, setJWT] = useState(null)
+  const api = createAPIClient({ jwt })
+  const signUp = signUpService({ api })
+  const signIn = signInService({ api, setSession, setJWT })
+  const patchOrderQuantity = patchOrderQuantityService({ api })
+  const deleteProductOrder = deleteProductOrderService({ api })
+  const cancelOrder = cancelOrderService({ api })
+  const getOrderDetail = getOrderDetailService({ api })
+  const allOrderUser = allOrderUserService({ api })
+  const getSingleAddress = getSingleAddressService({ api })
+  const signOut = useCallback(() => {
+    localStorage.removeItem(config.session.localStorageKey)
+    localStorage.removeItem("username")
+    setSession(false)
+    const date = new Date()
+    date.setDate(date.getDate() - 100)
+    document.cookie = `token=; expires=${date}; path=/;`
+    document.cookie = `userId=; expires=${date}; path=/;`
   }, [])
 
   if (!isPublicPage && session === null) {
@@ -75,6 +76,7 @@ export const AppContextProvider = (props) => {
           cancelOrder,
           getOrderDetail,
           allOrderUser,
+          getSingleAddress,
         },
         state: {
           session,

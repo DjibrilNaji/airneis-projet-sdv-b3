@@ -76,11 +76,7 @@ const routes = {
       address: {
         collection: (userId, query) =>
           createRouteWithQueryParams(`/users/${userId}/address`, query),
-        single: (addressId, query) =>
-          createRouteWithQueryParams(
-            `/users/address/${addressId}/addressSingle`,
-            query
-          ),
+        single: (addressId) => `/users/address/${addressId}/addressSingle`,
         add: (userId) => `/users/${userId}/address`,
       },
       billingAddress: {

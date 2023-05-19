@@ -1,37 +1,20 @@
 import axios from "axios"
 import routes from "@/web/routes"
 import cookie from "cookie"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import AddressForm from "@/web/components/Auth/AddressForm"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import useAppContext from "@/web/hooks/useAppContext"
+import FormError from "@/web/components/FormError"
 
-export const getServerSideProps = async ({
-  locale,
-  params,
-  req,
-  req: { url },
-}) => {
+export const getServerSideProps = async ({ locale, params, req }) => {
   const addressId = params.addressId
   const { token } = cookie.parse(
     req ? req.headers.cookie || "" : document.cookie
   )
-  const query = Object.fromEntries(
-    new URL(`http://example.com/${url}`).searchParams.entries()
-  )
-
-  const { data } = await axios.get(
-    `http://localhost:3000/api${routes.api.users.address.single(
-      addressId,
-      query
-    )}`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  )
 
   return {
     props: {
-      address: data,
       addressId: addressId,
       token: token,
       ...(await serverSideTranslations(locale, ["common", "navigation"])),
@@ -40,13 +23,31 @@ export const getServerSideProps = async ({
 }
 
 const EditAddress = (props) => {
-  const {
-    address: { result },
-    addressId,
-    token,
-  } = props
+  const { addressId, token } = props
 
-  const [address, setAddress] = useState(result)
+  const {
+    actions: { getSingleAddress },
+  } = useAppContext()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const [err, data] = await getSingleAddress(addressId)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setAddress(data.result)
+      setUserId(data.result.userId)
+    }
+    fetchData()
+  }, [addressId, getSingleAddress])
+
+  const [address, setAddress] = useState()
+  const [userId, setUserId] = useState()
+  const [error, setError] = useState(null)
 
   const handleSubmit = useCallback(
     async ({
@@ -89,18 +90,22 @@ const EditAddress = (props) => {
 
   return (
     <>
-      <div className="w-full mx-auto">
-        <h1 className="font-semibold text-2xl mb-10 text-center uppercase">
-          My Address
-        </h1>
-        <div className="flex flex-wrap justify-center">
-          <AddressForm
-            initialValues={address}
-            onSubmit={handleSubmit}
-            userId={address.userId}
-          />
+      {error ? (
+        <FormError error={error} />
+      ) : (
+        <div className="w-full mx-auto">
+          <h1 className="font-semibold text-2xl mb-10 text-center uppercase">
+            My Address
+          </h1>
+          <div className="flex flex-wrap justify-center">
+            <AddressForm
+              initialValues={address}
+              onSubmit={handleSubmit}
+              userId={userId}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </>
   )
 }
