@@ -32,43 +32,43 @@ const BillingAddressForm = (props) => {
     validationSchema = defaultValidationSchema,
     initialValues = defaultInitialValues,
     error,
-    hidden
+    hidden,
   } = props
 
   return (
     <div hidden={hidden}>
-    <Formik
-      onSubmit={onSubmit}
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-    >
-      <>
-        <FormError error={error} />
-        <Form className="flex flex-col gap-4 p-4">
-          <FormField
-            name="addressFull"
-            type="text"
-            label="addressFull"
-            icon={faPerson}
-          />
-          <FormField name="city" type="text" label="city" icon={faPerson} />
-          <FormField name="cp" type="text" label="cp" icon={faPerson} />
-          <FormField
-            name="country"
-            type="text"
-            label="country"
-            icon={faPerson}
-          />
-          <FormField
-            name="phoneNumber"
-            type="text"
-            label="phoneNumber"
-            icon={faPerson}
-          />
-        <SubmitButton className="mr-2">Submit</SubmitButton>
-        </Form>
-      </>
-    </Formik>
+      <Formik
+        onSubmit={onSubmit}
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+      >
+        <>
+          <FormError error={error} />
+          <Form className="flex flex-col gap-4 p-4">
+            <FormField
+              name="addressFull"
+              type="text"
+              label="Address :"
+              icon={faPerson}
+            />
+            <FormField name="city" type="text" label="City :" icon={faPerson} />
+            <FormField name="cp" type="text" label="CP :" icon={faPerson} />
+            <FormField
+              name="country"
+              type="text"
+              label="Country :"
+              icon={faPerson}
+            />
+            <FormField
+              name="phoneNumber"
+              type="text"
+              label="Phone Number :"
+              icon={faPerson}
+            />
+            <SubmitButton className="mr-2">Submit</SubmitButton>
+          </Form>
+        </>
+      </Formik>
     </div>
   )
 }

@@ -11,7 +11,8 @@ import allOrderUserService from "../services/order/allOrderUser"
 import getSingleAddressService from "../services/address/getSingleAddress"
 import modifyAddressService from "../services/address/modifyAddress"
 import deleteAddressService from "../services/address/deleteAddress"
-
+import addAddressService from "../services/address/addNewAddress"
+import addNewBillingAddressService from "../services/address/addNewBillingAddress"
 import {
   createContext,
   useCallback,
@@ -50,6 +51,8 @@ export const AppContextProvider = (props) => {
   const getSingleAddress = getSingleAddressService({ api })
   const modifyAddress = modifyAddressService({ api })
   const deleteAddress = deleteAddressService({ api })
+  const addNewAddress = addAddressService({ api })
+  const addNewBillingAddress = addNewBillingAddressService({ api })
   const signOut = useCallback(() => {
     localStorage.removeItem(config.session.localStorageKey)
     localStorage.removeItem("username")
@@ -84,6 +87,8 @@ export const AppContextProvider = (props) => {
           getSingleAddress,
           modifyAddress,
           deleteAddress,
+          addNewAddress,
+          addNewBillingAddress,
         },
         state: {
           session,
