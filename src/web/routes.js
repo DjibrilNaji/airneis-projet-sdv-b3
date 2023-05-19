@@ -50,11 +50,7 @@ const routes = {
       },
       products: {
         collection: () => "/admin/products/all",
-        single: (productId, query) =>
-          createRouteWithQueryParams(
-            `/admin/products/${productId}/single`,
-            query
-          ),
+        single: (productId) => `/admin/products/${productId}/single`,
         create: () => `/admin/products/all`,
         update: (productId) => `/admin/products/${productId}/single`,
         delete: (productId) => `/admin/products/${productId}/delete`,

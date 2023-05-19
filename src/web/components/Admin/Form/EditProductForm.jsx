@@ -58,6 +58,7 @@ const EditProductForm = (props) => {
       onSubmit={onSubmit}
       initialValues={initialValues}
       validationSchema={validationSchema}
+      enableReinitialize
     >
       <>
         <FormError error={error} />
@@ -86,7 +87,7 @@ const EditProductForm = (props) => {
             label="stock :"
             active={active}
           />
-          <label className="flex flex-col gap-2">
+          <label className="flex gap-2">
             {" "}
             Highlander
             <Field name="highlander" type="checkbox" disabled={active} />
@@ -101,7 +102,7 @@ const EditProductForm = (props) => {
                   className="m-2"
                   disabled={active}
                   name="materials"
-                  value={mat.nameMaterial}
+                  value={mat.nameMaterial ? mat.nameMaterial : ""}
                 />
                 {mat.nameMaterial}
               </label>

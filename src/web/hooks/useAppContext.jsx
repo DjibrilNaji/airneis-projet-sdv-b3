@@ -20,6 +20,9 @@ import getAllAddressService from "../services/address/getAllAddress"
 import getSingleCategorieService from "../services/categories/getSingleCategorie"
 import getAllProductsService from "../services/admin/products/getAllProducts"
 import deleteProductsService from "../services/admin/products/deleteProducts"
+import getSingleProductService from "../services/admin/products/getSingleProduct"
+import updateProductService from "../services/admin/products/updateProduct"
+import getMaterialsService from "../services/materials/getMaterials"
 import {
   createContext,
   useCallback,
@@ -67,6 +70,9 @@ export const AppContextProvider = (props) => {
   const getSingleCategorie = getSingleCategorieService({ api })
   const getAllProducts = getAllProductsService({ api })
   const deleteProducts = deleteProductsService({ api })
+  const getSingleProduct = getSingleProductService({ api })
+  const updateProduct = updateProductService({ api })
+  const getMaterials = getMaterialsService({ api })
   const signOut = useCallback(() => {
     localStorage.removeItem(config.session.localStorageKey)
     localStorage.removeItem("username")
@@ -110,6 +116,9 @@ export const AppContextProvider = (props) => {
           getSingleCategorie,
           getAllProducts,
           deleteProducts,
+          getSingleProduct,
+          updateProduct,
+          getMaterials,
         },
         state: {
           session,
