@@ -1,32 +1,25 @@
-import axios from "axios"
-import routes from "@/web/routes"
-import cookie from "cookie"
 import { useCallback, useEffect, useState } from "react"
 import AddressForm from "@/web/components/Auth/AddressForm"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import useAppContext from "@/web/hooks/useAppContext"
 import FormError from "@/web/components/FormError"
 
-export const getServerSideProps = async ({ locale, params, req }) => {
+export const getServerSideProps = async ({ locale, params }) => {
   const addressId = params.addressId
-  const { token } = cookie.parse(
-    req ? req.headers.cookie || "" : document.cookie
-  )
 
   return {
     props: {
       addressId: addressId,
-      token: token,
       ...(await serverSideTranslations(locale, ["common", "navigation"])),
     },
   }
 }
 
 const EditAddress = (props) => {
-  const { addressId, token } = props
+  const { addressId } = props
 
   const {
-    actions: { getSingleAddress },
+    actions: { getSingleAddress, modifyAddress },
   } = useAppContext()
 
   useEffect(() => {
@@ -50,42 +43,18 @@ const EditAddress = (props) => {
   const [error, setError] = useState(null)
 
   const handleSubmit = useCallback(
-    async ({
-      firstName,
-      lastName,
-      addressFull,
-      addressOptional,
-      country,
-      city,
-      cp,
-      phoneNumber,
-      address_default,
-    }) => {
-      const {
-        data: { result },
-      } = await axios.patch(
-        `http://localhost:3000/api${routes.api.users.address.single(
-          addressId
-        )}`,
-        {
-          firstName,
-          lastName,
-          addressFull,
-          addressOptional,
-          country,
-          city,
-          cp,
-          phoneNumber,
-          address_default,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
+    async (values) => {
+      const [err, data] = await modifyAddress(addressId, values)
 
-      setAddress(result)
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setAddress(data.result)
     },
-    [token, addressId]
+    [modifyAddress, addressId]
   )
 
   return (

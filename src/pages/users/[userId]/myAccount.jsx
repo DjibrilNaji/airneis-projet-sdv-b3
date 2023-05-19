@@ -9,6 +9,8 @@ import Link from "@/web/components/Link"
 import Button from "@/web/components/Button"
 import BillingAddressForm from "@/web/components/Auth/BillingAddressForm"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import useAppContext from "@/web/hooks/useAppContext"
+import FormError from "@/web/components/FormError"
 
 export const getServerSideProps = async ({
   locale,
@@ -60,6 +62,11 @@ const MyAccount = (props) => {
     allAddressUser,
   } = props
 
+  const {
+    actions: { deleteAddress },
+  } = useAppContext()
+
+  const [error, setError] = useState(null)
   const [user, setUser] = useState(result)
   const [billingAddress, setBillingAddress] = useState(result.billingAddress[0])
   const [seeData, setSeeData] = useState("Personnal Data")
@@ -115,20 +122,19 @@ const MyAccount = (props) => {
 
   const handleDeleteAddress = useCallback(
     async (event) => {
-      const {
-        data: { result },
-      } = await axios.delete(
-        `${config.api.baseApiURL}${routes.api.users.address.single(
-          parseInt(event.currentTarget.dataset.id)
-        )}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+      const [err, data] = await deleteAddress(
+        parseInt(event.currentTarget.dataset.id)
       )
 
-      setAllAddress(result)
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setAllAddress(data.result)
     },
-    [token]
+    [deleteAddress]
   )
 
   const handleChange = (event) => {
@@ -137,6 +143,7 @@ const MyAccount = (props) => {
 
   return (
     <>
+      {error ? <FormError error={error} /> : ""}
       <div className="w-full mx-auto">
         <h1 className="font-semibold text-2xl mb-10 text-center uppercase">
           My Account

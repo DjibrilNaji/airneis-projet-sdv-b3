@@ -9,6 +9,9 @@ import cancelOrderService from "../services/order/cancelOrder"
 import getOrderDetailService from "../services/order/getOrderDetail"
 import allOrderUserService from "../services/order/allOrderUser"
 import getSingleAddressService from "../services/address/getSingleAddress"
+import modifyAddressService from "../services/address/modifyAddress"
+import deleteAddressService from "../services/address/deleteAddress"
+
 import {
   createContext,
   useCallback,
@@ -45,6 +48,8 @@ export const AppContextProvider = (props) => {
   const getOrderDetail = getOrderDetailService({ api })
   const allOrderUser = allOrderUserService({ api })
   const getSingleAddress = getSingleAddressService({ api })
+  const modifyAddress = modifyAddressService({ api })
+  const deleteAddress = deleteAddressService({ api })
   const signOut = useCallback(() => {
     localStorage.removeItem(config.session.localStorageKey)
     localStorage.removeItem("username")
@@ -77,6 +82,8 @@ export const AppContextProvider = (props) => {
           getOrderDetail,
           allOrderUser,
           getSingleAddress,
+          modifyAddress,
+          deleteAddress,
         },
         state: {
           session,
