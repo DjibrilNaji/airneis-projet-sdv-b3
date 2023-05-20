@@ -43,7 +43,9 @@ const routes = {
   api: {
     signUp: () => "/register",
     signIn: () => "/login",
-    contact: () => "/contact",
+    contact: {
+      contact: () => "/contact",
+    },
     admin: {
       materials: {
         collection: () => "/admin/materials/all",
