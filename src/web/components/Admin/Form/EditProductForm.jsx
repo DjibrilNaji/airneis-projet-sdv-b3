@@ -102,7 +102,7 @@ const EditProductForm = (props) => {
                   className="m-2"
                   disabled={active}
                   name="materials"
-                  value={mat.nameMaterial ? mat.nameMaterial : ""}
+                  value={mat.nameMaterial}
                 />
                 {mat.nameMaterial}
               </label>

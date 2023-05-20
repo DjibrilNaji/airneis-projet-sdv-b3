@@ -85,18 +85,6 @@ const handler = mw({
         throw new NotFoundError()
       }
 
-      const newProduct = await ProductModel.query()
-        .updateAndFetchById(productId, {
-          ...(name ? { name } : {}),
-          ...(description ? { description } : {}),
-          ...(price ? { price } : {}),
-          ...(stock ? { stock } : {}),
-          ...(highlander ? { highlander } : {}),
-          ...(slug ? { slug } : {}),
-        })
-        .withGraphFetched("image")
-        .withGraphFetched("materials")
-
       await db("rel_material_product").where({ productId: productId }).del()
 
       materials.map(async (mat) => {
@@ -108,6 +96,23 @@ const handler = mw({
           productId,
           materialId: materialId.id,
         })
+      })
+
+      const newProduct = await ProductModel.query()
+        .updateAndFetchById(productId, {
+          ...(name ? { name } : {}),
+          ...(description ? { description } : {}),
+          ...(price ? { price } : {}),
+          ...(stock ? { stock } : {}),
+          ...(highlander ? { highlander } : {}),
+          ...(slug ? { slug } : {}),
+        })
+        .withGraphFetched("image")
+        .withGraphFetched("materials")
+        .modifyGraph("materials", (builder) => builder.select("nameMaterial"))
+
+      newProduct.materials.map((mat, index) => {
+        newProduct.materials.splice(index, 1, mat.nameMaterial)
       })
 
       newProduct.image.map((imageProduct) => {
