@@ -30,9 +30,7 @@ function App({ Component, pageProps }) {
         <title>Airneis</title>
       </Head>
 
-      <AppContextProvider>
-        <Component {...pageProps} />
-      </AppContextProvider>
+      <Component {...pageProps} />
     </>
   )
 }
