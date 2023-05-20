@@ -1,37 +1,57 @@
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
 import BackButton from "@/web/components/BackButton"
-import config from "@/web/config"
-import routes from "@/web/routes"
+import FormError from "@/web/components/FormError"
+import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
 import { faEye } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import axios from "axios"
 import Image from "next/image"
 import Link from "next/link"
+import { useEffect, useState } from "react"
 
 export const getServerSideProps = async ({ params }) => {
   const orderId = params.orderId
 
-  const { data } = await axios.get(
-    `${config.api.baseURL}${routes.api.admin.orders.single(orderId)}`
-  )
-
   return {
     props: {
-      order: data.order,
-      products: data.products,
-      address: data.order.address[0],
       orderId,
     },
   }
 }
 
 const ViewUser = (props) => {
-  const { order, products, address } = props
+  const { orderId } = props
+  const {
+    actions: { getSingleOrder },
+  } = useAppContext()
+
+  const [error, setError] = useState(null)
+  const [order, setOrder] = useState([])
+  const [products, setProducts] = useState([])
+  const [address, setAddress] = useState([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const [err, data] = await getSingleOrder(orderId)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setOrder(data.order)
+      setProducts(data.products)
+      setAddress(data.order.address[0])
+    }
+    fetchData()
+  }, [getSingleOrder, orderId])
 
   const creationDate = new Date(order.createdAt).toLocaleDateString("fr")
 
   return (
     <div>
+      {error ? <FormError error={error} /> : ""}
+
       <BackButton />
       <div className="flex flex-col gap-6">
         <span className="font-bold text-lg mx-4">
@@ -140,7 +160,11 @@ const ViewUser = (props) => {
 }
 
 ViewUser.getLayout = function (page) {
-  return <LayoutAdmin>{page}</LayoutAdmin>
+  return (
+    <AppContextProvider>
+      <LayoutAdmin>{page}</LayoutAdmin>
+    </AppContextProvider>
+  )
 }
 
 export default ViewUser

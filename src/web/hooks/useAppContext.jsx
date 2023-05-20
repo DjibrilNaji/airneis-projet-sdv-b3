@@ -28,6 +28,8 @@ import addNewProductService from "../services/admin/products/addNewProduct"
 import addMainImageService from "../services/admin/products/addMainImage"
 import getContactService from "../services/admin/contact/getContact"
 import deleteContactService from "../services/admin/contact/deleteContact"
+import getOrdersService from "../services/admin/orders/getOrders"
+import getSingleOrderService from "../services/admin/orders/getSingleOrder"
 import {
   createContext,
   useCallback,
@@ -83,6 +85,10 @@ export const AppContextProvider = (props) => {
   const addMainImage = addMainImageService({ api })
   const getContact = getContactService({ api })
   const deleteContact = deleteContactService({ api })
+
+  const getOrders = getOrdersService({ api })
+  const getSingleOrder = getSingleOrderService({ api })
+
   const signOut = useCallback(() => {
     localStorage.removeItem(config.session.localStorageKey)
     localStorage.removeItem("username")
@@ -134,6 +140,8 @@ export const AppContextProvider = (props) => {
           addMainImage,
           getContact,
           deleteContact,
+          getOrders,
+          getSingleOrder,
         },
         state: {
           session,
