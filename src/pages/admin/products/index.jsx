@@ -12,9 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons"
 import TableHeadField from "@/web/components/Admin/TableHeadField"
 import routes from "@/web/routes"
-import useAppContext, {
-  AppContextProvider,
-} from "@/web/hooks/useAppContext.jsx"
+import useAppContext from "@/web/hooks/useAppContext.jsx"
 import FormError from "@/web/components/FormError"
 
 const ProductAdmin = () => {
@@ -337,11 +335,7 @@ const ProductAdmin = () => {
 }
 
 ProductAdmin.getLayout = function (page) {
-  return (
-    <AppContextProvider>
-      <LayoutAdmin>{page}</LayoutAdmin>
-    </AppContextProvider>
-  )
+  return <LayoutAdmin>{page}</LayoutAdmin>
 }
 
 export default ProductAdmin

@@ -2,7 +2,7 @@ import EditProductForm from "@/web/components/Admin/Form/EditProductForm"
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
 import BackButton from "@/web/components/BackButton"
 import FormError from "@/web/components/FormError"
-import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
+import useAppContext from "@/web/hooks/useAppContext"
 import routes from "@/web/routes"
 import {
   faCartArrowDown,
@@ -165,11 +165,7 @@ const ViewUser = (props) => {
 }
 
 ViewUser.getLayout = function (page) {
-  return (
-    <AppContextProvider>
-      <LayoutAdmin>{page}</LayoutAdmin>
-    </AppContextProvider>
-  )
+  return <LayoutAdmin>{page}</LayoutAdmin>
 }
 
 export default ViewUser
