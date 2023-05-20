@@ -46,7 +46,10 @@ const CreateProduct = () => {
 
   const handleFileInput = (e) => {
     setFile(e.target.files[0])
-    setUrlImage(e.target.files[0].name)
+
+    if (e.target.files[0]) {
+      setUrlImage(e.target.files[0].name)
+    }
   }
 
   const handleSubmit = useCallback(

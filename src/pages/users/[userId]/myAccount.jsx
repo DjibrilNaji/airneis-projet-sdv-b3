@@ -45,7 +45,10 @@ const MyAccount = (props) => {
 
       setUser(data.result)
       setBillingAddress(data.result.billingAddress[0])
-      setBillingAddressId(data.result.billingAddress[0].id)
+
+      if (data.result.billingAddress[0]) {
+        setBillingAddressId(data.result.billingAddress[0].id)
+      }
     }
     fetchData()
   }, [getPersonnalData, userId])
