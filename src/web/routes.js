@@ -71,6 +71,8 @@ const routes = {
       },
     },
     users: {
+      collection: () => `/users`,
+      delete: (userId) => `/users/${userId}/delete`,
       address: {
         collection: (userId) => `/users/${userId}/address`,
         single: (addressId) => `/users/address/${addressId}/addressSingle`,

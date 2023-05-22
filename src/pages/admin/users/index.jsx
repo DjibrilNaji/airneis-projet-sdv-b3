@@ -1,5 +1,4 @@
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
-import axios from "axios"
 import Link from "next/link"
 import { useCallback, useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -13,8 +12,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons"
 import TableHeadField from "@/web/components/Admin/TableHeadField"
 import routes from "@/web/routes"
+import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
+import FormError from "@/web/components/FormError"
 
 const UsersAdmin = () => {
+  const {
+    actions: { getUsers, deleteUser },
+  } = useAppContext()
+
   const [data, setData] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState("")
@@ -25,21 +30,31 @@ const UsersAdmin = () => {
   const [searchTerm, setSearchTerm] = useState(null)
 
   const [selectedUsers, setSelectedUsers] = useState([])
+  const [error, setError] = useState("")
 
   const fetchData = useCallback(
     async (page) => {
-      const result = await axios.get(
-        `/api/users?limit=${limit}&page=${page}&sortColumn=${sortColumn}&order=${order}` +
-          (searchTerm === null ? "" : `&searchTerm=${searchTerm}`)
+      const [err, data] = await getUsers(
+        limit,
+        page,
+        sortColumn,
+        order,
+        searchTerm
       )
 
-      const totalUsers = result.data.result.meta.count
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      const totalUsers = data.result.meta.count
       const totalPages = Math.ceil(totalUsers / limit)
 
       setTotalPages(totalPages)
-      setData(result.data.result)
+      setData(data.result)
     },
-    [order, sortColumn, limit, searchTerm]
+    [order, sortColumn, limit, searchTerm, getUsers]
   )
 
   useEffect(() => {
@@ -48,11 +63,18 @@ const UsersAdmin = () => {
 
   const handleDelete = useCallback(
     async (userId) => {
-      await axios.patch(`/api/users/${userId}/delete`)
+      const [err] = await deleteUser(userId)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
       fetchData(currentPage)
       setSelectedUsers([])
     },
-    [fetchData, currentPage]
+    [fetchData, currentPage, deleteUser]
   )
 
   const handlePageChange = useCallback(
@@ -113,6 +135,8 @@ const UsersAdmin = () => {
 
   return (
     <>
+      {error ? <FormError error={error} /> : ""}
+
       <div className="flex item-center justify-center mb-5">
         <span className="font-extrabold text-3xl text-stone-500 uppercase">
           Users
@@ -270,7 +294,11 @@ const UsersAdmin = () => {
 }
 
 UsersAdmin.getLayout = function (page) {
-  return <LayoutAdmin>{page}</LayoutAdmin>
+  return (
+    <AppContextProvider>
+      <LayoutAdmin>{page}</LayoutAdmin>
+    </AppContextProvider>
+  )
 }
 
 export default UsersAdmin
