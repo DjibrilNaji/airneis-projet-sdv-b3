@@ -35,6 +35,7 @@ import getSingleUserService from "../services/admin/users/getSingleUser"
 import deleteUserService from "../services/admin/users/deleteUser"
 import updateUserService from "../services/admin/users/updateUser"
 import addUserService from "../services/admin/users/addUser"
+import contactService from "../services/contact"
 
 import {
   createContext,
@@ -101,6 +102,8 @@ export const AppContextProvider = (props) => {
   const updateUser = updateUserService({ api })
   const addUser = addUserService({ api })
 
+  const contact = contactService({ api })
+
   const signOut = useCallback(() => {
     localStorage.removeItem(config.session.localStorageKey)
     localStorage.removeItem("username")
@@ -159,6 +162,7 @@ export const AppContextProvider = (props) => {
           deleteUser,
           updateUser,
           addUser,
+          contact,
         },
         state: {
           session,
