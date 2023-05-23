@@ -38,6 +38,9 @@ import addUserService from "../services/admin/users/addUser"
 import contactService from "../services/contact"
 import getFavoriteService from "../services/favorites/getFavorites"
 import deleteFavoriteService from "../services/favorites/deleteFavorites"
+import getSingleProductBySlugService from "../services/products/getSingleProductBySlug"
+import getSingleFavoriteService from "../services/products/favorites/getSingleFavorite"
+import addFavoriteService from "../services/products/favorites/addFavorite"
 
 import {
   createContext,
@@ -109,6 +112,10 @@ export const AppContextProvider = (props) => {
   const getFavorites = getFavoriteService({ api })
   const deleteFavorite = deleteFavoriteService({ api })
 
+  const getSingleProductBySlug = getSingleProductBySlugService({ api })
+  const getSingleFavorite = getSingleFavoriteService({ api })
+  const addFavorite = addFavoriteService({ api })
+
   const signOut = useCallback(() => {
     localStorage.removeItem(config.session.localStorageKey)
     localStorage.removeItem("username")
@@ -170,6 +177,9 @@ export const AppContextProvider = (props) => {
           contact,
           getFavorites,
           deleteFavorite,
+          getSingleProductBySlug,
+          getSingleFavorite,
+          addFavorite,
         },
         state: {
           session,
