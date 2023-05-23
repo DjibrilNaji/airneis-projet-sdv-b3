@@ -2,10 +2,10 @@ import routes from "@/web/routes.js"
 
 const getSingleFavorite =
   ({ api }) =>
-  async (userId, productId) => {
+  async (userId, slug) => {
     try {
       const { data } = await api.get(
-        routes.api.products.favorites(userId, productId)
+        routes.api.products.favorites(userId, slug)
       )
 
       return [null, data]

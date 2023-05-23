@@ -7,7 +7,6 @@ import {
   faCartPlus,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons"
-import cookie from "cookie"
 import { useCallback, useContext, useEffect, useState } from "react"
 import { CartContext } from "@/web/hooks/cartContext"
 import Dialog from "@/web/components/Dialog"
@@ -15,17 +14,12 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import useAppContext from "@/web/hooks/useAppContext"
 import FormError from "@/web/components/FormError"
 
-export const getServerSideProps = async ({ locale, params, req }) => {
+export const getServerSideProps = async ({ locale, params }) => {
   const userId = params.userId
-
-  const { token } = cookie.parse(
-    req ? req.headers.cookie || "" : document.cookie
-  )
 
   return {
     props: {
       userId,
-      token,
       ...(await serverSideTranslations(locale, ["common", "navigation"])),
     },
   }

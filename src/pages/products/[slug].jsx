@@ -28,8 +28,8 @@ export const getServerSideProps = async ({ locale, params, req }) => {
   const cookies = req.headers.cookie
     ? cookie.parse(req.headers.cookie || "")
     : null
-  const token = cookies.token ? cookies.token : null
-  const userId = cookies.userId ? cookies.userId : null
+  const token = cookies ? cookies.token : null
+  const userId = cookies ? cookies.userId : null
 
   return {
     props: {
@@ -79,7 +79,7 @@ const Product = (props) => {
       }
     }
     fetchData()
-  }, [getSingleProductBySlug, userId, productSlug])
+  }, [getSingleProductBySlug, userId, productSlug, token, getSingleFavorite])
 
   const {
     actions: { addToCart },
@@ -98,24 +98,28 @@ const Product = (props) => {
   const [selectedQuantity, setSelectedQuantity] = useState(1)
   const [quantityDisplay, setQuantityDisplay] = useState([])
 
-  // {
-  //   token &&
-  //     userId &&
-  //     useEffect(() => {
-  //       async function fetchData() {
-  //         const [err, data] = await getSingleFavorite(userId, product.id)
+  {
+    token &&
+      userId &&
+      useEffect(() => {
+        const delay = setTimeout(() => {
+          async function fetchDataFavorites() {
+            const [err, data] = await getSingleFavorite(userId, productSlug)
 
-  //         if (err) {
-  //           setError(err)
+            if (err) {
+              setError(err)
 
-  //           return
-  //         }
+              return
+            }
 
-  //         setIsFavorite(data.result.length > 0 ? true : false)
-  //       }
-  //       fetchData()
-  //     }, [userId, getSingleFavorite, product.id])
-  // }
+            setIsFavorite(data.result.length > 0 ? true : false)
+          }
+          fetchDataFavorites()
+        }, 100)
+
+        return () => clearTimeout(delay)
+      }, [userId, getSingleFavorite, productSlug])
+  }
 
   const cartItems = cart.find((item) => item.slug === product.slug)
 

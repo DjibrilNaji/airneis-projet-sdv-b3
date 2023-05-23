@@ -102,10 +102,8 @@ const routes = {
     },
     products: {
       collection: () => "/products",
-      single: (slug, query) =>
-        createRouteWithQueryParams(`/products/${slug}`, query),
-      favorites: (userId, productId) =>
-        `/users/${userId}/favorites/${productId}`,
+      single: (slug) => `/products/${slug}`,
+      favorites: (userId, slug) => `/users/${userId}/favorites/${slug}`,
     },
     search: {
       collection: (query) => createRouteWithQueryParams(`/search`, query),
