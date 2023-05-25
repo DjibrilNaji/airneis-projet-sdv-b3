@@ -58,7 +58,10 @@ const routes = {
         delete: (productId) => `/admin/products/${productId}/delete`,
         uploadFile: () => `/admin/products/upload`,
       },
-      categories: () => "/admin/categories",
+      categories: {
+        collection: () => "/admin/categories/all",
+        delete: (categoryId) => `/admin/categories/${categoryId}/delete`,
+      },
       users: {
         single: (userId, query) =>
           createRouteWithQueryParams(`/admin/users/${userId}`, query),
