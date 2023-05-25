@@ -1,62 +1,53 @@
 import ListOrders from "@/web/components/ListOrders"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import { useEffect, useState } from "react"
-import useAppContext from "@/web/hooks/useAppContext"
-import FormError from "@/web/components/FormError"
+import { useState } from "react"
+import axios from "axios"
+import cookie from "cookie"
+import routes from "@/web/routes.js"
+import config from "@/web/config"
 
-export const getServerSideProps = async ({ locale, params }) => {
+export const getServerSideProps = async ({ locale, params, req }) => {
   const userId = params.userId
+
+  const { token } = cookie.parse(
+    req ? req.headers.cookie || "" : document.cookie
+  )
+
+  const { data } = await axios.get(
+    `${config.api.baseURL}${routes.api.orders.collection(userId)}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  )
 
   return {
     props: {
-      userId: userId,
+      orders: data,
       ...(await serverSideTranslations(locale, ["common", "navigation"])),
     },
   }
 }
 
 const ListOrder = (props) => {
-  const { userId } = props
-
   const {
-    actions: { allOrderUser },
-  } = useAppContext()
+    orders: { result },
+  } = props
 
   const [years] = useState([])
-  const [orders, setOrders] = useState([])
-  const [error, setError] = useState(null)
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const [err, data] = await allOrderUser(userId)
-
-      if (err) {
-        setError(err)
-
-        return
-      }
-
-      setOrders(data.result.orders)
-      data.result.orders.map((order) =>
-        years.includes(new Date(order.createdAt).getFullYear()) === true
-          ? ""
-          : years.push(new Date(order.createdAt).getFullYear())
-      )
-    }
-    fetchData()
-  }, [allOrderUser, userId, years])
+  result.orders.map((order) =>
+    years.includes(new Date(order.createdAt).getFullYear()) === true
+      ? ""
+      : years.push(new Date(order.createdAt).getFullYear())
+  )
 
   return (
     <>
-      {error ? (
-        <FormError error={error} />
-      ) : (
-        <div className="h-24 flex items-center justify-center p-8">
-          <span className="text-black uppercase font-bold text-2xl">
-            My Orders
-          </span>
-        </div>
-      )}
+      <div className="h-24 flex items-center justify-center p-8">
+        <span className="text-black uppercase font-bold text-2xl">
+          My Orders
+        </span>
+      </div>
       {years.map((year, index) => (
         <div
           key={index}
@@ -65,7 +56,7 @@ const ListOrder = (props) => {
           <h1 className="text-center text-xl font-bold border-solid border-b-2 w-full border-black mb-4">
             {year}
           </h1>
-          <ListOrders filteredOrders={orders} dateYear={year} />
+          <ListOrders filteredOrders={result.orders} dateYear={year} />
         </div>
       ))}
     </>

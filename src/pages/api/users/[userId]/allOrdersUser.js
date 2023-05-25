@@ -1,4 +1,5 @@
 import OrderModel from "@/api/db/models/OrderModel"
+import { InvalidAccessError } from "@/api/errors"
 import validate from "@/api/middlewares/validate.js"
 import mw from "@/api/mw.js"
 import { idValidator } from "@/validators"
@@ -15,7 +16,16 @@ const handler = mw({
         query: { userId },
       },
       res,
+      req,
     }) => {
+      const {
+        session: { user: sessionUser },
+      } = req
+
+      if (sessionUser.id !== userId) {
+        throw new InvalidAccessError()
+      }
+
       const orders = await OrderModel.query()
         .where({ userId: userId })
         .orderBy("createdAt", "desc")

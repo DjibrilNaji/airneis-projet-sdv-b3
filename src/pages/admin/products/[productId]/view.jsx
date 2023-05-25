@@ -14,55 +14,55 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Image from "next/image"
 import Link from "next/link"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
+import axios from "axios"
+import cookie from "cookie"
+import config from "@/web/config"
 
-export const getServerSideProps = async ({ params }) => {
+export const getServerSideProps = async ({ params, req }) => {
   const productId = params.productId
+
+  const { token } = cookie.parse(
+    req ? req.headers.cookie || "" : document.cookie
+  )
+
+  const { data } = await axios.get(
+    `${config.api.baseURL}${routes.api.admin.products.single(productId)}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  )
+
+  const materials = await axios.get(
+    `${config.api.baseURL}${routes.api.admin.materials.collection()}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  )
 
   return {
     props: {
+      product: data,
       productId,
+      materials: materials.data.result,
     },
   }
 }
 
 const ViewUser = (props) => {
-  const { productId } = props
+  const {
+    product: { result },
+    productId,
+    materials,
+  } = props
 
   const {
-    actions: { getSingleProduct, updateProduct, getMaterials },
+    actions: { updateProduct },
   } = useAppContext()
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const [err, data] = await getMaterials()
-
-      if (err) {
-        setError(err)
-
-        return
-      }
-
-      setMaterials(data.result)
-      const [erreur, dataProduct] = await getSingleProduct(productId)
-
-      if (erreur) {
-        setError(erreur)
-
-        return
-      }
-
-      setProduct(dataProduct.result.product[0])
-      setImage(dataProduct.result.product[0].image)
-    }
-    fetchData()
-  }, [getMaterials, getSingleProduct, productId])
 
   const [error, setError] = useState(null)
   const [toggleUpdateProduct, setToggleUpdateProduct] = useState(true)
-  const [product, setProduct] = useState([])
-  const [image, setImage] = useState([])
-  const [materials, setMaterials] = useState([])
+  const [product, setProduct] = useState(result.product[0])
 
   const handleSubmit = useCallback(
     async (values) => {
@@ -148,7 +148,7 @@ const ViewUser = (props) => {
           )}
         </div>
         <div className="flex">
-          {image.map((imageProduct) => (
+          {product.image.map((imageProduct) => (
             <Image
               key={imageProduct.id}
               src={imageProduct.urlImage}

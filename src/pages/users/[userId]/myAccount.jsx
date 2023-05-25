@@ -1,6 +1,6 @@
 import UserForm from "@/web/components/Auth/UserForm"
 import routes from "@/web/routes"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import TableAddress from "@/web/components/Auth/TableAddress"
 import Link from "@/web/components/Link"
 import Button from "@/web/components/Button"
@@ -8,73 +8,58 @@ import BillingAddressForm from "@/web/components/Auth/BillingAddressForm"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import useAppContext from "@/web/hooks/useAppContext"
 import FormError from "@/web/components/FormError"
+import axios from "axios"
+import cookie from "cookie"
+import config from "@/web/config"
 
-export const getServerSideProps = async ({ locale, params }) => {
+export const getServerSideProps = async ({ locale, params, req }) => {
   const userId = params.userId
+
+  const { token } = cookie.parse(
+    req ? req.headers.cookie || "" : document.cookie
+  )
+
+  const { data } = await axios.get(
+    `${config.api.baseURL}${routes.api.users.single(userId)}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  )
+
+  const addressUser = await axios.get(
+    `${config.api.baseURL}${routes.api.users.address.collection(userId)}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  )
 
   return {
     props: {
       userId: userId,
+      user: data,
+      allAddressUser: addressUser.data.result,
       ...(await serverSideTranslations(locale, ["common", "navigation"])),
     },
   }
 }
 
 const MyAccount = (props) => {
-  const { userId } = props
+  const {
+    user: { result },
+    userId,
+    allAddressUser,
+  } = props
 
   const {
-    actions: {
-      deleteAddress,
-      getPersonnalData,
-      updatePersonnalData,
-      updateBillingAddress,
-      getAllAddress,
-    },
+    actions: { deleteAddress, updatePersonnalData, updateBillingAddress },
   } = useAppContext()
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const [err, data] = await getPersonnalData(userId)
-
-      if (err) {
-        setError(err)
-
-        return
-      }
-
-      setUser(data.result)
-      setBillingAddress(data.result.billingAddress[0])
-
-      if (data.result.billingAddress[0]) {
-        setBillingAddressId(data.result.billingAddress[0].id)
-      }
-    }
-    fetchData()
-  }, [getPersonnalData, userId])
-
-  useEffect(() => {
-    const fetchAddressData = async () => {
-      const [err, data] = await getAllAddress(userId)
-
-      if (err) {
-        setError(err)
-
-        return
-      }
-
-      setAllAddress(data.result)
-    }
-    fetchAddressData()
-  }, [getAllAddress, userId])
-
   const [error, setError] = useState(null)
-  const [user, setUser] = useState()
-  const [billingAddress, setBillingAddress] = useState()
-  const [billingAddressId, setBillingAddressId] = useState()
+  const [user, setUser] = useState(result)
+  const [billingAddress, setBillingAddress] = useState(result.billingAddress[0])
   const [seeData, setSeeData] = useState("Personnal Data")
   const optionUser = ["Personnal Data", "Address", "Billing Address"]
-  const [allAddress, setAllAddress] = useState([])
+  const [allAddress, setAllAddress] = useState(allAddressUser)
 
   const handleSubmit = useCallback(
     async (values) => {
@@ -93,7 +78,7 @@ const MyAccount = (props) => {
 
   const handleSubmitBilling = useCallback(
     async (values) => {
-      const [err, data] = await updateBillingAddress(billingAddressId, values)
+      const [err, data] = await updateBillingAddress(billingAddress.id, values)
 
       if (err) {
         setError(err)
@@ -103,7 +88,7 @@ const MyAccount = (props) => {
 
       setBillingAddress(data.result)
     },
-    [billingAddressId, updateBillingAddress]
+    [billingAddress, updateBillingAddress]
   )
 
   const handleDeleteAddress = useCallback(

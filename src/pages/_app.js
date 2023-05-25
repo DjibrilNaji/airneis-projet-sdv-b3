@@ -29,7 +29,6 @@ function App({ Component, pageProps }) {
       <Head>
         <title>Airneis</title>
       </Head>
-
       <Component {...pageProps} />
     </>
   )

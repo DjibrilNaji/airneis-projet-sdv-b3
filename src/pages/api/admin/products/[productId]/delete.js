@@ -1,7 +1,7 @@
 import validate from "@/api/middlewares/validate.js"
 import mw from "@/api/mw.js"
 import { idValidator } from "@/validators"
-import { NotFoundError } from "@/api/errors"
+import { InvalidAccessError, NotFoundError } from "@/api/errors"
 import ProductModel from "@/api/db/models/ProductModel"
 
 const handler = mw({
@@ -16,7 +16,16 @@ const handler = mw({
         query: { productId },
       },
       res,
+      req,
     }) => {
+      const {
+        session: { user: sessionUser },
+      } = req
+
+      if (sessionUser.isAdmin !== true) {
+        throw new InvalidAccessError()
+      }
+
       const product = await ProductModel.query().findById(productId)
 
       if (!product) {

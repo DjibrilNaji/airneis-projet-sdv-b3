@@ -2,7 +2,7 @@ import validate from "@/api/middlewares/validate.js"
 import mw from "@/api/mw.js"
 import { idValidator } from "@/validators"
 import UserModel from "@/api/db/models/UserModel"
-import { NotFoundError } from "@/api/errors"
+import { InvalidAccessError, NotFoundError } from "@/api/errors"
 
 const handler = mw({
   PATCH: [
@@ -16,7 +16,16 @@ const handler = mw({
         query: { userId },
       },
       res,
+      req,
     }) => {
+      const {
+        session: { user: sessionUser },
+      } = req
+
+      if (sessionUser.id !== userId) {
+        throw new InvalidAccessError()
+      }
+
       const user = await UserModel.query().findById(userId)
 
       if (!user) {

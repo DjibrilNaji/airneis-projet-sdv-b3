@@ -2,21 +2,42 @@ import Image from "next/image"
 import debounce from "@/debounce.js"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTrash } from "@fortawesome/free-solid-svg-icons"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import Button from "@/web/components/Button"
 import useAppContext from "@/web/hooks/useAppContext.jsx"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import FormError from "@/web/components/FormError"
+import axios from "axios"
+import cookie from "cookie"
+import config from "@/web/config"
+import routes from "@/web/routes"
 
-export const getServerSideProps = async ({ locale, params, req: { url } }) => {
+export const getServerSideProps = async ({
+  locale,
+  params,
+  req: { url },
+  req,
+}) => {
   const numberOrder = params.numberOrder
+
+  const { token } = cookie.parse(
+    req ? req.headers.cookie || "" : document.cookie
+  )
 
   const query = Object.fromEntries(
     new URL(`http://example.com/${url}`).searchParams.entries()
   )
 
+  const { data } = await axios.get(
+    `${config.api.baseURL}${routes.api.orders.single(numberOrder)}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  )
+
   return {
     props: {
+      order: data,
       numberOrder: numberOrder,
       query: query,
       ...(await serverSideTranslations(locale, ["common", "navigation"])),
@@ -25,46 +46,21 @@ export const getServerSideProps = async ({ locale, params, req: { url } }) => {
 }
 
 const Order = (props) => {
-  const { numberOrder, query } = props
+  const {
+    order: { result },
+    numberOrder,
+    query,
+  } = props
 
   const {
-    actions: {
-      patchOrderQuantity,
-      deleteProductOrder,
-      cancelOrder,
-      getOrderDetail,
-    },
+    actions: { patchOrderQuantity, deleteProductOrder, cancelOrder },
   } = useAppContext()
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const [err, data] = await getOrderDetail(numberOrder)
-
-      if (err) {
-        setError(err)
-
-        return
-      }
-
-      setOrder(data.result.order[0])
-      setProducts(data.result.allProductsOrder)
-      setBillingAddress(data.result.userBillingAddress)
-      setDeliveryAddress(data.result.userDeliveryAddress)
-      setStatus(data.result.order[0].status)
-      setTotal(data.result.order[0].price_formatted)
-      setTotalTva(data.result.order[0].amount_tva_formatted)
-    }
-    fetchData()
-  }, [getOrderDetail, numberOrder])
-
-  const [order, setOrder] = useState([])
-  const [allProducts, setProducts] = useState([])
-  const [deliveryAddress, setDeliveryAddress] = useState([])
-  const [billingAddress, setBillingAddress] = useState([])
   const [error, setError] = useState(null)
-  const [status, setStatus] = useState()
-  const [total, setTotal] = useState()
-  const [totalTva, setTotalTva] = useState()
+  const [allProducts, setProducts] = useState(result.allProductsOrder)
+  const [status, setStatus] = useState(result.order[0].status)
+  const [total, setTotal] = useState(result.order[0].price_formatted)
+  const [totalTva, setTotalTva] = useState(result.order[0].amount_tva_formatted)
 
   const debouncedFetchData = useMemo(
     () =>
@@ -166,8 +162,9 @@ const Order = (props) => {
         <>
           <div className="h-40 flex items-center self-center justify-center">
             <span className="pl-10 md:pl-0 text-black uppercase font-bold text-2xl">
-              Order #{order.numberOrder} -{" "}
-              {new Date(order.createdAt).toLocaleDateString("fr")} - {status}
+              Order #{result.order.numberOrder} -{" "}
+              {new Date(result.order.createdAt).toLocaleDateString("fr")} -{" "}
+              {status}
             </span>
           </div>
           <div className="grid px-2 gap-7 grid-cols-1 md:pb-10 md:grid-cols-2">
@@ -244,7 +241,7 @@ const Order = (props) => {
                 <p className="font-bold text-2xl md:text-xl pr-5">
                   Delivery address
                 </p>
-                {deliveryAddress.map((delAdd, index) => (
+                {result.userDeliveryAddress.map((delAdd, index) => (
                   <div key={index}>
                     <p className="text-xl md:text-lg">
                       {delAdd.firstName} {delAdd.lastName}
@@ -262,7 +259,7 @@ const Order = (props) => {
                 <p className="font-bold text-2xl md:text-xl pr-5">
                   Billing address
                 </p>
-                {billingAddress.map((bilAdd, index) => (
+                {result.userBillingAddress.map((bilAdd, index) => (
                   <div key={index}>
                     <p className="text-xl md:text-lg">
                       {bilAdd.firstName} {bilAdd.lastName}

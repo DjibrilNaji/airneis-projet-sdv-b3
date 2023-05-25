@@ -6,21 +6,14 @@ import signUpService from "@/web/services/signUp.js"
 import patchOrderQuantityService from "../services/order/patchOrderQuantity"
 import deleteProductOrderService from "../services/order/deleteProductOrder"
 import cancelOrderService from "../services/order/cancelOrder"
-import getOrderDetailService from "../services/order/getOrderDetail"
-import allOrderUserService from "../services/order/allOrderUser"
-import getSingleAddressService from "../services/address/getSingleAddress"
 import modifyAddressService from "../services/address/modifyAddress"
 import deleteAddressService from "../services/address/deleteAddress"
 import addAddressService from "../services/address/addNewAddress"
 import addNewBillingAddressService from "../services/address/addNewBillingAddress"
-import getPersonnalDataService from "../services/user/getPersonnalData"
 import updatePersonnalDataService from "../services/user/updatePersonnalData"
 import updateBillingAddressService from "../services/address/updateBillingAddress"
-import getAllAddressService from "../services/address/getAllAddress"
-import getSingleCategorieService from "../services/categories/getSingleCategorie"
 import getAllProductsService from "../services/admin/products/getAllProducts"
 import deleteProductsService from "../services/admin/products/deleteProducts"
-import getSingleProductService from "../services/admin/products/getSingleProduct"
 import updateProductService from "../services/admin/products/updateProduct"
 import getMaterialsService from "../services/materials/getMaterials"
 import getCategoriesService from "../services/categories/getCategories"
@@ -76,21 +69,14 @@ export const AppContextProvider = (props) => {
   const patchOrderQuantity = patchOrderQuantityService({ api })
   const deleteProductOrder = deleteProductOrderService({ api })
   const cancelOrder = cancelOrderService({ api })
-  const getOrderDetail = getOrderDetailService({ api })
-  const allOrderUser = allOrderUserService({ api })
-  const getSingleAddress = getSingleAddressService({ api })
   const modifyAddress = modifyAddressService({ api })
   const deleteAddress = deleteAddressService({ api })
   const addNewAddress = addAddressService({ api })
   const addNewBillingAddress = addNewBillingAddressService({ api })
-  const getPersonnalData = getPersonnalDataService({ api })
   const updatePersonnalData = updatePersonnalDataService({ api })
   const updateBillingAddress = updateBillingAddressService({ api })
-  const getAllAddress = getAllAddressService({ api })
-  const getSingleCategorie = getSingleCategorieService({ api })
   const getAllProducts = getAllProductsService({ api })
   const deleteProducts = deleteProductsService({ api })
-  const getSingleProduct = getSingleProductService({ api })
   const updateProduct = updateProductService({ api })
   const getMaterials = getMaterialsService({ api })
   const getCategories = getCategoriesService({ api })
@@ -147,21 +133,14 @@ export const AppContextProvider = (props) => {
           patchOrderQuantity,
           deleteProductOrder,
           cancelOrder,
-          getOrderDetail,
-          allOrderUser,
-          getSingleAddress,
           modifyAddress,
           deleteAddress,
           addNewAddress,
           addNewBillingAddress,
-          getPersonnalData,
           updatePersonnalData,
           updateBillingAddress,
-          getAllAddress,
-          getSingleCategorie,
           getAllProducts,
           deleteProducts,
-          getSingleProduct,
           updateProduct,
           getMaterials,
           getCategories,

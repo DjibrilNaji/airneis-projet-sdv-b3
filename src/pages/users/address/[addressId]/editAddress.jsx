@@ -1,14 +1,29 @@
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import AddressForm from "@/web/components/Auth/AddressForm"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import useAppContext from "@/web/hooks/useAppContext"
 import FormError from "@/web/components/FormError"
+import axios from "axios"
+import cookie from "cookie"
+import config from "@/web/config"
+import routes from "@/web/routes"
 
-export const getServerSideProps = async ({ locale, params }) => {
+export const getServerSideProps = async ({ locale, params, req }) => {
   const addressId = params.addressId
+  const { token } = cookie.parse(
+    req ? req.headers.cookie || "" : document.cookie
+  )
+
+  const { data } = await axios.get(
+    `${config.api.baseURL}${routes.api.users.address.single(addressId)}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  )
 
   return {
     props: {
+      address: data,
       addressId: addressId,
       ...(await serverSideTranslations(locale, ["common", "navigation"])),
     },
@@ -16,30 +31,16 @@ export const getServerSideProps = async ({ locale, params }) => {
 }
 
 const EditAddress = (props) => {
-  const { addressId } = props
+  const {
+    address: { result },
+    addressId,
+  } = props
 
   const {
-    actions: { getSingleAddress, modifyAddress },
+    actions: { modifyAddress },
   } = useAppContext()
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const [err, data] = await getSingleAddress(addressId)
-
-      if (err) {
-        setError(err)
-
-        return
-      }
-
-      setAddress(data.result)
-      setUserId(data.result.userId)
-    }
-    fetchData()
-  }, [addressId, getSingleAddress])
-
-  const [address, setAddress] = useState()
-  const [userId, setUserId] = useState()
+  const [address, setAddress] = useState(result)
   const [error, setError] = useState(null)
 
   const handleSubmit = useCallback(
@@ -70,7 +71,7 @@ const EditAddress = (props) => {
             <AddressForm
               initialValues={address}
               onSubmit={handleSubmit}
-              userId={userId}
+              userId={address.userId}
             />
           </div>
         </div>

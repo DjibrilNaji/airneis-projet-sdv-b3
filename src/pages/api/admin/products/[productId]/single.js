@@ -1,5 +1,5 @@
 import ProductModel from "@/api/db/models/ProductModel"
-import { NotFoundError } from "@/api/errors"
+import { InvalidAccessError, NotFoundError } from "@/api/errors"
 import validate from "@/api/middlewares/validate.js"
 import s3 from "@@/configAWS.js"
 import mw from "@/api/mw.js"
@@ -30,7 +30,16 @@ const handler = mw({
         query: { productId },
       },
       res,
+      req,
     }) => {
+      const {
+        session: { user: sessionUser },
+      } = req
+
+      if (sessionUser.isAdmin !== true) {
+        throw new InvalidAccessError()
+      }
+
       const product = await ProductModel.query()
         .where({ id: productId })
         .withGraphFetched("image")
@@ -78,7 +87,16 @@ const handler = mw({
         body: { name, description, price, stock, highlander, slug, materials },
       },
       res,
+      req,
     }) => {
+      const {
+        session: { user: sessionUser },
+      } = req
+
+      if (sessionUser.isAdmin !== true) {
+        throw new InvalidAccessError()
+      }
+
       const product = await ProductModel.query().where({ id: productId })
 
       if (!product) {
