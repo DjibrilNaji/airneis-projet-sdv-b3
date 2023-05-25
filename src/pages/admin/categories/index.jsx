@@ -13,6 +13,8 @@ import {
 import TableHeadField from "@/web/components/Admin/TableHeadField"
 import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
 import FormError from "@/web/components/FormError"
+import axios from "axios"
+import routes from "@/web/routes"
 
 const CategoriesAdmin = () => {
   const [data, setData] = useState([])
@@ -26,32 +28,23 @@ const CategoriesAdmin = () => {
   const [error, setError] = useState(null)
 
   const {
-    actions: { getAllCategories, deleteCategory },
+    actions: { deleteCategory },
   } = useAppContext()
 
   const fetchData = useCallback(
     async (page) => {
-      const [err, data] = await getAllCategories(
-        limit,
-        page,
-        sortColumn,
-        order,
-        searchTerm
+      const result = await axios.get(
+        `/api${routes.api.admin.categories.collection()}?limit=${limit}&page=${page}&sortColumn=${sortColumn}&order=${order}` +
+          (searchTerm === null ? "" : `&searchTerm=${searchTerm}`)
       )
 
-      if (err) {
-        setError(err)
-
-        return
-      }
-
-      const totalCategories = data.result.meta.count
+      const totalCategories = result.data.result.meta.count
       const totalPages = Math.ceil(totalCategories / limit)
 
       setTotalPages(totalPages)
-      setData(data.result)
+      setData(result.data.result)
     },
-    [order, limit, sortColumn, searchTerm, getAllCategories]
+    [order, limit, sortColumn, searchTerm]
   )
 
   useEffect(() => {

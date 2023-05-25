@@ -41,7 +41,6 @@ import deleteFavoriteService from "../services/favorites/deleteFavorites"
 import getSingleProductBySlugService from "../services/products/getSingleProductBySlug"
 import getSingleFavoriteService from "../services/products/favorites/getSingleFavorite"
 import addFavoriteService from "../services/products/favorites/addFavorite"
-import getAllCategoriesService from "../services/admin/categories/getAllCategories"
 import deleteCategoryService from "../services/admin/categories/deleteCategory"
 
 import {
@@ -117,7 +116,6 @@ export const AppContextProvider = (props) => {
   const getSingleProductBySlug = getSingleProductBySlugService({ api })
   const getSingleFavorite = getSingleFavoriteService({ api })
   const addFavorite = addFavoriteService({ api })
-  const getAllCategories = getAllCategoriesService({ api })
   const deleteCategory = deleteCategoryService({ api })
 
   const signOut = useCallback(() => {
@@ -184,7 +182,6 @@ export const AppContextProvider = (props) => {
           getSingleProductBySlug,
           getSingleFavorite,
           addFavorite,
-          getAllCategories,
           deleteCategory,
         },
         state: {
