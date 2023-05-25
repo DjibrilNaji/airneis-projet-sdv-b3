@@ -16,6 +16,7 @@ import useAppContext, {
   AppContextProvider,
 } from "@/web/hooks/useAppContext.jsx"
 import FormError from "@/web/components/FormError"
+import { useRouter } from "next/router"
 
 const ProductAdmin = () => {
   const [data, setData] = useState([])
@@ -27,6 +28,7 @@ const ProductAdmin = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedProducts, setSelectedProducts] = useState([])
   const [error, setError] = useState(null)
+  const router = useRouter()
 
   const {
     actions: { getAllProducts, deleteProducts },
@@ -43,7 +45,7 @@ const ProductAdmin = () => {
       )
 
       if (err) {
-        setError(err)
+        router.push(routes.home())
 
         return
       }
@@ -53,7 +55,7 @@ const ProductAdmin = () => {
       setTotalPages(totalPages)
       setData(data.result)
     },
-    [getAllProducts, limit, sortColumn, order, searchTerm]
+    [getAllProducts, limit, sortColumn, order, searchTerm, router]
   )
 
   useEffect(() => {

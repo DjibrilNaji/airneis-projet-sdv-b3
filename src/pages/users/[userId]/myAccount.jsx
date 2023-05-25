@@ -8,36 +8,54 @@ import BillingAddressForm from "@/web/components/Auth/BillingAddressForm"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import useAppContext from "@/web/hooks/useAppContext"
 import FormError from "@/web/components/FormError"
-import axios from "axios"
 import cookie from "cookie"
-import config from "@/web/config"
+import getAllAddressService from "@/web/services/address/getAllAddress"
+import getPersonnalDataService from "@/web/services/user/getPersonnalData"
+import createAPIClient from "@/web/createAPIClient"
 
 export const getServerSideProps = async ({ locale, params, req }) => {
   const userId = params.userId
 
-  const { token } = cookie.parse(
-    req ? req.headers.cookie || "" : document.cookie
-  )
-
-  const { data } = await axios.get(
-    `${config.api.baseURL}${routes.api.users.single(userId)}`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
+  const redirection = () => {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
     }
-  )
+  }
 
-  const addressUser = await axios.get(
-    `${config.api.baseURL}${routes.api.users.address.collection(userId)}`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
+  const { jwt } = cookie.parse(req ? req.headers.cookie || "" : document.cookie)
+  const api = createAPIClient({ jwt, server: true })
+  const getAllAddress = getAllAddressService({ api })
+  const getPersonnalData = getPersonnalDataService({ api })
+
+  const [err, data] = await getPersonnalData(userId)
+
+  if (err) {
+    redirection()
+  }
+
+  const [error, dataAddress] = await getAllAddress(userId)
+
+  if (error) {
+    redirection()
+  }
+
+  if (err) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
     }
-  )
+  }
 
   return {
     props: {
       userId: userId,
       user: data,
-      allAddressUser: addressUser.data.result,
+      allAddressUser: dataAddress.result,
       ...(await serverSideTranslations(locale, ["common", "navigation"])),
     },
   }

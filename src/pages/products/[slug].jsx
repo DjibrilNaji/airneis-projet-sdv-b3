@@ -28,12 +28,12 @@ export const getServerSideProps = async ({ locale, params, req }) => {
   const cookies = req.headers.cookie
     ? cookie.parse(req.headers.cookie || "")
     : null
-  const token = cookies ? cookies.token : null
+  const jwt = cookies ? cookies.jwt : null
   const userId = cookies ? cookies.userId : null
 
   return {
     props: {
-      token,
+      jwt,
       userId,
       productSlug,
       ...(await serverSideTranslations(locale, ["product", "navigation"])),
@@ -42,7 +42,7 @@ export const getServerSideProps = async ({ locale, params, req }) => {
 }
 
 const Product = (props) => {
-  const { token, userId, errorCode, productSlug } = props
+  const { jwt, userId, errorCode, productSlug } = props
 
   if (errorCode) {
     return <Error statusCode={errorCode} />
@@ -79,7 +79,7 @@ const Product = (props) => {
       }
     }
     fetchData()
-  }, [getSingleProductBySlug, userId, productSlug, token, getSingleFavorite])
+  }, [getSingleProductBySlug, userId, productSlug, jwt, getSingleFavorite])
 
   const {
     actions: { addToCart },
@@ -99,7 +99,7 @@ const Product = (props) => {
   const [quantityDisplay, setQuantityDisplay] = useState([])
 
   {
-    token &&
+    jwt &&
       userId &&
       useEffect(() => {
         const delay = setTimeout(() => {
@@ -346,7 +346,7 @@ const Product = (props) => {
             <div className="flex gap-4 items-center">
               <h1 className="text-lg font-bold">{product.name}</h1>
 
-              {token && (
+              {jwt && (
                 <button
                   className="flex items-center transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
                   title="Ajouter aux favoris"

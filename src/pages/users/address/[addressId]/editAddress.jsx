@@ -3,23 +3,27 @@ import AddressForm from "@/web/components/Auth/AddressForm"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import useAppContext from "@/web/hooks/useAppContext"
 import FormError from "@/web/components/FormError"
-import axios from "axios"
 import cookie from "cookie"
-import config from "@/web/config"
-import routes from "@/web/routes"
+import getSingleAddressService from "@/web/services/address/getSingleAddress"
+import createAPIClient from "@/web/createAPIClient"
 
 export const getServerSideProps = async ({ locale, params, req }) => {
   const addressId = params.addressId
-  const { token } = cookie.parse(
-    req ? req.headers.cookie || "" : document.cookie
-  )
+  const { jwt } = cookie.parse(req ? req.headers.cookie || "" : document.cookie)
 
-  const { data } = await axios.get(
-    `${config.api.baseURL}${routes.api.users.address.single(addressId)}`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
+  const api = createAPIClient({ jwt, server: true })
+  const getSingleAddress = getSingleAddressService({ api })
+
+  const [err, data] = await getSingleAddress(addressId)
+
+  if (err) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
     }
-  )
+  }
 
   return {
     props: {

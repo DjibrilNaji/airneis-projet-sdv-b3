@@ -3,7 +3,6 @@ import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
 import BackButton from "@/web/components/BackButton"
 import FormError from "@/web/components/FormError"
 import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
-import routes from "@/web/routes"
 import {
   faCartArrowDown,
   faCheck,
@@ -15,36 +14,47 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Image from "next/image"
 import Link from "next/link"
 import { useCallback, useState } from "react"
-import axios from "axios"
 import cookie from "cookie"
-import config from "@/web/config"
+import createAPIClient from "@/web/createAPIClient"
+import getSingleProductService from "@/web/services/admin/products/getSingleProduct"
+import getMaterialsService from "@/web/services/materials/getMaterials"
+import routes from "@/web/routes"
 
 export const getServerSideProps = async ({ params, req }) => {
   const productId = params.productId
 
-  const { token } = cookie.parse(
-    req ? req.headers.cookie || "" : document.cookie
-  )
-
-  const { data } = await axios.get(
-    `${config.api.baseURL}${routes.api.admin.products.single(productId)}`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
+  const redirection = () => {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
     }
-  )
+  }
 
-  const materials = await axios.get(
-    `${config.api.baseURL}${routes.api.admin.materials.collection()}`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  )
+  const { jwt } = cookie.parse(req ? req.headers.cookie || "" : document.cookie)
+
+  const api = createAPIClient({ jwt, server: true })
+  const getSingleProduct = getSingleProductService({ api })
+  const getMaterials = getMaterialsService({ api })
+
+  const [err, data] = await getSingleProduct(productId)
+
+  if (err) {
+    redirection()
+  }
+
+  const [error, dataMaterials] = await getMaterials()
+
+  if (error) {
+    redirection()
+  }
 
   return {
     props: {
       product: data,
       productId,
-      materials: materials.data.result,
+      materials: dataMaterials.result,
     },
   }
 }

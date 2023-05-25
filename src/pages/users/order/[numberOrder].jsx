@@ -7,10 +7,9 @@ import Button from "@/web/components/Button"
 import useAppContext from "@/web/hooks/useAppContext.jsx"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import FormError from "@/web/components/FormError"
-import axios from "axios"
 import cookie from "cookie"
-import config from "@/web/config"
-import routes from "@/web/routes"
+import createAPIClient from "@/web/createAPIClient"
+import getOrderDetailService from "@/web/services/order/getOrderDetail"
 
 export const getServerSideProps = async ({
   locale,
@@ -20,20 +19,24 @@ export const getServerSideProps = async ({
 }) => {
   const numberOrder = params.numberOrder
 
-  const { token } = cookie.parse(
-    req ? req.headers.cookie || "" : document.cookie
-  )
-
   const query = Object.fromEntries(
     new URL(`http://example.com/${url}`).searchParams.entries()
   )
 
-  const { data } = await axios.get(
-    `${config.api.baseURL}${routes.api.orders.single(numberOrder)}`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
+  const { jwt } = cookie.parse(req ? req.headers.cookie || "" : document.cookie)
+
+  const api = createAPIClient({ jwt, server: true })
+  const getOrderDetail = getOrderDetailService({ api })
+  const [err, data] = await getOrderDetail(numberOrder)
+
+  if (err) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
     }
-  )
+  }
 
   return {
     props: {
@@ -162,8 +165,8 @@ const Order = (props) => {
         <>
           <div className="h-40 flex items-center self-center justify-center">
             <span className="pl-10 md:pl-0 text-black uppercase font-bold text-2xl">
-              Order #{result.order.numberOrder} -{" "}
-              {new Date(result.order.createdAt).toLocaleDateString("fr")} -{" "}
+              Order #{result.order[0].numberOrder} -{" "}
+              {new Date(result.order[0].createdAt).toLocaleDateString("fr")} -{" "}
               {status}
             </span>
           </div>

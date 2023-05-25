@@ -110,7 +110,7 @@ export const AppContextProvider = (props) => {
     setSession(false)
     const date = new Date()
     date.setDate(date.getDate() - 100)
-    document.cookie = `token=; expires=${date}; path=/;`
+    document.cookie = `jwt=; expires=${date}; path=/;`
     document.cookie = `userId=; expires=${date}; path=/;`
   }, [])
 

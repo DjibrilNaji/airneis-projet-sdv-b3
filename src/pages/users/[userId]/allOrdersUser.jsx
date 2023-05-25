@@ -1,24 +1,28 @@
 import ListOrders from "@/web/components/ListOrders"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useState } from "react"
-import axios from "axios"
 import cookie from "cookie"
-import routes from "@/web/routes.js"
-import config from "@/web/config"
+import getAllOrderUserService from "@/web/services/order/getAllOrderUser"
+import createAPIClient from "@/web/createAPIClient"
 
 export const getServerSideProps = async ({ locale, params, req }) => {
   const userId = params.userId
 
-  const { token } = cookie.parse(
-    req ? req.headers.cookie || "" : document.cookie
-  )
+  const { jwt } = cookie.parse(req ? req.headers.cookie || "" : document.cookie)
 
-  const { data } = await axios.get(
-    `${config.api.baseURL}${routes.api.orders.collection(userId)}`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
+  const api = createAPIClient({ jwt, server: true })
+  const getAllOrderUser = getAllOrderUserService({ api })
+
+  const [err, data] = await getAllOrderUser(userId)
+
+  if (err) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
     }
-  )
+  }
 
   return {
     props: {
