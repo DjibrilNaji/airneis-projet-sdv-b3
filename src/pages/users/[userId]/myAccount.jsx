@@ -33,13 +33,13 @@ export const getServerSideProps = async ({ locale, params, req }) => {
   const [err, data] = await getPersonnalData(userId)
 
   if (err) {
-    redirection()
+    return redirection()
   }
 
   const [error, dataAddress] = await getAllAddress(userId)
 
   if (error) {
-    redirection()
+    return redirection()
   }
 
   if (err) {

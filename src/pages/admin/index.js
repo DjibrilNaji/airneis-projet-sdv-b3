@@ -7,15 +7,23 @@ import config from "@/api/config"
 export const getServerSideProps = async ({ req }) => {
   const { jwt } = cookie.parse(req ? req.headers.cookie || "" : document.cookie)
 
-  const { payload } = jsonwebtoken.verify(jwt, config.security.jwt.secret)
-
-  if (payload.user.isAdmin !== true) {
+  const redirection = () => {
     return {
       redirect: {
         destination: "/",
         permanent: false,
       },
     }
+  }
+
+  if (jwt === undefined) {
+    return redirection()
+  }
+
+  const { payload } = jsonwebtoken.verify(jwt, config.security.jwt.secret)
+
+  if (payload.user.isAdmin !== true) {
+    return redirection()
   } else {
     return { props: {} }
   }

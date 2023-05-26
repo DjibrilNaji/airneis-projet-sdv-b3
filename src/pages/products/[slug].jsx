@@ -30,8 +30,13 @@ export const getServerSideProps = async ({ locale, params, req }) => {
   const cookies = req.headers.cookie
     ? cookie.parse(req.headers.cookie || "")
     : null
-  const jwt = cookies.jwt !== undefined ? cookies.jwt : null
-  const userId = cookies.userId !== undefined ? cookies.userId : null
+
+  const jwt = cookies ? (cookies.jwt !== undefined ? cookies.jwt : null) : null
+  const userId = cookies
+    ? cookies.userId !== undefined
+      ? cookies.userId
+      : null
+    : null
 
   const redirection = () => {
     return {

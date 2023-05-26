@@ -41,13 +41,13 @@ export const getServerSideProps = async ({ params, req }) => {
   const [err, data] = await getSingleProduct(productId)
 
   if (err) {
-    redirection()
+    return redirection()
   }
 
   const [error, dataMaterials] = await getMaterials()
 
   if (error) {
-    redirection()
+    return redirection()
   }
 
   return {
