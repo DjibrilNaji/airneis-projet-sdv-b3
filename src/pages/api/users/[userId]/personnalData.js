@@ -20,19 +20,6 @@ const handler = mw({
       req,
       res,
     }) => {
-      const { authorization } = req.headers
-
-      if (!authorization) {
-        throw new InvalidSessionError()
-      } else {
-        const { payload } = jsonwebtoken.verify(
-          authorization.slice(7),
-          config.security.jwt.secret
-        )
-
-        req.session = payload
-      }
-
       const {
         session: { user: sessionUser },
       } = req

@@ -28,8 +28,6 @@ import useAppContext from "@/web/hooks/useAppContext"
 import { useRouter } from "next/router.js"
 import { useCallback } from "react"
 import { UserIcon } from "@heroicons/react/24/outline"
-import axios from "axios"
-import config from "@/web/config"
 import SearchBar from "../SearchBar"
 import { CartContext } from "@/web/hooks/cartContext"
 import SwitchLanguage from "../SwitchLanguage"
@@ -41,18 +39,6 @@ const Navbar = () => {
   const direction = t("direction", { locale })
 
   const [isOpen, setIsOpen] = useState(false)
-  const [data, setData] = useState([])
-
-  const fetchData = useCallback(async () => {
-    const result = await axios.get(
-      `${config.api.baseApiURL}${routes.api.products.collection()}`
-    )
-    setData(result.data.result)
-  }, [])
-
-  useEffect(() => {
-    fetchData()
-  }, [fetchData])
 
   const {
     state: { cart },
@@ -193,7 +179,7 @@ const Navbar = () => {
       </Link>
 
       <div className="flex items-center ml-auto transition-all transition-duration-200">
-        <SearchBar data={data} />
+        <SearchBar />
         <Link href={`/cart`} className="px-2 py-1">
           <FontAwesomeIcon
             icon={faShoppingCart}

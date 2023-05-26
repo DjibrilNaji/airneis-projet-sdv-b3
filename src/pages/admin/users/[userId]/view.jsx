@@ -1,8 +1,8 @@
 import EditUserForm from "@/web/components/Admin/Form/EditUserForm"
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
 import BackButton from "@/web/components/BackButton"
-import config from "@/web/config"
-import routes from "@/web/routes"
+import FormError from "@/web/components/FormError"
+import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
 import {
   faAddressBook,
   faAddressCard,
@@ -12,61 +12,70 @@ import {
   faPerson,
 } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import axios from "axios"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
-export const getServerSideProps = async ({ params, req: { url } }) => {
+export const getServerSideProps = async ({ params }) => {
   const userId = params.userId
-  const query = Object.fromEntries(
-    new URL(`http://example.com/${url}`).searchParams.entries()
-  )
-
-  const { data } = await axios.get(
-    `${config.api.baseURL}${routes.api.admin.users.single(userId, query)}`
-  )
 
   return {
     props: {
-      userInfo: data,
       userId,
     },
   }
 }
 
 const ViewUser = (props) => {
+  const { userId } = props
+
   const {
-    userInfo: { result },
-    userId,
-  } = props
+    actions: { getSingleUser, updateUser },
+  } = useAppContext()
 
   const [toggleUpdateUser, setToggleUpdateUser] = useState(true)
-  const [user, setUser] = useState(result.user[0])
+  const [error, setError] = useState("")
+  const [user, setUser] = useState([])
+  const [address, setAddress] = useState([])
+  const [billingAddress, setBillingAddress] = useState([])
+  const [order, setOrder] = useState([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const [err, data] = await getSingleUser(userId)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setUser(data.result.user[0])
+      setAddress(data.result.user[0].address)
+      setBillingAddress(data.result.user[0].billingAddress)
+      setOrder(data.result.order)
+    }
+    fetchData()
+  }, [getSingleUser, userId])
 
   const handleSubmit = useCallback(
-    async ({ firstName, lastName, email, userName, password, isAdmin }) => {
-      const {
-        data: { result },
-      } = await axios.patch(
-        `${config.api.baseApiURL}${routes.api.admin.users.update(userId)}`,
-        {
-          userName,
-          firstName,
-          lastName,
-          email,
-          password,
-          isAdmin,
-        }
-      )
+    async (values) => {
+      const [err, data] = await updateUser(userId, values)
 
-      setUser(result)
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setUser(data.result)
       setToggleUpdateUser(!toggleUpdateUser)
     },
-
-    [userId, toggleUpdateUser]
+    [userId, toggleUpdateUser, updateUser]
   )
 
   return (
     <div>
+      {error ? <FormError error={error} /> : ""}
+
       <BackButton />
 
       <div className="bg-stone-100 mx-2 my-6">
@@ -75,18 +84,18 @@ const ViewUser = (props) => {
             <FontAwesomeIcon icon={faPerson} className="h-6 text-stone-400" />
             <h1 className="font-bold text-xl uppercase">Informations </h1>
 
-            {result.user[0].isDelete ? (
+            {user.isDelete ? (
               <span className="italic text-red-500 text-lg">
-                (Compte supprimé : id {result.user[0].id})
+                (Compte supprimé : id {user.id})
               </span>
             ) : (
               <span className="italic text-green-500 text-lg">
-                (Compte actif : id {result.user[0].id})
+                (Compte actif : id {user.id})
               </span>
             )}
           </div>
 
-          {!result.user[0].isDelete && (
+          {!user.isDelete && (
             <button
               className="flex justify-end text-stone-500 font-bold text-lg rounded"
               onClick={() => setToggleUpdateUser(!toggleUpdateUser)}
@@ -120,8 +129,8 @@ const ViewUser = (props) => {
           <h1 className="font-bold">Carnet d'adresses</h1>
         </div>
 
-        {result.user[0].address.length > 0 ? (
-          result.user[0].address.map((address, index) => (
+        {address.length > 0 ? (
+          address.map((address, index) => (
             <div
               className="flex flex-col my-3 border-b-2 border-stone-500 px-2 pb-2"
               key={address.id}
@@ -173,8 +182,8 @@ const ViewUser = (props) => {
           <h1 className="font-bold">Adresse de facturation</h1>
         </div>
 
-        {result.user[0].billingAddress.length > 0 ? (
-          result.user[0].billingAddress.map((address) => (
+        {billingAddress.length > 0 ? (
+          billingAddress.map((address) => (
             <div
               className="flex flex-col my-3 border-b-2 border-stone-500 px-2 pb-2"
               key={address.id}
@@ -208,8 +217,8 @@ const ViewUser = (props) => {
           <h1 className="font-bold">Commandes</h1>
         </div>
 
-        {result.order.length > 0 ? (
-          result.order.map((order, index) => (
+        {order.length > 0 ? (
+          order.map((order, index) => (
             <div
               className="flex flex-col my-3 border-b-2 border-stone-500 px-2 pb-2"
               key={order.id}
@@ -246,7 +255,11 @@ const ViewUser = (props) => {
 }
 
 ViewUser.getLayout = function (page) {
-  return <LayoutAdmin>{page}</LayoutAdmin>
+  return (
+    <AppContextProvider>
+      <LayoutAdmin>{page}</LayoutAdmin>
+    </AppContextProvider>
+  )
 }
 
 export default ViewUser

@@ -1,18 +1,28 @@
-import axios from "axios"
-import routes from "@/web/routes"
 import ListOrders from "@/web/components/ListOrders"
-import config from "@/web/config"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import { useState } from "react"
+import cookie from "cookie"
+import getAllOrderUserService from "@/web/services/order/getAllOrderUser"
+import createAPIClient from "@/web/createAPIClient"
 
-export const getServerSideProps = async ({ locale, params, req: { url } }) => {
+export const getServerSideProps = async ({ locale, params, req }) => {
   const userId = params.userId
-  const query = Object.fromEntries(
-    new URL(`http://example.com/${url}`).searchParams.entries()
-  )
 
-  const { data } = await axios.get(
-    `${config.api.baseURL}${routes.api.orders.collection(userId, query)}`
-  )
+  const { jwt } = cookie.parse(req ? req.headers.cookie || "" : document.cookie)
+
+  const api = createAPIClient({ jwt, server: true })
+  const getAllOrderUser = getAllOrderUserService({ api })
+
+  const [err, data] = await getAllOrderUser(userId)
+
+  if (err) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    }
+  }
 
   return {
     props: {
@@ -22,16 +32,17 @@ export const getServerSideProps = async ({ locale, params, req: { url } }) => {
   }
 }
 
-const listOrder = (props) => {
+const ListOrder = (props) => {
   const {
     orders: { result },
   } = props
 
-  const Year = []
+  const [years] = useState([])
+
   result.orders.map((order) =>
-    Year.includes(new Date(order.createdAt).getFullYear()) === true
+    years.includes(new Date(order.createdAt).getFullYear()) === true
       ? ""
-      : Year.push(new Date(order.createdAt).getFullYear())
+      : years.push(new Date(order.createdAt).getFullYear())
   )
 
   return (
@@ -41,7 +52,7 @@ const listOrder = (props) => {
           My Orders
         </span>
       </div>
-      {Year.map((year, index) => (
+      {years.map((year, index) => (
         <div
           key={index}
           className="flex flex-col justify-center items-center mb-5"
@@ -56,6 +67,6 @@ const listOrder = (props) => {
   )
 }
 
-listOrder.isPublic = false
+ListOrder.isPublic = false
 
-export default listOrder
+export default ListOrder

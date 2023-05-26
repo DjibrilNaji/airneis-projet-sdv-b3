@@ -13,7 +13,7 @@ const FormField = forwardRef((props, ref) => {
       {label ?? <span>{label}</span>}
       <input
         className={classNames(
-          "font-bold border-stone-500 border focus:border-2 rounded-lg px-2 py-1 focus:outline-none disabled:border-0 disabled:cursor-text",
+          "font-bold border-stone-500 border focus:border-2 rounded-lg px-2 py-1 focus:outline-none disabled:border-0 disabled:cursor-text disabled:opacity-50",
           {
             "focus:outline-none": !hasError,
             "focus:border-red-600": hasError,

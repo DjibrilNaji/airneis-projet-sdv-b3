@@ -1,8 +1,8 @@
 import EditProductForm from "@/web/components/Admin/Form/EditProductForm"
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
 import BackButton from "@/web/components/BackButton"
-import config from "@/web/config"
-import routes from "@/web/routes"
+import FormError from "@/web/components/FormError"
+import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
 import {
   faCartArrowDown,
   faCheck,
@@ -11,30 +11,50 @@ import {
   faPlus,
 } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import axios from "axios"
 import Image from "next/image"
 import Link from "next/link"
 import { useCallback, useState } from "react"
+import cookie from "cookie"
+import createAPIClient from "@/web/createAPIClient"
+import getSingleProductService from "@/web/services/admin/products/getSingleProduct"
+import getMaterialsService from "@/web/services/materials/getMaterials"
+import routes from "@/web/routes"
 
-export const getServerSideProps = async ({ params, req: { url } }) => {
+export const getServerSideProps = async ({ params, req }) => {
   const productId = params.productId
-  const query = Object.fromEntries(
-    new URL(`http://example.com/${url}`).searchParams.entries()
-  )
 
-  const { data } = await axios.get(
-    `${config.api.baseURL}${routes.api.admin.products.single(productId, query)}`
-  )
+  const redirection = () => {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    }
+  }
 
-  const materials = await axios.get(
-    `${config.api.baseURL}${routes.api.admin.materials.collection()}`
-  )
+  const { jwt } = cookie.parse(req ? req.headers.cookie || "" : document.cookie)
+
+  const api = createAPIClient({ jwt, server: true })
+  const getSingleProduct = getSingleProductService({ api })
+  const getMaterials = getMaterialsService({ api })
+
+  const [err, data] = await getSingleProduct(productId)
+
+  if (err) {
+    return redirection()
+  }
+
+  const [error, dataMaterials] = await getMaterials()
+
+  if (error) {
+    return redirection()
+  }
 
   return {
     props: {
       product: data,
       productId,
-      materials: materials.data.result,
+      materials: dataMaterials.result,
     },
   }
 }
@@ -46,48 +66,33 @@ const ViewUser = (props) => {
     materials,
   } = props
 
+  const {
+    actions: { updateProduct },
+  } = useAppContext()
+
+  const [error, setError] = useState(null)
   const [toggleUpdateProduct, setToggleUpdateProduct] = useState(true)
   const [product, setProduct] = useState(result.product[0])
 
   const handleSubmit = useCallback(
-    async ({
-      name,
-      description,
-      price,
-      stock,
-      highlander,
-      slug,
-      materials,
-    }) => {
-      if (highlander === "") {
-        highlander = false
+    async (values) => {
+      const [err, data] = await updateProduct(productId, values)
+
+      if (err) {
+        setError(err)
+
+        return
       }
 
-      const {
-        data: { result },
-      } = await axios.patch(
-        `${config.api.baseApiURL}${routes.api.admin.products.update(
-          productId
-        )}`,
-        {
-          name,
-          description,
-          price,
-          stock,
-          highlander,
-          slug,
-          materials,
-        }
-      )
-
-      setProduct(result)
+      setProduct(data.result)
       setToggleUpdateProduct(!toggleUpdateProduct)
     },
-    [productId, toggleUpdateProduct]
+    [productId, toggleUpdateProduct, updateProduct]
   )
 
   return (
     <div>
+      {error ? <FormError error={error} /> : ""}
       <BackButton />
       <div className="bg-stone-100 mx-2 my-6">
         <div className="flex items-center justify-between border-b-4 border-red-500 px-3 py-4 ">
@@ -170,7 +175,11 @@ const ViewUser = (props) => {
 }
 
 ViewUser.getLayout = function (page) {
-  return <LayoutAdmin>{page}</LayoutAdmin>
+  return (
+    <AppContextProvider>
+      <LayoutAdmin>{page}</LayoutAdmin>
+    </AppContextProvider>
+  )
 }
 
 export default ViewUser

@@ -1,5 +1,4 @@
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
-import axios from "axios"
 import Link from "next/link"
 import { useCallback, useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -13,52 +12,71 @@ import {
 } from "@fortawesome/free-solid-svg-icons"
 import TableHeadField from "@/web/components/Admin/TableHeadField"
 import routes from "@/web/routes"
-import config from "@/web/config"
+import useAppContext, {
+  AppContextProvider,
+} from "@/web/hooks/useAppContext.jsx"
+import FormError from "@/web/components/FormError"
+import { useRouter } from "next/router"
 
 const ProductAdmin = () => {
   const [data, setData] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
-
   const [totalPages, setTotalPages] = useState("")
-
   const [sortColumn, setSortColumn] = useState("id")
   const [order, setOrder] = useState("asc")
   const [limit, setLimit] = useState(10)
-  const [searchTerm, setSearchTerm] = useState(null)
-
+  const [searchTerm, setSearchTerm] = useState("")
   const [selectedProducts, setSelectedProducts] = useState([])
+  const [error, setError] = useState(null)
+  const router = useRouter()
+
+  const {
+    actions: { getAllProducts, deleteProducts },
+  } = useAppContext()
 
   const fetchData = useCallback(
     async (page) => {
-      const result = await axios.get(
-        `${
-          config.api.baseApiURL
-        }${routes.api.admin.products.collection()}?limit=${limit}&page=${page}&sortColumn=${sortColumn}&order=${order}` +
-          (searchTerm === null ? "" : `&searchTerm=${searchTerm}`)
+      const [err, data] = await getAllProducts(
+        limit,
+        page,
+        sortColumn,
+        order,
+        searchTerm
       )
 
-      const totalProducts = result.data.result.meta.count
+      if (err) {
+        router.push(routes.home())
+
+        return
+      }
+
+      const totalProducts = data.result.meta.count
       const totalPages = Math.ceil(totalProducts / limit)
       setTotalPages(totalPages)
-      setData(result.data.result)
+      setData(data.result)
     },
-    [order, sortColumn, limit, searchTerm]
-  )
-
-  const handleDelete = useCallback(
-    async (productId) => {
-      await axios.patch(
-        `${config.api.baseApiURL}${routes.api.admin.products.delete(productId)}`
-      )
-      fetchData(currentPage)
-      setSelectedProducts([])
-    },
-    [fetchData, currentPage]
+    [getAllProducts, limit, sortColumn, order, searchTerm, router]
   )
 
   useEffect(() => {
     fetchData(currentPage)
   }, [currentPage, fetchData])
+
+  const handleDelete = useCallback(
+    async (productId) => {
+      const [err] = await deleteProducts(productId)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      fetchData(currentPage)
+      setSelectedProducts([])
+    },
+    [deleteProducts, fetchData, currentPage]
+  )
 
   const handlePageChange = useCallback(
     (newPage) => {
@@ -117,6 +135,7 @@ const ProductAdmin = () => {
 
   return (
     <>
+      {error ? <FormError error={error} /> : ""}
       <div className="flex w-full justify-center mb-5">
         <span className="font-extrabold text-3xl text-stone-500 uppercase">
           Products
@@ -320,7 +339,11 @@ const ProductAdmin = () => {
 }
 
 ProductAdmin.getLayout = function (page) {
-  return <LayoutAdmin>{page}</LayoutAdmin>
+  return (
+    <AppContextProvider>
+      <LayoutAdmin>{page}</LayoutAdmin>
+    </AppContextProvider>
+  )
 }
 
 export default ProductAdmin

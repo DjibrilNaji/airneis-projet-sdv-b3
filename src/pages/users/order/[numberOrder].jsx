@@ -1,24 +1,42 @@
-import axios from "axios"
-import routes from "@/web/routes"
 import Image from "next/image"
 import debounce from "@/debounce.js"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTrash } from "@fortawesome/free-solid-svg-icons"
 import { useCallback, useMemo, useState } from "react"
 import Button from "@/web/components/Button"
-import config from "@/web/config"
+import useAppContext from "@/web/hooks/useAppContext.jsx"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import FormError from "@/web/components/FormError"
+import cookie from "cookie"
+import createAPIClient from "@/web/createAPIClient"
+import getOrderDetailService from "@/web/services/order/getOrderDetail"
 
-export const getServerSideProps = async ({ locale, params, req: { url } }) => {
+export const getServerSideProps = async ({
+  locale,
+  params,
+  req: { url },
+  req,
+}) => {
   const numberOrder = params.numberOrder
 
   const query = Object.fromEntries(
     new URL(`http://example.com/${url}`).searchParams.entries()
   )
 
-  const { data } = await axios.get(
-    `${config.api.baseURL}${routes.api.orders.single(numberOrder, query)}`
-  )
+  const { jwt } = cookie.parse(req ? req.headers.cookie || "" : document.cookie)
+
+  const api = createAPIClient({ jwt, server: true })
+  const getOrderDetail = getOrderDetailService({ api })
+  const [err, data] = await getOrderDetail(numberOrder)
+
+  if (err) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    }
+  }
 
   return {
     props: {
@@ -37,6 +55,11 @@ const Order = (props) => {
     query,
   } = props
 
+  const {
+    actions: { patchOrderQuantity, deleteProductOrder, cancelOrder },
+  } = useAppContext()
+
+  const [error, setError] = useState(null)
   const [allProducts, setProducts] = useState(result.allProductsOrder)
   const [status, setStatus] = useState(result.order[0].status)
   const [total, setTotal] = useState(result.order[0].price_formatted)
@@ -46,64 +69,79 @@ const Order = (props) => {
     () =>
       debounce((productId, quantity) => {
         async function fetchData(productId, quantity) {
-          const {
-            data: { result },
-          } = await axios.patch(
-            `/api${routes.api.orders.patchQuantity(numberOrder, query)}`,
-            {
-              productId,
-              quantity,
-            }
+          const [err, data] = await patchOrderQuantity(
+            numberOrder,
+            productId,
+            quantity
           )
-          setTotal(Object.values(result).map((tempo) => tempo.price_formatted))
+
+          if (err) {
+            setError(err)
+
+            return
+          }
+
+          setTotal(
+            Object.values(data.result).map((tempo) => tempo.price_formatted)
+          )
           setTotalTva(
-            Object.values(result).map((tempo) => tempo.amount_tva_formatted)
+            Object.values(data.result).map(
+              (tempo) => tempo.amount_tva_formatted
+            )
           )
         }
 
         fetchData(productId, quantity)
       }),
-    [numberOrder, query]
+    [numberOrder, patchOrderQuantity]
   )
 
   const handleDeleteClick = useCallback(
     (event) => {
       async function fetchDataDelete(productId) {
-        const {
-          data: { result },
-        } = await axios.delete(
-          `/api${routes.api.orders.deleteProductOrder(
-            numberOrder,
-            { productId: productId },
-            query
-          )}`
+        const [err, data] = await deleteProductOrder(
+          numberOrder,
+          productId,
+          query
         )
+
+        if (err) {
+          setError(err)
+
+          return
+        }
+
         setProducts(
           allProducts.filter((product) => product.id !== parseInt(productId))
         )
-        Object.values(result).map((tempo) => setStatus(tempo.status))
-        setTotal(Object.values(result).map((tempo) => tempo.price_formatted))
+        Object.values(data.result).map((tempo) => setStatus(tempo.status))
+        setTotal(
+          Object.values(data.result).map((tempo) => tempo.price_formatted)
+        )
         setTotalTva(
-          Object.values(result).map((tempo) => tempo.amount_tva_formatted)
+          Object.values(data.result).map((tempo) => tempo.amount_tva_formatted)
         )
       }
       const productId = event.currentTarget.dataset.id
       fetchDataDelete(productId)
     },
-    [allProducts, numberOrder, query]
+    [allProducts, deleteProductOrder, numberOrder, query]
   )
 
   const handleCancelOrder = useCallback(() => {
     async function fetchDataCancel() {
-      const {
-        data: { result },
-      } = await axios.patch(
-        `/api${routes.api.orders.cancelOrder(numberOrder, query)}`
-      )
-      setStatus(Object.values(result).map((tempo) => tempo.status))
+      const [err, data] = await cancelOrder(numberOrder)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setStatus(Object.values(data.result).map((tempo) => tempo.status))
     }
     fetchDataCancel()
-  }, [numberOrder, query])
+  }, [cancelOrder, numberOrder])
 
   const handleChangeQuantity = useCallback(
     (event) => {
@@ -121,12 +159,15 @@ const Order = (props) => {
 
   return (
     <>
-      {result.order.map((order, index) => (
-        <div key={index}>
+      {error ? (
+        <FormError error={error} />
+      ) : (
+        <>
           <div className="h-40 flex items-center self-center justify-center">
             <span className="pl-10 md:pl-0 text-black uppercase font-bold text-2xl">
-              Order #{order.numberOrder} -{" "}
-              {new Date(order.createdAt).toLocaleDateString("fr")} - {status}
+              Order #{result.order[0].numberOrder} -{" "}
+              {new Date(result.order[0].createdAt).toLocaleDateString("fr")} -{" "}
+              {status}
             </span>
           </div>
           <div className="grid px-2 gap-7 grid-cols-1 md:pb-10 md:grid-cols-2">
@@ -157,11 +198,11 @@ const Order = (props) => {
                         type="number"
                         className="w-6 h-6 text-sm md:w-16 md:h-10 md:text-base text-center"
                         min={1}
-                        max={product.quantityProduct}
+                        max={product.stock}
                         data-id={product.id}
                         disabled={status !== "On standby" ? true : false}
                         onChange={handleChangeQuantity}
-                        placeholder={product.stock}
+                        placeholder={product.quantity}
                       />
                     </div>
                     <div className="flex place-content-center">
@@ -248,8 +289,8 @@ const Order = (props) => {
               </div>
             </div>
           </div>
-        </div>
-      ))}
+        </>
+      )}
     </>
   )
 }

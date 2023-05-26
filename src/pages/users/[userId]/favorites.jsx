@@ -1,6 +1,4 @@
-import axios from "axios"
 import routes from "@/web/routes"
-import config from "@/web/config"
 import Image from "next/image"
 import Link from "next/link"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -9,85 +7,100 @@ import {
   faCartPlus,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons"
-import cookie from "cookie"
-import { useCallback, useContext, useState } from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import { CartContext } from "@/web/hooks/cartContext"
 import Dialog from "@/web/components/Dialog"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import useAppContext from "@/web/hooks/useAppContext"
+import FormError from "@/web/components/FormError"
+import cookie from "cookie"
+import createAPIClient from "@/web/createAPIClient"
+import getFavoritesService from "@/web/services/favorites/getFavorites"
 
-export const getServerSideProps = async ({
-  locale,
-  params,
-  req,
-  req: { url },
-}) => {
+export const getServerSideProps = async ({ locale, params, req }) => {
   const userId = params.userId
 
-  const { token } = cookie.parse(
-    req ? req.headers.cookie || "" : document.cookie
-  )
-  const query = Object.fromEntries(
-    new URL(`http://example.com/${url}`).searchParams.entries()
-  )
+  const cookies = req.headers.cookie
+    ? cookie.parse(req.headers.cookie || "")
+    : null
+  const jwt = cookies.jwt !== undefined ? cookies.jwt : null
+  const userIdCookie = cookies.userId !== undefined ? cookies.userId : null
 
-  const { data } = await axios.get(
-    `${config.api.baseURL}${routes.api.users.favorites.collection(
-      userId,
-      query
-    )}`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
+  const redirection = () => {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
     }
-  )
+  }
+
+  if (userId !== userIdCookie) {
+    return redirection()
+  }
+
+  const api = createAPIClient({ jwt, server: true })
+  const getFavorites = getFavoritesService({ api })
+
+  const [err, data] = await getFavorites(userId)
+
+  if (err) {
+    return redirection()
+  }
 
   return {
     props: {
-      favorites: data,
       userId,
-      token,
+      data: data.result,
       ...(await serverSideTranslations(locale, ["common", "navigation"])),
     },
   }
 }
 
 const Favorite = (props) => {
-  const {
-    favorites: { result },
-    userId,
-    token,
-  } = props
+  const { userId, data } = props
 
   const {
     actions: { addToCart },
   } = useContext(CartContext)
 
-  const [favorite, setFavorite] = useState(result)
+  const {
+    actions: { getFavorites, deleteFavorite },
+  } = useAppContext()
+
+  const [error, setError] = useState("")
+
+  const [favorite, setFavorite] = useState([])
   const [isOpen, setIsOpen] = useState(false)
   const [contentDialog, setContentDialog] = useState()
 
+  useEffect(() => {
+    setFavorite(data)
+  }, [data])
+
   const handleDeleteFavorite = useCallback(
     async (favoriteId) => {
-      await axios.delete(
-        `${config.api.baseApiURL}${routes.api.users.favorites.single(userId, {
-          favoriteId: favoriteId,
-        })}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
+      const [err] = await deleteFavorite(userId, {
+        favoriteId: favoriteId,
+      })
 
-      const { data } = await axios.get(
-        `${config.api.baseApiURL}${routes.api.users.favorites.collection(
-          userId
-        )}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      const [error, data] = await getFavorites(userId)
+
+      if (error) {
+        setError(error)
+
+        return
+      }
 
       setFavorite(data.result)
     },
-    [token, userId]
+    [deleteFavorite, getFavorites, userId]
   )
 
   const handleAddToCart = useCallback(
@@ -102,6 +115,8 @@ const Favorite = (props) => {
 
   return (
     <>
+      {error ? <FormError error={error} /> : ""}
+
       <Dialog
         isOpen={isOpen}
         dialogTitle="Informations"

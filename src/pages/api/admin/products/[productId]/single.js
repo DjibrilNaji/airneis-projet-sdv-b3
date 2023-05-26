@@ -1,5 +1,5 @@
 import ProductModel from "@/api/db/models/ProductModel"
-import { NotFoundError } from "@/api/errors"
+import { InvalidAccessError, NotFoundError } from "@/api/errors"
 import validate from "@/api/middlewares/validate.js"
 import s3 from "@@/configAWS.js"
 import mw from "@/api/mw.js"
@@ -30,7 +30,16 @@ const handler = mw({
         query: { productId },
       },
       res,
+      req,
     }) => {
+      const {
+        session: { user: sessionUser },
+      } = req
+
+      if (sessionUser.isAdmin !== true) {
+        throw new InvalidAccessError()
+      }
+
       const product = await ProductModel.query()
         .where({ id: productId })
         .withGraphFetched("image")
@@ -78,24 +87,21 @@ const handler = mw({
         body: { name, description, price, stock, highlander, slug, materials },
       },
       res,
+      req,
     }) => {
+      const {
+        session: { user: sessionUser },
+      } = req
+
+      if (sessionUser.isAdmin !== true) {
+        throw new InvalidAccessError()
+      }
+
       const product = await ProductModel.query().where({ id: productId })
 
       if (!product) {
         throw new NotFoundError()
       }
-
-      const newProduct = await ProductModel.query()
-        .updateAndFetchById(productId, {
-          ...(name ? { name } : {}),
-          ...(description ? { description } : {}),
-          ...(price ? { price } : {}),
-          ...(stock ? { stock } : {}),
-          ...(highlander ? { highlander } : {}),
-          ...(slug ? { slug } : {}),
-        })
-        .withGraphFetched("image")
-        .withGraphFetched("materials")
 
       await db("rel_material_product").where({ productId: productId }).del()
 
@@ -108,6 +114,23 @@ const handler = mw({
           productId,
           materialId: materialId.id,
         })
+      })
+
+      const newProduct = await ProductModel.query()
+        .updateAndFetchById(productId, {
+          ...(name ? { name } : {}),
+          ...(description ? { description } : {}),
+          ...(price ? { price } : {}),
+          ...(stock ? { stock } : {}),
+          ...(highlander ? { highlander } : {}),
+          ...(slug ? { slug } : {}),
+        })
+        .withGraphFetched("image")
+        .withGraphFetched("materials")
+        .modifyGraph("materials", (builder) => builder.select("nameMaterial"))
+
+      newProduct.materials.map((mat, index) => {
+        newProduct.materials.splice(index, 1, mat.nameMaterial)
       })
 
       newProduct.image.map((imageProduct) => {

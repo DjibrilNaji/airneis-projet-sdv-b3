@@ -16,6 +16,7 @@ import ImageProductModel from "@/api/db/models/ImageProductModel"
 import MaterialModel from "@/api/db/models/MaterialModel"
 import knex from "knex"
 import config from "@/api/config"
+import { InvalidAccessError } from "@/api/errors"
 
 const db = knex(config.db)
 
@@ -23,9 +24,9 @@ const handler = mw({
   GET: [
     validate({
       query: {
-        limit: limitValidator,
-        page: pageValidator,
-        order: orderValidator.default("asc"),
+        limit: limitValidator.nullable(),
+        page: pageValidator.nullable(),
+        order: orderValidator.default("asc").nullable(),
       },
     }),
     async ({
@@ -33,7 +34,16 @@ const handler = mw({
         query: { limit, page, order, sortColumn, searchTerm },
       },
       res,
+      req,
     }) => {
+      const {
+        session: { user: sessionUser },
+      } = req
+
+      if (sessionUser.isAdmin !== true) {
+        throw new InvalidAccessError()
+      }
+
       const searchTermModified = `%${searchTerm}%`
 
       const query = ProductModel.query()
@@ -103,7 +113,16 @@ const handler = mw({
         },
       },
       res,
+      req,
     }) => {
+      const {
+        session: { user: sessionUser },
+      } = req
+
+      if (sessionUser.isAdmin !== true) {
+        throw new InvalidAccessError()
+      }
+
       const product = await ProductModel.query().findOne({ slug })
 
       if (product) {

@@ -1,32 +1,51 @@
 import { useRouter } from "next/router"
-import { useCallback, useEffect, useState } from "react"
-import axios from "axios"
-import config from "@/web/config"
-import routes from "@/web/routes"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import FormError from "@/web/components/FormError"
+import createAPIClient from "@/web/createAPIClient"
+import getProductsSearchService from "@/web/services/search/getProductsSearch"
 
-export async function getServerSideProps({ locale }) {
+export async function getServerSideProps(context) {
+  const { locale } = context
+
+  const api = createAPIClient({ jwt: null, server: true })
+  const getProductsSearch = getProductsSearchService({ api })
+
+  const redirection = () => {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    }
+  }
+
+  const [err, data] = await getProductsSearch()
+
+  if (err) {
+    return redirection()
+  }
+
   return {
     props: {
+      error: err,
       ...(await serverSideTranslations(locale, ["common", "navigation"])),
+      getProductsSearch: data,
     },
   }
 }
 
-const Search = () => {
+const Search = (props) => {
   const router = useRouter()
-  const [data, setData] = useState([])
   const [searchTerm, setSearchTerm] = useState(router.query.term || "")
   const [inputValue, setInputValue] = useState("")
 
-  const fetchData = useCallback(async () => {
-    const result = await axios.get(
-      `${config.api.baseApiURL}${routes.api.products.collection()}`
-    )
-    setData(result.data.result)
-  }, [])
+  const {
+    getProductsSearch: { result },
+    error,
+  } = props
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value)
@@ -39,15 +58,11 @@ const Search = () => {
   }
 
   useEffect(() => {
-    fetchData()
-  }, [fetchData])
-
-  useEffect(() => {
     setSearchTerm(router.query.term || "")
     setInputValue(router.query.term || "")
   }, [router.query.term])
 
-  const filteredProducts = data?.products?.filter((product) =>
+  const filteredProducts = result?.products?.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
@@ -55,6 +70,7 @@ const Search = () => {
 
   return (
     <>
+      {error ? <FormError error={error} /> : ""}
       <div className="flex-col mt-10">
         <div className="flex justify-center items-center">
           <form onSubmit={handleSubmit} className="flex md:w-1/2 lg:w-1/2">
@@ -112,7 +128,7 @@ const Search = () => {
           <p className="text-xl font-semibold mb-4 mt-4">No results found</p>
           <h2 className="text-2xl font-semibold mb-4">Other products:</h2>
           <div className="grid gap-12 pb-7 md:grid-cols-2 md:gap-8 md:px-4 lg:grid-cols-3">
-            {data?.products?.slice(0, 6).map((product) => (
+            {result?.products?.slice(0, 6).map((product) => (
               <Link
                 key={product._id}
                 href={`/products/${product.slug}`}

@@ -1,19 +1,25 @@
-import axios from "axios"
-import routes from "@/web/routes.js"
 import Image from "next/image"
 import ListProduct from "@/web/components/ListProduct.jsx"
-import config from "@/web/config"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import getSingleCategoryService from "@/web/services/categories/getSingleCategory"
+import createAPIClient from "@/web/createAPIClient"
 
-export const getServerSideProps = async ({ locale, params, req: { url } }) => {
-  const slugCategory = params.slug
-  const query = Object.fromEntries(
-    new URL(`http://example.com/${url}`).searchParams.entries()
-  )
+export const getServerSideProps = async ({ locale, params }) => {
+  const slug = params.slug
 
-  const { data } = await axios.get(
-    `${config.api.baseURL}${routes.api.categories.single(slugCategory, query)}`
-  )
+  const api = createAPIClient({ jwt: null, server: true })
+  const getSingleCategory = getSingleCategoryService({ api })
+
+  const [err, data] = await getSingleCategory(slug)
+
+  if (err) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    }
+  }
 
   return {
     props: {

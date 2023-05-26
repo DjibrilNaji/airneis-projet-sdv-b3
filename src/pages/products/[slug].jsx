@@ -7,12 +7,9 @@ import {
   faHeart,
   faHeartBroken,
 } from "@fortawesome/free-solid-svg-icons"
-import axios from "axios"
-import config from "@/web/config"
 import routes from "@/web/routes"
 import { useCallback, useContext, useEffect, useState } from "react"
 import Link from "next/link"
-import Error from "@/pages/_error"
 import BackButton from "@/web/components/BackButton"
 import cookie from "cookie"
 import Button from "@/web/components/Button"
@@ -21,53 +18,88 @@ import Dialog from "@/web/components/Dialog"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useTranslation } from "next-i18next"
 import { useRouter } from "next/router"
+import useAppContext from "@/web/hooks/useAppContext"
+import FormError from "@/web/components/FormError"
+import getSingleProductBySlugService from "@/web/services/products/getSingleProductBySlug"
+import createAPIClient from "@/web/createAPIClient"
+import getSingleFavoriteService from "@/web/services/products/favorites/getSingleFavorite"
 
-export const getServerSideProps = async ({
-  locale,
-  params,
-  req,
-  req: { url },
-}) => {
+export const getServerSideProps = async ({ locale, params, req }) => {
   const productSlug = params.slug
-  const query = Object.fromEntries(
-    new URL(`http://example.com/${url}`).searchParams.entries()
-  )
 
   const cookies = req.headers.cookie
     ? cookie.parse(req.headers.cookie || "")
     : null
-  const token = cookies.token ? cookies.token : null
-  const userId = cookies.userId ? cookies.userId : null
 
-  try {
-    const { data } = await axios.get(
-      `${config.api.baseURL}${routes.api.products.single(productSlug, query)}`
-    )
+  const jwt = cookies ? (cookies.jwt !== undefined ? cookies.jwt : null) : null
+  const userId = cookies
+    ? cookies.userId !== undefined
+      ? cookies.userId
+      : null
+    : null
 
+  const redirection = () => {
     return {
-      props: {
-        product: data,
-        token,
-        userId,
-        ...(await serverSideTranslations(locale, ["product", "navigation"])),
+      redirect: {
+        destination: "/",
+        permanent: false,
       },
     }
-  } catch (error) {
-    const errorCode = error.response.status
+  }
 
-    return {
-      props: { errorCode: errorCode },
+  const api = createAPIClient({ jwt, server: true })
+
+  const getSingleProductBySlug = getSingleProductBySlugService({ api })
+  const getSingleFavorite = getSingleFavoriteService({ api })
+
+  const [err, data] = await getSingleProductBySlug(productSlug)
+
+  if (err) {
+    return redirection()
+  }
+
+  let favorite = []
+
+  if (jwt && userId) {
+    const [error, dataFavorites] = await getSingleFavorite(userId, productSlug)
+
+    if (error) {
+      return redirection()
+    } else {
+      favorite = dataFavorites
     }
+  }
+
+  return {
+    props: {
+      jwt,
+      favorite: jwt ? favorite.result : [],
+      userId,
+      data,
+      product: data.result.product,
+      randomProducts: data.result.randomProducts,
+      image: data.result.product.image,
+      category: data.result.product.category[0],
+      ...(await serverSideTranslations(locale, ["product", "navigation"])),
+    },
   }
 }
 
 const Product = (props) => {
-  const { product: data, token, userId, errorCode } = props
+  const {
+    jwt,
+    favorite,
+    userId,
+    data,
+    product,
+    randomProducts,
+    image,
+    category,
+  } = props
 
-  if (errorCode) {
-    return <Error statusCode={errorCode} />
-  }
-
+  const {
+    actions: { addFavorite },
+  } = useAppContext()
   const {
     actions: { addToCart },
     state: { cart },
@@ -82,93 +114,71 @@ const Product = (props) => {
   const [contentModal, setContentModal] = useState()
   const [quantity, setQuantity] = useState(1)
   const [isFavorite, setIsFavorite] = useState()
+  const [selectedQuantity, setSelectedQuantity] = useState(1)
+  const [quantityDisplay, setQuantityDisplay] = useState([])
+  const [mainImage, setMainImage] = useState([])
+  const [error, setError] = useState("")
 
-  {
-    token &&
-      userId &&
-      useEffect(() => {
-        async function fetchData() {
-          const favorite = await axios.get(
-            `${config.api.baseApiURL}/users/${userId}/favorites/${data.result.product.id}`,
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          )
+  useEffect(() => {
+    setMainImage(image.find((img) => img.isMain))
+    setIsFavorite(favorite.length > 0 ? true : false)
+  }, [data.result.product.category, image, favorite])
 
-          setIsFavorite(favorite.data.result.length > 0 ? true : false)
-        }
-        fetchData()
-      }, [data.result.product.id, token, userId])
-  }
-
-  const cartItems = cart.find((item) => item.slug === data.result.product.slug)
+  const cartItems = cart.find((item) => item.slug === product.slug)
 
   const currentInventory = cartItems
-    ? data.result.product.stock - cartItems.quantity
-    : data.result.product.stock
-
-  const mainImage = data.result.product.image.find((objet) => objet.isMain)
+    ? product.stock - cartItems.quantity
+    : product.stock
 
   const handlePrevious = () => {
     setActiveIndex(
-      (prevActiveIndex) =>
-        (prevActiveIndex - 1 + data.result.product.image.length) %
-        data.result.product.image.length
+      (prevActiveIndex) => (prevActiveIndex - 1 + image.length) % image.length
     )
   }
 
   const handleNext = () => {
-    setActiveIndex(
-      (prevActiveIndex) =>
-        (prevActiveIndex + 1) % data.result.product.image.length
-    )
+    setActiveIndex((prevActiveIndex) => (prevActiveIndex + 1) % image.length)
   }
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setActiveIndex(
-        (prevActiveIndex) =>
-          (prevActiveIndex + 1) % data.result.product.image.length
-      )
+      setActiveIndex((prevActiveIndex) => (prevActiveIndex + 1) % image.length)
     }, 5000)
 
     return () => {
       clearInterval(intervalId)
     }
-  }, [data.result.product.image.length])
+  }, [image.length])
 
   const handleAddFavorites = useCallback(
     async (productId) => {
       if (isFavorite) {
         setContentModal(t("pop_already_in_favorite"))
       } else {
-        await axios.post(
-          `${config.api.baseApiURL}${routes.api.users.favorites.single(userId, {
-            productId: productId,
-          })}`,
-          null,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        )
+        const [err] = await addFavorite(userId, productId)
+
+        if (err) {
+          setError(err)
+
+          return
+        }
+
         setIsFavorite(true)
         setContentModal(t("pop_add_to_favorite"))
       }
 
       setIsOpen(true)
-      setTimeout(() => setIsOpen(false), 2500)
+      setTimeout(() => setIsOpen(false), 2000)
     },
-    [token, userId, isFavorite, t]
+    [userId, isFavorite, addFavorite, t]
   )
-
-  const [selectedQuantity, setSelectedQuantity] = useState(1)
 
   const handleAddProduct = useCallback(
     (product, image) => {
       addToCart(product, image, parseInt(quantity))
       setContentModal(t("pop_add_to_cart"))
       setIsOpen(true)
-      setTimeout(() => setIsOpen(false), 2500)
+      setTimeout(() => setIsOpen(false), 2000)
       setQuantity(1)
       setSelectedQuantity(1)
     },
@@ -179,8 +189,6 @@ const Product = (props) => {
     setQuantity(e.target.value)
     setSelectedQuantity(e.target.value)
   }, [])
-
-  const [quantityDisplay, setQuantityDisplay] = useState([])
 
   useEffect(() => {
     const newQuantityDisplay = []
@@ -196,6 +204,8 @@ const Product = (props) => {
 
   return (
     <>
+      {error ? <FormError error={error} /> : ""}
+
       <Dialog
         isOpen={isOpen}
         dialogTitle={t("pop_title")}
@@ -205,7 +215,7 @@ const Product = (props) => {
 
       <div className="hidden md:flex items-center justify-center">
         <span className="absolute uppercase text-2xl font-bold text-stone-500 border-2 border-stone-500 bg-white rounded-xl p-2">
-          {data.result.product.name}
+          {product.name}
         </span>
 
         <Image
@@ -223,7 +233,7 @@ const Product = (props) => {
 
       <div className="md:hidden relative">
         <div className="m-4 h-96 relative">
-          {data.result.product.image.map((image, index) => (
+          {image.map((image, index) => (
             <Image
               key={image.id}
               src={image.urlImage}
@@ -240,7 +250,7 @@ const Product = (props) => {
         <button
           className="absolute top-[45%] text-stone-500 opacity-60 hover:opacity-100 left-0 transition-opacity ease-linear duration-300 disabled:opacity-20"
           onClick={handlePrevious}
-          disabled={data.result.product.image.length === 1}
+          disabled={image.length === 1}
         >
           <FontAwesomeIcon
             icon={faArrowLeft}
@@ -251,7 +261,7 @@ const Product = (props) => {
         <button
           className="absolute top-[45%] right-0 text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300 disabled:opacity-20"
           onClick={handleNext}
-          disabled={data.result.product.image.length === 1}
+          disabled={image.length === 1}
         >
           <FontAwesomeIcon
             icon={faArrowRight}
@@ -261,7 +271,7 @@ const Product = (props) => {
       </div>
 
       <div className="md:hidden flex justify-center">
-        {data.result.product.image.map((image, index) => (
+        {image.map((image, index) => (
           <button
             onClick={() => setActiveIndex(index)}
             key={image.id}
@@ -278,7 +288,7 @@ const Product = (props) => {
         <div className="hidden md:block w-full md:w-2/5 md:pr-8">
           <div className="relative">
             <div className="m-4 h-96 relative">
-              {data.result.product.image.map((image, index) => (
+              {image.map((image, index) => (
                 <Image
                   key={image.id}
                   src={image.urlImage}
@@ -296,7 +306,7 @@ const Product = (props) => {
               <button
                 className="text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300 disabled:opacity-20"
                 onClick={handlePrevious}
-                disabled={data.result.product.image.length === 1}
+                disabled={image.length === 1}
               >
                 <FontAwesomeIcon
                   icon={faArrowLeft}
@@ -309,7 +319,7 @@ const Product = (props) => {
               <button
                 className="text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300 disabled:opacity-20"
                 onClick={handleNext}
-                disabled={data.result.product.image.length === 1}
+                disabled={image.length === 1}
               >
                 <FontAwesomeIcon
                   icon={faArrowRight}
@@ -319,7 +329,7 @@ const Product = (props) => {
             </div>
 
             <div className="flex justify-center">
-              {data.result.product.image.map((image, index) => (
+              {image.map((image, index) => (
                 <button
                   onClick={() => setActiveIndex(index)}
                   key={image.id}
@@ -337,9 +347,9 @@ const Product = (props) => {
         <div className="flex w-full md:w-3/5">
           <div className="flex flex-col m-4 w-full">
             <div className="flex gap-4 items-center">
-              <h1 className="text-lg font-bold">{data.result.product.name}</h1>
+              <h1 className="text-lg font-bold">{product.name}</h1>
 
-              {token && (
+              {jwt && (
                 <button
                   className="flex items-center transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
                   title="Ajouter aux favoris"
@@ -349,17 +359,15 @@ const Product = (props) => {
                     className={`h-5 ${
                       isFavorite ? " text-red-500" : "text-yellow-500"
                     }`}
-                    onClick={() => handleAddFavorites(data.result.product.id)}
+                    onClick={() => handleAddFavorites(product.id)}
                   />
                 </button>
               )}
 
-              <span className="ml-auto mx-4 font-bold">
-                {data.result.product.price} €
-              </span>
+              <span className="ml-auto mx-4 font-bold">{product.price} €</span>
             </div>
 
-            {data.result.product.stock > 0 ? (
+            {product.stock > 0 ? (
               <h2 className="flex text-stone-500 opacity-60 font-bold">
                 {t("in_stock")}
               </h2>
@@ -369,9 +377,7 @@ const Product = (props) => {
               </h2>
             )}
 
-            <p className="text-lg font-semibold my-4">
-              {data.result.product.description}
-            </p>
+            <p className="text-lg font-semibold my-4">{product.description}</p>
 
             <div className="flex my-4">
               <div className="flex flex-col gap-4 ml-auto">
@@ -388,9 +394,7 @@ const Product = (props) => {
                 </div>
 
                 <Button
-                  onClick={() =>
-                    handleAddProduct(data.result.product, mainImage.urlImage)
-                  }
+                  onClick={() => handleAddProduct(product, mainImage.urlImage)}
                   className="disabled:cursor-not-allowed disabled:bg-stone-300"
                   disabled={currentInventory === 0}
                 >
@@ -402,10 +406,10 @@ const Product = (props) => {
             <div className="border-b-2 border-t-2 py-4" dir={direction}>
               <span className="font-bold">{t("category")} : </span>
               <Link
-                href={routes.categorie(data.result.product.category[0].slug)}
+                href={routes.categorie(category.slug)}
                 className="opacity-40 italic font-bold"
               >
-                {data.result.product.category[0].name}
+                {category.name}
               </Link>
             </div>
           </div>
@@ -419,7 +423,7 @@ const Product = (props) => {
       </div>
 
       <div className="grid gap-12 pb-7 md:grid-cols-2 md:gap-8 md:px-4 lg:grid-cols-3">
-        {data.result.randomProducts.map((product) => {
+        {randomProducts.map((product) => {
           return (
             <Link
               key={product.id}
