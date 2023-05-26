@@ -35,6 +35,7 @@ import getSingleFavoriteService from "../services/products/favorites/getSingleFa
 import addFavoriteService from "../services/products/favorites/addFavorite"
 import deleteCategoryService from "../services/admin/categories/deleteCategory"
 import getProductsSearchService from "../services/search/getProductsSearch"
+import getAllCategoriesService from "../services/admin/categories/getAllCategories"
 
 import {
   createContext,
@@ -102,6 +103,7 @@ export const AppContextProvider = (props) => {
   const getSingleFavorite = getSingleFavoriteService({ api })
   const addFavorite = addFavoriteService({ api })
   const deleteCategory = deleteCategoryService({ api })
+  const getAllCategories = getAllCategoriesService({ api })
 
   const getProductsSearch = getProductsSearchService({ api })
 
@@ -163,6 +165,7 @@ export const AppContextProvider = (props) => {
           addFavorite,
           deleteCategory,
           getProductsSearch,
+          getAllCategories,
         },
         state: {
           session,
