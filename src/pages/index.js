@@ -1,31 +1,26 @@
-import axios from "axios"
-import routes from "@/web/routes.js"
 import Image from "next/image"
 import Link from "next/link"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons"
 import { useEffect, useState } from "react"
-import config from "@/web/config"
 import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useRouter } from "next/router"
+import createAPIClient from "@/web/createAPIClient"
+import categoriesAndProductsService from "@/web/services/categoriesAndProducts"
+import FormError from "@/web/components/FormError"
 
 export const getServerSideProps = async (context) => {
-  const {
-    req: { url },
-    locale,
-  } = context
+  const { locale } = context
 
-  const query = Object.fromEntries(
-    new URL(`http://example.com/${url}`).searchParams.entries()
-  )
+  const api = createAPIClient({ jwt: null, server: true })
+  const categoriesAndProducts = categoriesAndProductsService({ api })
 
-  const { data } = await axios.get(
-    `${config.api.baseURL}${routes.api.categoriesAndProducts.collection(query)}`
-  )
+  const [err, data] = await categoriesAndProducts()
 
   return {
     props: {
+      error: err,
       ...(await serverSideTranslations(locale, ["home-page", "navigation"])),
       categoriesAndProducts: data,
     },
@@ -35,6 +30,7 @@ export const getServerSideProps = async (context) => {
 const Home = (props) => {
   const {
     categoriesAndProducts: { result },
+    error,
   } = props
 
   const [activeIndex, setActiveIndex] = useState(0)
@@ -73,6 +69,8 @@ const Home = (props) => {
   return (
     <>
       <div>
+        {error ? <FormError error={error} /> : ""}
+
         <div className="relative">
           <div className="m-4 h-96 relative">
             {result.imageHomePage.map((image, index) => (
