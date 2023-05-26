@@ -2,18 +2,40 @@ import { faMagnifyingGlass, faXmark } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Image from "next/image"
 import Link from "next/link"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/router"
+import useAppContext from "../hooks/useAppContext"
+import FormError from "./FormError"
 
-const SearchBar = (props) => {
-  const { data } = props
+const SearchBar = () => {
   const router = useRouter()
 
   const [showSearch, setShowSearch] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
   const [isInputEmpty, setIsInputEmpty] = useState(true)
+  const [data, setData] = useState([])
+  const [error, setError] = useState(null)
 
   const searchInputRef = useRef(null)
+
+  const {
+    actions: { getProductsSearch },
+  } = useAppContext()
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const [err, data] = await getProductsSearch()
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setData(data.result)
+    }
+    fetchProducts()
+  }, [getProductsSearch])
 
   const handleSearchChange = (searchItem) => {
     setSearchTerm(searchItem.target.value)
@@ -71,6 +93,7 @@ const SearchBar = (props) => {
 
   return (
     <>
+      {error ? <FormError error={error} /> : ""}
       {showSearch ? (
         <>
           <button>

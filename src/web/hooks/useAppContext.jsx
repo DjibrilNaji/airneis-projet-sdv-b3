@@ -34,6 +34,7 @@ import deleteFavoriteService from "../services/favorites/deleteFavorites"
 import getSingleFavoriteService from "../services/products/favorites/getSingleFavorite"
 import addFavoriteService from "../services/products/favorites/addFavorite"
 import deleteCategoryService from "../services/admin/categories/deleteCategory"
+import getProductsSearchService from "../services/search/getProductsSearch"
 
 import {
   createContext,
@@ -102,6 +103,8 @@ export const AppContextProvider = (props) => {
   const addFavorite = addFavoriteService({ api })
   const deleteCategory = deleteCategoryService({ api })
 
+  const getProductsSearch = getProductsSearchService({ api })
+
   const signOut = useCallback(() => {
     localStorage.removeItem(config.session.localStorageKey)
     localStorage.removeItem("username")
@@ -159,6 +162,7 @@ export const AppContextProvider = (props) => {
           getSingleFavorite,
           addFavorite,
           deleteCategory,
+          getProductsSearch,
         },
         state: {
           session,
