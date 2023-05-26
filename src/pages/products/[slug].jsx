@@ -10,7 +10,6 @@ import {
 import routes from "@/web/routes"
 import { useCallback, useContext, useEffect, useState } from "react"
 import Link from "next/link"
-import Error from "@/pages/_error"
 import BackButton from "@/web/components/BackButton"
 import cookie from "cookie"
 import Button from "@/web/components/Button"
@@ -21,6 +20,9 @@ import { useTranslation } from "next-i18next"
 import { useRouter } from "next/router"
 import useAppContext from "@/web/hooks/useAppContext"
 import FormError from "@/web/components/FormError"
+import getSingleProductBySlugService from "@/web/services/products/getSingleProductBySlug"
+import createAPIClient from "@/web/createAPIClient"
+import getSingleFavoriteService from "@/web/services/products/favorites/getSingleFavorite"
 
 export const getServerSideProps = async ({ locale, params, req }) => {
   const productSlug = params.slug
@@ -28,59 +30,71 @@ export const getServerSideProps = async ({ locale, params, req }) => {
   const cookies = req.headers.cookie
     ? cookie.parse(req.headers.cookie || "")
     : null
-  const jwt = cookies ? cookies.jwt : null
-  const userId = cookies ? cookies.userId : null
+  const jwt = cookies.jwt !== undefined ? cookies.jwt : null
+  const userId = cookies.userId !== undefined ? cookies.userId : null
+
+  const redirection = () => {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    }
+  }
+
+  const api = createAPIClient({ jwt, server: true })
+
+  const getSingleProductBySlug = getSingleProductBySlugService({ api })
+  const getSingleFavorite = getSingleFavoriteService({ api })
+
+  const [err, data] = await getSingleProductBySlug(productSlug)
+
+  if (err) {
+    redirection()
+  }
+
+  let favorite = []
+
+  if (jwt && userId) {
+    const [error, dataFavorites] = await getSingleFavorite(userId, productSlug)
+
+    if (error) {
+      redirection()
+    } else {
+      favorite = dataFavorites
+    }
+  }
 
   return {
     props: {
       jwt,
+      favorite: jwt ? favorite.result : [],
       userId,
-      productSlug,
+      data,
+      product: data.result.product,
+      randomProducts: data.result.randomProducts,
+      image: data.result.product.image,
+      category: data.result.product.category[0],
       ...(await serverSideTranslations(locale, ["product", "navigation"])),
     },
   }
 }
 
 const Product = (props) => {
-  const { jwt, userId, errorCode, productSlug } = props
-
-  if (errorCode) {
-    return <Error statusCode={errorCode} />
-  }
+  const {
+    jwt,
+    favorite,
+    userId,
+    data,
+    product,
+    randomProducts,
+    image,
+    category,
+  } = props
 
   const {
-    actions: { getSingleProductBySlug, getSingleFavorite, addFavorite },
+    actions: { addFavorite },
   } = useAppContext()
-
-  const [error, setError] = useState("")
-  const [product, setProduct] = useState([])
-  const [category, setCategory] = useState([])
-  const [mainImage, setMainImage] = useState([])
-  const [randomProducts, setRandomProducts] = useState([])
-  const [image, setImage] = useState([])
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const [err, data] = await getSingleProductBySlug(productSlug)
-
-      if (err) {
-        setError(err)
-
-        return
-      }
-
-      setProduct(data.result.product)
-
-      if (data.result.product) {
-        setCategory(data.result.product.category[0])
-        setImage(data.result.product.image)
-        setMainImage(data.result.product.image.find((img) => img.isMain))
-        setRandomProducts(data.result.randomProducts)
-      }
-    }
-    fetchData()
-  }, [getSingleProductBySlug, userId, productSlug, jwt, getSingleFavorite])
-
   const {
     actions: { addToCart },
     state: { cart },
@@ -97,29 +111,13 @@ const Product = (props) => {
   const [isFavorite, setIsFavorite] = useState()
   const [selectedQuantity, setSelectedQuantity] = useState(1)
   const [quantityDisplay, setQuantityDisplay] = useState([])
+  const [mainImage, setMainImage] = useState([])
+  const [error, setError] = useState("")
 
-  {
-    jwt &&
-      userId &&
-      useEffect(() => {
-        const delay = setTimeout(() => {
-          async function fetchDataFavorites() {
-            const [err, data] = await getSingleFavorite(userId, productSlug)
-
-            if (err) {
-              setError(err)
-
-              return
-            }
-
-            setIsFavorite(data.result.length > 0 ? true : false)
-          }
-          fetchDataFavorites()
-        }, 100)
-
-        return () => clearTimeout(delay)
-      }, [userId, getSingleFavorite, productSlug])
-  }
+  useEffect(() => {
+    setMainImage(image.find((img) => img.isMain))
+    setIsFavorite(favorite.length > 0 ? true : false)
+  }, [data.result.product.category, image, favorite])
 
   const cartItems = cart.find((item) => item.slug === product.slug)
 
