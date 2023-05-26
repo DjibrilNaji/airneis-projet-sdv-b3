@@ -50,7 +50,7 @@ export const getServerSideProps = async ({ locale, params, req }) => {
   const [err, data] = await getSingleProductBySlug(productSlug)
 
   if (err) {
-    redirection()
+    return redirection()
   }
 
   let favorite = []
@@ -59,7 +59,7 @@ export const getServerSideProps = async ({ locale, params, req }) => {
     const [error, dataFavorites] = await getSingleFavorite(userId, productSlug)
 
     if (error) {
-      redirection()
+      return redirection()
     } else {
       favorite = dataFavorites
     }

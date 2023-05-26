@@ -13,20 +13,52 @@ import Dialog from "@/web/components/Dialog"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import useAppContext from "@/web/hooks/useAppContext"
 import FormError from "@/web/components/FormError"
+import cookie from "cookie"
+import createAPIClient from "@/web/createAPIClient"
+import getFavoritesService from "@/web/services/favorites/getFavorites"
 
-export const getServerSideProps = async ({ locale, params }) => {
+export const getServerSideProps = async ({ locale, params, req }) => {
   const userId = params.userId
+
+  const cookies = req.headers.cookie
+    ? cookie.parse(req.headers.cookie || "")
+    : null
+  const jwt = cookies.jwt !== undefined ? cookies.jwt : null
+  const userIdCookie = cookies.userId !== undefined ? cookies.userId : null
+
+  const redirection = () => {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    }
+  }
+
+  if (userId !== userIdCookie) {
+    return redirection()
+  }
+
+  const api = createAPIClient({ jwt, server: true })
+  const getFavorites = getFavoritesService({ api })
+
+  const [err, data] = await getFavorites(userId)
+
+  if (err) {
+    return redirection()
+  }
 
   return {
     props: {
       userId,
+      data: data.result,
       ...(await serverSideTranslations(locale, ["common", "navigation"])),
     },
   }
 }
 
 const Favorite = (props) => {
-  const { userId } = props
+  const { userId, data } = props
 
   const {
     actions: { addToCart },
@@ -43,19 +75,8 @@ const Favorite = (props) => {
   const [contentDialog, setContentDialog] = useState()
 
   useEffect(() => {
-    const fetchData = async () => {
-      const [err, data] = await getFavorites(userId)
-
-      if (err) {
-        setError(err)
-
-        return
-      }
-
-      setFavorite(data.result)
-    }
-    fetchData()
-  }, [getFavorites, userId])
+    setFavorite(data)
+  }, [data])
 
   const handleDeleteFavorite = useCallback(
     async (favoriteId) => {
