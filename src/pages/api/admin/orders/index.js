@@ -1,4 +1,5 @@
 import OrderModel from "@/api/db/models/OrderModel"
+import { InvalidAccessError } from "@/api/errors"
 import validate from "@/api/middlewares/validate"
 import mw from "@/api/mw"
 import { limitValidator, orderValidator, pageValidator } from "@/validators"
@@ -17,7 +18,16 @@ const handler = mw({
         query: { limit, page, order, searchTerm },
       },
       res,
+      req,
     }) => {
+      const {
+        session: { user: sessionUser },
+      } = req
+
+      if (sessionUser.isAdmin !== true) {
+        throw new InvalidAccessError()
+      }
+
       const searchTermModified = `%${searchTerm}%`
 
       const query = OrderModel.query().withGraphFetched("user")
