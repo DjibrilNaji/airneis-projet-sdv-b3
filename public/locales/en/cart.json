@@ -5,5 +5,6 @@
   "total": "Total",
   "to_order": "To order",
   "empty_cart": "Your cart is sadly empty",
-  "go_home": "Back to home"
+  "go_home": "Back to home",
+  "payment": "Payment"
 }
