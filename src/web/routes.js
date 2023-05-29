@@ -43,24 +43,25 @@ const routes = {
   api: {
     signUp: () => "/register",
     signIn: () => "/login",
-    contact: () => "/contact",
+    contact: {
+      contact: () => "/contact",
+    },
     admin: {
       materials: {
         collection: () => "/admin/materials/all",
       },
       products: {
         collection: () => "/admin/products/all",
-        single: (productId, query) =>
-          createRouteWithQueryParams(
-            `/admin/products/${productId}/single`,
-            query
-          ),
+        single: (productId) => `/admin/products/${productId}/single`,
         create: () => `/admin/products/all`,
         update: (productId) => `/admin/products/${productId}/single`,
         delete: (productId) => `/admin/products/${productId}/delete`,
         uploadFile: () => `/admin/products/upload`,
       },
-      categories: () => "/admin/categories",
+      categories: {
+        collection: () => "/admin/categories/all",
+        delete: (categoryId) => `/admin/categories/${categoryId}/delete`,
+      },
       users: {
         single: (userId, query) =>
           createRouteWithQueryParams(`/admin/users/${userId}`, query),
@@ -73,14 +74,11 @@ const routes = {
       },
     },
     users: {
+      collection: () => `/users`,
+      delete: (userId) => `/users/${userId}/delete`,
       address: {
-        collection: (userId, query) =>
-          createRouteWithQueryParams(`/users/${userId}/address`, query),
-        single: (addressId, query) =>
-          createRouteWithQueryParams(
-            `/users/address/${addressId}/addressSingle`,
-            query
-          ),
+        collection: (userId) => `/users/${userId}/address`,
+        single: (addressId) => `/users/address/${addressId}/addressSingle`,
         add: (userId) => `/users/${userId}/address`,
       },
       billingAddress: {
@@ -90,8 +88,7 @@ const routes = {
       },
       validate: (token, query) =>
         createRouteWithQueryParams(`/users/confirmation/${token}`, query),
-      single: (userId, query) =>
-        createRouteWithQueryParams(`/users/${userId}/personnalData`, query),
+      single: (userId) => `/users/${userId}/personnalData`,
       update: (userId) => `/users/${userId}/personnalData`,
       favorites: {
         collection: (userId) => `/users/${userId}/favorites`,
@@ -103,29 +100,24 @@ const routes = {
       collection: () => "/categories-and-products",
     },
     categories: {
-      single: (slug, query) =>
-        createRouteWithQueryParams(`/categories/${slug}`, query),
+      single: (slug) => `/categories/${slug}`,
       collection: () => "/categories",
     },
     products: {
       collection: () => "/products",
-      single: (slug, query) =>
-        createRouteWithQueryParams(`/products/${slug}`, query),
+      single: (slug) => `/products/${slug}`,
+      favorites: (userId, slug) => `/users/${userId}/favorites/${slug}`,
     },
     search: {
       collection: (query) => createRouteWithQueryParams(`/search`, query),
     },
     orders: {
-      collection: (userId, query) =>
-        createRouteWithQueryParams(`/users/${userId}/allOrdersUser`, query),
-      single: (numberOrder, query) =>
-        createRouteWithQueryParams(`/users/order/${numberOrder}`, query),
-      patchQuantity: (numberOrder, query) =>
-        createRouteWithQueryParams(`/users/order/${numberOrder}`, query),
+      collection: (userId) => `/users/${userId}/allOrdersUser`,
+      single: (numberOrder) => `/users/order/${numberOrder}`,
+      patchQuantity: (numberOrder) => `/users/order/${numberOrder}`,
       deleteProductOrder: (numberOrder, query) =>
         createRouteWithQueryParams(`/users/order/${numberOrder}`, query),
-      cancelOrder: (numberOrder, query) =>
-        createRouteWithQueryParams(`/users/order/cancel/${numberOrder}`, query),
+      cancelOrder: (numberOrder) => `/users/order/cancel/${numberOrder}`,
     },
   },
 }

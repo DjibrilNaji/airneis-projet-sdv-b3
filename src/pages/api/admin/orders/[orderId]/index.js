@@ -1,6 +1,6 @@
 import OrderModel from "@/api/db/models/OrderModel"
 import RelOrderProductModel from "@/api/db/models/RelOrderProductModel"
-import { NotFoundError } from "@/api/errors"
+import { InvalidAccessError, NotFoundError } from "@/api/errors"
 import validate from "@/api/middlewares/validate.js"
 import mw from "@/api/mw.js"
 import { idValidator } from "@/validators"
@@ -18,7 +18,16 @@ const handler = mw({
         query: { orderId },
       },
       res,
+      req,
     }) => {
+      const {
+        session: { user: sessionUser },
+      } = req
+
+      if (sessionUser.isAdmin !== true) {
+        throw new InvalidAccessError()
+      }
+
       const order = await OrderModel.query()
         .findOne({ id: orderId })
         .withGraphFetched("address")

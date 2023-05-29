@@ -65,18 +65,43 @@ const ProductForm = (props) => {
       <>
         <FormError error={error} />
         <Form className="flex flex-col gap-4 p-4">
-          <FormField name="name" type="text" label="Nom du Produit :" />
+          <div className="flex gap-2">
+            <FormField
+              name="name"
+              type="text"
+              label="Product name :"
+              className="w-2/3"
+            />
+            <FormField
+              name="price"
+              type="number"
+              label="Price :"
+              className="w-1/3"
+            />
+          </div>
           <FormField name="description" type="text" label="Description :" />
-          <FormField name="price" type="number" label="Prix :" />
-          <FormField name="stock" type="number" label="Stock :" />
-          <label className="flex flex-col gap-2">
+          <div className="flex gap-2">
+            <FormField
+              name="slug"
+              type="text"
+              label="Slug :"
+              className="w-2/3"
+            />
+            <FormField
+              name="stock"
+              type="number"
+              label="Stock :"
+              className="w-1/3"
+            />
+          </div>
+          <label className="flex gap-2">
             {" "}
-            Highlander
-            <Field name="highlander" type="checkbox" />
+            Highlander :
+            <Field name="highlander" type="checkbox" className="w-4" />
           </label>
           <label className="flex flex-col gap-2">
             {" "}
-            Catégorie
+            Catégory :
             <Field as="select" name="categorieId">
               {categories.map((cat) => (
                 <option key={cat.id} value={cat.id}>
@@ -85,8 +110,7 @@ const ProductForm = (props) => {
               ))}
             </Field>
           </label>
-          <FormField name="slug" type="text" label="Slug :" />
-          <div id="checkbox-group">Material</div>
+          <div id="checkbox-group">Materials :</div>
           <div role="group" aria-labelledby="checkbox-group">
             {materials.map((mat) => (
               <label key={mat.id}>

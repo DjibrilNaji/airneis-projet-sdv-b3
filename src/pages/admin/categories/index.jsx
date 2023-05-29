@@ -1,5 +1,4 @@
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
-import axios from "axios"
 import Link from "next/link"
 import { useCallback, useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -12,7 +11,8 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons"
 import TableHeadField from "@/web/components/Admin/TableHeadField"
-import routes from "@/web/routes"
+import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
+import FormError from "@/web/components/FormError"
 
 const CategoriesAdmin = () => {
   const [data, setData] = useState([])
@@ -22,22 +22,36 @@ const CategoriesAdmin = () => {
   const [sortColumn, setSortColumn] = useState("id")
   const [order, setOrder] = useState("asc")
   const [limit, setLimit] = useState(10)
-  const [searchTerm, setSearchTerm] = useState(null)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [error, setError] = useState(null)
+
+  const {
+    actions: { getAllCategories, deleteCategory },
+  } = useAppContext()
 
   const fetchData = useCallback(
     async (page) => {
-      const result = await axios.get(
-        `/api${routes.api.admin.categories()}?limit=${limit}&page=${page}&sortColumn=${sortColumn}&order=${order}` +
-          (searchTerm === null ? "" : `&searchTerm=${searchTerm}`)
+      const [err, data] = await getAllCategories(
+        limit,
+        page,
+        sortColumn,
+        order,
+        searchTerm
       )
 
-      const totalCategories = result.data.result.meta.count
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      const totalCategories = data.result.meta.count
       const totalPages = Math.ceil(totalCategories / limit)
 
       setTotalPages(totalPages)
-      setData(result.data.result)
+      setData(data.result)
     },
-    [order, sortColumn, limit, searchTerm]
+    [order, limit, sortColumn, searchTerm, getAllCategories]
   )
 
   useEffect(() => {
@@ -76,10 +90,17 @@ const CategoriesAdmin = () => {
 
   const handleDelete = useCallback(
     async (categoryId) => {
-      await axios.patch(`/api/admin/${categoryId}/delete`)
+      const [err] = await deleteCategory(categoryId)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
       fetchData(currentPage)
     },
-    [fetchData, currentPage]
+    [deleteCategory, fetchData, currentPage]
   )
 
   const pagination = []
@@ -98,6 +119,7 @@ const CategoriesAdmin = () => {
 
   return (
     <>
+      {error ? <FormError error={error} /> : ""}
       <div className="flex w-full justify-center mb-5">
         <span className="font-extrabold text-3xl text-stone-500 uppercase">
           Categories
@@ -245,7 +267,11 @@ const CategoriesAdmin = () => {
 }
 
 CategoriesAdmin.getLayout = function (page) {
-  return <LayoutAdmin>{page}</LayoutAdmin>
+  return (
+    <AppContextProvider>
+      <LayoutAdmin>{page}</LayoutAdmin>
+    </AppContextProvider>
+  )
 }
 
 export default CategoriesAdmin

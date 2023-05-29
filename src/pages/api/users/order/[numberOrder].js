@@ -8,6 +8,7 @@ import RelOrderProductModel from "@/api/db/models/RelOrderProductModel"
 import s3 from "@@/configAWS.js"
 import BillingAddressModel from "@/api/db/models/BillingAddressModel"
 import AddressModel from "@/api/db/models/AddressModel"
+import ProductModel from "@/api/db/models/ProductModel"
 
 const db = knex(config.db)
 
@@ -50,36 +51,20 @@ const handler = mw({
         return
       }
 
-      let orderId = null
-      let userId = null
-      let addressId = null
-      order.map((odr) => {
-        ;(orderId = odr.id), (userId = odr.userId), (addressId = odr.addressId)
-      })
-      const allProductsOrder = await RelOrderProductModel.query()
-        .where({ orderId: orderId })
-        .innerJoin(
-          "products",
-          "products.id",
-          "=",
-          "rel_order_product.productId"
-        )
-        .innerJoin(
-          "image_product",
-          "products.id",
-          "=",
-          "image_product.productId"
-        )
+      const allProductsOrder = await ProductModel.query()
+        .withGraphFetched("image")
+        .withGraphJoined("order")
+        .where("order_join.orderId", order[0].id)
+        .distinctOn("products.id")
         .select(
-          "products.id",
+          "image.urlImage",
           "products.name",
           "products.description",
           "products.price_formatted",
-          "rel_order_product.quantity",
-          "products.stock as quantityProduct",
-          "image_product.urlImage"
+          "products.id",
+          "products.stock",
+          "order_join.quantity"
         )
-        .distinctOn("products.id")
 
       allProductsOrder.map((product) => {
         product.urlImage = s3.getSignedUrl("getObject", {
@@ -89,11 +74,11 @@ const handler = mw({
       })
 
       const userBillingAddress = await BillingAddressModel.query()
-        .where({ userId: userId })
+        .where({ userId: order[0].userId })
         .innerJoin("users", "billing_address.userId", "=", "users.id")
         .select("billing_address.*", "users.firstName", "users.lastName")
       const userDeliveryAddress = await AddressModel.query().where({
-        id: addressId,
+        id: order[0].addressId,
       })
 
       res.send({
@@ -125,13 +110,10 @@ const handler = mw({
     }) => {
       const order = await OrderModel.query()
         .where({ numberOrder: numberOrder })
-        .where({ productId: productId })
-        .innerJoin(
-          "rel_order_product",
-          "orders.id",
-          "=",
-          "rel_order_product.orderId"
-        )
+        .withGraphFetched("product")
+        .modifyGraph("product", (builder) => {
+          builder.where({ productId: productId })
+        })
         .select("orders.id")
 
       if (!order) {
@@ -140,34 +122,19 @@ const handler = mw({
         return
       }
 
-      let orderId
-      order.map((o) => (orderId = o.id))
-
       await RelOrderProductModel.query()
-        .where({ orderId: orderId })
+        .where({ orderId: order[0].id })
         .where({ productId: productId })
         .patch({ quantity: quantity })
 
       const newPrice = await OrderModel.query()
+        .withGraphJoined("product")
+        .sum(db.raw("?? * ??", ["product_join.quantity", "product.price"]))
         .where({ numberOrder: numberOrder })
-        .innerJoin(
-          "rel_order_product",
-          "orders.id",
-          "=",
-          "rel_order_product.orderId"
-        )
-        .innerJoin(
-          "products",
-          "products.id",
-          "=",
-          "rel_order_product.productId"
-        )
-        .sum(
-          db.raw("?? * ??", ["rel_order_product.quantity", "products.price"])
-        )
+        .groupBy("orders.id", "product:id")
 
       const priceUpdated = await OrderModel.query().updateAndFetchById(
-        orderId,
+        order[0].id,
         {
           price: newPrice[0].sum.toFixed(2),
           price_formatted: newPrice[0].sum.toFixed(2).toString(),
@@ -198,13 +165,10 @@ const handler = mw({
     }) => {
       const order = await OrderModel.query()
         .where({ numberOrder: numberOrder })
-        .where({ productId: productId })
-        .innerJoin(
-          "rel_order_product",
-          "orders.id",
-          "=",
-          "rel_order_product.orderId"
-        )
+        .withGraphFetched("product")
+        .modifyGraph("product", (builder) => {
+          builder.where({ productId: productId })
+        })
         .select("orders.id")
 
       if (!order) {
@@ -213,49 +177,43 @@ const handler = mw({
         return
       }
 
-      let orderId
       let priceUpdated
-      order.map((o) => (orderId = o.id))
 
       await RelOrderProductModel.query()
         .delete()
-        .where({ orderId: orderId })
+        .where({ orderId: order[0].id })
         .where({ productId: productId })
 
       const newPrice = await OrderModel.query()
+        .withGraphJoined("product")
+        .sum(db.raw("?? * ??", ["product_join.quantity", "product.price"]))
         .where({ numberOrder: numberOrder })
-        .innerJoin(
-          "rel_order_product",
-          "orders.id",
-          "=",
-          "rel_order_product.orderId"
-        )
-        .innerJoin(
-          "products",
-          "products.id",
-          "=",
-          "rel_order_product.productId"
-        )
-        .sum(
-          db.raw("?? * ??", ["rel_order_product.quantity", "products.price"])
-        )
+        .groupBy("orders.id", "product:id")
 
       if (newPrice[0].sum === null) {
-        priceUpdated = await OrderModel.query().updateAndFetchById(orderId, {
-          price: (0).toFixed(2),
-          price_formatted: (0).toFixed(2).toString(),
-          amount_tva: (0).toFixed(2),
-          amount_tva_formatted: (0).toFixed(2).toString(),
-          status: "Cancelled",
-        })
+        priceUpdated = await OrderModel.query().updateAndFetchById(
+          order[0].id,
+          {
+            price: (0).toFixed(2),
+            price_formatted: (0).toFixed(2).toString(),
+            amount_tva: (0).toFixed(2),
+            amount_tva_formatted: (0).toFixed(2).toString(),
+            status: "Cancelled",
+          }
+        )
       } else {
-        priceUpdated = await OrderModel.query().updateAndFetchById(orderId, {
-          price: newPrice[0].sum.toFixed(2),
-          price_formatted: newPrice[0].sum.toFixed(2).toString(),
-          amount_tva: (newPrice[0].sum * 0.21).toFixed(2),
-          amount_tva_formatted: (newPrice[0].sum * 0.21).toFixed(2).toString(),
-          status: "On standby",
-        })
+        priceUpdated = await OrderModel.query().updateAndFetchById(
+          order[0].id,
+          {
+            price: newPrice[0].sum.toFixed(2),
+            price_formatted: newPrice[0].sum.toFixed(2).toString(),
+            amount_tva: (newPrice[0].sum * 0.21).toFixed(2),
+            amount_tva_formatted: (newPrice[0].sum * 0.21)
+              .toFixed(2)
+              .toString(),
+            status: "On standby",
+          }
+        )
       }
 
       res.send({

@@ -1,39 +1,34 @@
-import axios from "axios"
-import routes from "@/web/routes"
-import cookie from "cookie"
 import { useCallback, useState } from "react"
 import AddressForm from "@/web/components/Auth/AddressForm"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import useAppContext from "@/web/hooks/useAppContext"
+import FormError from "@/web/components/FormError"
+import cookie from "cookie"
+import getSingleAddressService from "@/web/services/address/getSingleAddress"
+import createAPIClient from "@/web/createAPIClient"
 
-export const getServerSideProps = async ({
-  locale,
-  params,
-  req,
-  req: { url },
-}) => {
+export const getServerSideProps = async ({ locale, params, req }) => {
   const addressId = params.addressId
-  const { token } = cookie.parse(
-    req ? req.headers.cookie || "" : document.cookie
-  )
-  const query = Object.fromEntries(
-    new URL(`http://example.com/${url}`).searchParams.entries()
-  )
+  const { jwt } = cookie.parse(req ? req.headers.cookie || "" : document.cookie)
 
-  const { data } = await axios.get(
-    `http://localhost:3000/api${routes.api.users.address.single(
-      addressId,
-      query
-    )}`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
+  const api = createAPIClient({ jwt, server: true })
+  const getSingleAddress = getSingleAddressService({ api })
+
+  const [err, data] = await getSingleAddress(addressId)
+
+  if (err) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
     }
-  )
+  }
 
   return {
     props: {
       address: data,
       addressId: addressId,
-      token: token,
       ...(await serverSideTranslations(locale, ["common", "navigation"])),
     },
   }
@@ -43,64 +38,48 @@ const EditAddress = (props) => {
   const {
     address: { result },
     addressId,
-    token,
   } = props
 
+  const {
+    actions: { modifyAddress },
+  } = useAppContext()
+
   const [address, setAddress] = useState(result)
+  const [error, setError] = useState(null)
 
   const handleSubmit = useCallback(
-    async ({
-      firstName,
-      lastName,
-      addressFull,
-      addressOptional,
-      country,
-      city,
-      cp,
-      phoneNumber,
-      address_default,
-    }) => {
-      const {
-        data: { result },
-      } = await axios.patch(
-        `http://localhost:3000/api${routes.api.users.address.single(
-          addressId
-        )}`,
-        {
-          firstName,
-          lastName,
-          addressFull,
-          addressOptional,
-          country,
-          city,
-          cp,
-          phoneNumber,
-          address_default,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
+    async (values) => {
+      const [err, data] = await modifyAddress(addressId, values)
 
-      setAddress(result)
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setAddress(data.result)
     },
-    [token, addressId]
+    [modifyAddress, addressId]
   )
 
   return (
     <>
-      <div className="w-full mx-auto">
-        <h1 className="font-semibold text-2xl mb-10 text-center uppercase">
-          My Address
-        </h1>
-        <div className="flex flex-wrap justify-center">
-          <AddressForm
-            initialValues={address}
-            onSubmit={handleSubmit}
-            userId={address.userId}
-          />
+      {error ? (
+        <FormError error={error} />
+      ) : (
+        <div className="w-full mx-auto">
+          <h1 className="font-semibold text-2xl mb-10 text-center uppercase">
+            My Address
+          </h1>
+          <div className="flex flex-wrap justify-center">
+            <AddressForm
+              initialValues={address}
+              onSubmit={handleSubmit}
+              userId={address.userId}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </>
   )
 }

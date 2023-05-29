@@ -1,9 +1,9 @@
 import config from "@/web/config.js"
 import axios from "axios"
 
-const createAPIClient = ({ jwt } = {}) =>
+const createAPIClient = ({ jwt, server } = {}) =>
   axios.create({
-    baseURL: config.api.baseApiURL,
+    baseURL: server ? config.api.baseURL : config.api.baseApiURL,
     headers: {
       ...(jwt ? { Authorization: `Bearer ${jwt}` } : {}),
     },

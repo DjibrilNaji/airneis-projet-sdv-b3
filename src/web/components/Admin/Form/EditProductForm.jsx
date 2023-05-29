@@ -58,6 +58,7 @@ const EditProductForm = (props) => {
       onSubmit={onSubmit}
       initialValues={initialValues}
       validationSchema={validationSchema}
+      enableReinitialize
     >
       <>
         <FormError error={error} />
@@ -65,7 +66,7 @@ const EditProductForm = (props) => {
           <FormField
             name="name"
             type="text"
-            label="Nom du Produit :"
+            label="Product name:"
             active={active}
           />
           <FormField
@@ -77,22 +78,22 @@ const EditProductForm = (props) => {
           <FormField
             name="price"
             type="number"
-            label="Prix :"
+            label="Price :"
             active={active}
           />
           <FormField
             name="stock"
             type="number"
-            label="stock :"
+            label="Stock :"
             active={active}
           />
-          <label className="flex flex-col gap-2">
+          <label className="flex gap-2">
             {" "}
-            Highlander
+            Highlander :
             <Field name="highlander" type="checkbox" disabled={active} />
           </label>
           <FormField name="slug" type="text" label="Slug :" active={active} />
-          <div id="checkbox-group">Material</div>
+          <div id="checkbox-group">Materials :</div>
           <div role="group" aria-labelledby="checkbox-group">
             {material.map((mat) => (
               <label key={mat.id}>

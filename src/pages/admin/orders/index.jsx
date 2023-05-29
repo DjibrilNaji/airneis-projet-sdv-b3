@@ -1,6 +1,7 @@
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
+import FormError from "@/web/components/FormError"
 import TableHeadField from "@/web/components/TableHeadField"
-import config from "@/web/config"
+import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
 import routes from "@/web/routes"
 import {
   faArrowLeft,
@@ -10,35 +11,39 @@ import {
   faPlus,
 } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import axios from "axios"
 import Link from "next/link"
 import { useCallback, useEffect, useState } from "react"
 
 const OrderAdmin = () => {
+  const {
+    actions: { getOrders },
+  } = useAppContext()
+
   const [data, setData] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState("")
-
   const [limit] = useState(10)
-
   const [searchTerm, setSearchTerm] = useState(null)
+
+  const [error, setError] = useState("")
 
   const fetchData = useCallback(
     async (page) => {
-      const result = await axios.get(
-        `${
-          config.api.baseApiURL
-        }${routes.api.admin.orders.collection()}?limit=${limit}&page=${page}` +
-          (searchTerm === null ? "" : `&searchTerm=${searchTerm}`)
-      )
+      const [err, data] = await getOrders(limit, page, searchTerm)
 
-      const totalOrders = result.data.result.meta.count
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      const totalOrders = data.result.meta.count
       const totalPages = Math.ceil(totalOrders / limit)
 
       setTotalPages(totalPages)
-      setData(result.data.result)
+      setData(data.result)
     },
-    [limit, searchTerm]
+    [limit, searchTerm, getOrders]
   )
 
   useEffect(() => {
@@ -69,6 +74,8 @@ const OrderAdmin = () => {
 
   return (
     <>
+      {error ? <FormError error={error} /> : ""}
+
       <div className="flex item-center justify-center mb-5">
         <span className="font-extrabold text-3xl text-stone-500 uppercase">
           Orders
@@ -219,7 +226,11 @@ const OrderAdmin = () => {
 }
 
 OrderAdmin.getLayout = function (page) {
-  return <LayoutAdmin>{page}</LayoutAdmin>
+  return (
+    <AppContextProvider>
+      <LayoutAdmin>{page}</LayoutAdmin>
+    </AppContextProvider>
+  )
 }
 
 export default OrderAdmin

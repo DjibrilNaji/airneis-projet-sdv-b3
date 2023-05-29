@@ -1,5 +1,4 @@
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
-import axios from "axios"
 import { useCallback, useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
@@ -8,6 +7,8 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons"
 import TableHeadField from "@/web/components/Admin/TableHeadField"
+import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
+import FormError from "@/web/components/FormError"
 
 const ContactAdmin = () => {
   const [data, setData] = useState([])
@@ -18,23 +19,37 @@ const ContactAdmin = () => {
   const [order, setOrder] = useState("asc")
   const [limit, setLimit] = useState(10)
   const [searchTerm, setSearchTerm] = useState(null)
+  const [error, setError] = useState("")
 
   const [selectedContacts, setSelectedContacts] = useState([])
 
+  const {
+    actions: { getContact, deleteContact },
+  } = useAppContext()
+
   const fetchData = useCallback(
     async (page) => {
-      const result = await axios.get(
-        `/api/contact?limit=${limit}&page=${page}&sortColumn=${sortColumn}&order=${order}` +
-          (searchTerm === null ? "" : `&searchTerm=${searchTerm}`)
+      const [err, data] = await getContact(
+        limit,
+        page,
+        sortColumn,
+        order,
+        searchTerm
       )
 
-      const totalMessages = result.data.result.meta.count
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      const totalMessages = data.result.meta.count
       const totalPages = Math.ceil(totalMessages / limit)
 
       setTotalPages(totalPages)
-      setData(result.data.result)
+      setData(data.result)
     },
-    [order, limit, sortColumn, searchTerm]
+    [order, limit, sortColumn, searchTerm, getContact]
   )
 
   useEffect(() => {
@@ -43,11 +58,18 @@ const ContactAdmin = () => {
 
   const handleDelete = useCallback(
     async (contactId) => {
-      await axios.delete(`/api/contact?contactId=${contactId}`)
+      const [err] = await deleteContact(contactId)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
       fetchData(currentPage)
       setSelectedContacts([])
     },
-    [fetchData, currentPage]
+    [fetchData, currentPage, deleteContact]
   )
 
   const handlePageChange = useCallback(
@@ -108,6 +130,8 @@ const ContactAdmin = () => {
 
   return (
     <>
+      {error ? <FormError error={error} /> : ""}
+
       <div className="flex item-center justify-center mb-5">
         <span className="font-extrabold text-3xl text-stone-500 uppercase">
           Messages
@@ -226,7 +250,11 @@ const ContactAdmin = () => {
 }
 
 ContactAdmin.getLayout = function (page) {
-  return <LayoutAdmin>{page}</LayoutAdmin>
+  return (
+    <AppContextProvider>
+      <LayoutAdmin>{page}</LayoutAdmin>
+    </AppContextProvider>
+  )
 }
 
 export default ContactAdmin
