@@ -135,7 +135,7 @@ const Cart = (props) => {
                     </div>
 
                     <span className="flex justify-end text-sm font-bold">
-                      {product.price * product.quantity} €
+                      {(product.price * product.quantity).toFixed(2)} €
                     </span>
                   </div>
                 </div>
