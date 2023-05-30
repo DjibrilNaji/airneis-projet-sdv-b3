@@ -2,14 +2,11 @@ import * as yup from "yup"
 import { Form, Formik } from "formik"
 import Button from "@/web/components/Button.jsx"
 import FormField from "@/web/components/FormField.jsx"
-import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons"
-import TextAuth from "@/web/components/Auth/TextAuth.jsx"
+import { faEnvelope } from "@fortawesome/free-solid-svg-icons"
 import FormError from "../FormError.jsx"
-import routes from "@/web/routes.js"
 
 const defaultInitialValues = {
   email: "",
-  password: "",
 }
 
 const defaultValidationSchema = yup.object().shape({
@@ -18,10 +15,9 @@ const defaultValidationSchema = yup.object().shape({
     .email("Email invalide")
     .required("Enter a email please")
     .label("Email"),
-  password: yup.string().required("Enter a password please").label("Password"),
 })
 
-const LoginForm = (props) => {
+const CheckEmailForm = (props) => {
   const {
     onSubmit,
     initialValues = defaultInitialValues,
@@ -44,27 +40,11 @@ const LoginForm = (props) => {
             label="E-mail"
             icon={faEnvelope}
           />
-          <FormField
-            name="password"
-            type="password"
-            label="Password"
-            icon={faLock}
-          />
-          <TextAuth
-            route={routes.signUp()}
-            text1="Pas de compte ?"
-            text2="Inscrivez-vous"
-          />
-          <TextAuth
-            route={routes.checkEmail()}
-            text1="Vous avez oubliez votre mot de passe ?"
-            text2="Cliquez ici !"
-          />
-          <Button type="submit">Se connecter</Button>
+          <Button type="submit">Submit</Button>
         </Form>
       </>
     </Formik>
   )
 }
 
-export default LoginForm
+export default CheckEmailForm
