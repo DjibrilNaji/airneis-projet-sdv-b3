@@ -34,14 +34,14 @@ const handler = mw({
           "orders.numberOrder",
           "orders.status",
           "orders.createdAt",
-          "orders.price_formatted"
+          "orders.total_price"
         )
         .sum("product_join.quantity as quantity")
         .groupBy(
           "orders.numberOrder",
           "orders.status",
           "orders.createdAt",
-          "orders.price_formatted",
+          "orders.total_price",
           "orders.id",
           "product.id"
         )

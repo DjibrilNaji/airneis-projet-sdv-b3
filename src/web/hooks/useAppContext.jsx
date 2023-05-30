@@ -3,8 +3,6 @@ import createAPIClient from "@/web/createAPIClient.js"
 import parseSession from "@/web/parseSession.js"
 import signInService from "@/web/services/signIn.js"
 import signUpService from "@/web/services/signUp.js"
-import patchOrderQuantityService from "../services/order/patchOrderQuantity"
-import deleteProductOrderService from "../services/order/deleteProductOrder"
 import cancelOrderService from "../services/order/cancelOrder"
 import modifyAddressService from "../services/address/modifyAddress"
 import deleteAddressService from "../services/address/deleteAddress"
@@ -68,8 +66,6 @@ export const AppContextProvider = (props) => {
   const api = createAPIClient({ jwt })
   const signUp = signUpService({ api })
   const signIn = signInService({ api, setSession, setJWT })
-  const patchOrderQuantity = patchOrderQuantityService({ api })
-  const deleteProductOrder = deleteProductOrderService({ api })
   const cancelOrder = cancelOrderService({ api })
   const getAllAddress = getAllAddressService({ api })
   const modifyAddress = modifyAddressService({ api })
@@ -135,8 +131,6 @@ export const AppContextProvider = (props) => {
           signUp,
           signOut,
           signIn,
-          patchOrderQuantity,
-          deleteProductOrder,
           cancelOrder,
           modifyAddress,
           deleteAddress,
