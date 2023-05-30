@@ -48,6 +48,7 @@ const UserForm = (props) => {
       onSubmit={onSubmit}
       initialValues={initialValues}
       validationSchema={validationSchema}
+      enableReinitialize
     >
       <>
         <FormError error={error} />
@@ -55,21 +56,21 @@ const UserForm = (props) => {
           <FormField
             name="userName"
             type="text"
-            label="Nom d'utilisateur :"
+            label="Nom d'utilisateur* :"
             active={active}
           />
 
           <FormField
             name="firstName"
             type="text"
-            label="Prenom :"
+            label="Prenom* :"
             active={active}
           />
 
           <FormField
             name="lastName"
             type="text"
-            label="Nom :"
+            label="Nom* :"
             active={active}
           />
 
@@ -83,7 +84,7 @@ const UserForm = (props) => {
           <FormField
             name="password"
             type="password"
-            label="Password :"
+            label="Password* :"
             active={active}
           />
 
