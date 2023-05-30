@@ -180,7 +180,7 @@ const Navbar = () => {
 
       <div className="flex items-center ml-auto transition-all transition-duration-200">
         <SearchBar />
-        <Link href={`/cart`} className="px-2 py-1">
+        <Link href={routes.checkout.cart()} className="px-2 py-1">
           <FontAwesomeIcon
             icon={faShoppingCart}
             className="h-6 text-stone-400"

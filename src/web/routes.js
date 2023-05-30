@@ -14,6 +14,10 @@ const routes = {
   signIn: () => "/login",
   product: (slug) => `/products/${slug}`,
   categorie: (slug) => `/categories/${slug}`,
+  checkout: {
+    cart: () => "/checkout/cart",
+    delivery: () => "/checkout/delivery",
+  },
   admin: {
     users: {
       single: (userId) => `/admin/users/${userId}/view`,

@@ -1,5 +1,6 @@
 import Button from "@/web/components/Button"
 import Link from "@/web/components/Link"
+import routes from "@/web/routes"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 
 export const getServerSideProps = async ({ locale, params }) => {
@@ -29,7 +30,7 @@ const Confirmation = (props) => {
           Vous pouvez suivre son état depuis votre espace client.
         </p>
         <div className="flex justify-center py-7 md:justify-center items-center">
-          <Link href="/cart">
+          <Link href={routes.checkout.cart()}>
             <Button>Continuer mes achats</Button>
           </Link>
         </div>

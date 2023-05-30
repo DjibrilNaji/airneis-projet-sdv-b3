@@ -46,7 +46,15 @@ const handler = mw({
         throw new NotFoundError()
       }
 
-      res.send({ result: address })
+      const defaultAddress = await AddressModel.query()
+        .where({ userId: userId })
+        .where({ address_default: true })
+
+      if (!defaultAddress) {
+        throw new NotFoundError()
+      }
+
+      res.send({ result: address, defaultAddress })
     },
   ],
   POST: [
