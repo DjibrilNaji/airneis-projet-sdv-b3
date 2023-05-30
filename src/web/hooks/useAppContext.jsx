@@ -3,12 +3,11 @@ import createAPIClient from "@/web/createAPIClient.js"
 import parseSession from "@/web/parseSession.js"
 import signInService from "@/web/services/signIn.js"
 import signUpService from "@/web/services/signUp.js"
-import patchOrderQuantityService from "../services/order/patchOrderQuantity"
-import deleteProductOrderService from "../services/order/deleteProductOrder"
 import cancelOrderService from "../services/order/cancelOrder"
 import modifyAddressService from "../services/address/modifyAddress"
 import deleteAddressService from "../services/address/deleteAddress"
 import addAddressService from "../services/address/addNewAddress"
+import getAllAddressService from "../services/address/getAllAddress"
 import addNewBillingAddressService from "../services/address/addNewBillingAddress"
 import updatePersonnalDataService from "../services/user/updatePersonnalData"
 import updateBillingAddressService from "../services/address/updateBillingAddress"
@@ -67,9 +66,8 @@ export const AppContextProvider = (props) => {
   const api = createAPIClient({ jwt })
   const signUp = signUpService({ api })
   const signIn = signInService({ api, setSession, setJWT })
-  const patchOrderQuantity = patchOrderQuantityService({ api })
-  const deleteProductOrder = deleteProductOrderService({ api })
   const cancelOrder = cancelOrderService({ api })
+  const getAllAddress = getAllAddressService({ api })
   const modifyAddress = modifyAddressService({ api })
   const deleteAddress = deleteAddressService({ api })
   const addNewAddress = addAddressService({ api })
@@ -133,12 +131,11 @@ export const AppContextProvider = (props) => {
           signUp,
           signOut,
           signIn,
-          patchOrderQuantity,
-          deleteProductOrder,
           cancelOrder,
           modifyAddress,
           deleteAddress,
           addNewAddress,
+          getAllAddress,
           addNewBillingAddress,
           updatePersonnalData,
           updateBillingAddress,

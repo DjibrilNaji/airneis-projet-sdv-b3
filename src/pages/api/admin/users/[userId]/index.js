@@ -1,7 +1,7 @@
 import hashPassword from "@/api/db/hashPassword"
 import OrderModel from "@/api/db/models/OrderModel"
 import UserModel from "@/api/db/models/UserModel"
-import { NotFoundError } from "@/api/errors"
+import { InvalidAccessError, NotFoundError } from "@/api/errors"
 import validate from "@/api/middlewares/validate.js"
 import mw from "@/api/mw.js"
 import {
@@ -24,7 +24,16 @@ const handler = mw({
         query: { userId },
       },
       res,
+      req,
     }) => {
+      const {
+        session: { user: sessionUser },
+      } = req
+
+      if (sessionUser.isAdmin !== true) {
+        throw new InvalidAccessError()
+      }
+
       const user = await UserModel.query()
         .where({ id: userId })
         .withGraphFetched("billingAddress")
@@ -65,7 +74,16 @@ const handler = mw({
         body: { firstName, lastName, userName, email, password, isAdmin },
       },
       res,
+      req,
     }) => {
+      const {
+        session: { user: sessionUser },
+      } = req
+
+      if (sessionUser.isAdmin !== true) {
+        throw new InvalidAccessError()
+      }
+
       const user = await UserModel.query().findById(userId)
 
       if (!user) {

@@ -6,6 +6,7 @@ import {
   faArrowLeft,
   faArrowRight,
   faCheck,
+  faEdit,
   faPlus,
   faTrash,
   faXmark,
@@ -14,10 +15,12 @@ import TableHeadField from "@/web/components/Admin/TableHeadField"
 import routes from "@/web/routes"
 import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
 import FormError from "@/web/components/FormError"
+import Modal from "@/web/components/Modal"
+import EditUserForm from "@/web/components/Admin/Form/EditUserForm"
 
 const UsersAdmin = () => {
   const {
-    actions: { getUsers, deleteUser },
+    actions: { getUsers, deleteUser, getSingleUser, updateUser },
   } = useAppContext()
 
   const [data, setData] = useState([])
@@ -31,6 +34,22 @@ const UsersAdmin = () => {
 
   const [selectedUsers, setSelectedUsers] = useState([])
   const [error, setError] = useState("")
+
+  const [user, setUser] = useState([])
+  const [addressSingleUser, setAddressSingleUser] = useState([])
+  const [billingAddressSingleUser, setBillingAddress] = useState([])
+  const [orderSingleUser, setOrderSingleUser] = useState([])
+
+  const types = {
+    user: { name: "user", title: "User informations" },
+    address: { name: "address", title: "Address" },
+    billingAddress: { name: "billingAddress", title: "Billing address" },
+    order: { name: "order", title: "Order" },
+  }
+
+  const [selectedType, setSelectedType] = useState(types.user)
+  const [viewUserInfo, setViewUserInfo] = useState(false)
+  const [toggleUpdateUser, setToggleUpdateUser] = useState(true)
 
   const fetchData = useCallback(
     async (page) => {
@@ -118,6 +137,39 @@ const UsersAdmin = () => {
     },
     [selectedUsers]
   )
+
+  const handleSubmit = useCallback(
+    async (values) => {
+      const [err, data] = await updateUser(user.id, values)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setUser(data.result)
+      setToggleUpdateUser(!toggleUpdateUser)
+      fetchData(currentPage)
+    },
+    [user.id, toggleUpdateUser, updateUser, fetchData, currentPage]
+  )
+
+  const fetchSingleUser = async (id) => {
+    const [err, user] = await getSingleUser(id)
+
+    if (err) {
+      setError(err)
+
+      return
+    }
+
+    setUser(user.result.user[0])
+    setAddressSingleUser(user.result.user[0].address)
+    setBillingAddress(user.result.user[0].billingAddress)
+    setOrderSingleUser(user.result.order)
+    setViewUserInfo(true)
+  }
 
   const pagination = []
   for (let i = 1; i <= totalPages; i++) {
@@ -261,12 +313,12 @@ const UsersAdmin = () => {
               </td>
 
               <td className="py-2 px-4 flex">
-                <Link
-                  href={routes.admin.users.single(user.id)}
-                  className="border-2 px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200"
-                >
-                  <FontAwesomeIcon icon={faPlus} className="text-stone-400" />
-                </Link>
+                <button onClick={() => fetchSingleUser(user.id)}>
+                  <FontAwesomeIcon
+                    icon={faPlus}
+                    className="border-2 px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200 text-stone-400"
+                  />
+                </button>
               </td>
             </tr>
           ))}
@@ -289,6 +341,207 @@ const UsersAdmin = () => {
           Ajouter un utilisateur
         </Link>
       </div>
+
+      <Modal
+        isOpen={viewUserInfo}
+        modalTitle={selectedType.title}
+        closeModal={() => setViewUserInfo(false)}
+      >
+        <div className="flex gap-4">
+          <button
+            onClick={() => setSelectedType(types.user)}
+            className={`flex ${
+              selectedType.name === types.user.name && "font-bold underline"
+            }`}
+          >
+            User
+          </button>
+          <button
+            onClick={() => setSelectedType(types.address)}
+            className={`flex ${
+              selectedType.name === types.address.name && "font-bold underline"
+            }`}
+          >
+            Address
+          </button>
+          <button
+            onClick={() => setSelectedType(types.billingAddress)}
+            className={`flex ${
+              selectedType.name === types.billingAddress.name &&
+              "font-bold underline"
+            }`}
+          >
+            Billing address
+          </button>
+          <button
+            onClick={() => setSelectedType(types.order)}
+            className={`flex ${
+              selectedType.name === types.order.name && "font-bold underline"
+            }`}
+          >
+            Order
+          </button>
+        </div>
+
+        {selectedType.name === types.user.name ? (
+          <>
+            <div className="border-t-4 border-gray-500 px-3 my-4" />
+            <div className="flex items-center justify-between ">
+              <div className="px-4">
+                {user.isDelete ? (
+                  <span className="italic text-red-500 text-lg">
+                    (Compte supprimé : id {user.id})
+                  </span>
+                ) : (
+                  <span className="italic text-green-500 text-lg">
+                    (Compte actif : id {user.id})
+                  </span>
+                )}
+              </div>
+
+              {!user.isDelete && (
+                <button
+                  className="flex justify-end text-stone-500 font-bold text-lg rounded"
+                  onClick={() => setToggleUpdateUser(!toggleUpdateUser)}
+                  title={
+                    toggleUpdateUser
+                      ? "Modifier l'utilisateur"
+                      : "Finir les modifications"
+                  }
+                >
+                  <FontAwesomeIcon
+                    icon={toggleUpdateUser ? faEdit : faCheck}
+                    className="h-7"
+                  />
+                </button>
+              )}
+            </div>
+            <EditUserForm
+              initialValues={user}
+              onSubmit={handleSubmit}
+              active={toggleUpdateUser}
+            />
+          </>
+        ) : selectedType.name === types.address.name ? (
+          <>
+            <div className="border-t-4 border-gray-500 px-3 my-4" />
+            {addressSingleUser.length > 0 ? (
+              addressSingleUser.map((address, index) => (
+                <div
+                  className={`flex flex-col my-3 border-b-2 border-stone-500 px-2 pb-2 ${
+                    address.address_default && "bg-stone-300 rounded-lg"
+                  } `}
+                  key={address.id}
+                >
+                  <h2 className="font-bold underline">
+                    Adresse n°{index + 1}{" "}
+                    {address.isDelete ? (
+                      <span className="italic text-red-500 text-lg">
+                        (Supprimé)
+                      </span>
+                    ) : (
+                      <span className="italic text-green-500 text-lg">
+                        (Active)
+                      </span>
+                    )}
+                  </h2>
+                  <span>
+                    {address.firstName} {address.lastName}
+                  </span>
+                  <span>
+                    {address.addressFull} {address.lastName}
+                  </span>
+                  <span>
+                    {address.cp} {address.city}
+                  </span>
+                  <span>{address.country}</span>
+                </div>
+              ))
+            ) : (
+              <div className="p-4 text-lg font-semibold">
+                Aucune addresse enregistré
+              </div>
+            )}
+          </>
+        ) : selectedType.name === types.billingAddress.name ? (
+          <>
+            <div className="border-t-4 border-gray-500 px-3 my-4" />
+            <div>
+              {billingAddressSingleUser.length > 0 ? (
+                billingAddressSingleUser.map((address, index) => (
+                  <div
+                    className="flex flex-col my-3 border-b-2 border-stone-500 px-2 pb-2"
+                    key={address.id}
+                  >
+                    <h2 className="font-bold underline">
+                      Adresse n°{index + 1}
+                    </h2>
+
+                    <span>{address.phoneNumber}</span>
+
+                    <span>
+                      {address.addressFull} {address.lastName}
+                    </span>
+
+                    <span>
+                      {address.cp} {address.city}
+                    </span>
+
+                    <span>{address.country}</span>
+                  </div>
+                ))
+              ) : (
+                <div className="p-4 text-lg font-semibold">
+                  Aucune addresse enregistré
+                </div>
+              )}
+            </div>
+          </>
+        ) : (
+          selectedType.name === types.order.name && (
+            <>
+              <div className="border-t-4 border-gray-500 px-3 my-4" />
+              <div>
+                {orderSingleUser.length > 0 ? (
+                  orderSingleUser.map((order, index) => (
+                    <div
+                      className="flex flex-col my-3 border-b-2 border-stone-500 px-2 pb-2"
+                      key={order.id}
+                    >
+                      <h2 className="font-bold underline text-lg">
+                        Commande n°{index + 1}
+                      </h2>
+                      <span>Numéro de commande : {order.numberOrder}</span>
+                      <span>Status : {order.status}</span>
+                      <span>Price : {order.price_formatted}</span>
+                      <span>TVA : {order.amount_tva_formatted}</span>
+
+                      <div className="flex flex-col my-3 italic">
+                        <h3 className="font-bold underline">
+                          Address de livraison :
+                        </h3>
+                        <span>{order.address[0].phoneNumber}</span>
+                        <span>
+                          {order.address[0].addressFull}{" "}
+                          {order.address[0].lastName}
+                        </span>
+                        <span>
+                          {order.address[0].cp} {order.address[0].city}
+                        </span>
+                        <span>{order.address[0].country}</span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="p-4 text-lg font-semibold">
+                    Aucune commande passée
+                  </div>
+                )}
+              </div>
+            </>
+          )
+        )}
+      </Modal>
     </>
   )
 }

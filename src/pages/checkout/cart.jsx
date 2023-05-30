@@ -7,45 +7,40 @@ import Link from "next/link"
 import React, { useCallback, useContext, useEffect, useState } from "react"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useTranslation } from "next-i18next"
+import OrderSummary from "@/web/components/OrderSummary"
+import { useRouter } from "next/router"
+import cookie from "cookie"
 
-export async function getServerSideProps({ locale }) {
+export async function getServerSideProps({ locale, req }) {
+  const cookies = req.headers.cookie
+    ? cookie.parse(req.headers.cookie || "")
+    : null
+
+  const jwt = cookies ? (cookies.jwt !== undefined ? cookies.jwt : null) : null
+
   return {
     props: {
+      jwt,
       ...(await serverSideTranslations(locale, ["cart", "navigation"])),
     },
   }
 }
 
-const Cart = () => {
+const Cart = (props) => {
+  const { jwt } = props
   const {
     actions: { addToCart, removeQuantity, removeOneProduct, removeAllFromCart },
-    state: { cart },
+    state: { cart, subtotal, tva, total },
   } = useContext(CartContext)
 
   const { t } = useTranslation("cart")
 
   const [cartItems, setCartItems] = useState([])
-  const [totalPrice, setTotalPrice] = useState()
-  const [totalTva, setTotalTva] = useState()
+  const router = useRouter()
 
   useEffect(() => {
     setCartItems(cart)
   }, [cart])
-
-  useEffect(() => {
-    const total = cartItems.reduce(
-      (acc, item) => acc + item.price * item.quantity,
-      0
-    )
-
-    setTotalPrice(total)
-  }, [cartItems])
-
-  useEffect(() => {
-    const total = totalPrice * (20 / 100)
-
-    setTotalTva(total)
-  }, [totalPrice])
 
   const handleClickReduceQuantity = useCallback(
     (product) => {
@@ -67,6 +62,12 @@ const Cart = () => {
     },
     [removeOneProduct]
   )
+
+  const handleClick = () => {
+    router.push({
+      pathname: jwt ? routes.checkout.delivery() : routes.signIn(),
+    })
+  }
 
   return (
     <>
@@ -134,7 +135,7 @@ const Cart = () => {
                     </div>
 
                     <span className="flex justify-end text-sm font-bold">
-                      {product.price * product.quantity} €
+                      {(product.price * product.quantity).toFixed(2)} €
                     </span>
                   </div>
                 </div>
@@ -151,26 +152,13 @@ const Cart = () => {
             </button>
           </div>
 
-          <div className="flex flex-col w-full md:w-screen md:min-w-md md:max-w-sm border  h-fit rounded-lg p-4 shadow-xl">
-            <p className="flex text-sm justify-between font-bold">
-              <span>{t("subtotal")}</span>
-              <span>{totalPrice} €</span>
-            </p>
-
-            <p className="flex justify-between text-xs text-stone-400 font-bold">
-              <span>{t("tva")}</span>
-              <span>{totalTva} €</span>
-            </p>
-
-            <p className="flex justify-between mt-4 text-lg font-bold  whitespace-nowrap">
-              <span>{t("total")}</span>
-              <span>{totalPrice + totalTva} €</span>
-            </p>
-
-            <button className="border bg-stone-500 rounded-lg p-2 mt-4 whitespace-nowrap">
-              {t("to_order")}
-            </button>
-          </div>
+          <OrderSummary
+            price={subtotal}
+            totalTva={tva}
+            totalPrice={total}
+            handleClick={handleClick}
+            buttonName={t("to_order")}
+          />
         </div>
       ) : (
         <div className="fixed inset-0">
