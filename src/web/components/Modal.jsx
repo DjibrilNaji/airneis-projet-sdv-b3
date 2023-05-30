@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 const Modal = (props) => {
   const { isOpen, modalTitle, closeModal, children, dir } = props
 
+
   return (
     <>
       <div
