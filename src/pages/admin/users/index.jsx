@@ -1,5 +1,4 @@
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
-import Link from "next/link"
 import { useCallback, useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
@@ -12,15 +11,16 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons"
 import TableHeadField from "@/web/components/Admin/TableHeadField"
-import routes from "@/web/routes"
 import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
 import FormError from "@/web/components/FormError"
+import Button from "@/web/components/Button"
 import Modal from "@/web/components/Modal"
 import EditUserForm from "@/web/components/Admin/Form/EditUserForm"
+import UserForm from "@/web/components/Admin/Form/UserForm"
 
 const UsersAdmin = () => {
   const {
-    actions: { getUsers, deleteUser, getSingleUser, updateUser },
+    actions: { addUser, getUsers, deleteUser, getSingleUser, updateUser },
   } = useAppContext()
 
   const [data, setData] = useState([])
@@ -34,6 +34,7 @@ const UsersAdmin = () => {
 
   const [selectedUsers, setSelectedUsers] = useState([])
   const [error, setError] = useState("")
+  const [isOpen, setIsOpen] = useState(false)
 
   const [user, setUser] = useState([])
   const [addressSingleUser, setAddressSingleUser] = useState([])
@@ -185,9 +186,35 @@ const UsersAdmin = () => {
     )
   }
 
+  const handleAddUser = useCallback(
+    async (values, { resetForm }) => {
+      const [err] = await addUser(values)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      resetForm()
+      setIsOpen(false)
+      setCurrentPage(totalPages)
+      fetchData(totalPages)
+    },
+    [addUser, fetchData, totalPages]
+  )
+
   return (
     <>
       {error ? <FormError error={error} /> : ""}
+
+      <Modal
+        isOpen={isOpen}
+        modalTitle="Add"
+        closeModal={() => setIsOpen(false)}
+      >
+        <UserForm onSubmit={handleAddUser} />
+      </Modal>
 
       <div className="flex item-center justify-center mb-5">
         <span className="font-extrabold text-3xl text-stone-500 uppercase">
@@ -327,19 +354,16 @@ const UsersAdmin = () => {
 
       <div className="flex flex-col justify-start">
         <button
-          className="border-2 rounded-lg mx-3 my-4 p-2 bg-red-500 text-white disabled:cursor-not-allowed disabled:bg-red-200 w-fit"
+          className="border-2 rounded-lg my-4 p-2 bg-red-500 text-white disabled:cursor-not-allowed disabled:bg-red-200 mx-auto"
           onClick={() => selectedUsers.map((id) => handleDelete(id))}
           disabled={selectedUsers.length === 0}
         >
           Supprimer tous les éléments séléctionnés
         </button>
 
-        <Link
-          href={routes.admin.users.create()}
-          className="border-2 rounded-lg mx-3 my-4 p-2 bg-blue-500 text-white w-fit"
-        >
-          Ajouter un utilisateur
-        </Link>
+        <Button onClick={() => setIsOpen(true)} className="mx-auto">
+          Add new user
+        </Button>
       </div>
 
       <Modal
