@@ -3,6 +3,9 @@ import * as yup from "yup"
 import FormError from "@/web/components/FormError"
 import SubmitButton from "@/web/components/SubmitButton"
 import FormField from "@/web/components/Admin/FormField"
+import { useState } from "react"
+import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 const defaultInitialValues = {
   name: "",
@@ -23,11 +26,7 @@ const defaultValidationSchema = yup.object().shape({
     .string()
     .required("La description est obligatoire")
     .label("description"),
-  price: yup
-    .number()
-    .integer()
-    .required("Le prix est obligatoire")
-    .label("price"),
+  price: yup.number().required("Le prix est obligatoire").label("price"),
   stock: yup
     .number()
     .integer()
@@ -52,6 +51,16 @@ const EditProductForm = (props) => {
     active,
     error,
   } = props
+
+  const [seeMaterials, setSeeMaterials] = useState(false)
+
+  const onClick = () => {
+    if (seeMaterials === true) {
+      setSeeMaterials(false)
+    } else {
+      setSeeMaterials(true)
+    }
+  }
 
   return (
     <Formik
@@ -94,19 +103,36 @@ const EditProductForm = (props) => {
           </label>
           <FormField name="slug" type="text" label="Slug :" active={active} />
           <div id="checkbox-group">Materials :</div>
-          <div role="group" aria-labelledby="checkbox-group">
+          <div
+            role="group"
+            aria-labelledby="checkbox-group"
+            className="w-60 flex flex-wrap"
+          >
             {material.map((mat) => (
-              <label key={mat.id}>
-                <Field
-                  type="checkbox"
-                  className="m-2"
-                  disabled={active}
-                  name="materials"
-                  value={mat.nameMaterial}
-                />
-                {mat.nameMaterial}
-              </label>
+              <div
+                key={mat.id}
+                hidden={
+                  seeMaterials === false ? (mat.id > 5 ? true : false) : false
+                }
+              >
+                <label>
+                  <Field
+                    type="checkbox"
+                    className="m-2"
+                    disabled={active}
+                    name="materials"
+                    value={mat.nameMaterial}
+                  />
+                  {mat.nameMaterial}
+                </label>
+              </div>
             ))}
+            <button type="button" onClick={onClick} className="ml-2">
+              <FontAwesomeIcon
+                icon={seeMaterials ? faMinus : faPlus}
+                className="text-stone-400"
+              />
+            </button>
           </div>
           <SubmitButton
             active={active.toString()}
