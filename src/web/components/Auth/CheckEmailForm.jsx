@@ -3,7 +3,7 @@ import { Form, Formik } from "formik"
 import Button from "@/web/components/Button.jsx"
 import FormField from "@/web/components/FormField.jsx"
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons"
-import FormError from "../FormError.jsx"
+import FormSuccess from "../FormSuccess.jsx"
 
 const defaultInitialValues = {
   email: "",
@@ -22,7 +22,7 @@ const CheckEmailForm = (props) => {
     onSubmit,
     initialValues = defaultInitialValues,
     validationSchema = defaultValidationSchema,
-    error,
+    success,
   } = props
 
   return (
@@ -32,7 +32,7 @@ const CheckEmailForm = (props) => {
       validationSchema={validationSchema}
     >
       <>
-        <FormError error={error} />
+        <FormSuccess success={success} />
         <Form className="flex flex-col gap-4 p-4">
           <FormField
             name="email"

@@ -16,15 +16,25 @@ const CheckAccount = () => {
     actions: { checkEmail },
   } = useAppContext()
   const [error, setError] = useState(null)
+  const [success, setSuccess] = useState(null)
   const handleSubmit = useCallback(
     async (values) => {
       const [err] = await checkEmail(values)
 
       if (err) {
+        err[0] = "check your mail !"
         setError(err)
+        setTimeout(() => {
+          setError(null)
+        }, 5000)
 
         return
       }
+
+      setSuccess("check you mail !")
+      setTimeout(() => {
+        setSuccess(null)
+      }, 5000)
     },
     [checkEmail]
   )
@@ -37,7 +47,10 @@ const CheckAccount = () => {
             Saisissez votre Email
           </h1>
 
-          <CheckEmailForm onSubmit={handleSubmit} error={error} />
+          <CheckEmailForm
+            onSubmit={handleSubmit}
+            success={error ? error : success}
+          />
         </div>
       </div>
     </>
