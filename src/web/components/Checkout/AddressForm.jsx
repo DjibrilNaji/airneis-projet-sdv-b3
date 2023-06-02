@@ -41,6 +41,7 @@ const AddressForm = (props) => {
     onSubmit,
     validationSchema = defaultValidationSchema,
     initialValues = defaultInitialValues,
+    updateAddress,
     error,
   } = props
 
@@ -102,7 +103,9 @@ const AddressForm = (props) => {
             type="text"
             label={`${t("phoneNumber")} *`}
           />
-          <Button type="submit">{t("add_address_btn")} </Button>
+          <Button type="submit">
+            {updateAddress ? t("update_address_btn") : t("add_address_btn")}
+          </Button>
         </Form>
       </>
     </Formik>
