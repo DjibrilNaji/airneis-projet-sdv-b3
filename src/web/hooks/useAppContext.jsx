@@ -35,6 +35,7 @@ import addFavoriteService from "../services/products/favorites/addFavorite"
 import deleteCategoryService from "../services/admin/categories/deleteCategory"
 import getProductsSearchService from "../services/search/getProductsSearch"
 import getAllCategoriesService from "../services/admin/categories/getAllCategories"
+import getSingleProductService from "../services/admin/products/getSingleProduct"
 import checkEmailService from "../services/checkEmail"
 import resetPasswordService from "../services/resetPassword"
 
@@ -106,6 +107,7 @@ export const AppContextProvider = (props) => {
   const getAllCategories = getAllCategoriesService({ api })
 
   const getProductsSearch = getProductsSearchService({ api })
+  const getSingleProduct = getSingleProductService({ api })
   const checkEmail = checkEmailService({api})
   const resetPassword = resetPasswordService({api})
 
@@ -167,6 +169,7 @@ export const AppContextProvider = (props) => {
           deleteCategory,
           getProductsSearch,
           getAllCategories,
+          getSingleProduct,
           checkEmail,
           resetPassword,
         },

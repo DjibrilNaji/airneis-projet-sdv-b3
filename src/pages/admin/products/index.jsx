@@ -6,6 +6,7 @@ import {
   faArrowLeft,
   faArrowRight,
   faCheck,
+  faEdit,
   faPlus,
   faTrash,
   faXmark,
@@ -17,6 +18,9 @@ import useAppContext, {
 } from "@/web/hooks/useAppContext.jsx"
 import FormError from "@/web/components/FormError"
 import { useRouter } from "next/router"
+import Modal from "@/web/components/Modal"
+import EditProductForm from "@/web/components/Admin/Form/EditProductForm"
+import Image from "next/image"
 
 const ProductAdmin = () => {
   const [data, setData] = useState([])
@@ -28,10 +32,27 @@ const ProductAdmin = () => {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedProducts, setSelectedProducts] = useState([])
   const [error, setError] = useState(null)
+  const [product, setProduct] = useState([])
+  const [materials, setMaterials] = useState([])
+  const [images, setImages] = useState([])
+  const [toggleUpdateProduct, setToggleUpdateProduct] = useState(true)
   const router = useRouter()
+  const types = {
+    product: { name: "product", title: "Product informations" },
+    images: { name: "images", title: "Images Product" },
+  }
+
+  const [selectedType, setSelectedType] = useState(types.product)
+  const [viewProductInfo, setViewProductInfo] = useState(false)
 
   const {
-    actions: { getAllProducts, deleteProducts },
+    actions: {
+      getAllProducts,
+      deleteProducts,
+      getSingleProduct,
+      getMaterials,
+      updateProduct,
+    },
   } = useAppContext()
 
   const fetchData = useCallback(
@@ -117,6 +138,45 @@ const ProductAdmin = () => {
       fetchData(currentPage)
     },
     [fetchData, currentPage, order, sortColumn]
+  )
+
+  const fetchSingleProduct = async (id) => {
+    const [err, dataProduct] = await getSingleProduct(id)
+
+    if (err) {
+      setError(err)
+
+      return
+    }
+
+    const [error, dataMaterials] = await getMaterials()
+
+    if (error) {
+      setError(error)
+
+      return
+    }
+
+    setProduct(dataProduct.result.product[0])
+    setMaterials(dataMaterials.result)
+    setImages(dataProduct.result.product[0].image)
+    setViewProductInfo(true)
+  }
+
+  const handleSubmitUpdate = useCallback(
+    async (values) => {
+      const [err, data] = await updateProduct(product.id, values)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setProduct(data.result)
+      setToggleUpdateProduct(!toggleUpdateProduct)
+    },
+    [product, toggleUpdateProduct, updateProduct]
   )
 
   const pagination = []
@@ -207,11 +267,6 @@ const ProductAdmin = () => {
               fieldName="name"
             />
             <TableHeadField
-              displayName="Description"
-              handleSortChange={handleSortChange}
-              fieldName="description"
-            />
-            <TableHeadField
               displayName="Category"
               handleSortChange={handleSortChange}
               fieldName="category"
@@ -254,7 +309,6 @@ const ProductAdmin = () => {
               </td>
               <td className="py-2 px-4">{product.id} </td>
               <td className="py-2 px-4">{product.name}</td>
-              <td className="py-2 px-4">{product.description}</td>
               <td className="py-2 px-4">{product.category[0].name}</td>
               <td className="py-2 px-4">
                 {product.materials.map((mat, index) => (
@@ -308,12 +362,12 @@ const ProductAdmin = () => {
                 </button>
               </td>
               <td className="py-2 px-4 flex justify-center">
-                <Link
-                  href={routes.admin.products.single(product.id)}
-                  className="border-2 px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200"
-                >
-                  <FontAwesomeIcon icon={faPlus} className="text-stone-400" />
-                </Link>
+                <button onClick={() => fetchSingleProduct(product.id)}>
+                  <FontAwesomeIcon
+                    icon={faPlus}
+                    className="border-2 px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200 text-stone-400"
+                  />
+                </button>
               </td>
             </tr>
           ))}
@@ -334,6 +388,85 @@ const ProductAdmin = () => {
           Ajouter un Produit
         </Link>
       </div>
+      <Modal
+        isOpen={viewProductInfo}
+        modalTitle={selectedType.title}
+        closeModal={() => setViewProductInfo(false)}
+      >
+        <div className="flex gap-4">
+          <button
+            onClick={() => setSelectedType(types.product)}
+            className={`flex ${
+              selectedType.name === types.product.name && "font-bold underline"
+            }`}
+          >
+            Product
+          </button>
+          <button
+            onClick={() => setSelectedType(types.images)}
+            className={`flex ${
+              selectedType.name === types.images.name && "font-bold underline"
+            }`}
+          >
+            Image Product
+          </button>
+        </div>
+
+        {selectedType.name === types.product.name ? (
+          <>
+            <div className="border-t-4 border-gray-500 px-3 my-4" />
+            <div className="flex items-center justify-between ">
+              <div className="px-4">
+                {product.isDelete ? (
+                  <span className="italic text-red-500 text-lg">
+                    (Product delete : id {product.id})
+                  </span>
+                ) : (
+                  <span className="italic text-green-500 text-lg">
+                    (Product active : id {product.id})
+                  </span>
+                )}
+              </div>
+              {!product.isDelete && (
+                <button
+                  className="flex justify-end text-stone-500 font-bold text-lg rounded"
+                  onClick={() => setToggleUpdateProduct(!toggleUpdateProduct)}
+                  title={
+                    toggleUpdateProduct
+                      ? "Update Product"
+                      : "Finish modifications"
+                  }
+                >
+                  <FontAwesomeIcon
+                    icon={toggleUpdateProduct ? faEdit : faCheck}
+                    className="h-7"
+                  />
+                </button>
+              )}
+            </div>
+
+            <EditProductForm
+              initialValues={product}
+              onSubmit={handleSubmitUpdate}
+              active={toggleUpdateProduct}
+              material={materials}
+            />
+          </>
+        ) : (
+          <div className="flex">
+            {images.map((imageProduct) => (
+              <Image
+                key={imageProduct.id}
+                src={imageProduct.urlImage}
+                alt={`slide ${imageProduct.id}`}
+                className={`w-24 h-24 object-cover rounded-xl transition-opacity ease-linear duration-300 m-4`}
+                width="500"
+                height="500"
+              />
+            ))}
+          </div>
+        )}
+      </Modal>
     </>
   )
 }

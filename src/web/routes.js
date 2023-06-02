@@ -72,6 +72,7 @@ const routes = {
           createRouteWithQueryParams(`/admin/users/${userId}`, query),
         create: () => `/admin/users`,
         update: (userId) => `/admin/users/${userId}`,
+        delete: (userId) => `/admin/users/${userId}/delete`,
       },
       orders: {
         collection: () => `/admin/orders`,
