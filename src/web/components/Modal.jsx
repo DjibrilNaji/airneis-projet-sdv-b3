@@ -15,8 +15,11 @@ const Modal = (props) => {
         <div className="flex items-center justify-center min-h-screen">
           <div className="fixed inset-0 bg-gray-500 opacity-75"></div>
           <div className="bg-white rounded-lg z-20 p-6 max-h-[90vh] overflow-y-auto w-fit">
-            <div className="flex mb-4 justify-between items-center" dir={dir}>
-              <h3 className="font-bold text-2xl mr-2">{modalTitle}</h3>
+            <div
+              className="flex mb-4 justify-between items-center gap-6"
+              dir={dir}
+            >
+              <h3 className="font-bold text-2xl">{modalTitle}</h3>
               <Button onClick={closeModal} size="sm" className="rounded-lg">
                 <FontAwesomeIcon icon={faXmark} />
               </Button>
@@ -30,3 +33,4 @@ const Modal = (props) => {
 }
 
 export default Modal
+

@@ -15,5 +15,7 @@
   "yup_country_required": "Country is required",
   "yup_phoneNumber_required": "Phone number name is required",
   "add_address_btn": "Add address",
-  "add_address_modal_title": "Add an address"
+  "update_address_btn": "Change address",
+  "add_address_modal_title": "Add an address",
+  "update_address_modal_title": "Change address"
 }

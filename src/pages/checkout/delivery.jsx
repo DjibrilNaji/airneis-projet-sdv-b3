@@ -12,7 +12,12 @@ import createAPIClient from "@/web/createAPIClient"
 import getAllAddressService from "@/web/services/address/getAllAddress"
 import Button from "@/web/components/Button"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faInfo, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons"
+import {
+  faEdit,
+  faInfoCircle,
+  faPlus,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons"
 import OrderSummary from "@/web/components/OrderSummary"
 
 export const getServerSideProps = async ({ req, locale }) => {
@@ -72,7 +77,7 @@ const Delivery = (props) => {
   } = useCartContext()
 
   const {
-    actions: { addNewAddress, getAllAddress },
+    actions: { addNewAddress, getAllAddress, modifyAddress },
   } = useAppContext()
 
   const { t } = useTranslation(["cart", "delivery", "address"])
@@ -82,8 +87,10 @@ const Delivery = (props) => {
   const [error, setError] = useState(null)
   const [address, setAddress] = useState(data)
   const [addAddress, setAddAddress] = useState(false)
-  const [selectedAddress, setSelectedAddress] = useState(defaultAddress.id)
+  const [updateAddress, setUpdateAddress] = useState(false)
+  const [selectedAddressId, setSelectedAddressId] = useState(defaultAddress.id)
   const [visibleAddressId, setVisibleAddressId] = useState(null)
+  const [selectedAddress, setSelectedAddress] = useState()
 
   const fetchAddressData = useCallback(async () => {
     const [err, data] = await getAllAddress(userId)
@@ -95,20 +102,17 @@ const Delivery = (props) => {
     }
 
     setAddress(data.result)
-
-    setSelectedAddress(
-      data.defaultAddress.length > 0 ? data.defaultAddress[0].id : null
-    )
   }, [getAllAddress, userId])
 
   const handleChangeAddress = useCallback(
     (address) => {
-      selectedAddress !== address.id && setSelectedAddress(address.id)
+      selectedAddressId !== address.id && setSelectedAddressId(address.id)
+      setSelectedAddress(address)
     },
-    [selectedAddress]
+    [selectedAddressId]
   )
 
-  const handleSubmit = useCallback(
+  const handleAddAddress = useCallback(
     async (values, { resetForm }) => {
       const [err] = await addNewAddress(userId, values)
 
@@ -125,6 +129,24 @@ const Delivery = (props) => {
     [addNewAddress, userId, fetchAddressData]
   )
 
+  const handleUpdateAddress = useCallback(
+    async (values) => {
+      const [err] = await modifyAddress(selectedAddressId, values)
+      const addressID = selectedAddressId
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      fetchAddressData()
+      setUpdateAddress(false)
+      setSelectedAddressId(addressID)
+    },
+    [modifyAddress, selectedAddressId, fetchAddressData]
+  )
+
   const handleShowAddress = (id) => {
     if (visibleAddressId === id) {
       setVisibleAddressId(null)
@@ -137,12 +159,28 @@ const Delivery = (props) => {
     <>
       {error ? <FormError error={error} /> : ""}
       <Modal
-        isOpen={addAddress}
-        modalTitle={t("address:add_address_modal_title")}
-        closeModal={() => setAddAddress(false)}
+        isOpen={addAddress || updateAddress}
+        modalTitle={
+          addAddress
+            ? t("address:add_address_modal_title")
+            : t("address:update_address_modal_title")
+        }
+        closeModal={
+          addAddress
+            ? () => setAddAddress(false)
+            : () => setUpdateAddress(false)
+        }
         dir={direction}
       >
-        <AddressForm onSubmit={handleSubmit} />
+        {addAddress ? (
+          <AddressForm onSubmit={handleAddAddress} />
+        ) : (
+          <AddressForm
+            initialValues={selectedAddress}
+            onSubmit={handleUpdateAddress}
+            updateAddress={true}
+          />
+        )}
       </Modal>
 
       <h1 className="text-center text-3xl font-bold py-6">
@@ -162,7 +200,7 @@ const Delivery = (props) => {
               <div
                 key={address.id}
                 className={`${
-                  address.id === selectedAddress && "bg-stone-200"
+                  address.id === selectedAddressId && "bg-stone-200"
                 } cursor-pointer rounded-lg p-4 flex justify-between`}
                 onClick={() => handleChangeAddress(address)}
               >
@@ -170,8 +208,8 @@ const Delivery = (props) => {
                   <input
                     type="checkbox"
                     className="cursor-pointer h-5 w-5 border-2 border-stone-500 appearance-none checked:bg-stone-500"
-                    disabled={address.id === selectedAddress}
-                    checked={address.id === selectedAddress}
+                    disabled={address.id === selectedAddressId}
+                    checked={address.id === selectedAddressId}
                     readOnly
                   />
                   <span
@@ -195,12 +233,28 @@ const Delivery = (props) => {
                   </div>
                 </div>
 
-                <button onClick={() => handleShowAddress(address.id)}>
-                  <FontAwesomeIcon
-                    icon={visibleAddressId === address.id ? faXmark : faInfo}
-                    className="flex h-5 text-stone-600"
-                  />
-                </button>
+                <div className="flex flex-col justify-between">
+                  <button onClick={() => handleShowAddress(address.id)}>
+                    <FontAwesomeIcon
+                      icon={
+                        visibleAddressId === address.id ? faXmark : faInfoCircle
+                      }
+                      className="flex h-5 text-stone-600"
+                    />
+                  </button>
+
+                  <button
+                    onClick={() => setUpdateAddress(!addAddress)}
+                    className={`${
+                      visibleAddressId === address.id ? "" : "hidden"
+                    }`}
+                  >
+                    <FontAwesomeIcon
+                      icon={faEdit}
+                      className="flex h-5 text-stone-600"
+                    />
+                  </button>
+                </div>
               </div>
             ))}
 
@@ -223,7 +277,7 @@ const Delivery = (props) => {
           buttonName={t("cart:payment")}
           disabled={
             typeof selectedAddress === "undefined" ||
-            selectedAddress === null ||
+            selectedAddressId === null ||
             address.length === 0 ||
             subtotal === 0 ||
             tva === 0 ||
