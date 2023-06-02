@@ -10,6 +10,7 @@ const createRouteWithQueryParams = (route, query) => {
 
 const routes = {
   home: () => "/",
+  checkEmail: () => "/checkEmail",
   signUp: () => "/register",
   signIn: () => "/login",
   product: (slug) => `/products/${slug}`,
@@ -80,6 +81,8 @@ const routes = {
     users: {
       collection: () => `/users`,
       delete: (userId) => `/users/${userId}/delete`,
+      checkEmail: (email) => `users/resetPassword/${email}/check`,
+      resetPassword: () => `/users/resetPassword/reset`,
       address: {
         collection: (userId) => `/users/${userId}/address`,
         single: (addressId) => `/users/address/${addressId}/addressSingle`,
