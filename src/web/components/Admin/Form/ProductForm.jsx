@@ -3,6 +3,9 @@ import * as yup from "yup"
 import FormError from "@/web/components/FormError"
 import SubmitButton from "@/web/components/SubmitButton"
 import FormField from "@/web/components/Admin/FormField"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons"
+import { useState } from "react"
 
 const defaultInitialValues = {
   name: "",
@@ -55,6 +58,16 @@ const ProductForm = (props) => {
     categories,
     error,
   } = props
+
+  const [seeMaterials, setSeeMaterials] = useState(false)
+
+  const onClick = () => {
+    if (seeMaterials === true) {
+      setSeeMaterials(false)
+    } else {
+      setSeeMaterials(true)
+    }
+  }
 
   return (
     <Formik
@@ -111,18 +124,35 @@ const ProductForm = (props) => {
             </Field>
           </label>
           <div id="checkbox-group">Materials :</div>
-          <div role="group" aria-labelledby="checkbox-group">
+          <div
+            role="group"
+            aria-labelledby="checkbox-group"
+            className="w-72 flex flex-wrap"
+          >
             {materials.map((mat) => (
-              <label key={mat.id}>
-                <Field
-                  type="checkbox"
-                  name="materials"
-                  className="m-2"
-                  value={mat.nameMaterial}
-                />
-                {mat.nameMaterial}
-              </label>
+              <div
+                key={mat.id}
+                hidden={
+                  seeMaterials === false ? (mat.id > 5 ? true : false) : false
+                }
+              >
+                <label>
+                  <Field
+                    type="checkbox"
+                    name="materials"
+                    className="m-2"
+                    value={mat.nameMaterial}
+                  />
+                  {mat.nameMaterial}
+                </label>
+              </div>
             ))}
+            <button type="button" onClick={onClick} className="ml-2">
+              <FontAwesomeIcon
+                icon={seeMaterials ? faMinus : faPlus}
+                className="text-stone-400"
+              />
+            </button>
           </div>
           <FormField
             name="file"
