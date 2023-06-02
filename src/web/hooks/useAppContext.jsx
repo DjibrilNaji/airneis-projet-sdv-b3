@@ -35,6 +35,8 @@ import addFavoriteService from "../services/products/favorites/addFavorite"
 import deleteCategoryService from "../services/admin/categories/deleteCategory"
 import getProductsSearchService from "../services/search/getProductsSearch"
 import getAllCategoriesService from "../services/admin/categories/getAllCategories"
+import checkEmailService from "../services/checkEmail"
+import resetPasswordService from "../services/resetPassword"
 
 import {
   createContext,
@@ -104,6 +106,8 @@ export const AppContextProvider = (props) => {
   const getAllCategories = getAllCategoriesService({ api })
 
   const getProductsSearch = getProductsSearchService({ api })
+  const checkEmail = checkEmailService({api})
+  const resetPassword = resetPasswordService({api})
 
   const signOut = useCallback(() => {
     localStorage.removeItem(config.session.localStorageKey)
@@ -163,6 +167,8 @@ export const AppContextProvider = (props) => {
           deleteCategory,
           getProductsSearch,
           getAllCategories,
+          checkEmail,
+          resetPassword,
         },
         state: {
           session,
