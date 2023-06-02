@@ -16,5 +16,6 @@
   "yup_country_required": "الدولة مطلوبة",
   "yup_phoneNumber_required": "رقم الهاتف مطلوب",
   "add_address_btn": "اضف عنوان",
-  "add_address_modal_title": "أضف عنوانا"
+  "add_address_modal_title": "أضف عنوانا",
+  "update_address_modal_title": "تغيير العنوان"
 }

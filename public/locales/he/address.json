@@ -16,5 +16,6 @@
   "yup_country_required": "נדרשת מדינה",
   "yup_phoneNumber_required": "נדרש מספר טלפון",
   "add_address_btn": "הוסף כתובת",
-  "add_address_modal_title": "הוסף כתובת"
+  "add_address_modal_title": "הוסף כתובת",
+  "update_address_modal_title": "שינוי כתובת"
 }
