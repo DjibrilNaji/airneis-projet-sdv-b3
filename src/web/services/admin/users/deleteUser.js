@@ -4,7 +4,7 @@ const deleteUsers =
   ({ api }) =>
   async (userId) => {
     try {
-      const { data } = await api.patch(routes.api.users.delete(userId))
+      const { data } = await api.patch(routes.api.admin.users.delete(userId))
 
       return [null, data]
     } catch (err) {
