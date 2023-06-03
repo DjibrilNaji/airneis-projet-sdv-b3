@@ -18,6 +18,8 @@ const routes = {
   checkout: {
     cart: () => "/checkout/cart",
     delivery: () => "/checkout/delivery",
+    payment: () => "/checkout/payment",
+    confirmation: () => "/checkout/confirmation",
   },
   admin: {
     users: {
@@ -50,6 +52,9 @@ const routes = {
     signIn: () => "/login",
     contact: {
       contact: () => "/contact",
+    },
+    checkout: {
+      payment: () => "/payment",
     },
     admin: {
       materials: {
@@ -126,6 +131,10 @@ const routes = {
       deleteProductOrder: (numberOrder, query) =>
         createRouteWithQueryParams(`/users/order/${numberOrder}`, query),
       cancelOrder: (numberOrder) => `/users/order/cancel/${numberOrder}`,
+      add: (numberOrder) => `/users/order/${numberOrder}`,
+    },
+    relOrderProduct: {
+      add: () => `/users/order/relOrderProduct`,
     },
   },
 }
