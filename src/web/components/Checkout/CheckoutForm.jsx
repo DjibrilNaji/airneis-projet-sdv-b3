@@ -2,13 +2,25 @@ import React, { useEffect, useState } from "react"
 import { PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js"
 import routes from "@/web/routes"
 import styles from "@/styles/CheckoutForm.module.css"
+import useAppContext from "@/web/hooks/useAppContext"
+import useCartContext from "@/web/hooks/cartContext"
 
-export default function CheckoutForm() {
+export default function CheckoutForm(props) {
+  const { numberOrder, userId, addressId } = props
+
   const stripe = useStripe()
   const elements = useElements()
 
   const [message, setMessage] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
+
+  const {
+    actions: { addNewOrder, getOrderDetail, addRelOrderProduct },
+  } = useAppContext()
+
+  const {
+    state: { subtotal, tva, total, productsIdQuantities },
+  } = useCartContext()
 
   useEffect(() => {
     if (!stripe) {
@@ -56,6 +68,24 @@ export default function CheckoutForm() {
     }
 
     setIsLoading(true)
+
+    await addNewOrder(numberOrder, {
+      userId,
+      addressId,
+      price: subtotal,
+      amount_tva: tva,
+      total_price: total,
+    })
+
+    const [, data] = await getOrderDetail(numberOrder)
+
+    productsIdQuantities.forEach(async (item) => {
+      await addRelOrderProduct({
+        orderId: data.result.order[0].id,
+        productId: item.id,
+        quantity: item.quantity,
+      })
+    })
 
     const { error } = await stripe.confirmPayment({
       elements,
