@@ -47,12 +47,14 @@ const stripePromise = loadStripe(
   "pk_test_51MjQJFGci79RaC26CuZNM82rmkZjrFgiFYxD5Kvrczh42zTRN2xNZyVte2hj29cFzkfJiSlpJZ7onTRRPIPI121I00wYmcfLWl"
 )
 
-const Payment = () => {
+const Payment = (props) => {
+  const { userId, addressId } = props
   const {
     state: { totalStripe },
   } = useCartContext()
 
   const [clientSecret, setClientSecret] = useState("")
+  const [numberOrder, setNumberOrder] = useState("")
 
   useEffect(() => {
     const fetchClientSecret = async () => {
@@ -66,6 +68,7 @@ const Payment = () => {
         )
 
         setClientSecret(response.data.clientSecret)
+        setNumberOrder(response.data.clientId)
       } catch (error) {
         // Handle error
       }
@@ -90,7 +93,11 @@ const Payment = () => {
       <div className="flex">
         {clientSecret && (
           <Elements options={options} stripe={stripePromise}>
-            <CheckoutForm />
+            <CheckoutForm
+              numberOrder={numberOrder}
+              userId={userId}
+              addressId={addressId}
+            />
           </Elements>
         )}
       </div>
