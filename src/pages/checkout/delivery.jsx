@@ -43,6 +43,10 @@ export const getServerSideProps = async ({ req, locale }) => {
     }
   }
 
+  if (jwt === undefined) {
+    return redirection()
+  }
+
   const api = createAPIClient({ jwt, server: true })
 
   const getAllAddress = getAllAddressService({ api })

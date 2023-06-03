@@ -28,6 +28,19 @@ export const getServerSideProps = async ({ req, locale }) => {
       : null
     : null
 
+  const redirection = () => {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    }
+  }
+
+  if (jwt === undefined) {
+    return redirection()
+  }
+
   return {
     props: {
       jwt,
