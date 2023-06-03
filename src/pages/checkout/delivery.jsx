@@ -19,6 +19,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons"
 import OrderSummary from "@/web/components/OrderSummary"
+import routes from "@/web/routes"
 
 export const getServerSideProps = async ({ req, locale }) => {
   const cookies = req.headers.cookie
@@ -90,7 +91,7 @@ const Delivery = (props) => {
   const [updateAddress, setUpdateAddress] = useState(false)
   const [selectedAddressId, setSelectedAddressId] = useState(defaultAddress.id)
   const [visibleAddressId, setVisibleAddressId] = useState(null)
-  const [selectedAddress, setSelectedAddress] = useState()
+  const [selectedAddress, setSelectedAddress] = useState(defaultAddress)
 
   const fetchAddressData = useCallback(async () => {
     const [err, data] = await getAllAddress(userId)
@@ -154,6 +155,17 @@ const Delivery = (props) => {
       setVisibleAddressId(id)
     }
   }
+  const router = useRouter()
+
+  const handleClick = () => {
+    router.push({
+      pathname: routes.checkout.payment(),
+    })
+
+    const date = new Date()
+    date.setDate(date.getDate() + 1)
+    document.cookie = `addressId=${selectedAddress.id}; expires=${date}; path=/;`
+  }
 
   return (
     <>
@@ -196,67 +208,74 @@ const Delivery = (props) => {
             >
               {t("delivery:delivery_address")}
             </h2>
-            {address.map((address) => (
-              <div
-                key={address.id}
-                className={`${
-                  address.id === selectedAddressId && "bg-stone-200"
-                } cursor-pointer rounded-lg p-4 flex justify-between`}
-                onClick={() => handleChangeAddress(address)}
-              >
-                <div className="flex gap-4 items-center">
-                  <input
-                    type="checkbox"
-                    className="cursor-pointer h-5 w-5 border-2 border-stone-500 appearance-none checked:bg-stone-500"
-                    disabled={address.id === selectedAddressId}
-                    checked={address.id === selectedAddressId}
-                    readOnly
-                  />
-                  <span
-                    className={visibleAddressId === address.id ? "hidden" : ""}
-                  >
-                    {address.firstName}
-                  </span>
 
-                  <div
-                    className={`flex flex-col ${
-                      visibleAddressId === address.id ? "" : "hidden"
-                    }`}
-                  >
-                    <span>{address.firstName}</span>
-                    <span>{address.addressFull}</span>
-                    <span>
-                      {address.cp}, {address.city} -- {address.country}
+            <div className="h-96 border-2 rounded-xl border-xl overflow-scroll">
+              {address.map((address) => (
+                <div
+                  key={address.id}
+                  className={`${
+                    address.id === selectedAddressId && "bg-stone-200"
+                  } cursor-pointer rounded-lg p-4 flex justify-between`}
+                  onClick={() => handleChangeAddress(address)}
+                >
+                  <div className="flex gap-4 items-center">
+                    <input
+                      type="checkbox"
+                      className="cursor-pointer h-5 w-5 border-2 border-stone-500 appearance-none checked:bg-stone-500"
+                      disabled={address.id === selectedAddressId}
+                      checked={address.id === selectedAddressId}
+                      readOnly
+                    />
+                    <span
+                      className={
+                        visibleAddressId === address.id ? "hidden" : ""
+                      }
+                    >
+                      {address.firstName}
                     </span>
-                    <span></span>
-                    <span>{address.phoneNumber}</span>
+
+                    <div
+                      className={`flex flex-col ${
+                        visibleAddressId === address.id ? "" : "hidden"
+                      }`}
+                    >
+                      <span>{address.firstName}</span>
+                      <span>{address.addressFull}</span>
+                      <span>
+                        {address.cp}, {address.city} -- {address.country}
+                      </span>
+                      <span></span>
+                      <span>{address.phoneNumber}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col justify-between">
+                    <button onClick={() => handleShowAddress(address.id)}>
+                      <FontAwesomeIcon
+                        icon={
+                          visibleAddressId === address.id
+                            ? faXmark
+                            : faInfoCircle
+                        }
+                        className="flex h-5 text-stone-600"
+                      />
+                    </button>
+
+                    <button
+                      onClick={() => setUpdateAddress(!addAddress)}
+                      className={`${
+                        visibleAddressId === address.id ? "" : "hidden"
+                      }`}
+                    >
+                      <FontAwesomeIcon
+                        icon={faEdit}
+                        className="flex h-5 text-stone-600"
+                      />
+                    </button>
                   </div>
                 </div>
-
-                <div className="flex flex-col justify-between">
-                  <button onClick={() => handleShowAddress(address.id)}>
-                    <FontAwesomeIcon
-                      icon={
-                        visibleAddressId === address.id ? faXmark : faInfoCircle
-                      }
-                      className="flex h-5 text-stone-600"
-                    />
-                  </button>
-
-                  <button
-                    onClick={() => setUpdateAddress(!addAddress)}
-                    className={`${
-                      visibleAddressId === address.id ? "" : "hidden"
-                    }`}
-                  >
-                    <FontAwesomeIcon
-                      icon={faEdit}
-                      className="flex h-5 text-stone-600"
-                    />
-                  </button>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
 
             <Button
               onClick={() => setAddAddress(!addAddress)}
@@ -274,6 +293,7 @@ const Delivery = (props) => {
           price={subtotal}
           totalTva={tva}
           totalPrice={total}
+          handleClick={handleClick}
           buttonName={t("cart:payment")}
           disabled={
             typeof selectedAddress === "undefined" ||
