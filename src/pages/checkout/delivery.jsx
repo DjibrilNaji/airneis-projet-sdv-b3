@@ -209,7 +209,7 @@ const Delivery = (props) => {
               {t("delivery:delivery_address")}
             </h2>
 
-            <div className="h-96 border-2 rounded-xl border-xl overflow-scroll">
+            <div className="h-fit max-h-96 border-2 rounded-xl border-xl overflow-scroll">
               {address.map((address) => (
                 <div
                   key={address.id}
