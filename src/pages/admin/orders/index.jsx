@@ -1,16 +1,11 @@
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
+import Pagination from "@/web/components/Admin/Pagination"
 import FormError from "@/web/components/FormError"
 import Modal from "@/web/components/Modal"
 import TableHeadField from "@/web/components/TableHeadField"
 import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
 import routes from "@/web/routes"
-import {
-  faArrowLeft,
-  faArrowRight,
-  faCircle,
-  faEdit,
-  faPlus,
-} from "@fortawesome/free-solid-svg-icons"
+import { faCircle, faEdit, faPlus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Image from "next/image"
 import Link from "next/link"
@@ -88,20 +83,6 @@ const OrderAdmin = () => {
 
   const creationDate = new Date(order.createdAt).toLocaleDateString("fr")
 
-  const pagination = []
-  for (let i = 1; i <= totalPages; i++) {
-    pagination.push(
-      <button
-        key={i}
-        className={`h-12 border-2 border-r-0 border-stone-500
-               w-12  ${currentPage === i && "bg-stone-500 text-white"}`}
-        onClick={() => handlePageChange(i)}
-      >
-        {i}
-      </button>
-    )
-  }
-
   return (
     <>
       {error ? <FormError error={error} /> : ""}
@@ -113,27 +94,11 @@ const OrderAdmin = () => {
       </div>
 
       {data.orders?.length > 0 && (
-        <div className="flex justify-center my-5">
-          <div className="flex">
-            <button
-              className={
-                "h-12 border-2 border-r-0 text-stone-500  border-stone-500 px-4 rounded-l-lg hover:bg-stone-500 hover:text-white disabled:opacity-30 disabled:z-[-1]"
-              }
-              disabled={currentPage === 1}
-              onClick={() => handlePageChange(currentPage - 1)}
-            >
-              <FontAwesomeIcon icon={faArrowLeft} />
-            </button>
-            <div>{pagination}</div>
-            <button
-              className="h-12 border-2 text-stone-500  border-stone-500 px-4 rounded-r-lg hover:bg-stone-500 hover:text-white disabled:opacity-30 disabled:z-[-1]"
-              disabled={currentPage === totalPages}
-              onClick={() => handlePageChange(currentPage + 1)}
-            >
-              <FontAwesomeIcon icon={faArrowRight} />
-            </button>
-          </div>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          handlePageChange={handlePageChange}
+        />
       )}
 
       <div className="flex items-center justify-between">
@@ -263,7 +228,7 @@ const OrderAdmin = () => {
           <>
             <div className="mt-4">
               <span className="font-bold text-lg">
-                Numéro de commande :
+                Order number :
                 <i className="text-md font-normal"> {order.numberOrder}</i>
               </span>
               <div className="flex flex-row gap-3 font-bold text-lg">

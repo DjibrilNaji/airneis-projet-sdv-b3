@@ -2,8 +2,6 @@ import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
 import { useCallback, useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
-  faArrowLeft,
-  faArrowRight,
   faCheck,
   faEdit,
   faPlus,
@@ -18,6 +16,7 @@ import Modal from "@/web/components/Modal"
 import EditUserForm from "@/web/components/Admin/Form/EditUserForm"
 import UserForm from "@/web/components/Admin/Form/UserForm"
 import SelectShow from "@/web/components/Admin/SelectShow"
+import Pagination from "@/web/components/Admin/Pagination"
 
 const UsersAdmin = () => {
   const {
@@ -26,7 +25,7 @@ const UsersAdmin = () => {
 
   const [data, setData] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState("")
+  const [totalPages, setTotalPages] = useState(1)
 
   const [sortColumn, setSortColumn] = useState("id")
   const [order, setOrder] = useState("asc")
@@ -173,20 +172,6 @@ const UsersAdmin = () => {
     setViewUserInfo(true)
   }
 
-  const pagination = []
-  for (let i = 1; i <= totalPages; i++) {
-    pagination.push(
-      <button
-        key={i}
-        className={`h-12 border-2 border-r-0 border-stone-500
-               w-12  ${currentPage === i && "bg-stone-500 text-white"}`}
-        onClick={() => handlePageChange(i)}
-      >
-        {i}
-      </button>
-    )
-  }
-
   const handleAddUser = useCallback(
     async (values, { resetForm }) => {
       const [err] = await addUser(values)
@@ -222,33 +207,18 @@ const UsersAdmin = () => {
           Users
         </span>
       </div>
-      <div className="flex justify-center my-5">
-        <div className="flex">
-          <button
-            className={
-              "h-12 border-2 border-r-0 text-stone-500  border-stone-500 px-4 rounded-l-lg hover:bg-stone-500 hover:text-white disabled:opacity-30 disabled:z-[-1]"
-            }
-            disabled={currentPage === 1}
-            onClick={() => handlePageChange(currentPage - 1)}
-          >
-            <FontAwesomeIcon icon={faArrowLeft} />
-          </button>
-          <div> {pagination}</div>
-          <button
-            className="h-12 border-2 text-stone-500  border-stone-500 px-4 rounded-r-lg hover:bg-stone-500 hover:text-white disabled:opacity-30 disabled:z-[-1]"
-            disabled={currentPage === totalPages}
-            onClick={() => handlePageChange(currentPage + 1)}
-          >
-            <FontAwesomeIcon icon={faArrowRight} />
-          </button>
-        </div>
-      </div>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        handlePageChange={handlePageChange}
+      />
 
       <div className="flex items-center justify-between">
         <SelectShow
           limit={limit}
           handleLimitChange={handleLimitChange}
-          name={"orders"}
+          name={"users"}
         />
         <div className="mx-1">
           <input
@@ -347,7 +317,7 @@ const UsersAdmin = () => {
           onClick={() => selectedUsers.map((id) => handleDelete(id))}
           disabled={selectedUsers.length === 0}
         >
-          Supprimer tous les éléments séléctionnés
+          Delete all selected items
         </button>
 
         <Button onClick={() => setIsOpen(true)} className="mx-auto">
@@ -403,11 +373,11 @@ const UsersAdmin = () => {
               <div className="px-4">
                 {user.isDelete ? (
                   <span className="italic text-red-500 text-lg">
-                    (Compte supprimé : id {user.id})
+                    (Account deleted : id {user.id})
                   </span>
                 ) : (
                   <span className="italic text-green-500 text-lg">
-                    (Compte actif : id {user.id})
+                    (Active account : id {user.id})
                   </span>
                 )}
               </div>
@@ -447,10 +417,10 @@ const UsersAdmin = () => {
                   key={address.id}
                 >
                   <h2 className="font-bold underline">
-                    Adresse n°{index + 1}{" "}
+                    Address n°{index + 1}{" "}
                     {address.isDelete ? (
                       <span className="italic text-red-500 text-lg">
-                        (Supprimé)
+                        (Deleted)
                       </span>
                     ) : (
                       <span className="italic text-green-500 text-lg">
@@ -472,7 +442,7 @@ const UsersAdmin = () => {
               ))
             ) : (
               <div className="p-4 text-lg font-semibold">
-                Aucune addresse enregistré
+                No registered address
               </div>
             )}
           </>
@@ -487,7 +457,7 @@ const UsersAdmin = () => {
                     key={address.id}
                   >
                     <h2 className="font-bold underline">
-                      Adresse n°{index + 1}
+                      Address n°{index + 1}
                     </h2>
 
                     <span>{address.phoneNumber}</span>
@@ -505,7 +475,7 @@ const UsersAdmin = () => {
                 ))
               ) : (
                 <div className="p-4 text-lg font-semibold">
-                  Aucune addresse enregistré
+                  No registered address
                 </div>
               )}
             </div>
@@ -522,16 +492,16 @@ const UsersAdmin = () => {
                       key={order.id}
                     >
                       <h2 className="font-bold underline text-lg">
-                        Commande n°{index + 1}
+                        Order n°{index + 1}
                       </h2>
-                      <span>Numéro de commande : {order.numberOrder}</span>
+                      <span>Order number : {order.numberOrder}</span>
                       <span>Status : {order.status}</span>
                       <span>Price : {order.price_formatted}</span>
-                      <span>TVA : {order.amount_tva_formatted}</span>
+                      <span>VAT : {order.amount_tva_formatted}</span>
 
                       <div className="flex flex-col my-3 italic">
                         <h3 className="font-bold underline">
-                          Address de livraison :
+                          Delivery address :
                         </h3>
                         <span>{order.address[0].phoneNumber}</span>
                         <span>
@@ -547,7 +517,7 @@ const UsersAdmin = () => {
                   ))
                 ) : (
                   <div className="p-4 text-lg font-semibold">
-                    Aucune commande passée
+                    No order placed
                   </div>
                 )}
               </div>
