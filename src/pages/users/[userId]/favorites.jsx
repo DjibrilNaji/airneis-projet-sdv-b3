@@ -163,7 +163,11 @@ const Favorite = (props) => {
                           icon={faCartPlus}
                           className="h-6"
                           onClick={() =>
-                            handleAddToCart(product, product.product.urlImage)
+                            handleAddToCart(
+                              product.product,
+                              product.product.image.find((img) => img.isMain)
+                                .urlImage
+                            )
                           }
                         />
                       </button>
