@@ -130,7 +130,6 @@ const handler = mw({
       }
 
       const categoryId = parseInt(categorieId)
-      const price_formatted = price.toFixed(2).toString() + " €"
       const isDelete = false
 
       const newProduct = await ProductModel.query().insertAndFetch({
@@ -141,7 +140,6 @@ const handler = mw({
         highlander,
         categoryId,
         slug,
-        price_formatted,
         isDelete,
       })
 
