@@ -21,6 +21,7 @@ import { useRouter } from "next/router"
 import Modal from "@/web/components/Modal"
 import EditProductForm from "@/web/components/Admin/Form/EditProductForm"
 import Image from "next/image"
+import SelectShow from "@/web/components/Admin/SelectShow"
 
 const ProductAdmin = () => {
   const [data, setData] = useState([])
@@ -224,23 +225,11 @@ const ProductAdmin = () => {
       </div>
 
       <div className="flex items-center justify-between">
-        <div className="flex gap-2 my-6">
-          <span>Show</span>
-          <select
-            name="country"
-            className="border-2 rounded-lg px-3 text-right"
-            value={limit}
-            onChange={handleLimitChange}
-          >
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="15">15</option>
-            <option value="20">20</option>
-            <option value="25">25</option>
-            <option value="30">30</option>
-          </select>
-          <span>products per page</span>
-        </div>
+        <SelectShow
+          limit={limit}
+          handleLimitChange={handleLimitChange}
+          name={"products"}
+        />
         <div className="flex gap-2">
           <input
             type="text"

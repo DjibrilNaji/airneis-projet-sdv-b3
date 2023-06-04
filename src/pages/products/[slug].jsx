@@ -23,6 +23,7 @@ import FormError from "@/web/components/FormError"
 import getSingleProductBySlugService from "@/web/services/products/getSingleProductBySlug"
 import createAPIClient from "@/web/createAPIClient"
 import getSingleFavoriteService from "@/web/services/products/favorites/getSingleFavorite"
+import Banner from "@/web/components/Banner"
 
 export const getServerSideProps = async ({ locale, params, req }) => {
   const productSlug = params.slug
@@ -416,11 +417,7 @@ const Product = (props) => {
         </div>
       </div>
 
-      <div className="flex justify-center bg-stone-500 my-10">
-        <p className="p-6 font-bold text-white text-xl">
-          {t("similar_products")}
-        </p>
-      </div>
+      <Banner text={t("similar_products")} />
 
       <div className="grid gap-12 pb-7 md:grid-cols-2 md:gap-8 md:px-4 lg:grid-cols-3">
         {randomProducts.map((product) => {

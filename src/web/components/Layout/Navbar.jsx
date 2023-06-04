@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
@@ -29,9 +29,10 @@ import { useRouter } from "next/router.js"
 import { useCallback } from "react"
 import { UserIcon } from "@heroicons/react/24/outline"
 import SearchBar from "../SearchBar"
-import { CartContext } from "@/web/hooks/cartContext"
+import useCartContext from "@/web/hooks/cartContext"
 import SwitchLanguage from "../SwitchLanguage"
 import { useTranslation } from "next-i18next"
+import NavBarItem from "@/web/components/Layout/NavBarItem"
 
 const Navbar = () => {
   const { t } = useTranslation("navigation")
@@ -42,7 +43,7 @@ const Navbar = () => {
 
   const {
     state: { cart },
-  } = useContext(CartContext)
+  } = useCartContext()
 
   const [cartItems, setCartItems] = useState([])
 
@@ -58,9 +59,6 @@ const Navbar = () => {
 
   const {
     state: { session },
-  } = useAppContext()
-
-  const {
     actions: { signOut },
   } = useAppContext()
 
@@ -221,19 +219,7 @@ const Navbar = () => {
             </div>
 
             <ul className="flex flex-col gap-4 m-5" dir={direction}>
-              {navItemsConnected.map((items) => (
-                <Link
-                  key={items.title}
-                  href={items.href}
-                  className="bg-white p-4 border-2 rounded-lg hover:bg-stone-200"
-                  onClick={items.onClick}
-                >
-                  <li className="w-full flex gap-3 items-center">
-                    <p className="w-4">{items.icon}</p>
-                    <p>{items.title}</p>
-                  </li>
-                </Link>
-              ))}
+              <NavBarItem data={navItemsConnected} />
 
               {session.user.isAdmin && (
                 <Link
@@ -264,19 +250,7 @@ const Navbar = () => {
             </div>
 
             <ul className="flex flex-col gap-4 m-5">
-              {navItemsNotConnected.map((items) => (
-                <Link
-                  key={items.title}
-                  href={items.href}
-                  className="bg-white p-4 border-2 rounded-lg hover:bg-stone-200"
-                  onClick={items.onClick}
-                >
-                  <li className="w-full flex gap-3 items-center">
-                    <p className="w-4">{items.icon}</p>
-                    <p>{items.title}</p>
-                  </li>
-                </Link>
-              ))}
+              <NavBarItem data={navItemsNotConnected} />
             </ul>
           </>
         )}

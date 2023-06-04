@@ -17,6 +17,7 @@ import Button from "@/web/components/Button"
 import Modal from "@/web/components/Modal"
 import EditUserForm from "@/web/components/Admin/Form/EditUserForm"
 import UserForm from "@/web/components/Admin/Form/UserForm"
+import SelectShow from "@/web/components/Admin/SelectShow"
 
 const UsersAdmin = () => {
   const {
@@ -244,23 +245,11 @@ const UsersAdmin = () => {
       </div>
 
       <div className="flex items-center justify-between">
-        <div className="flex gap-2 my-6 mx-1">
-          <span>Show</span>
-          <select
-            name="country"
-            className="px-1 border-2 rounded-lg md:px-3 text-right focus:outline-none"
-            value={limit}
-            onChange={handleLimitChange}
-          >
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="15">15</option>
-            <option value="20">20</option>
-            <option value="25">25</option>
-            <option value="30">30</option>
-          </select>
-          <span>users per page</span>
-        </div>
+        <SelectShow
+          limit={limit}
+          handleLimitChange={handleLimitChange}
+          name={"orders"}
+        />
         <div className="mx-1">
           <input
             type="text"
