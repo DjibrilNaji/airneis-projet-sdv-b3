@@ -1,5 +1,4 @@
 import Image from "next/image"
-import Link from "next/link"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons"
 import { useEffect, useState } from "react"
@@ -9,6 +8,9 @@ import { useRouter } from "next/router"
 import createAPIClient from "@/web/createAPIClient"
 import categoriesAndProductsService from "@/web/services/categoriesAndProducts"
 import FormError from "@/web/components/FormError"
+import Categories from "@/web/components/Cards/Categories"
+import Products from "@/web/components/Cards/Products"
+import Banner from "@/web/components/Banner"
 
 export const getServerSideProps = async (context) => {
   const { locale } = context
@@ -120,50 +122,9 @@ const Home = (props) => {
         </p>
       </div>
 
-      <div className="grid gap-12 md:grid-cols-2 md:gap-8 md:px-4 lg:grid-cols-3">
-        {result.categories.map((category) => (
-          <Link
-            href={`/categories/${category.slug}`}
-            key={category.id}
-            className="flex items-center justify-center h-60 transition duration-800 hover:scale-105 hover:opacity-90"
-          >
-            <span className="absolute uppercase font-bold text-2xl bg-white text-stone-500 rounded-lg p-1 border-2 border-stone-500">
-              {category.name}
-            </span>
-            <Image
-              src={category.urlImage}
-              alt="slide 2"
-              className="h-full w-full object-cover rounded-2xl"
-              width="500"
-              height="500"
-            />
-          </Link>
-        ))}
-      </div>
-      <div className="flex justify-center bg-stone-500 my-10">
-        <p className="p-6 font-bold text-white text-xl">{t("highlander")}</p>
-      </div>
-
-      <div className="grid gap-12 pb-7 md:grid-cols-2 md:gap-8 md:px-4 lg:grid-cols-3">
-        {result.products.map((product) => (
-          <Link
-            key={product._id}
-            href={`/products/${product.slug}`}
-            className="flex items-center justify-center h-60 transition duration-800 hover:scale-105 hover:opacity-90"
-          >
-            <span className="absolute uppercase font-bold text-2xl bg-white text-stone-500 rounded-lg p-1 border-2 border-stone-500">
-              {product.name}
-            </span>
-            <Image
-              src={product.urlImage}
-              alt={product.name}
-              className="h-full w-full object-cover rounded-2xl"
-              width="500"
-              height="500"
-            />
-          </Link>
-        ))}
-      </div>
+      <Categories data={result.categories} />
+      <Banner text={t("highlander")} />
+      <Products data={result.products} />
     </>
   )
 }
