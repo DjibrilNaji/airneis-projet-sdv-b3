@@ -10,6 +10,7 @@ import { useTranslation } from "next-i18next"
 import OrderSummary from "@/web/components/OrderSummary"
 import { useRouter } from "next/router"
 import cookie from "cookie"
+import EmptyPage from "@/web/components/EmptyPage"
 
 export async function getServerSideProps({ locale, req }) {
   const cookies = req.headers.cookie
@@ -161,25 +162,11 @@ const Cart = (props) => {
           />
         </div>
       ) : (
-        <div className="fixed inset-0">
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="flex flex-col items-center gap-10 bg-white rounded-lg">
-              <div className="flex flex-col items-center gap-10">
-                <FontAwesomeIcon
-                  icon={faCartShopping}
-                  className="h-20 text-stone-500"
-                />
-                <p className="font-bold">{t("empty_cart")}</p>
-              </div>
-              <Link
-                href={"/"}
-                className="bg-stone-500 px-4 text-xl py-2 rounded-md text-white"
-              >
-                {t("go_home")}
-              </Link>
-            </div>
-          </div>
-        </div>
+        <EmptyPage
+          icon={faCartShopping}
+          content={t("empty_cart")}
+          button={t("go_home")}
+        />
       )}
     </>
   )
