@@ -16,6 +16,7 @@ import FormError from "@/web/components/FormError"
 import cookie from "cookie"
 import createAPIClient from "@/web/createAPIClient"
 import getFavoritesService from "@/web/services/favorites/getFavorites"
+import EmptyPage from "@/web/components/EmptyPage"
 
 export const getServerSideProps = async ({ locale, params, req }) => {
   const userId = params.userId
@@ -123,27 +124,7 @@ const Favorite = (props) => {
         content={contentDialog}
       />
 
-      {favorite.length === 0 ? (
-        <div className="fixed inset-0">
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="flex flex-col items-center gap-10 bg-white rounded-lg">
-              <div className="flex flex-col items-center gap-10">
-                <FontAwesomeIcon
-                  icon={faBoxOpen}
-                  className="h-20 text-stone-500"
-                />
-                <p className="font-bold">Your favorites list is empty !</p>
-              </div>
-              <Link
-                href={"/"}
-                className="bg-stone-500 px-4 text-xl py-2 rounded-md text-white"
-              >
-                Go home
-              </Link>
-            </div>
-          </div>
-        </div>
-      ) : (
+      {favorite.length > 0 ? (
         <>
           <h1 className="flex text-stone-400 text-3xl font-bold justify-center my-6">
             My Favourits
@@ -203,6 +184,12 @@ const Favorite = (props) => {
             ))}
           </div>
         </>
+      ) : (
+        <EmptyPage
+          icon={faBoxOpen}
+          content="Your favorites list is empty !"
+          button="Go home"
+        />
       )}
     </>
   )
