@@ -1,11 +1,14 @@
 import OrderModel from "@/api/db/models/OrderModel"
 import validate from "@/api/middlewares/validate.js"
 import mw from "@/api/mw.js"
-import { stringValidator } from "@/validators"
+import { idValidator, numberValidator, stringValidator } from "@/validators"
 import s3 from "@@/configAWS.js"
 import BillingAddressModel from "@/api/db/models/BillingAddressModel"
 import AddressModel from "@/api/db/models/AddressModel"
 import ProductModel from "@/api/db/models/ProductModel"
+import { InvalidAccessError, InvalidSessionError } from "@/api/errors"
+import jsonwebtoken from "jsonwebtoken"
+import config from "@/api/config"
 
 const handler = mw({
   GET: [
@@ -84,6 +87,69 @@ const handler = mw({
           userDeliveryAddress,
         },
       })
+    },
+  ],
+  POST: [
+    validate({
+      query: {
+        numberOrder: stringValidator.required(),
+      },
+      body: {
+        userId: idValidator.required(),
+        addressId: idValidator.required(),
+        price: numberValidator.required(),
+        amount_tva: numberValidator.required(),
+        total_price: numberValidator.required(),
+      },
+    }),
+    async ({
+      locals: {
+        query: { numberOrder },
+        body: { userId, addressId, price, amount_tva, total_price },
+      },
+      req,
+      res,
+    }) => {
+      const { authorization } = req.headers
+
+      if (!authorization) {
+        throw new InvalidSessionError()
+      } else {
+        const { payload } = jsonwebtoken.verify(
+          authorization.slice(7),
+          config.security.jwt.secret
+        )
+
+        req.session = payload
+      }
+
+      const {
+        session: { user: sessionUser },
+      } = req
+
+      if (sessionUser.id !== userId) {
+        throw new InvalidAccessError()
+      }
+
+      const order = await OrderModel.query().findOne({ numberOrder })
+
+      if (order) {
+        res.send({ result: "Ok" })
+
+        return
+      }
+
+      await OrderModel.query().insert({
+        numberOrder,
+        status: "On standby",
+        userId,
+        addressId,
+        price,
+        amount_tva,
+        total_price,
+      })
+
+      res.send({ result: "OK" })
     },
   ],
 })
