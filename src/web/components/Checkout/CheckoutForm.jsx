@@ -87,6 +87,8 @@ export default function CheckoutForm(props) {
       })
     })
 
+    localStorage.setItem("cart", JSON.stringify([]))
+
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
