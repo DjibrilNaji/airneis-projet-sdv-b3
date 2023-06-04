@@ -24,6 +24,8 @@ export const CartContextProvider = (props) => {
   const [subtotal, setSubtotal] = useState()
   const [tva, setTva] = useState()
   const [total, setTotal] = useState()
+  const [totalStripe, setTotalStripe] = useState()
+  const [productsIdQuantities, setProductsIdQuantities] = useState()
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart))
@@ -38,6 +40,15 @@ export const CartContextProvider = (props) => {
     newSubtotal > 0 ? setSubtotal(newSubtotal.toFixed(2)) : setSubtotal(0)
     newTva > 0 ? setTva(newTva.toFixed(2)) : setTva(0)
     newTotal > 0 ? setTotal(newTotal.toFixed(2)) : setTotal(0)
+    setTotalStripe(total * 100)
+
+    const idQuantities = []
+
+    cart.forEach((item) => {
+      idQuantities.push({ id: item.id, quantity: item.quantity })
+    })
+
+    setProductsIdQuantities(idQuantities)
   }, [cart, subtotal, tva, total])
 
   const addToCart = (product, image, quantity) => {
@@ -102,7 +113,14 @@ export const CartContextProvider = (props) => {
           removeOneProduct,
           removeAllFromCart,
         },
-        state: { cart, subtotal, tva, total },
+        state: {
+          cart,
+          subtotal,
+          tva,
+          total,
+          totalStripe,
+          productsIdQuantities,
+        },
       }}
     />
   )

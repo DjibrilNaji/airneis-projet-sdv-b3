@@ -2,6 +2,7 @@ import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
 import BackButton from "@/web/components/BackButton"
 import FormError from "@/web/components/FormError"
 import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
+import routes from "@/web/routes"
 import { faEye } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Image from "next/image"
@@ -93,16 +94,14 @@ const ViewUser = (props) => {
             <div className="flex flex-col gap-1">
               <div className="font-bold">Recapitualif commande</div>
               <span className="flex justify-between">
-                Montant HT : <span>{order.price - order.amount_tva} €</span>
+                Montant HT :{" "}
+                <span>{(order.price - order.amount_tva).toFixed(2)} €</span>
               </span>
               <span className="flex justify-between">
-                TVA : <span>{order.amount_tva_formatted}</span>
+                TVA : <span>{order.amount_tva} €</span>
               </span>
-              <span className="flex justify-between">
-                Total : <span> {order.price_formatted}</span>
-              </span>
-              <span className="flex justify-between font-bold gap-4">
-                Montant total HTC : <span>{order.price_formatted}</span>
+              <span className="flex justify-between font-bold gap-4 text-xl">
+                Total : <span> {order.total_price} €</span>
               </span>
             </div>
           </div>
@@ -116,7 +115,7 @@ const ViewUser = (props) => {
             {products.map((item) => (
               <div
                 key={item.productId}
-                className="flex flex-col p-4 gap-4 border-b border-2 md:flex-row"
+                className="flex flex-col p-4 gap-4 border-b border-2 md:flex-row items-center"
               >
                 <Image
                   src={item.product.image[0].urlImage}
@@ -127,16 +126,18 @@ const ViewUser = (props) => {
                 />
                 <div className="w-full">
                   <div className="flex justify-between">
-                    <Link href={"/"} className="font-bold text-lg">
-                      {item.name}
+                    <Link
+                      href={routes.product(item.product.slug)}
+                      className="font-bold text-lg"
+                    >
+                      {item.product.name}
                     </Link>
-
                     <span className="font-semibold text-lg">
-                      {item.product.price_formatted}
+                      {item.product.price} €
                     </span>
                   </div>
 
-                  <p className="truncate-2 w-[80%]">
+                  <p className="truncate-3 w-[80%]">
                     {item.product.description}
                   </p>
 
