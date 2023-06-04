@@ -22,6 +22,7 @@ import getContactService from "../services/admin/contact/getContact"
 import deleteContactService from "../services/admin/contact/deleteContact"
 import getOrdersService from "../services/admin/orders/getOrders"
 import getSingleOrderService from "../services/admin/orders/getSingleOrder"
+import addNewOrderService from "../services/order/addNewOrder"
 import getUsersService from "../services/admin/users/getUsers"
 import getSingleUserService from "../services/admin/users/getSingleUser"
 import deleteUserService from "../services/admin/users/deleteUser"
@@ -38,6 +39,8 @@ import getAllCategoriesService from "../services/admin/categories/getAllCategori
 import getSingleProductService from "../services/admin/products/getSingleProduct"
 import checkEmailService from "../services/checkEmail"
 import resetPasswordService from "../services/resetPassword"
+import getOrderDetailService from "../services/order/getOrderDetail"
+import addRelOrderProductService from "../services/relOrderProduct/addRelOrderProduct"
 
 import {
   createContext,
@@ -89,6 +92,8 @@ export const AppContextProvider = (props) => {
 
   const getOrders = getOrdersService({ api })
   const getSingleOrder = getSingleOrderService({ api })
+  const addNewOrder = addNewOrderService({ api })
+  const getOrderDetail = getOrderDetailService({ api })
 
   const getUsers = getUsersService({ api })
   const getSingleUser = getSingleUserService({ api })
@@ -108,8 +113,10 @@ export const AppContextProvider = (props) => {
 
   const getProductsSearch = getProductsSearchService({ api })
   const getSingleProduct = getSingleProductService({ api })
-  const checkEmail = checkEmailService({api})
-  const resetPassword = resetPasswordService({api})
+  const checkEmail = checkEmailService({ api })
+  const resetPassword = resetPasswordService({ api })
+
+  const addRelOrderProduct = addRelOrderProductService({ api })
 
   const signOut = useCallback(() => {
     localStorage.removeItem(config.session.localStorageKey)
@@ -172,6 +179,9 @@ export const AppContextProvider = (props) => {
           getSingleProduct,
           checkEmail,
           resetPassword,
+          addNewOrder,
+          getOrderDetail,
+          addRelOrderProduct,
         },
         state: {
           session,
