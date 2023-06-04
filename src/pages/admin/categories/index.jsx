@@ -1,11 +1,11 @@
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
-import Link from "next/link"
 import { useCallback, useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faArrowLeft,
   faArrowRight,
   faCheck,
+  faEdit,
   faPlus,
   faTrash,
   faXmark,
@@ -14,8 +14,15 @@ import TableHeadField from "@/web/components/Admin/TableHeadField"
 import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
 import FormError from "@/web/components/FormError"
 import SelectShow from "@/web/components/Admin/SelectShow"
+import Modal from "@/web/components/Modal"
+import EditCategoryForm from "@/web/components/Admin/Form/EditCategoryForm"
 
 const CategoriesAdmin = () => {
+  const types = {
+    category: { name: "category", title: "Category informations" },
+    images: { name: "images", title: "Images Category" },
+  }
+
   const [data, setData] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState("")
@@ -25,9 +32,18 @@ const CategoriesAdmin = () => {
   const [limit, setLimit] = useState(10)
   const [searchTerm, setSearchTerm] = useState("")
   const [error, setError] = useState(null)
+  const [selectedType, setSelectedType] = useState(types.category)
+  const [viewCategoryInfo, setViewCategoryInfo] = useState(false)
+  const [toggleUpdateCategory, setToggleUpdateCategory] = useState(true)
+  const [category, setCategory] = useState(null)
 
   const {
-    actions: { getAllCategories, deleteCategory },
+    actions: {
+      getAllCategories,
+      deleteCategory,
+      getSingleCategory,
+      updateCategory,
+    },
   } = useAppContext()
 
   const fetchData = useCallback(
@@ -73,6 +89,39 @@ const CategoriesAdmin = () => {
       fetchData
     },
     [fetchData]
+  )
+
+  const fetchSingleCategory = useCallback(
+    async (id) => {
+      const [err, data] = await getSingleCategory(id)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setCategory(data.result[0])
+      setViewCategoryInfo(true)
+    },
+    [getSingleCategory]
+  )
+
+  const handleSubmitUpdate = useCallback(
+    async (values) => {
+      const [err, data] = await updateCategory(category.id, values)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setCategory(data.result)
+      setToggleUpdateCategory(!toggleUpdateCategory)
+      fetchData(currentPage)
+    },
+    [category, updateCategory, toggleUpdateCategory, fetchData, currentPage]
   )
 
   const handleSortChange = useCallback(
@@ -241,17 +290,68 @@ const CategoriesAdmin = () => {
                 </div>
               </td>
               <td className="py-2 px-4 flex justify-center">
-                <Link
-                  href={""}
+                <button
+                  onClick={() => fetchSingleCategory(category.id)}
                   className="border-2 px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200"
                 >
                   <FontAwesomeIcon icon={faPlus} className="text-stone-400" />
-                </Link>
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+      <Modal
+        isOpen={viewCategoryInfo}
+        modalTitle={selectedType.title}
+        closeModal={() => setViewCategoryInfo(false)}
+      >
+        <div className="flex gap-4">
+          <button
+            onClick={() => setSelectedType(types.category)}
+            className={`flex ${
+              selectedType.name === types.category.name && "font-bold underline"
+            }`}
+          ></button>
+        </div>
+        <>
+          <div className="border-t-4 border-gray-500 px-3 my-4" />
+          <div className="flex items-center justify-between ">
+            <div className="px-4">
+              {category?.isDelete ? (
+                <span className="italic text-red-500 text-lg">
+                  (Category delete : id {category?.id})
+                </span>
+              ) : (
+                <span className="italic text-green-500 text-lg">
+                  (Category active : id {category?.id})
+                </span>
+              )}
+            </div>
+            {!category?.isDelete && (
+              <button
+                className="flex justify-end text-stone-500 font-bold text-lg rounded"
+                onClick={() => setToggleUpdateCategory(!toggleUpdateCategory)}
+                title={
+                  toggleUpdateCategory
+                    ? "Update Category"
+                    : "Finish modifications"
+                }
+              >
+                <FontAwesomeIcon
+                  icon={toggleUpdateCategory ? faEdit : faCheck}
+                  className="h-7"
+                />
+              </button>
+            )}
+          </div>
+          <EditCategoryForm
+            initialValues={category}
+            onSubmit={handleSubmitUpdate}
+            active={toggleUpdateCategory}
+          />
+        </>
+      </Modal>
     </>
   )
 }

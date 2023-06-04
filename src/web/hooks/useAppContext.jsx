@@ -41,6 +41,8 @@ import checkEmailService from "../services/checkEmail"
 import resetPasswordService from "../services/resetPassword"
 import getOrderDetailService from "../services/order/getOrderDetail"
 import addRelOrderProductService from "../services/relOrderProduct/addRelOrderProduct"
+import updateCategoryService from "../services/admin/categories/updateCategory"
+import getSingleCategoryService from "../services/admin/categories/getSingleCategory"
 
 import {
   createContext,
@@ -110,7 +112,9 @@ export const AppContextProvider = (props) => {
   const addFavorite = addFavoriteService({ api })
   const deleteCategory = deleteCategoryService({ api })
   const getAllCategories = getAllCategoriesService({ api })
+  const updateCategory = updateCategoryService({ api })
 
+  const getSingleCategory = getSingleCategoryService({ api })
   const getProductsSearch = getProductsSearchService({ api })
   const getSingleProduct = getSingleProductService({ api })
   const checkEmail = checkEmailService({ api })
@@ -182,6 +186,8 @@ export const AppContextProvider = (props) => {
           addNewOrder,
           getOrderDetail,
           addRelOrderProduct,
+          updateCategory,
+          getSingleCategory,
         },
         state: {
           session,

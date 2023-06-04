@@ -71,6 +71,8 @@ const routes = {
       categories: {
         collection: () => "/admin/categories/all",
         delete: (categoryId) => `/admin/categories/${categoryId}/delete`,
+        single: (categoryId) => `/admin/categories/${categoryId}/single`,
+        update: (categoryId) => `/admin/categories/${categoryId}/single`,
       },
       users: {
         single: (userId, query) =>
