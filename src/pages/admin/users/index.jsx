@@ -190,6 +190,12 @@ const UsersAdmin = () => {
     [addUser, fetchData, totalPages]
   )
 
+  const handleCloseUserInfoModal = useCallback(async () => {
+    setToggleUpdateUser(true)
+    setViewUserInfo(false)
+    setSelectedType(types.user)
+  }, [types.user])
+
   return (
     <>
       {error ? <FormError error={error} /> : ""}
@@ -328,7 +334,7 @@ const UsersAdmin = () => {
       <Modal
         isOpen={viewUserInfo}
         modalTitle={selectedType.title}
-        closeModal={() => setViewUserInfo(false)}
+        closeModal={handleCloseUserInfoModal}
       >
         <div className="flex gap-4">
           <button
