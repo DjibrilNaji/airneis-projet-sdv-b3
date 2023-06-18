@@ -10,6 +10,7 @@ import TableHeadField from "@/web/components/Admin/TableHeadField"
 import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
 import FormError from "@/web/components/FormError"
 import SelectShow from "@/web/components/Admin/SelectShow"
+import ConfirmDelete from "@/web/components/Admin/ConfirmDelete"
 
 const ContactAdmin = () => {
   const [data, setData] = useState([])
@@ -23,6 +24,9 @@ const ContactAdmin = () => {
   const [error, setError] = useState("")
 
   const [selectedContacts, setSelectedContacts] = useState([])
+  const [toggleDeleteOne, setToggleDeleteOne] = useState(false)
+  const [toggleDeleteSeveral, setToggleDeleteSeveral] = useState(false)
+  const [contactIdToRemove, setContactIdToRemove] = useState()
 
   const {
     actions: { getContact, deleteContact },
@@ -69,6 +73,8 @@ const ContactAdmin = () => {
 
       fetchData(currentPage)
       setSelectedContacts([])
+      setToggleDeleteOne(false)
+      setToggleDeleteSeveral(false)
     },
     [fetchData, currentPage, deleteContact]
   )
@@ -115,6 +121,11 @@ const ContactAdmin = () => {
     [selectedContacts]
   )
 
+  const selectContactToRemove = useCallback((id) => {
+    setToggleDeleteOne(true)
+    setContactIdToRemove(id)
+  }, [])
+
   const pagination = []
   for (let i = 1; i <= totalPages; i++) {
     pagination.push(
@@ -132,6 +143,21 @@ const ContactAdmin = () => {
   return (
     <>
       {error ? <FormError error={error} /> : ""}
+
+      <ConfirmDelete
+        isOpen={toggleDeleteOne || toggleDeleteSeveral}
+        page="messages"
+        close={
+          toggleDeleteSeveral
+            ? () => setToggleDeleteSeveral(false)
+            : () => setToggleDeleteOne(false)
+        }
+        remove={
+          toggleDeleteSeveral
+            ? () => selectedContacts.map((id) => handleDelete(id))
+            : () => handleDelete(contactIdToRemove)
+        }
+      />
 
       <div className="flex item-center justify-center mb-5">
         <span className="font-extrabold text-3xl text-stone-500 uppercase">
@@ -214,7 +240,7 @@ const ContactAdmin = () => {
               <td className="text-center">
                 <button
                   className="disabled:opacity-30 disabled:cursor-not-allowed"
-                  onClick={() => handleDelete(message.id)}
+                  onClick={() => selectContactToRemove(message.id)}
                 >
                   <FontAwesomeIcon
                     icon={faTrash}
@@ -229,7 +255,7 @@ const ContactAdmin = () => {
 
       <button
         className="border-2 rounded-lg mx-3 my-4 p-2 bg-red-500 text-white disabled:cursor-not-allowed disabled:bg-red-200"
-        onClick={() => selectedContacts.map((id) => handleDelete(id))}
+        onClick={() => setToggleDeleteSeveral(true)}
         disabled={selectedContacts.length === 0}
       >
         Supprimer tous les messages séléctionnés
