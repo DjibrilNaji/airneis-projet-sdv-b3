@@ -5,6 +5,7 @@ import FormError from "@/web/components/FormError"
 import ConfirmDelete from "@/web/components/Admin/ConfirmDelete"
 import ContentPage from "@/web/components/Admin/ContentPage"
 import DeleteAllButton from "@/web/components/Admin/Button/DeleteAllButton"
+import CenterItem from "@/web/components/CenterItem"
 
 const ContactAdmin = () => {
   const [data, setData] = useState([])
@@ -161,52 +162,59 @@ const ContactAdmin = () => {
 
   return (
     <>
-      {error ? <FormError error={error} /> : ""}
-
-      <ConfirmDelete
-        isOpen={toggleDeleteOne || toggleDeleteSeveral}
-        page="messages"
-        close={
-          toggleDeleteSeveral
-            ? () => setToggleDeleteSeveral(false)
-            : () => setToggleDeleteOne(false)
-        }
-        remove={
-          toggleDeleteSeveral
-            ? () => selectedContacts.map((id) => handleDelete(id))
-            : () => handleDelete(contactIdToRemove)
-        }
+      <CenterItem
+        className="md:hidden"
+        content="Use a larger screen to access the backoffice"
       />
 
-      <ContentPage
-        title="Messages"
-        data={data.contacts}
-        columnsTableHead={columnsTableHead}
-        columnsTableBody={["id", "email", "message"]}
-        name={"messages"}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        limit={limit}
-        searchTerm={searchTerm}
-        selectedItems={selectedContacts}
-        handlePageChange={handlePageChange}
-        handleLimitChange={handleLimitChange}
-        handleSortChange={handleSortChange}
-        handleSelectItem={handleSelectItem}
-        selectItemToRemove={selectContactToRemove}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        getInfo={false}
-        displayIsDelete={false}
-        displayDeleteButton={true}
-        displayStatus={false}
-      />
+      <div className="hidden md:block">
+        {error ? <FormError error={error} /> : ""}
 
-      <DeleteAllButton
-        title="Delete all selected messages"
-        className="mx-3"
-        onClick={() => setToggleDeleteSeveral(true)}
-        disabled={selectedContacts.length === 0}
-      />
+        <ConfirmDelete
+          isOpen={toggleDeleteOne || toggleDeleteSeveral}
+          page="messages"
+          close={
+            toggleDeleteSeveral
+              ? () => setToggleDeleteSeveral(false)
+              : () => setToggleDeleteOne(false)
+          }
+          remove={
+            toggleDeleteSeveral
+              ? () => selectedContacts.map((id) => handleDelete(id))
+              : () => handleDelete(contactIdToRemove)
+          }
+        />
+
+        <ContentPage
+          title="Messages"
+          data={data.contacts}
+          columnsTableHead={columnsTableHead}
+          columnsTableBody={["id", "email", "message"]}
+          name={"messages"}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          limit={limit}
+          searchTerm={searchTerm}
+          selectedItems={selectedContacts}
+          handlePageChange={handlePageChange}
+          handleLimitChange={handleLimitChange}
+          handleSortChange={handleSortChange}
+          handleSelectItem={handleSelectItem}
+          selectItemToRemove={selectContactToRemove}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          getInfo={false}
+          displayIsDelete={false}
+          displayDeleteButton={true}
+          displayStatus={false}
+        />
+
+        <DeleteAllButton
+          title="Delete all selected messages"
+          className="mx-3"
+          onClick={() => setToggleDeleteSeveral(true)}
+          disabled={selectedContacts.length === 0}
+        />
+      </div>
     </>
   )
 }

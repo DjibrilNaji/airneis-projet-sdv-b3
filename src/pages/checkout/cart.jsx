@@ -10,7 +10,7 @@ import { useTranslation } from "next-i18next"
 import OrderSummary from "@/web/components/OrderSummary"
 import { useRouter } from "next/router"
 import cookie from "cookie"
-import EmptyPage from "@/web/components/EmptyPage"
+import CenterItem from "@/web/components/CenterItem"
 
 export async function getServerSideProps({ locale, req }) {
   const cookies = req.headers.cookie
@@ -162,7 +162,7 @@ const Cart = (props) => {
           />
         </div>
       ) : (
-        <EmptyPage
+        <CenterItem
           icon={faCartShopping}
           content={t("empty_cart")}
           button={t("go_home")}
