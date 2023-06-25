@@ -1,12 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import Image from "next/image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import {
-  faArrowLeft,
-  faArrowRight,
-  faHeart,
-  faHeartBroken,
-} from "@fortawesome/free-solid-svg-icons"
+import { faHeart, faHeartBroken } from "@fortawesome/free-solid-svg-icons"
 import routes from "@/web/routes"
 import { useCallback, useContext, useEffect, useState } from "react"
 import Link from "next/link"
@@ -24,6 +19,7 @@ import getSingleProductBySlugService from "@/web/services/products/getSingleProd
 import createAPIClient from "@/web/createAPIClient"
 import getSingleFavoriteService from "@/web/services/products/favorites/getSingleFavorite"
 import Banner from "@/web/components/Banner"
+import Carousel from "@/web/components/Carousel"
 
 export const getServerSideProps = async ({ locale, params, req }) => {
   const productSlug = params.slug
@@ -232,117 +228,24 @@ const Product = (props) => {
         <BackButton />
       </div>
 
-      <div className="md:hidden relative">
-        <div className="m-4 h-96 relative">
-          {image.map((image, index) => (
-            <Image
-              key={image.id}
-              src={image.urlImage}
-              alt="slide 2"
-              className={`w-full h-full object-cover rounded-xl absolute ${
-                index === activeIndex ? "opacity-100" : "opacity-0"
-              } transition-opacity ease-linear duration-300`}
-              width="500"
-              height="500"
-            />
-          ))}
-        </div>
-
-        <button
-          className="absolute top-[45%] text-stone-500 opacity-60 hover:opacity-100 left-0 transition-opacity ease-linear duration-300 disabled:opacity-20"
-          onClick={handlePrevious}
-          disabled={image.length === 1}
-        >
-          <FontAwesomeIcon
-            icon={faArrowLeft}
-            className="fa-2xl p-2 rounded-full bg-white"
-          />
-        </button>
-
-        <button
-          className="absolute top-[45%] right-0 text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300 disabled:opacity-20"
-          onClick={handleNext}
-          disabled={image.length === 1}
-        >
-          <FontAwesomeIcon
-            icon={faArrowRight}
-            className="fa-2xl p-2 rounded-full bg-white"
-          />
-        </button>
-      </div>
-
-      <div className="md:hidden flex justify-center">
-        {image.map((image, index) => (
-          <button
-            onClick={() => setActiveIndex(index)}
-            key={image.id}
-            className={`rounded-full h-2 w-8 mt-2 mx-2 ${
-              index === activeIndex
-                ? "bg-stone-500"
-                : "bg-stone-200 hover:bg-stone-900"
-            }`}
-          />
-        ))}
-      </div>
+      <Carousel
+        image={image}
+        activeIndex={activeIndex}
+        handleNext={handleNext}
+        handlePrevious={handlePrevious}
+        className="md:hidden"
+        setActiveIndex={setActiveIndex}
+      />
 
       <div className="flex">
         <div className="hidden md:block w-full md:w-2/5 md:pr-8">
-          <div className="relative">
-            <div className="m-4 h-96 relative">
-              {image.map((image, index) => (
-                <Image
-                  key={image.id}
-                  src={image.urlImage}
-                  alt="Carousel products"
-                  className={`w-full h-full object-cover rounded-xl absolute ${
-                    index === activeIndex ? "opacity-100" : "opacity-0"
-                  } transition-opacity ease-linear duration-300`}
-                  width="500"
-                  height="500"
-                />
-              ))}
-            </div>
-
-            <div className="hidden md:block absolute top-1/2 transform -translate-y-1/2 left-0">
-              <button
-                className="text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300 disabled:opacity-20"
-                onClick={handlePrevious}
-                disabled={image.length === 1}
-              >
-                <FontAwesomeIcon
-                  icon={faArrowLeft}
-                  className="fa-2xl p-2 rounded-full bg-white "
-                />
-              </button>
-            </div>
-
-            <div className="hidden md:block absolute top-1/2 transform -translate-y-1/2 right-0">
-              <button
-                className="text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300 disabled:opacity-20"
-                onClick={handleNext}
-                disabled={image.length === 1}
-              >
-                <FontAwesomeIcon
-                  icon={faArrowRight}
-                  className="fa-2xl p-2 rounded-full bg-white"
-                />
-              </button>
-            </div>
-
-            <div className="flex justify-center">
-              {image.map((image, index) => (
-                <button
-                  onClick={() => setActiveIndex(index)}
-                  key={image.id}
-                  className={`rounded-full h-2 w-8 mt-2 mx-2 ${
-                    index === activeIndex
-                      ? "bg-stone-500"
-                      : "bg-stone-200 hover:bg-stone-900"
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
+          <Carousel
+            image={image}
+            activeIndex={activeIndex}
+            handleNext={handleNext}
+            handlePrevious={handlePrevious}
+            setActiveIndex={setActiveIndex}
+          />
         </div>
 
         <div className="flex w-full md:w-3/5">
@@ -420,26 +323,24 @@ const Product = (props) => {
       <Banner text={t("similar_products")} />
 
       <div className="grid gap-12 pb-7 md:grid-cols-2 md:gap-8 md:px-4 lg:grid-cols-3">
-        {randomProducts.map((product) => {
-          return (
-            <Link
-              key={product.id}
-              href={routes.product(product.slug)}
-              className="flex items-center justify-center h-60 transition duration-800 hover:scale-105 hover:opacity-90"
-            >
-              <span className="absolute uppercase font-bold text-2xl bg-white text-stone-500 rounded-lg p-1 border-2 border-stone-500">
-                {product.name}
-              </span>
-              <Image
-                src={product.image.find((img) => img.isMain).urlImage}
-                alt={product.name}
-                className="h-full w-[90vw] md:w-full object-cover rounded-2xl"
-                width="500"
-                height="500"
-              />
-            </Link>
-          )
-        })}
+        {randomProducts.map((product) => (
+          <Link
+            key={product.id}
+            href={routes.product(product.slug)}
+            className="flex items-center justify-center h-60 transition duration-800 hover:scale-105 hover:opacity-90"
+          >
+            <span className="absolute uppercase font-bold text-2xl bg-white text-stone-500 rounded-lg p-1 border-2 border-stone-500">
+              {product.name}
+            </span>
+            <Image
+              src={product.image.find((img) => img.isMain).urlImage}
+              alt={product.name}
+              className="h-full w-[90vw] md:w-full object-cover rounded-2xl"
+              width="500"
+              height="500"
+            />
+          </Link>
+        ))}
       </div>
     </>
   )
