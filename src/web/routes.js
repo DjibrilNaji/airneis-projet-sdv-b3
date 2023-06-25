@@ -61,6 +61,11 @@ const routes = {
     admin: {
       materials: {
         collection: () => "/admin/materials/all",
+        relMaterialProduct: (query) =>
+          createRouteWithQueryParams(
+            `/admin/materials/relMaterialProduct`,
+            query
+          ),
       },
       products: {
         collection: () => "/admin/products/all",
