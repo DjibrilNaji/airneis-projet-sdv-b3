@@ -17,6 +17,7 @@ import EditUserForm from "@/web/components/Admin/Form/EditUserForm"
 import UserForm from "@/web/components/Admin/Form/UserForm"
 import SelectShow from "@/web/components/Admin/SelectShow"
 import Pagination from "@/web/components/Admin/Pagination"
+import ConfirmDelete from "@/web/components/Admin/ConfirmDelete"
 
 const UsersAdmin = () => {
   const {
@@ -51,6 +52,10 @@ const UsersAdmin = () => {
   const [selectedType, setSelectedType] = useState(types.user)
   const [viewUserInfo, setViewUserInfo] = useState(false)
   const [toggleUpdateUser, setToggleUpdateUser] = useState(true)
+
+  const [toggleDeleteOne, setToggleDeleteOne] = useState()
+  const [toggleDeleteSeveral, setToggleDeleteSeveral] = useState()
+  const [userIdToRemove, setUserIdToRemove] = useState()
 
   const fetchData = useCallback(
     async (page) => {
@@ -93,6 +98,8 @@ const UsersAdmin = () => {
 
       fetchData(currentPage)
       setSelectedUsers([])
+      setToggleDeleteOne(false)
+      setToggleDeleteSeveral(false)
     },
     [fetchData, currentPage, deleteUser]
   )
@@ -190,6 +197,11 @@ const UsersAdmin = () => {
     [addUser, fetchData, totalPages]
   )
 
+  const selectUserToRemove = useCallback((id) => {
+    setToggleDeleteOne(true)
+    setUserIdToRemove(id)
+  }, [])
+  
   const handleCloseUserInfoModal = useCallback(async () => {
     setToggleUpdateUser(true)
     setViewUserInfo(false)
@@ -199,6 +211,21 @@ const UsersAdmin = () => {
   return (
     <>
       {error ? <FormError error={error} /> : ""}
+
+      <ConfirmDelete
+        isOpen={toggleDeleteOne || toggleDeleteSeveral}
+        page="users"
+        close={
+          toggleDeleteSeveral
+            ? () => setToggleDeleteSeveral(false)
+            : () => setToggleDeleteOne(false)
+        }
+        remove={
+          toggleDeleteSeveral
+            ? () => selectedUsers.map((id) => handleDelete(id))
+            : () => handleDelete(userIdToRemove)
+        }
+      />
 
       <Modal
         isOpen={isOpen}
@@ -294,7 +321,7 @@ const UsersAdmin = () => {
               <td className="text-center">
                 <button
                   className="disabled:opacity-30 disabled:cursor-not-allowed"
-                  onClick={() => handleDelete(user.id)}
+                  onClick={() => selectUserToRemove(user.id)}
                   disabled={user.isDelete}
                 >
                   <FontAwesomeIcon
@@ -320,7 +347,7 @@ const UsersAdmin = () => {
       <div className="flex flex-col justify-start">
         <button
           className="border-2 rounded-lg my-4 p-2 bg-red-500 text-white disabled:cursor-not-allowed disabled:bg-red-200 mx-auto"
-          onClick={() => selectedUsers.map((id) => handleDelete(id))}
+          onClick={() => setToggleDeleteSeveral(true)}
           disabled={selectedUsers.length === 0}
         >
           Delete all selected items
