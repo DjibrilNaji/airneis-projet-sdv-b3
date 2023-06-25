@@ -7,13 +7,16 @@ const TableHeadField = ({
   className,
   handleSortChange,
   fieldName,
+  handleSortDisplay,
 }) => {
   return (
     <th className={classNames(className)}>
       {displayName}
-      <button onClick={() => handleSortChange(fieldName)}>
-        <FontAwesomeIcon icon={faArrowDownWideShort} className="ml-1" />
-      </button>
+      {handleSortDisplay && (
+        <button onClick={() => handleSortChange(fieldName)}>
+          <FontAwesomeIcon icon={faArrowDownWideShort} className="ml-1" />
+        </button>
+      )}
     </th>
   )
 }
