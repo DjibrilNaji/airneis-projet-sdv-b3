@@ -41,13 +41,19 @@ const CreateCategoryForm = (props) => {
       initialValues={initialValues}
       validationSchema={validationSchema}
     >
-      <FormError error={error} />
-      <Form className="flex flex-col gap-4 p-4">
-        <FormField name="name" type="text" label="CategoryName" />
-        <FormField name="description" type="text" label="CategoryDescription" />
-        <FormField name="urlImage" type="text" label="CategoryImage" />
-        <SubmitButton>Create Category</SubmitButton>
-      </Form>
+      <>
+        <FormError error={error} />
+        <Form className="flex flex-col gap-4 p-4">
+          <FormField name="name" type="text" label="CategoryName" />
+          <FormField
+            name="description"
+            type="text"
+            label="CategoryDescription"
+          />
+          <FormField name="urlImage" type="text" label="CategoryImage" />
+          <SubmitButton>Create Category</SubmitButton>
+        </Form>
+      </>
     </Formik>
   )
 }

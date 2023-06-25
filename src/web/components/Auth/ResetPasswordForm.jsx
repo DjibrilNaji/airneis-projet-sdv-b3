@@ -29,17 +29,19 @@ const ResetPasswordForm = (props) => {
       onSubmit={onSubmit}
       validationSchema={validationSchema}
     >
-      <FormError error={error} />
-      <FormSuccess success={success} />
-      <Form className="flex flex-col gap-4 p-4">
-        <FormField
-          name="password"
-          type="password"
-          label="Password"
-          icon={faLock}
-        />
-        <Button type="submit">Reset</Button>
-      </Form>
+      <>
+        <FormError error={error} />
+        <FormSuccess success={success} />
+        <Form className="flex flex-col gap-4 p-4">
+          <FormField
+            name="password"
+            type="password"
+            label="Password"
+            icon={faLock}
+          />
+          <Button type="submit">Reset</Button>
+        </Form>
+      </>
     </Formik>
   )
 }

@@ -31,11 +31,18 @@ const CheckEmailForm = (props) => {
       onSubmit={onSubmit}
       validationSchema={validationSchema}
     >
-      <FormSuccess success={success} />
-      <Form className="flex flex-col gap-4 p-4">
-        <FormField name="email" type="text" label="E-mail" icon={faEnvelope} />
-        <Button type="submit">Submit</Button>
-      </Form>
+      <>
+        <FormSuccess success={success} />
+        <Form className="flex flex-col gap-4 p-4">
+          <FormField
+            name="email"
+            type="text"
+            label="E-mail"
+            icon={faEnvelope}
+          />
+          <Button type="submit">Submit</Button>
+        </Form>
+      </>
     </Formik>
   )
 }
