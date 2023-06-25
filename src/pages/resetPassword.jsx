@@ -4,20 +4,21 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import ResetPasswordForm from "@/web/components/Auth/ResetPasswordForm"
 import { useRouter } from "next/router"
 import routes from "@/web/routes"
+import Form from "@/web/components/Form"
 
 export async function getServerSideProps({ locale, query }) {
-    const token = query.token
+  const token = query.token
 
   return {
     props: {
-        token: token,
+      token: token,
       ...(await serverSideTranslations(locale, ["common", "navigation"])),
     },
   }
 }
 
 const ResetPassword = (props) => {
-    const {token} = props
+  const { token } = props
   const {
     actions: { resetPassword },
   } = useAppContext()
@@ -43,17 +44,13 @@ const ResetPassword = (props) => {
   )
 
   return (
-    <>
-      <div className="w-80 mx-auto">
-        <div>
-          <h1 className="font-semibold text-2xl text-center uppercase">
-            Reset Password
-          </h1>
-
-          <ResetPasswordForm onSubmit={handleSubmit} error={error} success={success} />
-        </div>
-      </div>
-    </>
+    <Form title="Reset Password">
+      <ResetPasswordForm
+        onSubmit={handleSubmit}
+        error={error}
+        success={success}
+      />
+    </Form>
   )
 }
 

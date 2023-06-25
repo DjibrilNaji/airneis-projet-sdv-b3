@@ -1,9 +1,9 @@
 import { Form, Formik } from "formik"
 import * as yup from "yup"
-import FormError from "../FormError.jsx"
+import FormError from "../../FormError.jsx"
 import React from "react"
 import FormField from "@/web/components/FormField.jsx"
-import SubmitButton from "../SubmitButton.jsx"
+import SubmitButton from "../../SubmitButton.jsx"
 
 const categoryInitialValues = {
   name: "",
@@ -41,13 +41,19 @@ const CreateCategoryForm = (props) => {
       initialValues={initialValues}
       validationSchema={validationSchema}
     >
-      <FormError error={error} />
-      <Form className="flex flex-col gap-4 p-4">
-        <FormField name="name" type="text" label="CategoryName" />
-        <FormField name="description" type="text" label="CategoryDescription" />
-        <FormField name="urlImage" type="text" label="CategoryImage" />
-        <SubmitButton>Create Category</SubmitButton>
-      </Form>
+      <>
+        <FormError error={error} />
+        <Form className="flex flex-col gap-4 p-4">
+          <FormField name="name" type="text" label="CategoryName" />
+          <FormField
+            name="description"
+            type="text"
+            label="CategoryDescription"
+          />
+          <FormField name="urlImage" type="text" label="CategoryImage" />
+          <SubmitButton>Create Category</SubmitButton>
+        </Form>
+      </>
     </Formik>
   )
 }

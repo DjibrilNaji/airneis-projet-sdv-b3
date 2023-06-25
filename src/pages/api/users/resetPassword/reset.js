@@ -21,14 +21,16 @@ const handler = mw({
       },
       res,
     }) => {
-        const { payload } = jsonwebtoken.verify(
-          token,
-          config.security.jwt.secret
-        )
+      const { payload } = jsonwebtoken.verify(token, config.security.jwt.secret)
 
-    const {user: {email}} = payload
+      const {
+        user: { email },
+      } = payload
 
-      const user = await UserModel.query().findOne({email}).where({isDelete: false}).where({validate: true})
+      const user = await UserModel.query()
+        .findOne({ email })
+        .where({ isDelete: false })
+        .where({ validate: true })
 
       if (!user) {
         throw new NotFoundError()
@@ -36,10 +38,9 @@ const handler = mw({
 
       const [passwordHash, passwordSalt] = await hashPassword(password)
 
-
-    await UserModel.query().updateAndFetchById(user.id, {
+      await UserModel.query().updateAndFetchById(user.id, {
         passwordHash,
-        passwordSalt
+        passwordSalt,
       })
 
       res.send({ result: "ok" })

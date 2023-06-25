@@ -3,7 +3,7 @@ import classNames from "classnames"
 const variants = {
   info: "bg-blue-200 text-blue-800",
   danger: "bg-red-200 text-red-800",
-  success: "bg-green-200 text-green-800"
+  success: "bg-green-200 text-green-800",
 }
 
 const Button = (props) => {

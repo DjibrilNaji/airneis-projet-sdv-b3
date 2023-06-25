@@ -20,7 +20,7 @@ const ResetPasswordForm = (props) => {
     initialValues = defaultInitialValues,
     validationSchema = defaultValidationSchema,
     error,
-    success
+    success,
   } = props
 
   return (
