@@ -184,9 +184,7 @@ const Navbar = () => {
             className="h-6 text-stone-400"
           />
           {cartItems.length > 0 && (
-            <span className="absolute top-0 right-0 inline-flex items-center justify-center p-1 text-xs font-bold leading-none text-white bg-black rounded-full">
-              {cartItems.length}
-            </span>
+            <span className="absolute top-4 h-3 w-3 bg-red-500 rounded-full"></span>
           )}
         </Link>
 
