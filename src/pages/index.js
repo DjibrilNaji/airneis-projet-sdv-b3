@@ -1,6 +1,3 @@
-import Image from "next/image"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons"
 import { useEffect, useState } from "react"
 import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
@@ -11,6 +8,7 @@ import FormError from "@/web/components/FormError"
 import Categories from "@/web/components/Cards/Categories"
 import Products from "@/web/components/Cards/Products"
 import Banner from "@/web/components/Banner"
+import Carousel from "@/web/components/Carousel"
 
 export const getServerSideProps = async (context) => {
   const { locale } = context
@@ -70,48 +68,16 @@ const Home = (props) => {
 
   return (
     <>
-      <div>
-        {error ? <FormError error={error} /> : ""}
-        <div className="relative">
-          <div className="m-4 h-96 relative">
-            {result.imageHomePage.map((image, index) => (
-              <Image
-                key={image.id}
-                src={image.urlImage}
-                alt="slide 2"
-                className={`w-full h-full object-cover rounded-xl absolute ${
-                  index === activeIndex ? "opacity-100" : "opacity-0"
-                } transition-opacity ease-linear duration-300`}
-                width="500"
-                height="500"
-              />
-            ))}
-          </div>
-          <FontAwesomeIcon
-            icon={faArrowLeft}
-            className="absolute top-[45%] fa-2xl border-2 bg-white p-2 left-0 rounded-full text-stone-500"
-            onClick={handlePrevious}
-          />
-          <FontAwesomeIcon
-            icon={faArrowRight}
-            className="absolute top-[45%] fa-2xl border-2 bg-white p-2 right-0 rounded-full text-stone-500"
-            onClick={handleNext}
-          />
-        </div>
-        <div className="flex justify-center">
-          {result.imageHomePage.map((image, index) => (
-            <button
-              onClick={() => setActiveIndex(index)}
-              key={image.id}
-              className={`rounded-full h-2 w-8 mt-2 mx-2 ${
-                index === activeIndex
-                  ? "bg-stone-500"
-                  : "bg-stone-200 hover:bg-stone-900"
-              }`}
-            />
-          ))}
-        </div>
-      </div>
+      {error ? <FormError error={error} /> : ""}
+
+      <Carousel
+        image={result.imageHomePage}
+        activeIndex={activeIndex}
+        handleNext={handleNext}
+        handlePrevious={handlePrevious}
+        setActiveIndex={setActiveIndex}
+      />
+
       <div className="flex justify-center my-4">
         <p
           className="p-6 text-center font-bold text-stone-400 text-xl"
