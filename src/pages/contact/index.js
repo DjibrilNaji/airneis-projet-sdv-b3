@@ -5,6 +5,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useTranslation } from "next-i18next"
 import useAppContext from "@/web/hooks/useAppContext"
 import FormError from "@/web/components/FormError"
+import Form from "@/web/components/Form"
 
 export async function getServerSideProps({ locale }) {
   return {
@@ -40,19 +41,10 @@ const Contact = () => {
   )
 
   return (
-    <>
-      <div className="w-80 mx-auto">
-        <div>
-          <h1 className="font-semibold text-2xl text-center uppercase">
-            {t("contact_us")}
-          </h1>
-
-          {error ? <FormError className="my-4" error={error} /> : ""}
-
-          <ContactForm onSubmit={handleSubmit} />
-        </div>
-      </div>
-    </>
+    <Form title={t("contact_us")}>
+      {error ? <FormError className="my-4" error={error} /> : ""}
+      <ContactForm onSubmit={handleSubmit} />
+    </Form>
   )
 }
 

@@ -2,6 +2,7 @@ import useAppContext from "@/web/hooks/useAppContext.jsx"
 import { useCallback, useState } from "react"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import CheckEmailForm from "@/web/components/Auth/CheckEmailForm"
+import Form from "@/web/components/Form"
 
 export async function getServerSideProps({ locale }) {
   return {
@@ -40,20 +41,12 @@ const CheckAccount = () => {
   )
 
   return (
-    <>
-      <div className="w-80 mx-auto">
-        <div>
-          <h1 className="font-semibold text-2xl text-center uppercase">
-            Saisissez votre Email
-          </h1>
-
-          <CheckEmailForm
-            onSubmit={handleSubmit}
-            success={error ? error : success}
-          />
-        </div>
-      </div>
-    </>
+    <Form title="Saisissez votre Email">
+      <CheckEmailForm
+        onSubmit={handleSubmit}
+        success={error ? error : success}
+      />
+    </Form>
   )
 }
 

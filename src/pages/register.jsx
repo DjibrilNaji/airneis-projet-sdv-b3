@@ -3,6 +3,7 @@ import useAppContext from "@/web/hooks/useAppContext"
 import { useRouter } from "next/router.js"
 import { useCallback, useState } from "react"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import Form from "@/web/components/Form"
 
 export async function getServerSideProps({ locale }) {
   return {
@@ -34,15 +35,9 @@ const Register = () => {
   )
 
   return (
-    <>
-      <div className="w-80 mx-auto">
-        <h1 className="font-semibold text-2xl text-center uppercase">
-          Inscription
-        </h1>
-
-        <RegisterForm onSubmit={handleSubmit} error={error} />
-      </div>
-    </>
+    <Form title="Register">
+      <RegisterForm onSubmit={handleSubmit} error={error} />
+    </Form>
   )
 }
 
