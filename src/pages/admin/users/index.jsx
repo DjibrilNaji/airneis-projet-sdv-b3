@@ -201,6 +201,12 @@ const UsersAdmin = () => {
     setToggleDeleteOne(true)
     setUserIdToRemove(id)
   }, [])
+  
+  const handleCloseUserInfoModal = useCallback(async () => {
+    setToggleUpdateUser(true)
+    setViewUserInfo(false)
+    setSelectedType(types.user)
+  }, [types.user])
 
   return (
     <>
@@ -355,7 +361,7 @@ const UsersAdmin = () => {
       <Modal
         isOpen={viewUserInfo}
         modalTitle={selectedType.title}
-        closeModal={() => setViewUserInfo(false)}
+        closeModal={handleCloseUserInfoModal}
       >
         <div className="flex gap-4">
           <button
