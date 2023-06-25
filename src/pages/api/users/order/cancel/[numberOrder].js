@@ -16,22 +16,23 @@ const handler = mw({
       },
       res,
     }) => {
-      const order = await OrderModel.query()
-        .findOne({ numberOrder: numberOrder })
-        
+      const order = await OrderModel.query().findOne({
+        numberOrder: numberOrder,
+      })
+
       if (!order) {
         res.status(401).send({ error: "No orders found" })
 
         return
       }
 
-      const newStatus = await order.$query()
-        .patchAndFetch({status: "Cancelled"})
-        
+      const newStatus = await order
+        .$query()
+        .patchAndFetch({ status: "Cancelled" })
 
       res.send({
         result: {
-            newStatus,
+          newStatus,
         },
       })
     },

@@ -43,32 +43,30 @@ const BillingAddressForm = (props) => {
         validationSchema={validationSchema}
         enableReinitialize
       >
-        <>
-          <FormError error={error} />
-          <Form className="flex flex-col gap-4 p-4">
-            <FormField
-              name="addressFull"
-              type="text"
-              label="Address :"
-              icon={faPerson}
-            />
-            <FormField name="city" type="text" label="City :" icon={faPerson} />
-            <FormField name="cp" type="text" label="CP :" icon={faPerson} />
-            <FormField
-              name="country"
-              type="text"
-              label="Country :"
-              icon={faPerson}
-            />
-            <FormField
-              name="phoneNumber"
-              type="text"
-              label="Phone Number :"
-              icon={faPerson}
-            />
-            <SubmitButton className="mr-2">Submit</SubmitButton>
-          </Form>
-        </>
+        <FormError error={error} />
+        <Form className="flex flex-col gap-4 p-4">
+          <FormField
+            name="addressFull"
+            type="text"
+            label="Address :"
+            icon={faPerson}
+          />
+          <FormField name="city" type="text" label="City :" icon={faPerson} />
+          <FormField name="cp" type="text" label="CP :" icon={faPerson} />
+          <FormField
+            name="country"
+            type="text"
+            label="Country :"
+            icon={faPerson}
+          />
+          <FormField
+            name="phoneNumber"
+            type="text"
+            label="Phone Number :"
+            icon={faPerson}
+          />
+          <SubmitButton className="mr-2">Submit</SubmitButton>
+        </Form>
       </Formik>
     </div>
   )

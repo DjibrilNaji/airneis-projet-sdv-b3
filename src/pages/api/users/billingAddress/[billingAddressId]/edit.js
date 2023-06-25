@@ -1,10 +1,6 @@
 import validate from "@/api/middlewares/validate.js"
 import mw from "@/api/mw.js"
-import {
-  idValidator,
-  stringValidator,
-  integerValidator,
-} from "@/validators"
+import { idValidator, stringValidator, integerValidator } from "@/validators"
 import {
   InvalidAccessError,
   InvalidSessionError,
@@ -31,13 +27,7 @@ const handler = mw({
     async ({
       locals: {
         query: { billingAddressId },
-        body: {
-          addressFull,
-          city,
-          country,
-          cp,
-          phoneNumber,
-        },
+        body: { addressFull, city, country, cp, phoneNumber },
       },
       req,
       res,
@@ -59,7 +49,9 @@ const handler = mw({
         session: { user: sessionUser },
       } = req
 
-      const billingAddress = await BillingAddressModel.query().findById(billingAddressId).withGraphFetched("user")
+      const billingAddress = await BillingAddressModel.query()
+        .findById(billingAddressId)
+        .withGraphFetched("user")
 
       if (!billingAddress) {
         throw new NotFoundError()
@@ -69,16 +61,14 @@ const handler = mw({
         throw new InvalidAccessError()
       }
 
-      const updateBillingAddress = await BillingAddressModel.query().updateAndFetchById(
-        billingAddressId,
-        {
+      const updateBillingAddress =
+        await BillingAddressModel.query().updateAndFetchById(billingAddressId, {
           ...(addressFull ? { addressFull } : {}),
           ...(city ? { city } : {}),
           ...(cp ? { cp } : {}),
           ...(country ? { country } : {}),
           ...(phoneNumber ? { phoneNumber } : {}),
-        }
-      )
+        })
 
       res.send({ result: updateBillingAddress })
     },

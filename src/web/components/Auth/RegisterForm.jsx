@@ -41,7 +41,7 @@ const RegisterForm = (props) => {
     onSubmit,
     initialValues = defaultInitialValues,
     validationSchema = defaultValidationSchema,
-    error
+    error,
   } = props
 
   return (
@@ -50,7 +50,6 @@ const RegisterForm = (props) => {
       initialValues={initialValues}
       validationSchema={validationSchema}
     >
-      <>
       <FormError error={error} />
       <Form className="flex flex-col gap-4 p-4">
         <FormField
@@ -85,8 +84,7 @@ const RegisterForm = (props) => {
           button="S'inscrire"
         />
         <SubmitButton>S'inscrire</SubmitButton>
-        </Form>
-        </>
+      </Form>
     </Formik>
   )
 }

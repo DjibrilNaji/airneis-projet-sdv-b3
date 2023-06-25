@@ -45,34 +45,32 @@ const ContactForm = (props) => {
       initialValues={initialValues}
       validationSchema={validationSchema}
     >
-      <>
-        <FormError error={error} />
+      <FormError error={error} />
 
-        <Form className="flex flex-col gap-4 p-4">
-          <FormField
-            dir={direction}
-            name="email"
-            type="email"
-            label={`${t("email")} *`}
-            icon={faEnvelope}
-          />
-          <FormField
-            dir={direction}
-            name="subject"
-            type="text"
-            label={`${t("subject")} *`}
-            icon={faEnvelope}
-          />
-          <FormField
-            dir={direction}
-            name="message"
-            type="textarea"
-            label={`${t("message")} *`}
-            icon={faPerson}
-          />
-          <SubmitButton>{t("send_message")}</SubmitButton>
-        </Form>
-      </>
+      <Form className="flex flex-col gap-4 p-4">
+        <FormField
+          dir={direction}
+          name="email"
+          type="email"
+          label={`${t("email")} *`}
+          icon={faEnvelope}
+        />
+        <FormField
+          dir={direction}
+          name="subject"
+          type="text"
+          label={`${t("subject")} *`}
+          icon={faEnvelope}
+        />
+        <FormField
+          dir={direction}
+          name="message"
+          type="textarea"
+          label={`${t("message")} *`}
+          icon={faPerson}
+        />
+        <SubmitButton>{t("send_message")}</SubmitButton>
+      </Form>
     </Formik>
   )
 }

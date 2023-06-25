@@ -41,33 +41,31 @@ const EditCategoryForm = (props) => {
       validationSchema={validationSchema}
       enableReinitialize
     >
-      <>
-        <FormError error={error} />
-        <Form className="flex flex-col gap-4 p-4">
-          <FormField
-            name="name"
-            type="text"
-            label="Category name:"
-            active={active}
-          />
-          <FormField
-            name="description"
-            type="text"
-            label="Category Description :"
-            active={active}
-          />
-          <FormField name="slug" type="text" label="Slug :" active={active} />
-          <SubmitButton
-            active={active.toString()}
-            color="light"
-            variant="secondary"
-            size="sm"
-            className="disabled:hidden"
-          >
-            Update
-          </SubmitButton>
-        </Form>
-      </>
+      <FormError error={error} />
+      <Form className="flex flex-col gap-4 p-4">
+        <FormField
+          name="name"
+          type="text"
+          label="Category name:"
+          active={active}
+        />
+        <FormField
+          name="description"
+          type="text"
+          label="Category Description :"
+          active={active}
+        />
+        <FormField name="slug" type="text" label="Slug :" active={active} />
+        <SubmitButton
+          active={active.toString()}
+          color="light"
+          variant="secondary"
+          size="sm"
+          className="disabled:hidden"
+        >
+          Update
+        </SubmitButton>
+      </Form>
     </Formik>
   )
 }

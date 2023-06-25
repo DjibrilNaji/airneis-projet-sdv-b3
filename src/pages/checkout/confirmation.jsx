@@ -33,16 +33,14 @@ const Confirmation = (props) => {
   }, [])
 
   return (
-    <>
-      <MessageConfirmation
-        title={t("title")}
-        message={t("confirmation")}
-        info={numberOrder}
-        route={routes.home()}
-        button={t("go_home")}
-        dir={direction}
-      />
-    </>
+    <MessageConfirmation
+      title={t("title")}
+      message={t("confirmation")}
+      info={numberOrder}
+      route={routes.home()}
+      button={t("go_home")}
+      dir={direction}
+    />
   )
 }
 

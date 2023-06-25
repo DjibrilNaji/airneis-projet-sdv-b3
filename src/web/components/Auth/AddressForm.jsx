@@ -56,78 +56,76 @@ const AddressForm = (props) => {
       validationSchema={validationSchema}
       enableReinitialize
     >
-      <>
-        <FormError error={error} />
-        <Form className="flex flex-col gap-4 p-4">
-          <div className="flex">
-            <FormField
-              name="firstName"
-              type="text"
-              label="First name :"
-              icon={faPerson}
-              className="pr-4 w-1/2"
-            />
-            <FormField
-              name="lastName"
-              type="text"
-              label="Last name :"
-              icon={faPerson}
-              className="w-1/2"
-            />
-          </div>
+      <FormError error={error} />
+      <Form className="flex flex-col gap-4 p-4">
+        <div className="flex">
           <FormField
-            name="addressFull"
+            name="firstName"
             type="text"
-            label="Address :"
+            label="First name :"
             icon={faPerson}
+            className="pr-4 w-1/2"
           />
           <FormField
-            name="addressOptional"
+            name="lastName"
             type="text"
-            label="Address Optional :"
+            label="Last name :"
             icon={faPerson}
+            className="w-1/2"
           />
-          <div className="flex">
-            <FormField
-              name="city"
-              type="text"
-              label="City :"
-              icon={faPerson}
-              className="pr-4"
-            />
-            <FormField
-              name="cp"
-              type="text"
-              label="CP :"
-              icon={faPerson}
-              className="pr-4"
-            />
-            <FormField
-              name="country"
-              type="text"
-              label="Country :"
-              icon={faPerson}
-            />
-          </div>
+        </div>
+        <FormField
+          name="addressFull"
+          type="text"
+          label="Address :"
+          icon={faPerson}
+        />
+        <FormField
+          name="addressOptional"
+          type="text"
+          label="Address Optional :"
+          icon={faPerson}
+        />
+        <div className="flex">
           <FormField
-            name="phoneNumber"
+            name="city"
             type="text"
-            label="Phone Number :"
+            label="City :"
+            icon={faPerson}
+            className="pr-4"
+          />
+          <FormField
+            name="cp"
+            type="text"
+            label="CP :"
+            icon={faPerson}
+            className="pr-4"
+          />
+          <FormField
+            name="country"
+            type="text"
+            label="Country :"
             icon={faPerson}
           />
-          <label className="flex gap-2">
-            {" "}
-            Address default :
-            <Field name="address_default" type="checkbox" />
-          </label>
-          <div className="flex justify-center">
-            <SubmitButton className="mr-2">Submit</SubmitButton>
-            <Link href={routes.users.single(userId)}>
-              <Button>Back</Button>
-            </Link>
-          </div>
-        </Form>
-      </>
+        </div>
+        <FormField
+          name="phoneNumber"
+          type="text"
+          label="Phone Number :"
+          icon={faPerson}
+        />
+        <label className="flex gap-2">
+          {" "}
+          Address default :
+          <Field name="address_default" type="checkbox" />
+        </label>
+        <div className="flex justify-center">
+          <SubmitButton className="mr-2">Submit</SubmitButton>
+          <Link href={routes.users.single(userId)}>
+            <Button>Back</Button>
+          </Link>
+        </div>
+      </Form>
     </Formik>
   )
 }
