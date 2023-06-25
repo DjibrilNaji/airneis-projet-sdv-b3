@@ -15,7 +15,7 @@ export default function CheckoutForm(props) {
   const [isLoading, setIsLoading] = useState(false)
 
   const {
-    actions: { addNewOrder, getOrderDetail, addRelOrderProduct },
+    actions: { addNewOrder, getOrderDetail, addRelOrderProduct, updateProduct },
   } = useAppContext()
 
   const {
@@ -84,6 +84,10 @@ export default function CheckoutForm(props) {
         orderId: data.result.order[0].id,
         productId: item.id,
         quantity: item.quantity,
+      })
+
+      await updateProduct(item.id, {
+        stock: item.stock - item.quantity,
       })
     })
 
