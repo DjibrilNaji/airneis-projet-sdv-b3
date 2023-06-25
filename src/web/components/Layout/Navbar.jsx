@@ -76,7 +76,7 @@ const Navbar = () => {
       href:
         (session !== false) & (session !== null)
           ? routes.users.single(session.user.id)
-          : "/",
+          : routes.home(),
       title: t("menu_settings"),
       icon: <FontAwesomeIcon icon={faGear} />,
       onClick: handleIsOpenClick,
@@ -85,7 +85,7 @@ const Navbar = () => {
       href:
         (session !== false) & (session !== null)
           ? routes.users.favorites(session.user.id)
-          : "/",
+          : routes.home(),
       title: t("menu_favourites"),
       icon: <FontAwesomeIcon icon={faHeart} />,
       onClick: handleIsOpenClick,
@@ -94,7 +94,7 @@ const Navbar = () => {
       href:
         (session !== false) & (session !== null)
           ? routes.orders.collection(session.user.id)
-          : "/",
+          : routes.home(),
       title: t("menu_orders"),
       icon: <FontAwesomeIcon icon={faCircleCheck} />,
       onClick: handleIsOpenClick,
@@ -112,7 +112,7 @@ const Navbar = () => {
       onClick: handleIsOpenClick,
     },
     {
-      href: "/contact",
+      href: routes.contact(),
       title: t("menu_contact"),
       icon: <FontAwesomeIcon icon={faMessage} />,
       onClick: handleIsOpenClick,
@@ -124,7 +124,7 @@ const Navbar = () => {
       onClick: handleIsOpenClick,
     },
     {
-      href: "/",
+      href: routes.home(),
       title: t("menu_logout"),
       icon: <FontAwesomeIcon icon={faRightFromBracket} />,
       onClick: handleSignOut,
@@ -157,7 +157,7 @@ const Navbar = () => {
       onClick: handleIsOpenClick,
     },
     {
-      href: "/contact",
+      href: routes.contact(),
       title: t("menu_contact"),
       icon: <FontAwesomeIcon icon={faMessage} />,
       onClick: handleIsOpenClick,
@@ -172,7 +172,7 @@ const Navbar = () => {
 
   return (
     <nav className="flex items-center sticky top-0 bg-white border-b-2 border-stone-400 shadow-lg p-4 z-10">
-      <Link href={"/"} legacyBehavior>
+      <Link href={routes.home()} legacyBehavior>
         <Image src={logo} alt="logo" />
       </Link>
 
@@ -221,7 +221,7 @@ const Navbar = () => {
 
               {session.user.isAdmin && (
                 <Link
-                  href={"/admin"}
+                  href={routes.admin.admin()}
                   className="bg-white p-4 border-2 rounded-lg hover:bg-stone-200"
                   onClick={handleIsOpenClick}
                 >

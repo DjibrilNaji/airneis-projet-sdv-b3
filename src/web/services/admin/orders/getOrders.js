@@ -2,11 +2,11 @@ import routes from "@/web/routes.js"
 
 const getOrders =
   ({ api }) =>
-  async (limit, page, searchTerm) => {
+  async (limit, page, sortColumn, order, searchTerm) => {
     try {
       const { data } = await api.get(
         routes.api.admin.orders.collection() +
-          `?limit=${limit}&page=${page}` +
+          `?limit=${limit}&page=${page}&sortColumn=${sortColumn}&order=${order}` +
           (searchTerm === null ? "" : `&searchTerm=${searchTerm}`)
       )
 

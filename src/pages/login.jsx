@@ -3,6 +3,7 @@ import useAppContext from "@/web/hooks/useAppContext.jsx"
 import { useRouter } from "next/router.js"
 import { useCallback, useState } from "react"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import Form from "@/web/components/Form"
 
 export async function getServerSideProps({ locale }) {
   return {
@@ -36,17 +37,9 @@ const Login = () => {
   )
 
   return (
-    <>
-      <div className="w-80 mx-auto">
-        <div>
-          <h1 className="font-semibold text-2xl text-center uppercase">
-            Connexion
-          </h1>
-
-          <LoginForm onSubmit={handleSubmit} error={error} />
-        </div>
-      </div>
-    </>
+    <Form title="Connection">
+      <LoginForm onSubmit={handleSubmit} error={error} />
+    </Form>
   )
 }
 

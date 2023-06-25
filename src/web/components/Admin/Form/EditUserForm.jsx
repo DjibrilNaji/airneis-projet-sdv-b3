@@ -3,7 +3,7 @@ import * as yup from "yup"
 import React from "react"
 import FormError from "@/web/components/FormError"
 import SubmitButton from "@/web/components/SubmitButton"
-import FormField from "@/web/components/Admin/FormField"
+import FormField from "@/web/components/Admin/Form/FormField"
 
 const defaultInitialValues = {
   userName: "",
