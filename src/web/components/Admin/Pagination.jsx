@@ -1,4 +1,4 @@
-import ButtonPagination from "@/web/components/Admin/ButtonPagination"
+import ButtonPagination from "@/web/components/Admin/Button/ButtonPagination"
 import {
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,
@@ -10,6 +10,7 @@ const Pagination = ({ currentPage, totalPages, handlePageChange }) => {
   const pagination = []
   pagination.push(
     <button
+      key={1}
       className={`w-12 text-xl ${
         currentPage === 1 && "underline font-semibold"
       }`}
@@ -23,12 +24,13 @@ const Pagination = ({ currentPage, totalPages, handlePageChange }) => {
     (currentPage === 1 && totalPages > 2) ||
     (currentPage === totalPages && totalPages > 2)
   ) {
-    pagination.push(<span className={``}>........</span>)
+    pagination.push(<span key="ellipsis">........</span>)
   }
 
   if (currentPage > 1) {
     pagination.push(
       <button
+        key={currentPage}
         className={`w-12 text-xl underline font-semibold`}
         onClick={() => handlePageChange(currentPage)}
       >
@@ -40,6 +42,7 @@ const Pagination = ({ currentPage, totalPages, handlePageChange }) => {
   if (currentPage < totalPages) {
     pagination.push(
       <button
+        key={totalPages}
         className={`w-12 text-xl`}
         onClick={() => handlePageChange(totalPages)}
       >
