@@ -10,10 +10,10 @@ import {
   faTrash,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons"
-import TableHeadField from "@/web/components/Admin/TableHeadField"
+import TableHeadField from "@/web/components/Admin/Table/TableHeadField"
 import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
 import FormError from "@/web/components/FormError"
-import SelectShow from "@/web/components/Admin/SelectShow"
+import SelectShow from "@/web/components/Admin/SelectAndSearch/SelectShow"
 import Modal from "@/web/components/Modal"
 import EditCategoryForm from "@/web/components/Admin/Form/EditCategoryForm"
 

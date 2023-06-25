@@ -11,7 +11,7 @@ import {
   faTrash,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons"
-import TableHeadField from "@/web/components/Admin/TableHeadField"
+import TableHeadField from "@/web/components/Admin/Table/TableHeadField"
 import routes from "@/web/routes"
 import useAppContext, {
   AppContextProvider,
@@ -21,7 +21,7 @@ import { useRouter } from "next/router"
 import Modal from "@/web/components/Modal"
 import EditProductForm from "@/web/components/Admin/Form/EditProductForm"
 import Image from "next/image"
-import SelectShow from "@/web/components/Admin/SelectShow"
+import SelectShow from "@/web/components/Admin/SelectAndSearch/SelectShow"
 
 const ProductAdmin = () => {
   const [data, setData] = useState([])
