@@ -180,17 +180,15 @@ const SearchBar = () => {
           </button>
         </>
       ) : (
-        <>
-          <button
-            className="hidden lg:block px-2 py-1"
-            onClick={handleShowSearchClick}
-          >
-            <FontAwesomeIcon
-              icon={faMagnifyingGlass}
-              className="h-6 text-stone-400"
-            />
-          </button>
-        </>
+        <button
+          className="hidden lg:block px-2 py-1"
+          onClick={handleShowSearchClick}
+        >
+          <FontAwesomeIcon
+            icon={faMagnifyingGlass}
+            className="h-6 text-stone-400"
+          />
+        </button>
       )}
       <Link className="block lg:hidden px-2 py-1" href={`/search`}>
         <FontAwesomeIcon

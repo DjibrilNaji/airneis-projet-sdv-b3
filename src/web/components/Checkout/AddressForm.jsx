@@ -52,62 +52,60 @@ const AddressForm = (props) => {
       validationSchema={validationSchema}
       enableReinitialize
     >
-      <>
-        <FormError error={error} />
-        <Form className="flex flex-col gap-4 py-4">
-          <FormField
-            dir={direction}
-            name="firstName"
-            type="text"
-            label={`${t("firstName")} *`}
-          />
-          <FormField
-            dir={direction}
-            name="lastName"
-            type="text"
-            label={`${t("lastName")} *`}
-          />
-          <FormField
-            dir={direction}
-            name="addressFull"
-            type="text"
-            label={`${t("full_address")} *`}
-          />
-          <FormField
-            dir={direction}
-            name="addressOptional"
-            type="text"
-            label={`${t("optional_address")}`}
-          />
-          <FormField
-            dir={direction}
-            name="city"
-            type="text"
-            label={`${t("city")} *`}
-          />
-          <FormField
-            dir={direction}
-            name="cp"
-            type="text"
-            label={`${t("cp")} *`}
-          />
-          <FormField
-            dir={direction}
-            name="country"
-            type="text"
-            label={`${t("country")} *`}
-          />
-          <FormField
-            dir={direction}
-            name="phoneNumber"
-            type="text"
-            label={`${t("phoneNumber")} *`}
-          />
-          <Button type="submit">
-            {updateAddress ? t("update_address_btn") : t("add_address_btn")}
-          </Button>
-        </Form>
-      </>
+      <FormError error={error} />
+      <Form className="flex flex-col gap-4 py-4">
+        <FormField
+          dir={direction}
+          name="firstName"
+          type="text"
+          label={`${t("firstName")} *`}
+        />
+        <FormField
+          dir={direction}
+          name="lastName"
+          type="text"
+          label={`${t("lastName")} *`}
+        />
+        <FormField
+          dir={direction}
+          name="addressFull"
+          type="text"
+          label={`${t("full_address")} *`}
+        />
+        <FormField
+          dir={direction}
+          name="addressOptional"
+          type="text"
+          label={`${t("optional_address")}`}
+        />
+        <FormField
+          dir={direction}
+          name="city"
+          type="text"
+          label={`${t("city")} *`}
+        />
+        <FormField
+          dir={direction}
+          name="cp"
+          type="text"
+          label={`${t("cp")} *`}
+        />
+        <FormField
+          dir={direction}
+          name="country"
+          type="text"
+          label={`${t("country")} *`}
+        />
+        <FormField
+          dir={direction}
+          name="phoneNumber"
+          type="text"
+          label={`${t("phoneNumber")} *`}
+        />
+        <Button type="submit">
+          {updateAddress ? t("update_address_btn") : t("add_address_btn")}
+        </Button>
+      </Form>
     </Formik>
   )
 }

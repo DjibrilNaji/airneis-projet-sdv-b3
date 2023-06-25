@@ -75,96 +75,89 @@ const ProductForm = (props) => {
       initialValues={initialValues}
       validationSchema={validationSchema}
     >
-      <>
-        <FormError error={error} />
-        <Form className="flex flex-col gap-4 p-4">
-          <div className="flex gap-2">
-            <FormField
-              name="name"
-              type="text"
-              label="Product name :"
-              className="w-2/3"
-            />
-            <FormField
-              name="price"
-              type="number"
-              label="Price :"
-              className="w-1/3"
-            />
-          </div>
-          <FormField name="description" type="text" label="Description :" />
-          <div className="flex gap-2">
-            <FormField
-              name="slug"
-              type="text"
-              label="Slug :"
-              className="w-2/3"
-            />
-            <FormField
-              name="stock"
-              type="number"
-              label="Stock :"
-              className="w-1/3"
-            />
-          </div>
-          <label className="flex gap-2">
-            {" "}
-            Highlander :
-            <Field name="highlander" type="checkbox" className="w-4" />
-          </label>
-          <label className="flex flex-col gap-2">
-            {" "}
-            Catégory :
-            <Field as="select" name="categorieId">
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </Field>
-          </label>
-          <div id="checkbox-group">Materials :</div>
-          <div
-            role="group"
-            aria-labelledby="checkbox-group"
-            className="w-72 flex flex-wrap"
-          >
-            {materials.map((mat) => (
-              <div
-                key={mat.id}
-                hidden={
-                  seeMaterials === false ? (mat.id > 5 ? true : false) : false
-                }
-              >
-                <label>
-                  <Field
-                    type="checkbox"
-                    name="materials"
-                    className="m-2"
-                    value={mat.nameMaterial}
-                  />
-                  {mat.nameMaterial}
-                </label>
-              </div>
-            ))}
-            <button type="button" onClick={onClick} className="ml-2">
-              <FontAwesomeIcon
-                icon={seeMaterials ? faMinus : faPlus}
-                className="text-stone-400"
-              />
-            </button>
-          </div>
+      <FormError error={error} />
+      <Form className="flex flex-col gap-4 p-4">
+        <div className="flex gap-2">
           <FormField
-            name="file"
-            type="file"
-            label="Main Image :"
-            onChange={onChange}
+            name="name"
+            type="text"
+            label="Product name :"
+            className="w-2/3"
           />
-          <SubmitButton color="light" variant="secondary" size="sm">
-            Submit
-          </SubmitButton>
-        </Form>
-      </>
+          <FormField
+            name="price"
+            type="number"
+            label="Price :"
+            className="w-1/3"
+          />
+        </div>
+        <FormField name="description" type="text" label="Description :" />
+        <div className="flex gap-2">
+          <FormField name="slug" type="text" label="Slug :" className="w-2/3" />
+          <FormField
+            name="stock"
+            type="number"
+            label="Stock :"
+            className="w-1/3"
+          />
+        </div>
+        <label className="flex gap-2">
+          {" "}
+          Highlander :
+          <Field name="highlander" type="checkbox" className="w-4" />
+        </label>
+        <label className="flex flex-col gap-2">
+          {" "}
+          Catégory :
+          <Field as="select" name="categorieId">
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </Field>
+        </label>
+        <div id="checkbox-group">Materials :</div>
+        <div
+          role="group"
+          aria-labelledby="checkbox-group"
+          className="w-72 flex flex-wrap"
+        >
+          {materials.map((mat) => (
+            <div
+              key={mat.id}
+              hidden={
+                seeMaterials === false ? (mat.id > 5 ? true : false) : false
+              }
+            >
+              <label>
+                <Field
+                  type="checkbox"
+                  name="materials"
+                  className="m-2"
+                  value={mat.nameMaterial}
+                />
+                {mat.nameMaterial}
+              </label>
+            </div>
+          ))}
+          <button type="button" onClick={onClick} className="ml-2">
+            <FontAwesomeIcon
+              icon={seeMaterials ? faMinus : faPlus}
+              className="text-stone-400"
+            />
+          </button>
+        </div>
+        <FormField
+          name="file"
+          type="file"
+          label="Main Image :"
+          onChange={onChange}
+        />
+        <SubmitButton color="light" variant="secondary" size="sm">
+          Submit
+        </SubmitButton>
+      </Form>
     </Formik>
   )
 }

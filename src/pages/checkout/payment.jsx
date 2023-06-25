@@ -102,19 +102,17 @@ const Payment = (props) => {
   }
 
   return (
-    <>
-      <div className="flex">
-        {clientSecret && (
-          <Elements options={options} stripe={stripePromise}>
-            <CheckoutForm
-              numberOrder={numberOrder}
-              userId={userId}
-              addressId={addressId}
-            />
-          </Elements>
-        )}
-      </div>
-    </>
+    <div className="flex">
+      {clientSecret && (
+        <Elements options={options} stripe={stripePromise}>
+          <CheckoutForm
+            numberOrder={numberOrder}
+            userId={userId}
+            addressId={addressId}
+          />
+        </Elements>
+      )}
+    </div>
   )
 }
 

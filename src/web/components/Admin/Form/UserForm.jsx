@@ -50,47 +50,40 @@ const UserForm = (props) => {
       validationSchema={validationSchema}
       enableReinitialize
     >
-      <>
-        <FormError error={error} />
-        <Form className="flex flex-col gap-4 p-4">
-          <FormField
-            name="userName"
-            type="text"
-            label="Nom d'utilisateur* :"
-            active={active}
-          />
+      <FormError error={error} />
+      <Form className="flex flex-col gap-4 p-4">
+        <FormField
+          name="userName"
+          type="text"
+          label="Nom d'utilisateur* :"
+          active={active}
+        />
 
-          <FormField
-            name="firstName"
-            type="text"
-            label="Prenom* :"
-            active={active}
-          />
+        <FormField
+          name="firstName"
+          type="text"
+          label="Prenom* :"
+          active={active}
+        />
 
-          <FormField
-            name="lastName"
-            type="text"
-            label="Nom* :"
-            active={active}
-          />
+        <FormField name="lastName" type="text" label="Nom* :" active={active} />
 
-          <FormField
-            name="email"
-            type="email"
-            label="E-mail* :"
-            active={active}
-          />
+        <FormField
+          name="email"
+          type="email"
+          label="E-mail* :"
+          active={active}
+        />
 
-          <FormField
-            name="password"
-            type="password"
-            label="Password* :"
-            active={active}
-          />
+        <FormField
+          name="password"
+          type="password"
+          label="Password* :"
+          active={active}
+        />
 
-          <SubmitButton>Add</SubmitButton>
-        </Form>
-      </>
+        <SubmitButton>Add</SubmitButton>
+      </Form>
     </Formik>
   )
 }

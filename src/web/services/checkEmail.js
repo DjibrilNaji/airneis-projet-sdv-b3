@@ -2,11 +2,9 @@ import routes from "@/web/routes.js"
 
 const checkEmail =
   ({ api }) =>
-  async ({email}) => {
+  async ({ email }) => {
     try {
-      const { data } = await api.get(
-        routes.api.users.checkEmail(email)
-      )
+      const { data } = await api.get(routes.api.users.checkEmail(email))
 
       return [null, data]
     } catch (err) {
