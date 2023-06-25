@@ -1,3 +1,4 @@
+import ModalButtonInfo from "@/web/components/Admin/Button/ModalButtonInfo"
 import ContentPage from "@/web/components/Admin/ContentPage"
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
 import FormError from "@/web/components/FormError"
@@ -52,8 +53,8 @@ const OrderAdmin = () => {
   ]
 
   const types = {
-    summary: { name: "summary", title: "Summary" },
-    products: { name: "products", title: "Products" },
+    summary: { button: "Summary", name: "summary", title: "Summary" },
+    products: { button: "Products", name: "products", title: "Products" },
   }
 
   const [products, setProducts] = useState("")
@@ -187,22 +188,15 @@ const OrderAdmin = () => {
         closeModal={() => setViewOrderInfo(false)}
       >
         <div className="flex gap-4">
-          <button
-            onClick={() => setSelectedType(types.summary)}
-            className={`flex ${
-              selectedType.name === types.summary.name && "font-bold underline"
-            }`}
-          >
-            {types.summary.title}
-          </button>
-          <button
-            onClick={() => setSelectedType(types.products)}
-            className={`flex ${
-              selectedType.name === types.products.name && "font-bold underline"
-            }`}
-          >
-            {types.products.title}
-          </button>
+          {Object.values(types).map((type) => (
+            <ModalButtonInfo
+              key={type.name}
+              title={type.button}
+              onClick={() => setSelectedType(type)}
+              selectedType={selectedType}
+              type={type}
+            />
+          ))}
         </div>
 
         {selectedType.name === types.summary.name ? (
@@ -223,8 +217,21 @@ const OrderAdmin = () => {
               </div>
             </div>
             <div className="mt-4 border-2 rounded-lg w-fit">
-              <div className="flex justify-between items-center bg-gray-300 p-4 rounded-t-md">
-                <i>(Status : {singleOrder.status})</i>
+              <div className="flex justify-between items-center bg-gray-300 p-4 rounded-t-md ">
+                <i>
+                  Status :{" "}
+                  <span
+                    className={`font-bold ${
+                      singleOrder.status === "Delivered"
+                        ? "text-green-500"
+                        : singleOrder.status === "Cancelled"
+                        ? "text-red-500"
+                        : "text-orange-500"
+                    }`}
+                  >
+                    {singleOrder.status}
+                  </span>
+                </i>
               </div>
 
               <div className="flex flex-col gap-10 md:flex-row md:justify-between p-4">
