@@ -1,3 +1,4 @@
+import routes from "@/web/routes"
 import Link from "next/link"
 
 function Error({ statusCode }) {
@@ -9,7 +10,7 @@ function Error({ statusCode }) {
           : "An error occurred on client"}
       </p>
       <Link
-        href={"/"}
+        href={routes.home()}
         className="my-7 bg-stone-500 text-white px-4 py-2 rounded-md text-lg"
       >
         Go Back
