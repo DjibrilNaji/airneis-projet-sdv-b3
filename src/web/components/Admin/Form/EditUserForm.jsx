@@ -56,51 +56,58 @@ const EditUserForm = (props) => {
       validationSchema={validationSchema}
       enableReinitialize
     >
-      <FormError error={error} />
-      <Form className="flex flex-col gap-4 p-4">
-        <FormField
-          name="userName"
-          type="text"
-          label="Nom d'utilisateur :"
-          active={active}
-        />
-        <FormField
-          name="firstName"
-          type="text"
-          label="Prenom :"
-          active={active}
-        />
-        <FormField name="lastName" type="text" label="Nom :" active={active} />
-        <FormField
-          name="email"
-          type="email"
-          label="E-mail* :"
-          active={active}
-        />
-        <FormField
-          name="password"
-          type="password"
-          label="Password :"
-          active={active}
-        />
-        <span>isAdmin :</span>
-        <select
-          className="font-bold border-stone-500 border focus:border-2 rounded-lg px-2 py-1 focus:outline-none disabled:border-0 disabled:cursor-text"
-          disabled={active}
-        >
-          <option value={1}>true</option>
-          <option value={2}>false</option>
-        </select>
-        <SubmitButton
-          active={active.toString()}
-          color="light"
-          variant="secondary"
-          size="sm"
-          className="disabled:hidden"
-        >
-          Update
-        </SubmitButton>
-      </Form>
+      <>
+        <FormError error={error} />
+        <Form className="flex flex-col gap-4 p-4">
+          <FormField
+            name="userName"
+            type="text"
+            label="Nom d'utilisateur :"
+            active={active}
+          />
+          <FormField
+            name="firstName"
+            type="text"
+            label="Prenom :"
+            active={active}
+          />
+          <FormField
+            name="lastName"
+            type="text"
+            label="Nom :"
+            active={active}
+          />
+          <FormField
+            name="email"
+            type="email"
+            label="E-mail* :"
+            active={active}
+          />
+          <FormField
+            name="password"
+            type="password"
+            label="Password :"
+            active={active}
+          />
+          <span>isAdmin :</span>
+          <select
+            className="font-bold border-stone-500 border focus:border-2 rounded-lg px-2 py-1 focus:outline-none disabled:border-0 disabled:cursor-text"
+            disabled={active}
+          >
+            <option value={1}>true</option>
+            <option value={2}>false</option>
+          </select>
+          <SubmitButton
+            active={active.toString()}
+            color="light"
+            variant="secondary"
+            size="sm"
+            className="disabled:hidden"
+          >
+            Update
+          </SubmitButton>
+        </Form>
+      </>
     </Formik>
   )
 }

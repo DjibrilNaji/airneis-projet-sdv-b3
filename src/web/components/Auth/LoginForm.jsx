@@ -35,27 +35,34 @@ const LoginForm = (props) => {
       onSubmit={onSubmit}
       validationSchema={validationSchema}
     >
-      <FormError error={error} />
-      <Form className="flex flex-col gap-4 p-4">
-        <FormField name="email" type="text" label="E-mail" icon={faEnvelope} />
-        <FormField
-          name="password"
-          type="password"
-          label="Password"
-          icon={faLock}
-        />
-        <TextAuth
-          route={routes.signUp()}
-          text1="Pas de compte ?"
-          text2="Inscrivez-vous"
-        />
-        <TextAuth
-          route={routes.checkEmail()}
-          text1="Vous avez oubliez votre mot de passe ?"
-          text2="Cliquez ici !"
-        />
-        <Button type="submit">Se connecter</Button>
-      </Form>
+      <>
+        <FormError error={error} />
+        <Form className="flex flex-col gap-4 p-4">
+          <FormField
+            name="email"
+            type="text"
+            label="E-mail"
+            icon={faEnvelope}
+          />
+          <FormField
+            name="password"
+            type="password"
+            label="Password"
+            icon={faLock}
+          />
+          <TextAuth
+            route={routes.signUp()}
+            text1="Pas de compte ?"
+            text2="Inscrivez-vous"
+          />
+          <TextAuth
+            route={routes.checkEmail()}
+            text1="Vous avez oubliez votre mot de passe ?"
+            text2="Cliquez ici !"
+          />
+          <Button type="submit">Se connecter</Button>
+        </Form>
+      </>
     </Formik>
   )
 }

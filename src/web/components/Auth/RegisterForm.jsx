@@ -50,41 +50,43 @@ const RegisterForm = (props) => {
       initialValues={initialValues}
       validationSchema={validationSchema}
     >
-      <FormError error={error} />
-      <Form className="flex flex-col gap-4 p-4">
-        <FormField
-          name="userName"
-          type="text"
-          label="Identifiant"
-          icon={faPerson}
-        />
-        <FormField
-          name="firstName"
-          type="text"
-          label="Prenom"
-          icon={faPerson}
-        />
-        <FormField name="lastName" type="text" label="Nom" icon={faPerson} />
-        <FormField
-          name="email"
-          type="email"
-          label="E-mail*"
-          icon={faEnvelope}
-        />
-        <FormField
-          name="password"
-          type="password"
-          label="Password*"
-          icon={faLock}
-        />
-        <TextAuth
-          route="./login"
-          text1="Déjà un compte ?"
-          text2="Connectez-vous"
-          button="S'inscrire"
-        />
-        <SubmitButton>S'inscrire</SubmitButton>
-      </Form>
+      <>
+        <FormError error={error} />
+        <Form className="flex flex-col gap-4 p-4">
+          <FormField
+            name="userName"
+            type="text"
+            label="Identifiant"
+            icon={faPerson}
+          />
+          <FormField
+            name="firstName"
+            type="text"
+            label="Prenom"
+            icon={faPerson}
+          />
+          <FormField name="lastName" type="text" label="Nom" icon={faPerson} />
+          <FormField
+            name="email"
+            type="email"
+            label="E-mail*"
+            icon={faEnvelope}
+          />
+          <FormField
+            name="password"
+            type="password"
+            label="Password*"
+            icon={faLock}
+          />
+          <TextAuth
+            route="./login"
+            text1="Déjà un compte ?"
+            text2="Connectez-vous"
+            button="S'inscrire"
+          />
+          <SubmitButton>S'inscrire</SubmitButton>
+        </Form>
+      </>
     </Formik>
   )
 }
