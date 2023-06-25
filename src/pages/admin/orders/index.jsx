@@ -1,11 +1,10 @@
+import ContentPage from "@/web/components/Admin/ContentPage"
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
-import Pagination from "@/web/components/Admin/Pagination"
 import FormError from "@/web/components/FormError"
 import Modal from "@/web/components/Modal"
-import TableHeadField from "@/web/components/TableHeadField"
 import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
 import routes from "@/web/routes"
-import { faCircle, faEdit, faPlus } from "@fortawesome/free-solid-svg-icons"
+import { faCircle } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Image from "next/image"
 import Link from "next/link"
@@ -18,11 +17,39 @@ const OrderAdmin = () => {
 
   const [data, setData] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
+  const [sortColumn, setSortColumn] = useState("id")
+  const [order, setOrder] = useState("asc")
   const [totalPages, setTotalPages] = useState("")
-  const [limit] = useState(10)
+  const [limit, setLimit] = useState(10)
   const [searchTerm, setSearchTerm] = useState(null)
 
   const [error, setError] = useState("")
+
+  const columnsTableHead = [
+    {
+      displayName: "Id",
+      fieldName: "id",
+      handleSort: true,
+    },
+    {
+      displayName: "Email",
+      fieldName: "email",
+      handleSort: true,
+    },
+    {
+      displayName: "Price",
+      fieldName: "price",
+      handleSort: true,
+    },
+    {
+      displayName: "Status",
+      handleSort: false,
+    },
+    {
+      displayName: "More",
+      handleSort: false,
+    },
+  ]
 
   const types = {
     summary: { name: "summary", title: "Summary" },
@@ -32,12 +59,18 @@ const OrderAdmin = () => {
   const [products, setProducts] = useState("")
   const [selectedType, setSelectedType] = useState(types.summary)
   const [viewOrderInfo, setViewOrderInfo] = useState(false)
-  const [order, setOrder] = useState("")
+  const [singleOrder, setSingleOrder] = useState("")
   const [addressOrder, setAddressOrder] = useState("")
 
   const fetchData = useCallback(
     async (page) => {
-      const [err, data] = await getOrders(limit, page, searchTerm)
+      const [err, data] = await getOrders(
+        limit,
+        page,
+        sortColumn,
+        order,
+        searchTerm
+      )
 
       if (err) {
         setError(err)
@@ -51,7 +84,7 @@ const OrderAdmin = () => {
       setTotalPages(totalPages)
       setData(data.result)
     },
-    [limit, searchTerm, getOrders]
+    [limit, searchTerm, getOrders, sortColumn, order]
   )
 
   useEffect(() => {
@@ -66,6 +99,29 @@ const OrderAdmin = () => {
     [fetchData]
   )
 
+  const handleSortChange = useCallback(
+    (column) => {
+      if (column === sortColumn) {
+        setOrder(order === "asc" ? "desc" : "asc")
+      } else {
+        setSortColumn(column)
+        setOrder("asc")
+      }
+
+      fetchData(currentPage)
+    },
+    [fetchData, currentPage, order, sortColumn]
+  )
+
+  const handleLimitChange = useCallback(
+    (e) => {
+      setLimit(e.target.value)
+      setCurrentPage(1)
+      fetchData(1)
+    },
+    [fetchData]
+  )
+
   const fetchSingleOrder = async (id) => {
     const [err, order] = await getSingleOrder(id)
 
@@ -75,129 +131,54 @@ const OrderAdmin = () => {
       return
     }
 
-    setOrder(order.order)
+    setSingleOrder(order.order)
     setProducts(order.products)
     setAddressOrder(order.order.address[0])
     setViewOrderInfo(true)
   }
 
-  const creationDate = new Date(order.createdAt).toLocaleDateString("fr")
+  const creationDate = new Date(singleOrder.createdAt).toLocaleDateString("fr")
 
   return (
     <>
       {error ? <FormError error={error} /> : ""}
 
-      <div className="flex item-center justify-center mb-5">
-        <span className="font-extrabold text-3xl text-stone-500 uppercase">
-          Orders
-        </span>
-      </div>
+      <ContentPage
+        title="Orders"
+        data={data.orders}
+        columnsTableHead={columnsTableHead}
+        columnsTableBody={["id", "userEmail", "total_price"]}
+        name={"orders"}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        limit={limit}
+        searchTerm={searchTerm}
+        handlePageChange={handlePageChange}
+        handleLimitChange={handleLimitChange}
+        handleSortChange={handleSortChange}
+        fetchSingleItem={fetchSingleOrder}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        getInfo={true}
+        displayIsDelete={false}
+        displayDeleteButton={false}
+        displayStatus={true}
+      />
 
       {data.orders?.length > 0 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          handlePageChange={handlePageChange}
-        />
-      )}
-
-      <div className="flex items-center justify-between">
-        <div className="flex gap-2 my-6 mx-1"></div>
-        <div className="mx-1">
-          <input
-            type="text"
-            placeholder="Search"
-            className="border-2 border-stone-500 rounded-lg px-2 focus:outline-none"
-            value={searchTerm == null ? "" : searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+        <div className="flex justify-center gap-14 my-14">
+          <span className="flex gap-2 items-center">
+            <FontAwesomeIcon icon={faCircle} className="h-5 text-green-400" />
+            <h3>Delivered</h3>
+          </span>
+          <span className="flex gap-2 items-center">
+            <FontAwesomeIcon icon={faCircle} className="h-5 text-orange-400" />
+            <h3>On standby</h3>
+          </span>
+          <span className="flex gap-2 items-center">
+            <FontAwesomeIcon icon={faCircle} className="h-5 text-red-400" />
+            <h3>Cancelled</h3>
+          </span>
         </div>
-      </div>
-
-      {data.orders?.length > 0 && (
-        <>
-          <table className="w-[100vw]">
-            <thead className="text-xs text-left uppercase bg-gray-50 text-gray-700">
-              <tr>
-                <TableHeadField displayName="Id" fieldName="id" />
-                <TableHeadField displayName="Email" fieldName="email" />
-                <TableHeadField
-                  className="px-10"
-                  displayName="Price"
-                  fieldName="price_formatted"
-                />
-                <th className="text-center py-2 px-1">Status</th>
-                <th className="text-center py-2 px-1">Actions</th>
-                <th className="text-center py-2 px-1">More</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {data.orders?.map((order) => (
-                <tr
-                  key={order.id}
-                  className="border-b text-sm border-gray-300 py-2 px-4 text-center"
-                >
-                  <td className="py-2 px-4">{order.id} </td>
-                  <td className="py-2 px-4">{order.user.email} </td>
-                  <td className="py-2 px-4">{order.total_price} € </td>
-                  <td className="py-2 px-4">
-                    <FontAwesomeIcon
-                      icon={faCircle}
-                      className={`text-stone-400 h-5 ${
-                        order.status === "Delivered"
-                          ? "text-green-400"
-                          : order.status === "Cancelled"
-                          ? "text-red-400"
-                          : "text-orange-400"
-                      }`}
-                    />
-                  </td>
-
-                  <td className="py-2 px-4">
-                    <button
-                      className="disabled:opacity-30 disabled:cursor-not-allowed"
-                      disabled={
-                        order.status === "Delivered" ||
-                        order.status === "Cancelled"
-                      }
-                    >
-                      <FontAwesomeIcon
-                        icon={faEdit}
-                        className="text-stone-400 h-5"
-                      />
-                    </button>
-                  </td>
-                  <td>
-                    <button onClick={() => fetchSingleOrder(order.id)}>
-                      <FontAwesomeIcon
-                        icon={faPlus}
-                        className="border-2 px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200 text-stone-400"
-                      />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className="flex justify-center gap-14 my-14">
-            <span className="flex gap-2 items-center">
-              <FontAwesomeIcon icon={faCircle} className="h-5 text-green-400" />
-              <h3>Delivered</h3>
-            </span>
-            <span className="flex gap-2 items-center">
-              <FontAwesomeIcon
-                icon={faCircle}
-                className="h-5 text-orange-400"
-              />
-              <h3>On standby</h3>
-            </span>
-            <span className="flex gap-2 items-center">
-              <FontAwesomeIcon icon={faCircle} className="h-5 text-red-400" />
-              <h3>Cancelled</h3>
-            </span>
-          </div>
-        </>
       )}
 
       <Modal
@@ -229,16 +210,21 @@ const OrderAdmin = () => {
             <div className="mt-4">
               <span className="font-bold text-lg">
                 Order number :
-                <i className="text-md font-normal"> {order.numberOrder}</i>
+                <i className="text-md font-normal">
+                  {" "}
+                  {singleOrder.numberOrder}
+                </i>
               </span>
               <div className="flex flex-row gap-3 font-bold text-lg">
                 User id :
-                <span className="text-md font-normal">{order.userId}</span>
+                <span className="text-md font-normal">
+                  {singleOrder.userId}
+                </span>
               </div>
             </div>
             <div className="mt-4 border-2 rounded-lg w-fit">
               <div className="flex justify-between items-center bg-gray-300 p-4 rounded-t-md">
-                <i>(Status : {order.status})</i>
+                <i>(Status : {singleOrder.status})</i>
               </div>
 
               <div className="flex flex-col gap-10 md:flex-row md:justify-between p-4">
@@ -265,13 +251,16 @@ const OrderAdmin = () => {
                   <div className="font-bold">Order summary :</div>
                   <span className="flex justify-between">
                     Amount ET :{" "}
-                    <span>{(order.price - order.amount_tva).toFixed(2)} €</span>
+                    <span>
+                      {(singleOrder.price - singleOrder.amount_tva).toFixed(2)}{" "}
+                      €
+                    </span>
                   </span>
                   <span className="flex justify-between">
-                    VAT : <span>{order.amount_tva} €</span>
+                    VAT : <span>{singleOrder.amount_tva} €</span>
                   </span>
                   <span className="flex justify-between text-xl font-bold gap-4">
-                    Total : <span> {order.total_price} €</span>
+                    Total : <span> {singleOrder.total_price} €</span>
                   </span>
                 </div>
               </div>
@@ -330,20 +319,6 @@ const OrderAdmin = () => {
           </div>
         )}
       </Modal>
-
-      <div
-        className={`${
-          data.orders?.length > 0
-            ? "hidden"
-            : typeof data.orders === "undefined"
-            ? "hidden"
-            : "flex"
-        } items-center justify-center mb-5`}
-      >
-        <span className="font-bold text-3xl text-black ">
-          There are no orders
-        </span>
-      </div>
     </>
   )
 }
