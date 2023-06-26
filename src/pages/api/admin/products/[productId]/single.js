@@ -6,9 +6,9 @@ import mw from "@/api/mw.js"
 import {
   boolValidator,
   idValidator,
-  integerValidator,
   materialValidator,
   numberValidator,
+  stockValidator,
   stringValidator,
   urlSlugValidator,
 } from "@/validators"
@@ -75,7 +75,7 @@ const handler = mw({
         name: stringValidator,
         description: stringValidator,
         price: numberValidator,
-        stock: integerValidator,
+        stock: stockValidator,
         highlander: boolValidator,
         slug: urlSlugValidator,
         materials: materialValidator,
@@ -123,7 +123,7 @@ const handler = mw({
           ...(name ? { name } : {}),
           ...(description ? { description } : {}),
           ...(price ? { price } : {}),
-          ...(stock ? { stock } : {}),
+          ...(stock || stock === 0 ? { stock } : {}),
           ...(highlander ? { highlander } : {}),
           ...(slug ? { slug } : {}),
         })
