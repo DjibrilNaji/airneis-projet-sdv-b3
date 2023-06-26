@@ -3,8 +3,6 @@ import Link from "next/link"
 import { useCallback, useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
-  faArrowLeft,
-  faArrowRight,
   faCheck,
   faEdit,
   faPlus,
@@ -22,6 +20,7 @@ import Modal from "@/web/components/Modal"
 import EditProductForm from "@/web/components/Admin/Form/EditProductForm"
 import Image from "next/image"
 import SelectShow from "@/web/components/Admin/SelectAndSearch/SelectShow"
+import Pagination from "@/web/components/Admin/Pagination"
 
 const ProductAdmin = () => {
   const [data, setData] = useState([])
@@ -180,20 +179,6 @@ const ProductAdmin = () => {
     [product, toggleUpdateProduct, updateProduct]
   )
 
-  const pagination = []
-  for (let i = 1; i <= totalPages; i++) {
-    pagination.push(
-      <button
-        key={i}
-        className={`h-12 border-2 border-r-0 border-stone-500
-               w-12  ${currentPage === i && "bg-stone-500 text-white"}`}
-        onClick={() => handlePageChange(i)}
-      >
-        {i}
-      </button>
-    )
-  }
-
   return (
     <>
       {error ? <FormError error={error} /> : ""}
@@ -204,23 +189,11 @@ const ProductAdmin = () => {
       </div>
       <div className="flex justify-center my-5">
         <div className="flex">
-          <button
-            className={
-              "h-12 border-2 border-r-0 text-stone-500  border-stone-500 px-4 rounded-l-lg hover:bg-stone-500 hover:text-white disabled:opacity-30 disabled:z-[-1]"
-            }
-            disabled={currentPage === 1}
-            onClick={() => handlePageChange(currentPage - 1)}
-          >
-            <FontAwesomeIcon icon={faArrowLeft} />
-          </button>
-          <div> {pagination}</div>
-          <button
-            className="h-12 border-2 text-stone-500  border-stone-500 px-4 rounded-r-lg hover:bg-stone-500 hover:text-white disabled:opacity-30 disabled:z-[-1]"
-            disabled={currentPage === totalPages}
-            onClick={() => handlePageChange(currentPage + 1)}
-          >
-            <FontAwesomeIcon icon={faArrowRight} />
-          </button>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            handlePageChange={handlePageChange}
+          />
         </div>
       </div>
 
