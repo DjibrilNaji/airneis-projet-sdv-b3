@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react"
 import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useRouter } from "next/router"
@@ -33,35 +32,7 @@ const Home = (props) => {
     error,
   } = props
 
-  const [activeIndex, setActiveIndex] = useState(0)
-
   const { t } = useTranslation("home-page")
-
-  const handlePrevious = () => {
-    setActiveIndex(
-      (prevActiveIndex) =>
-        (prevActiveIndex - 1 + result.imageHomePage.length) %
-        result.imageHomePage.length
-    )
-  }
-
-  const handleNext = () => {
-    setActiveIndex(
-      (prevActiveIndex) => (prevActiveIndex + 1) % result.imageHomePage.length
-    )
-  }
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setActiveIndex(
-        (prevActiveIndex) => (prevActiveIndex + 1) % result.imageHomePage.length
-      )
-    }, 8000)
-
-    return () => {
-      clearInterval(intervalId)
-    }
-  }, [result.imageHomePage.length])
 
   const { locale } = useRouter()
   const direction = t("direction", { locale })
@@ -70,13 +41,7 @@ const Home = (props) => {
     <>
       {error ? <FormError error={error} /> : ""}
 
-      <Carousel
-        image={result.imageHomePage}
-        activeIndex={activeIndex}
-        handleNext={handleNext}
-        handlePrevious={handlePrevious}
-        setActiveIndex={setActiveIndex}
-      />
+      <Carousel image={result.imageHomePage} />
 
       <div className="flex justify-center my-4">
         <p
