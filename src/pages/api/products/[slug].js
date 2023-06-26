@@ -23,6 +23,7 @@ const handler = mw({
         .where({ isDelete: false })
         .withGraphFetched("image")
         .withGraphFetched("category")
+        .withGraphFetched("materials")
 
       if (!product) {
         throw new NotFoundError()

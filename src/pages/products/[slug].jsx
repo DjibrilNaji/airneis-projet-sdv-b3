@@ -19,6 +19,7 @@ import getSingleProductBySlugService from "@/web/services/products/getSingleProd
 import createAPIClient from "@/web/createAPIClient"
 import getSingleFavoriteService from "@/web/services/products/favorites/getSingleFavorite"
 import Banner from "@/web/components/Banner"
+import Modal from "@/web/components/Modal"
 import Carousel from "@/web/components/Carousel"
 
 export const getServerSideProps = async ({ locale, params, req }) => {
@@ -73,6 +74,7 @@ export const getServerSideProps = async ({ locale, params, req }) => {
       favorite: jwt ? favorite.result : [],
       userId,
       data,
+      materials: data.result.product.materials,
       product: data.result.product,
       randomProducts: data.result.randomProducts,
       image: data.result.product.image,
@@ -92,6 +94,7 @@ const Product = (props) => {
     randomProducts,
     image,
     category,
+    materials,
   } = props
 
   const {
@@ -108,13 +111,15 @@ const Product = (props) => {
 
   const [activeIndex, setActiveIndex] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
-  const [contentModal, setContentModal] = useState()
+  const [contentDialog, setContentDialog] = useState()
   const [quantity, setQuantity] = useState(1)
   const [isFavorite, setIsFavorite] = useState()
   const [selectedQuantity, setSelectedQuantity] = useState(1)
   const [quantityDisplay, setQuantityDisplay] = useState([])
   const [mainImage, setMainImage] = useState([])
   const [error, setError] = useState("")
+
+  const [toggleViewMaterials, setToggleViewMaterials] = useState(false)
 
   useEffect(() => {
     setMainImage(image.find((img) => img.isMain))
@@ -150,7 +155,7 @@ const Product = (props) => {
   const handleAddFavorites = useCallback(
     async (productId) => {
       if (isFavorite) {
-        setContentModal(t("pop_already_in_favorite"))
+        setContentDialog(t("pop_already_in_favorite"))
       } else {
         const [err] = await addFavorite(userId, productId)
 
@@ -161,7 +166,7 @@ const Product = (props) => {
         }
 
         setIsFavorite(true)
-        setContentModal(t("pop_add_to_favorite"))
+        setContentDialog(t("pop_add_to_favorite"))
       }
 
       setIsOpen(true)
@@ -173,7 +178,7 @@ const Product = (props) => {
   const handleAddProduct = useCallback(
     (product, image) => {
       addToCart(product, image, parseInt(quantity))
-      setContentModal(t("pop_add_to_cart"))
+      setContentDialog(t("pop_add_to_cart"))
       setIsOpen(true)
       setTimeout(() => setIsOpen(false), 2000)
       setQuantity(1)
@@ -206,9 +211,21 @@ const Product = (props) => {
       <Dialog
         isOpen={isOpen}
         dialogTitle={t("pop_title")}
-        content={contentModal}
+        content={contentDialog}
         dir={direction}
       />
+
+      <Modal
+        isOpen={toggleViewMaterials}
+        modalTitle={"Materials"}
+        closeModal={() => setToggleViewMaterials(false)}
+      >
+        {materials.map((material, index) => (
+          <ul key={index}>
+            <li className="text-lg font-semibold">- {material.nameMaterial}</li>
+          </ul>
+        ))}
+      </Modal>
 
       <div className="hidden md:flex items-center justify-center">
         <span className="absolute uppercase text-2xl font-bold text-stone-500 border-2 border-stone-500 bg-white rounded-xl p-2">
@@ -282,6 +299,15 @@ const Product = (props) => {
             )}
 
             <p className="text-lg font-semibold my-4">{product.description}</p>
+
+            {materials.length > 0 && (
+              <button
+                onClick={() => setToggleViewMaterials(true)}
+                className="font-semibold text-gray-700 flex border-2 w-fit px-2 rounded-lg bg-stone-200 text-lg"
+              >
+                More informations
+              </button>
+            )}
 
             <div className="flex my-4">
               <div className="flex flex-col gap-4 ml-auto">
