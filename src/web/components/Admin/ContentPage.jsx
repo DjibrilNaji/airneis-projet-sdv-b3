@@ -23,6 +23,7 @@ const ContentPage = (props) => {
     selectItemToRemove,
     fetchSingleItem,
     getInfo,
+    displayHighlander,
     displayIsDelete,
     displayDeleteButton,
     displayStatus,
@@ -58,6 +59,7 @@ const ContentPage = (props) => {
             selectItemToRemove={selectItemToRemove}
             fetchSingleItem={fetchSingleItem}
             getInfo={getInfo}
+            displayHighlander={displayHighlander}
             displayIsDelete={displayIsDelete}
             displayDeleteButton={displayDeleteButton}
             displayStatus={displayStatus}

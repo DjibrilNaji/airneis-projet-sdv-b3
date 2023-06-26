@@ -17,6 +17,7 @@ const CustomTableBody = (props) => {
     getInfo,
     displayIsDelete,
     fetchSingleItem,
+    displayHighlander,
     displayDeleteButton,
     displayStatus,
   } = props
@@ -38,9 +39,31 @@ const CustomTableBody = (props) => {
           )}
           {columns.map((fieldName) => (
             <td key={fieldName} className="py-2 px-4">
-              {fieldName === "userEmail" ? item.user.email : item[fieldName]}
+              {fieldName === "userEmail"
+                ? item.user.email
+                : fieldName === "categoryName"
+                ? item.category[0].name
+                : fieldName === "materialList"
+                ? item.materials.map((mat, index) => (
+                    <ul key={index}>
+                      <li>{mat.nameMaterial}</li>
+                    </ul>
+                  ))
+                : item[fieldName]}
             </td>
           ))}
+          {displayHighlander && (
+            <td className="py-2 px-4">
+              {item.highlander ? (
+                <FontAwesomeIcon
+                  icon={faCheck}
+                  className="h-6 text-green-500"
+                />
+              ) : (
+                <FontAwesomeIcon icon={faTimes} className="h-6 text-red-500" />
+              )}
+            </td>
+          )}
           {displayIsDelete && (
             <td className="py-2 px-4">
               {item.isDelete ? (

@@ -12,6 +12,7 @@ const Table = (props) => {
     handleSelectItem,
     fetchSingleItem,
     getInfo,
+    displayHighlander,
     displayIsDelete,
     displayDeleteButton,
     displayStatus,
@@ -32,6 +33,7 @@ const Table = (props) => {
         selectItemToRemove={selectItemToRemove}
         fetchSingleItem={fetchSingleItem}
         getInfo={getInfo}
+        displayHighlander={displayHighlander}
         displayIsDelete={displayIsDelete}
         displayDeleteButton={displayDeleteButton}
         displayStatus={displayStatus}
