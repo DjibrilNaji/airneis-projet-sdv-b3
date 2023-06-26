@@ -18,8 +18,6 @@ import FormError from "@/web/components/FormError"
 import getSingleProductBySlugService from "@/web/services/products/getSingleProductBySlug"
 import createAPIClient from "@/web/createAPIClient"
 import getSingleFavoriteService from "@/web/services/products/favorites/getSingleFavorite"
-import getMaterialsService from "@/web/services/materials/getMaterials"
-import getRelMaterialProductService from "@/web/services/materials/getRelMaterialProduct"
 import Banner from "@/web/components/Banner"
 import Modal from "@/web/components/Modal"
 import Carousel from "@/web/components/Carousel"
@@ -50,8 +48,6 @@ export const getServerSideProps = async ({ locale, params, req }) => {
   const api = createAPIClient({ jwt, server: true })
 
   const getSingleProductBySlug = getSingleProductBySlugService({ api })
-  const getMaterials = getMaterialsService({ api })
-  const getRelMaterialProduct = getRelMaterialProductService({ api })
   const getSingleFavorite = getSingleFavoriteService({ api })
 
   const [err, data] = await getSingleProductBySlug(productSlug)
@@ -59,15 +55,6 @@ export const getServerSideProps = async ({ locale, params, req }) => {
   if (err) {
     return redirection()
   }
-
-  const [, dataMaterials] = await getMaterials()
-  const [, dataRelMaterials] = await getRelMaterialProduct(
-    data.result.product.id
-  )
-
-  const filteredMaterials = dataMaterials.result.filter((material) =>
-    dataRelMaterials.result.some((id) => id.materialId === material.id)
-  )
 
   let favorite = []
 
@@ -87,7 +74,7 @@ export const getServerSideProps = async ({ locale, params, req }) => {
       favorite: jwt ? favorite.result : [],
       userId,
       data,
-      filteredMaterials,
+      materials: data.result.product.materials,
       product: data.result.product,
       randomProducts: data.result.randomProducts,
       image: data.result.product.image,
@@ -107,7 +94,7 @@ const Product = (props) => {
     randomProducts,
     image,
     category,
-    filteredMaterials,
+    materials,
   } = props
 
   const {
@@ -133,13 +120,11 @@ const Product = (props) => {
   const [error, setError] = useState("")
 
   const [toggleViewMaterials, setToggleViewMaterials] = useState(false)
-  const [materials, setMaterials] = useState([])
 
   useEffect(() => {
     setMainImage(image.find((img) => img.isMain))
     setIsFavorite(favorite.length > 0 ? true : false)
-    setMaterials(filteredMaterials)
-  }, [data.result.product.category, image, favorite, filteredMaterials])
+  }, [data.result.product.category, image, favorite])
 
   const cartItems = cart.find((item) => item.slug === product.slug)
 
