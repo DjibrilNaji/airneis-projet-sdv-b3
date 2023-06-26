@@ -43,9 +43,12 @@ export const CartContextProvider = (props) => {
     setTotalStripe(total * 100)
 
     const idQuantities = []
-
     cart.forEach((item) => {
-      idQuantities.push({ id: item.id, quantity: item.quantity })
+      idQuantities.push({
+        id: item.id,
+        quantity: item.quantity,
+        stock: item.stock,
+      })
     })
 
     setProductsIdQuantities(idQuantities)
