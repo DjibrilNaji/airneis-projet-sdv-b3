@@ -167,6 +167,7 @@ const OrderAdmin = () => {
           fetchSingleItem={fetchSingleOrder}
           onChange={(e) => setSearchTerm(e.target.value)}
           getInfo={true}
+          displayHighlander={false}
           displayIsDelete={false}
           displayDeleteButton={false}
           displayStatus={true}
