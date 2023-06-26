@@ -43,6 +43,8 @@ import getOrderDetailService from "../services/order/getOrderDetail"
 import addRelOrderProductService from "../services/relOrderProduct/addRelOrderProduct"
 import updateCategoryService from "../services/admin/categories/updateCategory"
 import getSingleCategoryService from "../services/admin/categories/getSingleCategory"
+import getImagesHomePageService from "../services/admin/image-home-page/getImagesHomePage"
+import changeDisplayImageHomePageService from "../services/admin/image-home-page/changeDisplayImageHomePage"
 
 import {
   createContext,
@@ -122,6 +124,9 @@ export const AppContextProvider = (props) => {
 
   const addRelOrderProduct = addRelOrderProductService({ api })
 
+  const getImagesHomePage = getImagesHomePageService({ api })
+  const changeDisplayImageHomePage = changeDisplayImageHomePageService({ api })
+
   const signOut = useCallback(() => {
     localStorage.removeItem(config.session.localStorageKey)
     localStorage.removeItem("username")
@@ -188,6 +193,8 @@ export const AppContextProvider = (props) => {
           addRelOrderProduct,
           updateCategory,
           getSingleCategory,
+          getImagesHomePage,
+          changeDisplayImageHomePage,
         },
         state: {
           session,
