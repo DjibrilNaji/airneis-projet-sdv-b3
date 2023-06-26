@@ -59,6 +59,11 @@ const routes = {
       payment: () => "/payment",
     },
     admin: {
+      imageHomePage: {
+        collection: () => "/admin/image-home-page",
+        changeDisplay: (imageHomePageId) =>
+          `/admin/image-home-page/${imageHomePageId}`,
+      },
       materials: {
         collection: () => "/admin/materials/all",
       },
