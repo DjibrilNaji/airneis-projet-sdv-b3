@@ -2,16 +2,32 @@ import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import classNames from "classnames"
 import Image from "next/image"
+import { useEffect, useState } from "react"
 
 const Carousel = (props) => {
-  const {
-    image,
-    activeIndex,
-    handleNext,
-    handlePrevious,
-    className,
-    setActiveIndex,
-  } = props
+  const { image, className } = props
+
+  const [activeIndex, setActiveIndex] = useState(0)
+
+  const handlePrevious = () => {
+    setActiveIndex(
+      (prevActiveIndex) => (prevActiveIndex - 1 + image.length) % image.length
+    )
+  }
+
+  const handleNext = () => {
+    setActiveIndex((prevActiveIndex) => (prevActiveIndex + 1) % image.length)
+  }
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setActiveIndex((prevActiveIndex) => (prevActiveIndex + 1) % image.length)
+    }, 5000)
+
+    return () => {
+      clearInterval(intervalId)
+    }
+  }, [image.length])
 
   return (
     <div className={classNames("relative", className)}>
