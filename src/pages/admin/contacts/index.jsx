@@ -121,20 +121,6 @@ const ContactAdmin = () => {
     setContactIdToRemove(id)
   }, [])
 
-  const pagination = []
-  for (let i = 1; i <= totalPages; i++) {
-    pagination.push(
-      <button
-        key={i}
-        className={`h-12 border-2 border-r-0 border-stone-500
-               w-12  ${currentPage === i && "bg-stone-500 text-white"}`}
-        onClick={() => handlePageChange(i)}
-      >
-        {i}
-      </button>
-    )
-  }
-
   const columnsTableHead = [
     {
       displayName: "Select",
