@@ -16,7 +16,7 @@ import FormError from "@/web/components/FormError"
 import cookie from "cookie"
 import createAPIClient from "@/web/createAPIClient"
 import getFavoritesService from "@/web/services/favorites/getFavorites"
-import EmptyPage from "@/web/components/EmptyPage"
+import CenterItem from "@/web/components/CenterItem"
 
 export const getServerSideProps = async ({ locale, params, req }) => {
   const userId = params.userId
@@ -189,7 +189,7 @@ const Favorite = (props) => {
           </div>
         </>
       ) : (
-        <EmptyPage
+        <CenterItem
           icon={faBoxOpen}
           content="Your favorites list is empty !"
           button="Go home"

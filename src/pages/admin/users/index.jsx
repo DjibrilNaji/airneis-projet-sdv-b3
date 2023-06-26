@@ -12,6 +12,7 @@ import ConfirmDelete from "@/web/components/Admin/ConfirmDelete"
 import ContentPage from "@/web/components/Admin/ContentPage"
 import DeleteAllButton from "@/web/components/Admin/Button/DeleteAllButton"
 import ModalButtonInfo from "@/web/components/Admin/Button/ModalButtonInfo"
+import CenterItem from "@/web/components/CenterItem"
 
 const UsersAdmin = () => {
   const {
@@ -246,191 +247,164 @@ const UsersAdmin = () => {
 
   return (
     <>
-      {error ? <FormError error={error} /> : ""}
-
-      <ConfirmDelete
-        isOpen={toggleDeleteOne || toggleDeleteSeveral}
-        page="users"
-        close={
-          toggleDeleteSeveral
-            ? () => setToggleDeleteSeveral(false)
-            : () => setToggleDeleteOne(false)
-        }
-        remove={
-          toggleDeleteSeveral
-            ? () => selectedUsers.map((id) => handleDelete(id))
-            : () => handleDelete(userIdToRemove)
-        }
+      <CenterItem
+        className="md:hidden"
+        content="Use a larger screen to access the backoffice"
       />
 
-      <Modal
-        isOpen={isOpen}
-        modalTitle="Add"
-        closeModal={() => setIsOpen(false)}
-      >
-        <UserForm onSubmit={handleAddUser} />
-      </Modal>
+      <div className="hidden md:block">
+        {error ? <FormError error={error} /> : ""}
 
-      <ContentPage
-        title="Users"
-        data={data.users}
-        columnsTableHead={columnsTableHead}
-        columnsTableBody={["id", "email", "userName"]}
-        name={"messages"}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        limit={limit}
-        searchTerm={searchTerm}
-        selectedItems={selectedUsers}
-        handlePageChange={handlePageChange}
-        handleLimitChange={handleLimitChange}
-        handleSortChange={handleSortChange}
-        handleSelectItem={handleSelectItem}
-        selectItemToRemove={selectUserToRemove}
-        fetchSingleItem={fetchSingleUser}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        getInfo={true}
-        displayIsDelete={true}
-        displayDeleteButton={true}
-        displayStatus={false}
-      />
+        <ConfirmDelete
+          isOpen={toggleDeleteOne || toggleDeleteSeveral}
+          page="users"
+          close={
+            toggleDeleteSeveral
+              ? () => setToggleDeleteSeveral(false)
+              : () => setToggleDeleteOne(false)
+          }
+          remove={
+            toggleDeleteSeveral
+              ? () => selectedUsers.map((id) => handleDelete(id))
+              : () => handleDelete(userIdToRemove)
+          }
+        />
 
-      {data.users?.length > 0 && (
-        <div className="flex flex-col justify-start">
-          <DeleteAllButton
-            className="mx-auto"
-            title="Delete all selected users"
-            onClick={() => setToggleDeleteSeveral(true)}
-            disabled={selectedUsers.length === 0}
-          />
+        <Modal
+          isOpen={isOpen}
+          modalTitle="Add"
+          closeModal={() => setIsOpen(false)}
+        >
+          <UserForm onSubmit={handleAddUser} />
+        </Modal>
 
-          <Button onClick={() => setIsOpen(true)} className="mx-auto">
-            Add new user
-          </Button>
-        </div>
-      )}
+        <ContentPage
+          title="Users"
+          data={data.users}
+          columnsTableHead={columnsTableHead}
+          columnsTableBody={["id", "email", "userName"]}
+          name={"messages"}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          limit={limit}
+          searchTerm={searchTerm}
+          selectedItems={selectedUsers}
+          handlePageChange={handlePageChange}
+          handleLimitChange={handleLimitChange}
+          handleSortChange={handleSortChange}
+          handleSelectItem={handleSelectItem}
+          selectItemToRemove={selectUserToRemove}
+          fetchSingleItem={fetchSingleUser}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          getInfo={true}
+          displayIsDelete={true}
+          displayDeleteButton={true}
+          displayStatus={false}
+        />
 
-      <Modal
-        isOpen={viewUserInfo}
-        modalTitle={selectedType.title}
-        closeModal={handleCloseUserInfoModal}
-      >
-        <div className="flex gap-4">
-          {Object.values(types).map((type) => (
-            <ModalButtonInfo
-              key={type.name}
-              title={type.button}
-              onClick={() => setSelectedType(type)}
-              selectedType={selectedType}
-              type={type}
+        {data.users?.length > 0 && (
+          <div className="flex flex-col justify-start">
+            <DeleteAllButton
+              className="mx-auto"
+              title="Delete all selected users"
+              onClick={() => setToggleDeleteSeveral(true)}
+              disabled={selectedUsers.length === 0}
             />
-          ))}
-        </div>
 
-        {selectedType.name === types.user.name ? (
-          <>
-            <div className="border-t-4 border-gray-500 px-3 my-4" />
-            <div className="flex items-center justify-between ">
-              <div className="px-4">
-                {user.isDelete ? (
-                  <span className="italic text-red-500 text-lg">
-                    (Account deleted : id {user.id})
-                  </span>
-                ) : (
-                  <span className="italic text-green-500 text-lg">
-                    (Active account : id {user.id})
-                  </span>
+            <Button onClick={() => setIsOpen(true)} className="mx-auto">
+              Add new user
+            </Button>
+          </div>
+        )}
+
+        <Modal
+          isOpen={viewUserInfo}
+          modalTitle={selectedType.title}
+          closeModal={handleCloseUserInfoModal}
+        >
+          <div className="flex gap-4">
+            {Object.values(types).map((type) => (
+              <ModalButtonInfo
+                key={type.name}
+                title={type.button}
+                onClick={() => setSelectedType(type)}
+                selectedType={selectedType}
+                type={type}
+              />
+            ))}
+          </div>
+
+          {selectedType.name === types.user.name ? (
+            <>
+              <div className="border-t-4 border-gray-500 px-3 my-4" />
+              <div className="flex items-center justify-between ">
+                <div className="px-4">
+                  {user.isDelete ? (
+                    <span className="italic text-red-500 text-lg">
+                      (Account deleted : id {user.id})
+                    </span>
+                  ) : (
+                    <span className="italic text-green-500 text-lg">
+                      (Active account : id {user.id})
+                    </span>
+                  )}
+                </div>
+
+                {!user.isDelete && (
+                  <button
+                    className="flex justify-end text-stone-500 font-bold text-lg rounded"
+                    onClick={() => setToggleUpdateUser(!toggleUpdateUser)}
+                    title={
+                      toggleUpdateUser
+                        ? "Modifier l'utilisateur"
+                        : "Finir les modifications"
+                    }
+                  >
+                    <FontAwesomeIcon
+                      icon={toggleUpdateUser ? faEdit : faCheck}
+                      className="h-7"
+                    />
+                  </button>
                 )}
               </div>
-
-              {!user.isDelete && (
-                <button
-                  className="flex justify-end text-stone-500 font-bold text-lg rounded"
-                  onClick={() => setToggleUpdateUser(!toggleUpdateUser)}
-                  title={
-                    toggleUpdateUser
-                      ? "Modifier l'utilisateur"
-                      : "Finir les modifications"
-                  }
-                >
-                  <FontAwesomeIcon
-                    icon={toggleUpdateUser ? faEdit : faCheck}
-                    className="h-7"
-                  />
-                </button>
-              )}
-            </div>
-            <EditUserForm
-              initialValues={user}
-              onSubmit={handleSubmit}
-              active={toggleUpdateUser}
-            />
-          </>
-        ) : selectedType.name === types.address.name ? (
-          <>
-            <div className="border-t-4 border-gray-500 px-3 my-4" />
-            {addressSingleUser.length > 0 ? (
-              addressSingleUser.map((address, index) => (
-                <div
-                  className={`flex flex-col my-3 border-b-2 border-stone-500 px-2 pb-2 ${
-                    address.address_default && "bg-stone-300 rounded-lg"
-                  } `}
-                  key={address.id}
-                >
-                  <h2 className="font-bold underline">
-                    Address n°{index + 1}{" "}
-                    {address.isDelete ? (
-                      <span className="italic text-red-500 text-lg">
-                        (Deleted)
-                      </span>
-                    ) : (
-                      <span className="italic text-green-500 text-lg">
-                        (Active)
-                      </span>
-                    )}
-                  </h2>
-                  <span>
-                    {address.firstName} {address.lastName}
-                  </span>
-                  <span>
-                    {address.addressFull} {address.lastName}
-                  </span>
-                  <span>
-                    {address.cp} {address.city}
-                  </span>
-                  <span>{address.country}</span>
-                </div>
-              ))
-            ) : (
-              <div className="p-4 text-lg font-semibold">
-                No registered address
-              </div>
-            )}
-          </>
-        ) : selectedType.name === types.billingAddress.name ? (
-          <>
-            <div className="border-t-4 border-gray-500 px-3 my-4" />
-            <div>
-              {billingAddressSingleUser.length > 0 ? (
-                billingAddressSingleUser.map((address, index) => (
+              <EditUserForm
+                initialValues={user}
+                onSubmit={handleSubmit}
+                active={toggleUpdateUser}
+              />
+            </>
+          ) : selectedType.name === types.address.name ? (
+            <>
+              <div className="border-t-4 border-gray-500 px-3 my-4" />
+              {addressSingleUser.length > 0 ? (
+                addressSingleUser.map((address, index) => (
                   <div
-                    className="flex flex-col my-3 border-b-2 border-stone-500 px-2 pb-2"
+                    className={`flex flex-col my-3 border-b-2 border-stone-500 px-2 pb-2 ${
+                      address.address_default && "bg-stone-300 rounded-lg"
+                    } `}
                     key={address.id}
                   >
                     <h2 className="font-bold underline">
-                      Address n°{index + 1}
+                      Address n°{index + 1}{" "}
+                      {address.isDelete ? (
+                        <span className="italic text-red-500 text-lg">
+                          (Deleted)
+                        </span>
+                      ) : (
+                        <span className="italic text-green-500 text-lg">
+                          (Active)
+                        </span>
+                      )}
                     </h2>
-
-                    <span>{address.phoneNumber}</span>
-
+                    <span>
+                      {address.firstName} {address.lastName}
+                    </span>
                     <span>
                       {address.addressFull} {address.lastName}
                     </span>
-
                     <span>
                       {address.cp} {address.city}
                     </span>
-
                     <span>{address.country}</span>
                   </div>
                 ))
@@ -439,53 +413,87 @@ const UsersAdmin = () => {
                   No registered address
                 </div>
               )}
-            </div>
-          </>
-        ) : (
-          selectedType.name === types.order.name && (
+            </>
+          ) : selectedType.name === types.billingAddress.name ? (
             <>
               <div className="border-t-4 border-gray-500 px-3 my-4" />
               <div>
-                {orderSingleUser.length > 0 ? (
-                  orderSingleUser.map((order, index) => (
+                {billingAddressSingleUser.length > 0 ? (
+                  billingAddressSingleUser.map((address, index) => (
                     <div
                       className="flex flex-col my-3 border-b-2 border-stone-500 px-2 pb-2"
-                      key={order.id}
+                      key={address.id}
                     >
-                      <h2 className="font-bold underline text-lg">
-                        Order n°{index + 1}
+                      <h2 className="font-bold underline">
+                        Address n°{index + 1}
                       </h2>
-                      <span>Order number : {order.numberOrder}</span>
-                      <span>Status : {order.status}</span>
-                      <span>Price : {order.price_formatted}</span>
-                      <span>VAT : {order.amount_tva_formatted}</span>
 
-                      <div className="flex flex-col my-3 italic">
-                        <h3 className="font-bold underline">
-                          Delivery address :
-                        </h3>
-                        <span>{order.address[0].phoneNumber}</span>
-                        <span>
-                          {order.address[0].addressFull}{" "}
-                          {order.address[0].lastName}
-                        </span>
-                        <span>
-                          {order.address[0].cp} {order.address[0].city}
-                        </span>
-                        <span>{order.address[0].country}</span>
-                      </div>
+                      <span>{address.phoneNumber}</span>
+
+                      <span>
+                        {address.addressFull} {address.lastName}
+                      </span>
+
+                      <span>
+                        {address.cp} {address.city}
+                      </span>
+
+                      <span>{address.country}</span>
                     </div>
                   ))
                 ) : (
                   <div className="p-4 text-lg font-semibold">
-                    No order placed
+                    No registered address
                   </div>
                 )}
               </div>
             </>
-          )
-        )}
-      </Modal>
+          ) : (
+            selectedType.name === types.order.name && (
+              <>
+                <div className="border-t-4 border-gray-500 px-3 my-4" />
+                <div>
+                  {orderSingleUser.length > 0 ? (
+                    orderSingleUser.map((order, index) => (
+                      <div
+                        className="flex flex-col my-3 border-b-2 border-stone-500 px-2 pb-2"
+                        key={order.id}
+                      >
+                        <h2 className="font-bold underline text-lg">
+                          Order n°{index + 1}
+                        </h2>
+                        <span>Order number : {order.numberOrder}</span>
+                        <span>Status : {order.status}</span>
+                        <span>Price : {order.price_formatted}</span>
+                        <span>VAT : {order.amount_tva_formatted}</span>
+
+                        <div className="flex flex-col my-3 italic">
+                          <h3 className="font-bold underline">
+                            Delivery address :
+                          </h3>
+                          <span>{order.address[0].phoneNumber}</span>
+                          <span>
+                            {order.address[0].addressFull}{" "}
+                            {order.address[0].lastName}
+                          </span>
+                          <span>
+                            {order.address[0].cp} {order.address[0].city}
+                          </span>
+                          <span>{order.address[0].country}</span>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="p-4 text-lg font-semibold">
+                      No order placed
+                    </div>
+                  )}
+                </div>
+              </>
+            )
+          )}
+        </Modal>
+      </div>
     </>
   )
 }

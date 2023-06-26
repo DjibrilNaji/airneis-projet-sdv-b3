@@ -58,7 +58,7 @@ const NavAdmin = () => {
       <button
         className={`${
           !isOpen
-            ? "ml-6 mt-6 h-11 border-2 rounded-lg pb-1 pt-2 pl-3 pr-3 hover:bg-slate-200"
+            ? "ml-6 mt-6 h-11 border-2 rounded-lg pb-1 pt-2 pl-3 pr-3 hover:bg-slate-200 z-50"
             : "hidden"
         } `}
         onClick={handleIsOpenClick}
@@ -71,7 +71,7 @@ const NavAdmin = () => {
       <aside
         className={`${
           isOpen
-            ? "bg-white drop-shadow-2xl w-[100vw] h-screen absolute lg:w-[18vw]  lg:static	"
+            ? "bg-white drop-shadow-2xl w-[100vw] h-screen absolute lg:w-[18vw] z-50 lg:static"
             : "hidden"
         } `}
       >
