@@ -22,6 +22,11 @@ const NavAdmin = () => {
       icon: <HomeIcon />,
     },
     {
+      href: "/admin/image-home-page",
+      title: "Home page",
+      icon: <HomeIcon />,
+    },
+    {
       href: "/admin/products",
       title: "Products",
       icon: <ShoppingCartIcon />,
