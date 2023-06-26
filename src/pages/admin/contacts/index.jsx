@@ -189,6 +189,7 @@ const ContactAdmin = () => {
           selectItemToRemove={selectContactToRemove}
           onChange={(e) => setSearchTerm(e.target.value)}
           getInfo={false}
+          displayHighlander={false}
           displayIsDelete={false}
           displayDeleteButton={true}
           displayStatus={false}

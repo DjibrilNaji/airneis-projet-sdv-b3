@@ -297,6 +297,7 @@ const UsersAdmin = () => {
           fetchSingleItem={fetchSingleUser}
           onChange={(e) => setSearchTerm(e.target.value)}
           getInfo={true}
+          displayHighlander={false}
           displayIsDelete={true}
           displayDeleteButton={true}
           displayStatus={false}
