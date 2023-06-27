@@ -92,6 +92,14 @@ const routes = {
         collection: () => `/admin/orders`,
         single: (userId) => `/admin/orders/${userId}`,
       },
+      dashboard: {
+        sales: () => `/sales`,
+        salesToday: () => `/salesToday`,
+        categoriesSales: (startDate, endDate) =>
+          `/categoriesSales?startDate=${startDate}&endDate=${endDate}`,
+        averageBasket: (startDate, endDate) =>
+          `/averageBasket?startDate=${startDate}&endDate=${endDate}`,
+      },
     },
     users: {
       collection: () => `/users`,
