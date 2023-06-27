@@ -153,7 +153,7 @@ const SearchBar = () => {
                   </div>
                 )}
                 <Link
-                  href={`/search?term=${searchTerm}`}
+                  href={`/search`}
                   onClick={() => {
                     handleShowSearchClick()
                     resetSearch()
