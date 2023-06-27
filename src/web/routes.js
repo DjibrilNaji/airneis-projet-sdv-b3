@@ -139,7 +139,8 @@ const routes = {
       favorites: (userId, slug) => `/users/${userId}/favorites/${slug}`,
     },
     search: {
-      collection: (query) => createRouteWithQueryParams(`/search`, query),
+      collection: () => "/search",
+      searchFilter: () => "/searchFilter",
     },
     orders: {
       collection: (userId) => `/users/${userId}/allOrdersUser`,
