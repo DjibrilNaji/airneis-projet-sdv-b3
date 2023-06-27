@@ -45,6 +45,10 @@ import updateCategoryService from "../services/admin/categories/updateCategory"
 import getSingleCategoryService from "../services/admin/categories/getSingleCategory"
 import getImagesHomePageService from "../services/admin/image-home-page/getImagesHomePage"
 import changeDisplayImageHomePageService from "../services/admin/image-home-page/changeDisplayImageHomePage"
+import getSalesService from "../services/admin/dashboard/getSales"
+import getSalesTodayService from "../services/admin/dashboard/getSalesToday"
+import getCategoriesSalesService from "../services/admin/dashboard/getCategoriesSales"
+import getAverageBasketService from "../services/admin/dashboard/getAverageBasket"
 
 import {
   createContext,
@@ -127,6 +131,11 @@ export const AppContextProvider = (props) => {
   const getImagesHomePage = getImagesHomePageService({ api })
   const changeDisplayImageHomePage = changeDisplayImageHomePageService({ api })
 
+  const getSales = getSalesService({ api })
+  const getSalesToday = getSalesTodayService({ api })
+  const getCategoriesSales = getCategoriesSalesService({ api })
+  const getAverageBasket = getAverageBasketService({ api })
+
   const signOut = useCallback(() => {
     localStorage.removeItem(config.session.localStorageKey)
     localStorage.removeItem("username")
@@ -195,6 +204,10 @@ export const AppContextProvider = (props) => {
           getSingleCategory,
           getImagesHomePage,
           changeDisplayImageHomePage,
+          getSales,
+          getSalesToday,
+          getCategoriesSales,
+          getAverageBasket,
         },
         state: {
           session,

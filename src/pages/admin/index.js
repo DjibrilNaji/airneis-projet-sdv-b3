@@ -3,6 +3,7 @@ import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
 import cookie from "cookie"
 import jsonwebtoken from "jsonwebtoken"
 import config from "@/api/config"
+import { AppContextProvider } from "@/web/hooks/useAppContext"
 
 export const getServerSideProps = async ({ req }) => {
   const { jwt } = cookie.parse(req ? req.headers.cookie || "" : document.cookie)
@@ -34,7 +35,11 @@ const IndexAdmin = () => {
 }
 
 IndexAdmin.getLayout = function (page) {
-  return <LayoutAdmin>{page}</LayoutAdmin>
+  return (
+    <AppContextProvider>
+      <LayoutAdmin>{page}</LayoutAdmin>
+    </AppContextProvider>
+  )
 }
 
 export default IndexAdmin
