@@ -149,12 +149,14 @@ const ContactAdmin = () => {
           displayDeleteButton={true}
         />
 
-        <DeleteAllButton
-          title="Delete all selected messages"
-          className="mx-3"
-          onClick={() => setToggleDeleteSeveral(true)}
-          disabled={selectedItems.length === 0}
-        />
+        {data.contacts?.length > 0 && (
+          <DeleteAllButton
+            title="Delete all selected messages"
+            className="mx-3"
+            onClick={() => setToggleDeleteSeveral(true)}
+            disabled={selectedItems.length === 0}
+          />
+        )}
       </div>
     </>
   )
