@@ -50,6 +50,7 @@ import getSalesTodayService from "../services/admin/dashboard/getSalesToday"
 import getCategoriesSalesService from "../services/admin/dashboard/getCategoriesSales"
 import getAverageBasketService from "../services/admin/dashboard/getAverageBasket"
 import getProductsSearchFilterService from "../services/search/getProductsSearchFilter"
+import categoriesAndProductsService from "../services/categoriesAndProducts"
 
 import {
   createContext,
@@ -138,6 +139,8 @@ export const AppContextProvider = (props) => {
   const getAverageBasket = getAverageBasketService({ api })
   const getProductsSearchFilter = getProductsSearchFilterService({ api })
 
+  const categoriesAndProducts = categoriesAndProductsService({ api })
+
   const signOut = useCallback(() => {
     localStorage.removeItem(config.session.localStorageKey)
     localStorage.removeItem("username")
@@ -211,6 +214,7 @@ export const AppContextProvider = (props) => {
           getCategoriesSales,
           getAverageBasket,
           getProductsSearchFilter,
+          categoriesAndProducts,
         },
         state: {
           session,
