@@ -27,15 +27,11 @@ const Pagination = ({ totalPages }) => {
       <div className="flex gap-6">
         <ButtonPagination
           icon={<ChevronDoubleLeftIcon />}
-          handlePageChange={handlePageChange}
-          currentPage={currentPage}
           changePage={1}
           disabledPage={1}
         />
         <ButtonPagination
           icon={<ChevronLeftIcon />}
-          handlePageChange={handlePageChange}
-          currentPage={currentPage}
           changePage={currentPage - 1}
           disabledPage={1}
         />
@@ -58,15 +54,11 @@ const Pagination = ({ totalPages }) => {
 
         <ButtonPagination
           icon={<ChevronRightIcon />}
-          handlePageChange={handlePageChange}
-          currentPage={currentPage}
           changePage={currentPage + 1}
           disabledPage={totalPages}
         />
         <ButtonPagination
           icon={<ChevronDoubleRightIcon />}
-          handlePageChange={handlePageChange}
-          currentPage={currentPage}
           changePage={totalPages}
           disabledPage={totalPages}
         />
