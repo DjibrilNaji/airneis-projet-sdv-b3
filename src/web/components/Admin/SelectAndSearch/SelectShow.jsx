@@ -1,5 +1,12 @@
+import useAppContext from "@/web/hooks/useAppContext"
+
 const SelectShow = (props) => {
-  const { limit, handleLimitChange, name } = props
+  const { name } = props
+
+  const {
+    state: { limit },
+    actions: { handleLimitChange },
+  } = useAppContext()
 
   return (
     <div className="flex gap-2 my-6">
