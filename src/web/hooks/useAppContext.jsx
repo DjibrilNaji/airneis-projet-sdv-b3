@@ -64,6 +64,14 @@ const AppContext = createContext()
 
 export const AppContextProvider = (props) => {
   const { isPublicPage, ...otherProps } = props
+  const [currentPage, setCurrentPage] = useState(1)
+  const [limit, setLimit] = useState(10)
+  const [sortColumn, setSortColumn] = useState("id")
+  const [order, setOrder] = useState("asc")
+  const [selectedItems, setSelectedItems] = useState([])
+  const [toggleDeleteOne, setToggleDeleteOne] = useState(false)
+  const [itemIdToRemove, setItemIdToRemove] = useState()
+
   useEffect(() => {
     const jwt = localStorage.getItem(config.session.localStorageKey)
 
@@ -75,6 +83,44 @@ export const AppContextProvider = (props) => {
 
     setSession(session)
     setJWT(jwt)
+  }, [])
+
+  const handleSortChange = useCallback(
+    (column) => {
+      if (column === sortColumn) {
+        setOrder(order === "asc" ? "desc" : "asc")
+      } else {
+        setSortColumn(column)
+        setOrder("asc")
+      }
+    },
+    [order, sortColumn]
+  )
+
+  const handleLimitChange = useCallback((e) => {
+    const newLimit = parseInt(e.target.value)
+    setLimit(newLimit)
+    setCurrentPage(1)
+  }, [])
+
+  const handlePageChange = useCallback((newPage) => {
+    setCurrentPage(newPage)
+  }, [])
+
+  const handleSelectItem = useCallback(
+    (userId) => {
+      if (selectedItems.includes(userId)) {
+        setSelectedItems(selectedItems.filter((id) => id !== userId))
+      } else {
+        setSelectedItems([...selectedItems, userId])
+      }
+    },
+    [selectedItems]
+  )
+
+  const selectedItemToRemove = useCallback((id) => {
+    setToggleDeleteOne(true)
+    setItemIdToRemove(id)
   }, [])
 
   const [session, setSession] = useState(null)
@@ -215,9 +261,23 @@ export const AppContextProvider = (props) => {
           getAverageBasket,
           getProductsSearchFilter,
           categoriesAndProducts,
+          handleSortChange,
+          handleLimitChange,
+          handlePageChange,
+          handleSelectItem,
+          selectedItemToRemove,
+          setToggleDeleteOne,
+          setSelectedItems,
         },
         state: {
           session,
+          limit,
+          order,
+          sortColumn,
+          currentPage,
+          toggleDeleteOne,
+          itemIdToRemove,
+          selectedItems,
         },
       }}
     />
