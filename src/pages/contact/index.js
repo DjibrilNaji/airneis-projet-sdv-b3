@@ -6,6 +6,7 @@ import { useTranslation } from "next-i18next"
 import useAppContext from "@/web/hooks/useAppContext"
 import FormError from "@/web/components/FormError"
 import Form from "@/web/components/Form"
+import routes from "@/web/routes"
 
 export async function getServerSideProps({ locale }) {
   return {
@@ -35,7 +36,7 @@ const Contact = () => {
       }
 
       localStorage.setItem("contactEmail", email)
-      router.push("/contact/confirmation")
+      router.push(routes.contact.confirmation())
     },
     [contact, router]
   )

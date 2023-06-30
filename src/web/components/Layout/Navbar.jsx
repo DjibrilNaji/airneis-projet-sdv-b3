@@ -65,7 +65,7 @@ const Navbar = () => {
   const handleSignOut = useCallback(async () => {
     await signOut()
 
-    router.push("/")
+    router.push(routes.home())
   }, [signOut, router])
 
   const username =
@@ -112,7 +112,7 @@ const Navbar = () => {
       onClick: handleIsOpenClick,
     },
     {
-      href: routes.contact(),
+      href: routes.contact.contact(),
       title: t("menu_contact"),
       icon: <FontAwesomeIcon icon={faMessage} />,
       onClick: handleIsOpenClick,
@@ -157,7 +157,7 @@ const Navbar = () => {
       onClick: handleIsOpenClick,
     },
     {
-      href: routes.contact(),
+      href: routes.contact.contact(),
       title: t("menu_contact"),
       icon: <FontAwesomeIcon icon={faMessage} />,
       onClick: handleIsOpenClick,
