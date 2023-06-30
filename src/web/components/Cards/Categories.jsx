@@ -13,13 +13,14 @@ const Categories = (props) => {
           key={data.id}
           className="flex items-center justify-center h-60 transition duration-800 hover:scale-105 hover:opacity-90"
         >
-          <span className="absolute uppercase font-bold text-2xl bg-white text-stone-500 rounded-lg p-1 border-2 border-stone-500">
+          <span className="absolute uppercase font-bold text-xl bg-white text-stone-500 rounded-lg p-1 border-2 border-stone-500">
             {data.name}
           </span>
+
           <Image
             src={data.urlImage}
             alt="slide 2"
-            className="h-full w-full object-cover rounded-2xl"
+            className="h-full w-full object-cover"
             width="500"
             height="500"
           />
