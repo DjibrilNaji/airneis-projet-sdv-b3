@@ -24,7 +24,7 @@ const CustomTableBody = (props) => {
 
   return (
     <tbody>
-      {data.map((item) => (
+      {data?.map((item) => (
         <tr key={item.id} className="border-b text-sm border-gray-300">
           {selectedItems && (
             <td className="py-2 px-4">

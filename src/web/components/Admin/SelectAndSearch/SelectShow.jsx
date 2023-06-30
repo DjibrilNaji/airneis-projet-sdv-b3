@@ -6,7 +6,7 @@ const SelectShow = (props) => {
       <span>Show</span>
       <select
         name="country"
-        className="border-2 rounded-lg px-3 text-right"
+        className="border-2 rounded-lg px-3 text-right focus:outline-none"
         value={limit}
         onChange={handleLimitChange}
       >

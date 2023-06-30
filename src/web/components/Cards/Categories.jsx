@@ -7,7 +7,7 @@ const Categories = (props) => {
 
   return (
     <div className="grid gap-12 md:grid-cols-2 md:gap-8 md:px-4 lg:grid-cols-3">
-      {data.map((data) => (
+      {data?.map((data) => (
         <Link
           href={routes.categorie(data.slug)}
           key={data.id}

@@ -27,12 +27,12 @@ const Carousel = (props) => {
     return () => {
       clearInterval(intervalId)
     }
-  }, [image.length])
+  }, [image?.length])
 
   return (
     <div className={classNames("relative", className)}>
       <div className="m-4 h-96 relative">
-        {image.map((image, index) => (
+        {image?.map((image, index) => (
           <Image
             key={image.id}
             src={image.urlImage}
@@ -48,7 +48,7 @@ const Carousel = (props) => {
         ))}
       </div>
       <button
-        disabled={image.length === 1}
+        disabled={image?.length === 1}
         onClick={handlePrevious}
         className="absolute top-[45%] border-2 opacity-60 hover:opacity-100 bg-white p-2 left-0 rounded-full transition-opacity ease-linear duration-300 disabled:opacity-20"
       >
@@ -56,7 +56,7 @@ const Carousel = (props) => {
       </button>
 
       <button
-        disabled={image.length === 1}
+        disabled={image?.length === 1}
         onClick={handleNext}
         className="absolute top-[45%] border-2 opacity-60 hover:opacity-100 bg-white p-2 right-0 rounded-full transition-opacity ease-linear duration-300 disabled:opacity-20"
       >
@@ -66,7 +66,7 @@ const Carousel = (props) => {
         />
       </button>
       <div className="flex justify-center">
-        {image.map((image, index) => (
+        {image?.map((image, index) => (
           <button
             onClick={() => setActiveIndex(index)}
             key={image.id}
