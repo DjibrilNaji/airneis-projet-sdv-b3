@@ -148,7 +148,7 @@ export const AppContextProvider = (props) => {
     document.cookie = `userId=; expires=${date}; path=/;`
   }, [])
 
-  if (!isPublicPage && session === null) {
+  if (!isPublicPage) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-white text-4xl font-bold">
         <span className="animate-bounce">Loading...</span>
