@@ -11,5 +11,6 @@
   "menu_logout": "Cerrar sesión",
   "menu_login": "Iniciar sesión",
   "menu_register": "Registrarse",
-  "menu_admin": "Admin"
+  "menu_admin": "Admin",
+  "go_back": "Go back"
 }

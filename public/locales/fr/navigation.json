@@ -11,5 +11,6 @@
   "menu_logout": "Se déconnecter",
   "menu_login": "Se connecter",
   "menu_register": "S'inscrire",
-  "menu_admin": "Admin"
+  "menu_admin": "Admin",
+  "go_back": "Retour"
 }
