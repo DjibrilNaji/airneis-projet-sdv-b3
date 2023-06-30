@@ -9,22 +9,29 @@ import CenterItem from "@/web/components/CenterItem"
 
 const ContactAdmin = () => {
   const [data, setData] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState("")
 
-  const [sortColumn, setSortColumn] = useState("id")
-  const [order, setOrder] = useState("asc")
-  const [limit, setLimit] = useState(10)
   const [searchTerm, setSearchTerm] = useState(null)
   const [error, setError] = useState("")
 
-  const [selectedContacts, setSelectedContacts] = useState([])
-  const [toggleDeleteOne, setToggleDeleteOne] = useState(false)
   const [toggleDeleteSeveral, setToggleDeleteSeveral] = useState(false)
-  const [contactIdToRemove, setContactIdToRemove] = useState()
 
   const {
-    actions: { getContact, deleteContact },
+    state: {
+      limit,
+      currentPage,
+      sortColumn,
+      order,
+      selectedItems,
+      itemIdToRemove,
+      toggleDeleteOne,
+    },
+    actions: {
+      getContact,
+      deleteContact,
+      setSelectedItems,
+      setToggleDeleteOne,
+    },
   } = useAppContext()
 
   const fetchData = useCallback(
@@ -67,59 +74,18 @@ const ContactAdmin = () => {
       }
 
       fetchData(currentPage)
-      setSelectedContacts([])
+      setSelectedItems([])
       setToggleDeleteOne(false)
       setToggleDeleteSeveral(false)
     },
-    [fetchData, currentPage, deleteContact]
+    [
+      fetchData,
+      currentPage,
+      deleteContact,
+      setSelectedItems,
+      setToggleDeleteOne,
+    ]
   )
-
-  const handlePageChange = useCallback(
-    (newPage) => {
-      setCurrentPage(newPage)
-      fetchData(newPage)
-    },
-    [fetchData]
-  )
-
-  const handleLimitChange = useCallback(
-    (e) => {
-      setLimit(e.target.value)
-      setCurrentPage(1)
-      fetchData(1)
-    },
-    [fetchData]
-  )
-
-  const handleSortChange = useCallback(
-    (column) => {
-      if (column === sortColumn) {
-        setOrder(order === "asc" ? "desc" : "asc")
-      } else {
-        setSortColumn(column)
-        setOrder("asc")
-      }
-
-      fetchData(currentPage)
-    },
-    [fetchData, currentPage, order, sortColumn]
-  )
-
-  const handleSelectItem = useCallback(
-    (userId) => {
-      if (selectedContacts.includes(userId)) {
-        setSelectedContacts(selectedContacts.filter((id) => id !== userId))
-      } else {
-        setSelectedContacts([...selectedContacts, userId])
-      }
-    },
-    [selectedContacts]
-  )
-
-  const selectContactToRemove = useCallback((id) => {
-    setToggleDeleteOne(true)
-    setContactIdToRemove(id)
-  }, [])
 
   const columnsTableHead = [
     {
@@ -166,8 +132,8 @@ const ContactAdmin = () => {
           }
           remove={
             toggleDeleteSeveral
-              ? () => selectedContacts.map((id) => handleDelete(id))
-              : () => handleDelete(contactIdToRemove)
+              ? () => selectedItems.map((id) => handleDelete(id))
+              : () => handleDelete(itemIdToRemove)
           }
         />
 
@@ -177,29 +143,17 @@ const ContactAdmin = () => {
           columnsTableHead={columnsTableHead}
           columnsTableBody={["id", "email", "message"]}
           name={"messages"}
-          currentPage={currentPage}
           totalPages={totalPages}
-          limit={limit}
           searchTerm={searchTerm}
-          selectedItems={selectedContacts}
-          handlePageChange={handlePageChange}
-          handleLimitChange={handleLimitChange}
-          handleSortChange={handleSortChange}
-          handleSelectItem={handleSelectItem}
-          selectItemToRemove={selectContactToRemove}
           onChange={(e) => setSearchTerm(e.target.value)}
-          getInfo={false}
-          displayHighlander={false}
-          displayIsDelete={false}
           displayDeleteButton={true}
-          displayStatus={false}
         />
 
         <DeleteAllButton
           title="Delete all selected messages"
           className="mx-3"
           onClick={() => setToggleDeleteSeveral(true)}
-          disabled={selectedContacts.length === 0}
+          disabled={selectedItems.length === 0}
         />
       </div>
     </>
