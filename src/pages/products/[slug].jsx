@@ -149,7 +149,7 @@ const Product = (props) => {
       }
 
       setIsOpen(true)
-      setTimeout(() => setIsOpen(false), 2000)
+      setTimeout(() => setIsOpen(false), 3000)
     },
     [userId, isFavorite, addFavorite, t]
   )
@@ -159,7 +159,7 @@ const Product = (props) => {
       addToCart(product, image, parseInt(quantity))
       setContentDialog(t("pop_add_to_cart"))
       setIsOpen(true)
-      setTimeout(() => setIsOpen(false), 2000)
+      setTimeout(() => setIsOpen(false), 3000)
       setQuantity(1)
       setSelectedQuantity(1)
     },
@@ -187,12 +187,7 @@ const Product = (props) => {
     <>
       {error ? <FormError error={error} /> : ""}
 
-      <Dialog
-        isOpen={isOpen}
-        dialogTitle={t("pop_title")}
-        content={contentDialog}
-        dir={direction}
-      />
+      <Dialog isOpen={isOpen} content={contentDialog} dir={direction} />
 
       <Modal
         isOpen={toggleViewMaterials}

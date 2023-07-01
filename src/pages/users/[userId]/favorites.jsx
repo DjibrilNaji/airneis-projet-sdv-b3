@@ -106,6 +106,9 @@ const Favorite = (props) => {
       }
 
       setFavorite(data.result)
+      setContentDialog("Votre produit a été retiré des favoris")
+      setIsOpen(true)
+      setTimeout(() => setIsOpen(false), 3000)
     },
     [deleteFavorite, getFavorites, userId]
   )
@@ -115,7 +118,7 @@ const Favorite = (props) => {
       addToCart(product, image, 1)
       setContentDialog("Votre produit a bien été ajouté aux panier")
       setIsOpen(true)
-      setTimeout(() => setIsOpen(false), 2500)
+      setTimeout(() => setIsOpen(false), 3000)
     },
     [addToCart]
   )
@@ -124,11 +127,7 @@ const Favorite = (props) => {
     <>
       {error ? <FormError error={error} /> : ""}
 
-      <Dialog
-        isOpen={isOpen}
-        dialogTitle="Informations"
-        content={contentDialog}
-      />
+      <Dialog isOpen={isOpen} content={contentDialog} />
 
       {favorite.length > 0 ? (
         <>
