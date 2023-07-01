@@ -1,41 +1,73 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ÀIRNEIS project
 
-## Getting Started
+ÀIRNEIS is a Scottish company specializing in the sale of furniture made by Scottish designers.
+She wants to develop in the field of e-commerce. They want to create their own e-commerce solution including a mobile-first website, a mobile application for Android and/or iOS, as well as a web backoffice to manage content. The objective is to reach an international clientele while consolidating their local presence. The solution must include a secure payment system and be easily maintainable over the long term.
 
-First, run the development server:
+| Team    |      Job      |
+| ------- | :-----------: |
+| Djibril | Web developer |
+| Thomas  | Web developer |
+| Alexis  | Web developer |
+| Myriam  | Web developer |
+
+---
+
+### Link to the repo :
+
+https://github.com/DjibrilNaji/airneis-projet-sdv-b3.git
+
+# To use this directory
+
+> Follow these commands on your terminal
 
 ```bash
-npm run dev
-# or
-yarn dev
+git clone https://github.com/DjibrilNaji/airneis-projet-sdv-b3.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```bash
+cd airneis-projet-sdv-b3
+```
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+```bash
+npm install
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+> Create your .env with these fields
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```dotenv
+BASE_URL=http://localhost:3000/api
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+# Database
+DB_CLIENT=
+DB_PORT=
+DB_USER=
+DB_PASSWORD=
+DB_DATABASE=
 
-## Learn More
+# Security
+SECURITY__JWT__SECRET=
+SECURITY__PASSWORD__PEPPER=
 
-To learn more about Next.js, take a look at the following resources:
+# Mail
+ACCESS_KEY_ID_S3=
+SECRET_ACCESS_KEY_S3=
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Stripe
+STRIPE_PRIVATE_KEY=
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+> When done, run these commands:
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-## Migrations
-
-npx knex migrate:make nameOfMigration
+```bash
 npx knex migrate:latest
+```
+
+```
+npx knex seed:run
+```
+
+```
+npm run dev
+```
+
+> Your server will be running on : http://localhost:3000
