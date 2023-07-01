@@ -2,6 +2,8 @@ import mw from "@/api/mw.js"
 import s3 from "@@/configAWS.js"
 import ImageHomePageModel from "@/api/db/models/ImageHomePageModel"
 import { InvalidAccessError } from "@/api/errors"
+import validate from "@/api/middlewares/validate"
+import { stringValidator } from "@/validators"
 
 const handler = mw({
   GET: [
@@ -32,6 +34,47 @@ const handler = mw({
       res.send({
         imageHomePage,
       })
+    },
+  ],
+  POST: [
+    validate({
+      body: {
+        urlImage: stringValidator.required(),
+      },
+    }),
+    async ({
+      locals: {
+        body: { urlImage },
+      },
+      res,
+      req,
+    }) => {
+      const {
+        session: { user: sessionUser },
+      } = req
+
+      if (sessionUser.isAdmin !== true) {
+        throw new InvalidAccessError()
+      }
+
+      const imageHomePage = await ImageHomePageModel.query().findOne({
+        urlImage,
+      })
+
+      if (imageHomePage) {
+        res.send({
+          result: "An error occurred while retrieving image home page",
+        })
+      }
+
+      const display = false
+
+      const newImageHomePage = await ImageHomePageModel.query().insertAndFetch({
+        urlImage,
+        display,
+      })
+
+      res.send({ result: newImageHomePage })
     },
   ],
 })
