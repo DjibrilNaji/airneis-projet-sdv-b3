@@ -19,7 +19,7 @@ const Footer = () => {
       dir={direction}
     >
       <div>
-        <Link href={`/`} legacyBehavior>
+        <Link href={`/conditions `} legacyBehavior>
           <a className="pr-3 text-stone-400 text-lg font-bold">
             {t("menu_conditions")}
           </a>

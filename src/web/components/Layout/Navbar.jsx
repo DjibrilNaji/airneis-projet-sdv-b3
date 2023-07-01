@@ -145,7 +145,7 @@ const Navbar = () => {
       onClick: handleIsOpenClick,
     },
     {
-      href: "/",
+      href: routes.conditions(),
       title: t("menu_conditions"),
       icon: <FontAwesomeIcon icon={faList} />,
       onClick: handleIsOpenClick,

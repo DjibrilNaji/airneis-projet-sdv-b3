@@ -13,8 +13,11 @@ const routes = {
   checkEmail: () => "/checkEmail",
   signUp: () => "/register",
   signIn: () => "/login",
+  contact: () => "/contact",
+  conditions: () => "/conditions",
   product: (slug) => `/products/${slug}`,
   categorie: (slug) => `/categories/${slug}`,
+  // eslint-disable-next-line no-dupe-keys
   contact: {
     contact: () => "/contact",
     confirmation: () => "/contact/confirmation",
