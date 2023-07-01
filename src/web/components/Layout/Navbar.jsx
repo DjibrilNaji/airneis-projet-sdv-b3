@@ -112,7 +112,7 @@ const Navbar = () => {
       onClick: handleIsOpenClick,
     },
     {
-      href: "/contact",
+      href: routes.contact(),
       title: t("menu_contact"),
       icon: <FontAwesomeIcon icon={faMessage} />,
       onClick: handleIsOpenClick,
@@ -157,7 +157,7 @@ const Navbar = () => {
       onClick: handleIsOpenClick,
     },
     {
-      href: "/contact",
+      href: routes.contact(),
       title: t("menu_contact"),
       icon: <FontAwesomeIcon icon={faMessage} />,
       onClick: handleIsOpenClick,
