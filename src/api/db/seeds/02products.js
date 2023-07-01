@@ -22,6 +22,13 @@ exports.seed = async function (knex) {
 
   const categories = [
     {
+      name: "No category",
+      slug: "no-category",
+      description: "These products have no category.",
+      urlImage: "no-category.jpeg",
+      isDelete: false,
+    },
+    {
       name: "Rooms",
       slug: "rooms",
       description:
@@ -70,7 +77,6 @@ exports.seed = async function (knex) {
       isDelete: false,
     },
     {
-      id: 7,
       name: "Bedding",
       slug: "bedding",
       description:
@@ -79,7 +85,6 @@ exports.seed = async function (knex) {
       isDelete: false,
     },
     {
-      id: 8,
       name: "Garden",
       slug: "garden",
       description:
@@ -88,7 +93,6 @@ exports.seed = async function (knex) {
       isDelete: false,
     },
     {
-      id: 9,
       name: "Accessories",
       slug: "accessories",
       description:
@@ -97,7 +101,6 @@ exports.seed = async function (knex) {
       isDelete: false,
     },
   ]
-
   await knex("categories").insert(categories)
 
   const products = [

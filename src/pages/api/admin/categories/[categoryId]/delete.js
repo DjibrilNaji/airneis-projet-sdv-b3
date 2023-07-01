@@ -30,7 +30,7 @@ const handler = mw({
         .returning("*")
 
       await ProductModel.query()
-        .patch({ isDelete: true })
+        .patch({ categoryId: 1 })
         .where({ categoryId: categoryId })
 
       res.send({
