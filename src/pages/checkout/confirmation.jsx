@@ -2,7 +2,6 @@ import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useEffect } from "react"
 import routes from "@/web/routes"
-import { useTranslation } from "next-i18next"
 import MessageConfirmation from "@/web/components/Contact/MessageConfirmation"
 import { useRouter } from "next/router"
 
