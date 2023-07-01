@@ -14,15 +14,12 @@ import { useCallback, useEffect, useState } from "react"
 
 const OrderAdmin = () => {
   const {
+    state: { currentPage, sortColumn, order, limit },
     actions: { getOrders, getSingleOrder },
   } = useAppContext()
 
   const [data, setData] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const [sortColumn, setSortColumn] = useState("id")
-  const [order, setOrder] = useState("asc")
   const [totalPages, setTotalPages] = useState("")
-  const [limit, setLimit] = useState(10)
   const [searchTerm, setSearchTerm] = useState(null)
 
   const [error, setError] = useState("")
@@ -93,37 +90,6 @@ const OrderAdmin = () => {
     fetchData(currentPage)
   }, [currentPage, fetchData])
 
-  const handlePageChange = useCallback(
-    (newPage) => {
-      setCurrentPage(newPage)
-      fetchData(newPage)
-    },
-    [fetchData]
-  )
-
-  const handleSortChange = useCallback(
-    (column) => {
-      if (column === sortColumn) {
-        setOrder(order === "asc" ? "desc" : "asc")
-      } else {
-        setSortColumn(column)
-        setOrder("asc")
-      }
-
-      fetchData(currentPage)
-    },
-    [fetchData, currentPage, order, sortColumn]
-  )
-
-  const handleLimitChange = useCallback(
-    (e) => {
-      setLimit(e.target.value)
-      setCurrentPage(1)
-      fetchData(1)
-    },
-    [fetchData]
-  )
-
   const fetchSingleOrder = async (id) => {
     const [err, order] = await getSingleOrder(id)
 
@@ -157,18 +123,11 @@ const OrderAdmin = () => {
           columnsTableHead={columnsTableHead}
           columnsTableBody={["id", "userEmail", "total_price"]}
           name={"orders"}
-          currentPage={currentPage}
           totalPages={totalPages}
-          limit={limit}
           searchTerm={searchTerm}
-          handlePageChange={handlePageChange}
-          handleLimitChange={handleLimitChange}
-          handleSortChange={handleSortChange}
           fetchSingleItem={fetchSingleOrder}
           onChange={(e) => setSearchTerm(e.target.value)}
           getInfo={true}
-          displayIsDelete={false}
-          displayDeleteButton={false}
           displayStatus={true}
         />
 

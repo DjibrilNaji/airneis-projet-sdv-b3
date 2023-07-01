@@ -2,7 +2,12 @@ import OrderModel from "@/api/db/models/OrderModel"
 import { InvalidAccessError } from "@/api/errors"
 import validate from "@/api/middlewares/validate"
 import mw from "@/api/mw"
-import { limitValidator, orderValidator, pageValidator } from "@/validators"
+import {
+  limitValidator,
+  orderValidator,
+  pageValidator,
+  stringValidator,
+} from "@/validators"
 
 const handler = mw({
   GET: [
@@ -11,11 +16,12 @@ const handler = mw({
         limit: limitValidator,
         page: pageValidator,
         order: orderValidator.default("asc"),
+        sortColumn: stringValidator.default("id"),
       },
     }),
     async ({
       locals: {
-        query: { limit, page, order, searchTerm },
+        query: { limit, page, order, searchTerm, sortColumn },
       },
       res,
       req,
@@ -54,7 +60,7 @@ const handler = mw({
 
       const count = Number.parseInt(countResult.count, 10)
 
-      const orders = await query.orderBy("id", order)
+      const orders = await query.orderBy(sortColumn, order)
 
       res.send({
         result: {

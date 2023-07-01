@@ -109,7 +109,6 @@ const Product = (props) => {
   const { locale } = useRouter()
   const direction = t("direction", { locale })
 
-  const [activeIndex, setActiveIndex] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
   const [contentDialog, setContentDialog] = useState()
   const [quantity, setQuantity] = useState(1)
@@ -131,26 +130,6 @@ const Product = (props) => {
   const currentInventory = cartItems
     ? product.stock - cartItems.quantity
     : product.stock
-
-  const handlePrevious = () => {
-    setActiveIndex(
-      (prevActiveIndex) => (prevActiveIndex - 1 + image.length) % image.length
-    )
-  }
-
-  const handleNext = () => {
-    setActiveIndex((prevActiveIndex) => (prevActiveIndex + 1) % image.length)
-  }
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setActiveIndex((prevActiveIndex) => (prevActiveIndex + 1) % image.length)
-    }, 5000)
-
-    return () => {
-      clearInterval(intervalId)
-    }
-  }, [image.length])
 
   const handleAddFavorites = useCallback(
     async (productId) => {
@@ -217,8 +196,9 @@ const Product = (props) => {
 
       <Modal
         isOpen={toggleViewMaterials}
-        modalTitle={"Materials"}
+        modalTitle={t("materials")}
         closeModal={() => setToggleViewMaterials(false)}
+        dir={direction}
       >
         {materials.map((material, index) => (
           <ul key={index}>
@@ -245,24 +225,11 @@ const Product = (props) => {
         <BackButton />
       </div>
 
-      <Carousel
-        image={image}
-        activeIndex={activeIndex}
-        handleNext={handleNext}
-        handlePrevious={handlePrevious}
-        className="md:hidden"
-        setActiveIndex={setActiveIndex}
-      />
+      <Carousel image={image} className="md:hidden" />
 
       <div className="flex">
         <div className="hidden md:block w-full md:w-2/5 md:pr-8">
-          <Carousel
-            image={image}
-            activeIndex={activeIndex}
-            handleNext={handleNext}
-            handlePrevious={handlePrevious}
-            setActiveIndex={setActiveIndex}
-          />
+          <Carousel image={image} />
         </div>
 
         <div className="flex w-full md:w-3/5">
@@ -305,7 +272,7 @@ const Product = (props) => {
                 onClick={() => setToggleViewMaterials(true)}
                 className="font-semibold text-gray-700 flex border-2 w-fit px-2 rounded-lg bg-stone-200 text-lg"
               >
-                More informations
+                {t("more_informations")}
               </button>
             )}
 
@@ -348,24 +315,23 @@ const Product = (props) => {
 
       <Banner text={t("similar_products")} />
 
-      <div className="grid gap-12 pb-7 md:grid-cols-2 md:gap-8 md:px-4 lg:grid-cols-3">
+      <div className="flex overflow-x-auto w-full gap-7 mb-8 bg-stone-300 p-4">
         {randomProducts.map((product) => (
-          <Link
-            key={product.id}
-            href={routes.product(product.slug)}
-            className="flex items-center justify-center h-60 transition duration-800 hover:scale-105 hover:opacity-90"
-          >
-            <span className="absolute uppercase font-bold text-2xl bg-white text-stone-500 rounded-lg p-1 border-2 border-stone-500">
-              {product.name}
-            </span>
-            <Image
-              src={product.image.find((img) => img.isMain).urlImage}
-              alt={product.name}
-              className="h-full w-[90vw] md:w-full object-cover rounded-2xl"
-              width="500"
-              height="500"
-            />
-          </Link>
+          <div key={product.id} className="flex-none w-full md:w-1/2 lg:w-1/3">
+            <Link href={routes.product(product.slug)} className="relative">
+              <Image
+                src={product.image.find((img) => img.isMain).urlImage}
+                alt={product.name}
+                className="w-full h-56 object-cover"
+                width="500"
+                height="500"
+              />
+
+              <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xl border-2 text-stone-500 font-semibold border-stone-500 bg-white p-1 whitespace-nowrap rounded-lg">
+                {product.name}
+              </span>
+            </Link>
+          </div>
         ))}
       </div>
     </>

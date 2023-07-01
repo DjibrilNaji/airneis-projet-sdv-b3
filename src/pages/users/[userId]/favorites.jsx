@@ -17,6 +17,7 @@ import cookie from "cookie"
 import createAPIClient from "@/web/createAPIClient"
 import getFavoritesService from "@/web/services/favorites/getFavorites"
 import CenterItem from "@/web/components/CenterItem"
+import { useTranslation } from "next-i18next"
 
 export const getServerSideProps = async ({ locale, params, req }) => {
   const userId = params.userId
@@ -53,13 +54,18 @@ export const getServerSideProps = async ({ locale, params, req }) => {
     props: {
       userId,
       data: data.result,
-      ...(await serverSideTranslations(locale, ["common", "navigation"])),
+      ...(await serverSideTranslations(locale, [
+        "common",
+        "navigation",
+        "product",
+      ])),
     },
   }
 }
 
 const Favorite = (props) => {
   const { userId, data } = props
+  const { t } = useTranslation("product")
 
   const {
     actions: { addToCart },
@@ -127,7 +133,7 @@ const Favorite = (props) => {
       {favorite.length > 0 ? (
         <>
           <h1 className="flex text-stone-400 text-3xl font-bold justify-center my-6">
-            My Favourits
+            {t("favorite")}
           </h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mx-4 my-4">
             {favorite.map((product) => (

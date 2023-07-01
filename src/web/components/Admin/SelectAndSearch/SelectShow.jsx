@@ -1,12 +1,19 @@
+import useAppContext from "@/web/hooks/useAppContext"
+
 const SelectShow = (props) => {
-  const { limit, handleLimitChange, name } = props
+  const { name } = props
+
+  const {
+    state: { limit },
+    actions: { handleLimitChange },
+  } = useAppContext()
 
   return (
     <div className="flex gap-2 my-6">
       <span>Show</span>
       <select
         name="country"
-        className="border-2 rounded-lg px-3 text-right"
+        className="border-2 rounded-lg px-3 text-right focus:outline-none"
         value={limit}
         onChange={handleLimitChange}
       >

@@ -6,12 +6,9 @@ const Table = (props) => {
     data,
     columnsTableHead,
     columnsTableBody,
-    selectItemToRemove,
-    selectedItems,
-    handleSortChange,
-    handleSelectItem,
     fetchSingleItem,
     getInfo,
+    displayHighlander,
     displayIsDelete,
     displayDeleteButton,
     displayStatus,
@@ -19,19 +16,14 @@ const Table = (props) => {
 
   return (
     <table className="w-[100vw]">
-      <CustomTableHead
-        columns={columnsTableHead}
-        handleSortChange={handleSortChange}
-      />
+      <CustomTableHead columns={columnsTableHead} />
 
       <CustomTableBody
         data={data || []}
         columns={columnsTableBody}
-        selectedItems={selectedItems}
-        handleSelectItem={handleSelectItem}
-        selectItemToRemove={selectItemToRemove}
         fetchSingleItem={fetchSingleItem}
         getInfo={getInfo}
+        displayHighlander={displayHighlander}
         displayIsDelete={displayIsDelete}
         displayDeleteButton={displayDeleteButton}
         displayStatus={displayStatus}

@@ -44,7 +44,7 @@ const ContactConfirmation = () => {
         <MessageConfirmation
           dir={direction}
           message={t("not_email_return_message")}
-          route={routes.contact()}
+          route={routes.contact.contact()}
           button={t("contact_us")}
         />
       )}

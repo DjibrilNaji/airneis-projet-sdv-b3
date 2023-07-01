@@ -1,82 +1,57 @@
-import { useEffect, useState } from "react"
 import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useRouter } from "next/router"
-import createAPIClient from "@/web/createAPIClient"
-import categoriesAndProductsService from "@/web/services/categoriesAndProducts"
 import FormError from "@/web/components/FormError"
 import Categories from "@/web/components/Cards/Categories"
 import Products from "@/web/components/Cards/Products"
 import Banner from "@/web/components/Banner"
 import Carousel from "@/web/components/Carousel"
+import { useEffect, useState } from "react"
+import useAppContext from "@/web/hooks/useAppContext"
 
 export const getServerSideProps = async (context) => {
   const { locale } = context
 
-  const api = createAPIClient({ jwt: null, server: true })
-  const categoriesAndProducts = categoriesAndProductsService({ api })
-
-  const [err, data] = await categoriesAndProducts()
-
   return {
     props: {
-      error: err,
       ...(await serverSideTranslations(locale, ["home-page", "navigation"])),
-      categoriesAndProducts: data,
     },
   }
 }
 
-const Home = (props) => {
+const Home = () => {
   const {
-    categoriesAndProducts: { result },
-    error,
-  } = props
+    actions: { categoriesAndProducts },
+  } = useAppContext()
 
-  const [activeIndex, setActiveIndex] = useState(0)
-
-  const { t } = useTranslation("home-page")
-
-  const handlePrevious = () => {
-    setActiveIndex(
-      (prevActiveIndex) =>
-        (prevActiveIndex - 1 + result.imageHomePage.length) %
-        result.imageHomePage.length
-    )
-  }
-
-  const handleNext = () => {
-    setActiveIndex(
-      (prevActiveIndex) => (prevActiveIndex + 1) % result.imageHomePage.length
-    )
-  }
+  const [data, setData] = useState([])
+  const [err, setError] = useState()
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setActiveIndex(
-        (prevActiveIndex) => (prevActiveIndex + 1) % result.imageHomePage.length
-      )
-    }, 8000)
+    const fetchProducts = async () => {
+      const [err, data] = await categoriesAndProducts()
 
-    return () => {
-      clearInterval(intervalId)
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setData(data.result)
     }
-  }, [result.imageHomePage.length])
+    fetchProducts()
+  }, [categoriesAndProducts])
+
+  const { t } = useTranslation("home-page")
 
   const { locale } = useRouter()
   const direction = t("direction", { locale })
 
   return (
     <>
-      {error ? <FormError error={error} /> : ""}
+      {err ? <FormError error={err} /> : ""}
 
-      <Carousel
-        image={result.imageHomePage}
-        activeIndex={activeIndex}
-        handleNext={handleNext}
-        handlePrevious={handlePrevious}
-        setActiveIndex={setActiveIndex}
-      />
+      <Carousel image={data.imageHomePage} />
 
       <div className="flex justify-center my-4">
         <p
@@ -88,9 +63,9 @@ const Home = (props) => {
         </p>
       </div>
 
-      <Categories data={result.categories} />
+      <Categories data={data.categories} />
       <Banner text={t("highlander")} />
-      <Products data={result.products} />
+      <Products data={data.products} />
     </>
   )
 }

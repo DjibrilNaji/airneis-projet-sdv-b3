@@ -3,11 +3,14 @@
   "in_stock": "במלאי",
   "out_of_stock": "אזל במלאי",
   "category": "קטגוריה",
+  "materials": "חומרים",
   "quantity": "כַּמוּת",
   "add_to_cart": "הוסף לעגלה",
   "similar_products": "מוצרים דומים",
+  "favorite": "החביבים עליי ביותר",
   "pop_title": "מֵידָע",
   "pop_add_to_cart": "המוצר שלך נוסף לעגלת הקניות",
   "pop_already_in_favorite": "המוצר הזה כבר נמצא במועדפים שלך",
-  "pop_add_to_favorite": "המוצר שלך נוסף למועדפים"
+  "pop_add_to_favorite": "המוצר שלך נוסף למועדפים",
+  "more_informations": "עוד מידע"
 }

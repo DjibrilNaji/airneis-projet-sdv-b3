@@ -3,11 +3,14 @@
   "in_stock": "في المخزن",
   "out_of_stock": "إنتهى من المخزن",
   "category": "فئة",
+  "materials": "مواد",
   "quantity": "كمية",
   "add_to_cart": "أضف إلى السلة",
   "similar_products": "منتجات مماثلة",
+  "favorite": "المفضلة لدي",
   "pop_title": "معلومة",
   "pop_add_to_cart": "تمت إضافة منتجك إلى سلة التسوق",
   "pop_already_in_favorite": "هذا المنتج موجود بالفعل في المفضلة لديك",
-  "pop_add_to_favorite": "تمت إضافة منتجك إلى المفضلة"
+  "pop_add_to_favorite": "تمت إضافة منتجك إلى المفضلة",
+  "more_informations": "معلومات اكثر"
 }

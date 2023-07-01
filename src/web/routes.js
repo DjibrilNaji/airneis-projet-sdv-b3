@@ -13,9 +13,12 @@ const routes = {
   checkEmail: () => "/checkEmail",
   signUp: () => "/register",
   signIn: () => "/login",
-  contact: () => "/contact",
   product: (slug) => `/products/${slug}`,
   categorie: (slug) => `/categories/${slug}`,
+  contact: {
+    contact: () => "/contact",
+    confirmation: () => "/contact/confirmation",
+  },
   checkout: {
     cart: () => "/checkout/cart",
     delivery: () => "/checkout/delivery",
@@ -92,6 +95,14 @@ const routes = {
         collection: () => `/admin/orders`,
         single: (userId) => `/admin/orders/${userId}`,
       },
+      dashboard: {
+        sales: () => `/sales`,
+        salesToday: () => `/salesToday`,
+        categoriesSales: (startDate, endDate) =>
+          `/categoriesSales?startDate=${startDate}&endDate=${endDate}`,
+        averageBasket: (startDate, endDate) =>
+          `/averageBasket?startDate=${startDate}&endDate=${endDate}`,
+      },
     },
     users: {
       collection: () => `/users`,
@@ -131,7 +142,8 @@ const routes = {
       favorites: (userId, slug) => `/users/${userId}/favorites/${slug}`,
     },
     search: {
-      collection: (query) => createRouteWithQueryParams(`/search`, query),
+      collection: () => "/search",
+      searchFilter: () => "/searchFilter",
     },
     orders: {
       collection: (userId) => `/users/${userId}/allOrdersUser`,

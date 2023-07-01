@@ -2,11 +2,14 @@
   "in_stock": "En stock",
   "out_of_stock": "Plus de stock",
   "category": "Catégorie",
+  "materials": "Matériaux",
   "quantity": "Quantité",
   "add_to_cart": "Ajouter au panier",
   "similar_products": "Produits similaires",
+  "favorite": "Mes favoris",
   "pop_title": "Informations",
   "pop_add_to_cart": "Votre produit a bien été ajouté aux panier",
   "pop_already_in_favorite": "Ce produit est déjà dans vos favoris",
-  "pop_add_to_favorite": "Votre produit a bien été ajouté aux favoris"
+  "pop_add_to_favorite": "Votre produit a bien été ajouté aux favoris",
+  "more_informations": "Plus d'informations"
 }

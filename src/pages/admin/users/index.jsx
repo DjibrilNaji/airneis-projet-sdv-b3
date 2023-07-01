@@ -16,19 +16,28 @@ import CenterItem from "@/web/components/CenterItem"
 
 const UsersAdmin = () => {
   const {
-    actions: { addUser, getUsers, deleteUser, getSingleUser, updateUser },
+    state: {
+      sortColumn,
+      order,
+      limit,
+      selectedItems,
+      itemIdToRemove,
+      currentPage,
+    },
+    actions: {
+      addUser,
+      getUsers,
+      deleteUser,
+      getSingleUser,
+      updateUser,
+      setSelectedItems,
+    },
   } = useAppContext()
 
   const [data, setData] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-
-  const [sortColumn, setSortColumn] = useState("id")
-  const [order, setOrder] = useState("asc")
-  const [limit, setLimit] = useState(10)
   const [searchTerm, setSearchTerm] = useState(null)
 
-  const [selectedUsers, setSelectedUsers] = useState([])
   const [error, setError] = useState("")
   const [isOpen, setIsOpen] = useState(false)
 
@@ -92,7 +101,6 @@ const UsersAdmin = () => {
 
   const [toggleDeleteOne, setToggleDeleteOne] = useState()
   const [toggleDeleteSeveral, setToggleDeleteSeveral] = useState()
-  const [userIdToRemove, setUserIdToRemove] = useState()
 
   const fetchData = useCallback(
     async (page) => {
@@ -134,53 +142,11 @@ const UsersAdmin = () => {
       }
 
       fetchData(currentPage)
-      setSelectedUsers([])
+      setSelectedItems([])
       setToggleDeleteOne(false)
       setToggleDeleteSeveral(false)
     },
-    [fetchData, currentPage, deleteUser]
-  )
-
-  const handlePageChange = useCallback(
-    (newPage) => {
-      setCurrentPage(newPage)
-      fetchData(newPage)
-    },
-    [fetchData]
-  )
-
-  const handleLimitChange = useCallback(
-    (e) => {
-      setLimit(e.target.value)
-      setCurrentPage(1)
-      fetchData(1)
-    },
-    [fetchData]
-  )
-
-  const handleSortChange = useCallback(
-    (column) => {
-      if (column === sortColumn) {
-        setOrder(order === "asc" ? "desc" : "asc")
-      } else {
-        setSortColumn(column)
-        setOrder("asc")
-      }
-
-      fetchData(currentPage)
-    },
-    [fetchData, currentPage, order, sortColumn]
-  )
-
-  const handleSelectItem = useCallback(
-    (userId) => {
-      if (selectedUsers.includes(userId)) {
-        setSelectedUsers(selectedUsers.filter((id) => id !== userId))
-      } else {
-        setSelectedUsers([...selectedUsers, userId])
-      }
-    },
-    [selectedUsers]
+    [fetchData, currentPage, deleteUser, setSelectedItems]
   )
 
   const handleSubmit = useCallback(
@@ -228,16 +194,10 @@ const UsersAdmin = () => {
 
       resetForm()
       setIsOpen(false)
-      setCurrentPage(totalPages)
       fetchData(totalPages)
     },
     [addUser, fetchData, totalPages]
   )
-
-  const selectUserToRemove = useCallback((id) => {
-    setToggleDeleteOne(true)
-    setUserIdToRemove(id)
-  }, [])
 
   const handleCloseUserInfoModal = useCallback(async () => {
     setToggleUpdateUser(true)
@@ -265,8 +225,8 @@ const UsersAdmin = () => {
           }
           remove={
             toggleDeleteSeveral
-              ? () => selectedUsers.map((id) => handleDelete(id))
-              : () => handleDelete(userIdToRemove)
+              ? () => selectedItems.map((id) => handleDelete(id))
+              : () => handleDelete(itemIdToRemove)
           }
         />
 
@@ -283,23 +243,14 @@ const UsersAdmin = () => {
           data={data.users}
           columnsTableHead={columnsTableHead}
           columnsTableBody={["id", "email", "userName"]}
-          name={"messages"}
-          currentPage={currentPage}
+          name={"users"}
           totalPages={totalPages}
-          limit={limit}
           searchTerm={searchTerm}
-          selectedItems={selectedUsers}
-          handlePageChange={handlePageChange}
-          handleLimitChange={handleLimitChange}
-          handleSortChange={handleSortChange}
-          handleSelectItem={handleSelectItem}
-          selectItemToRemove={selectUserToRemove}
           fetchSingleItem={fetchSingleUser}
           onChange={(e) => setSearchTerm(e.target.value)}
           getInfo={true}
           displayIsDelete={true}
           displayDeleteButton={true}
-          displayStatus={false}
         />
 
         {data.users?.length > 0 && (
@@ -308,7 +259,7 @@ const UsersAdmin = () => {
               className="mx-auto"
               title="Delete all selected users"
               onClick={() => setToggleDeleteSeveral(true)}
-              disabled={selectedUsers.length === 0}
+              disabled={selectedItems.length === 0}
             />
 
             <Button onClick={() => setIsOpen(true)} className="mx-auto">

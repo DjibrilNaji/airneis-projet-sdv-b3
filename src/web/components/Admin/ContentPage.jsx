@@ -6,23 +6,16 @@ import Title from "@/web/components/Admin/Title"
 const ContentPage = (props) => {
   const {
     title,
-    currentPage,
     totalPages,
-    handlePageChange,
-    limit,
-    handleLimitChange,
     name,
     searchTerm,
     onChange,
     data,
     columnsTableBody,
     columnsTableHead,
-    selectedItems,
-    handleSortChange,
-    handleSelectItem,
-    selectItemToRemove,
     fetchSingleItem,
     getInfo,
+    displayHighlander,
     displayIsDelete,
     displayDeleteButton,
     displayStatus,
@@ -33,8 +26,6 @@ const ContentPage = (props) => {
       <Title title={title} />
 
       <SelectAndSearch
-        limit={limit}
-        handleLimitChange={handleLimitChange}
         name={name}
         searchTerm={searchTerm}
         onChange={onChange}
@@ -42,22 +33,15 @@ const ContentPage = (props) => {
 
       {data?.length > 0 && (
         <>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            handlePageChange={handlePageChange}
-          />
+          <Pagination totalPages={totalPages} />
 
           <Table
             data={data}
             columnsTableBody={columnsTableBody}
             columnsTableHead={columnsTableHead}
-            selectedItems={selectedItems}
-            handleSortChange={handleSortChange}
-            handleSelectItem={handleSelectItem}
-            selectItemToRemove={selectItemToRemove}
             fetchSingleItem={fetchSingleItem}
             getInfo={getInfo}
+            displayHighlander={displayHighlander}
             displayIsDelete={displayIsDelete}
             displayDeleteButton={displayDeleteButton}
             displayStatus={displayStatus}

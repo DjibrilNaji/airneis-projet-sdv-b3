@@ -78,6 +78,14 @@ const ImageHomePage = () => {
                 height="500"
               />
 
+              <span
+                className={`absolute top-0 left-0 w-fit h-fit p-1 text-white text-sm rounded-r-lg ${
+                  obj.display ? "bg-green-500" : "bg-red-500"
+                }`}
+              >
+                {obj.display ? "Visible " : "Not visible"}
+              </span>
+
               <div
                 className={`absolute inset-0 bg-black opacity-0 hover:opacity-80 transition-opacity ease-linear duration-300 flex items-center justify-center gap-4 rounded-lg ${
                   !obj.display && imagesDisplay === 4 && "cursor-not-allowed"
@@ -108,7 +116,7 @@ const ImageHomePage = () => {
           ))}
 
           <button className="w-72 h-48 border-2 rounded-lg flex justify-center items-center bg-gray-200 cursor-pointer">
-            <FontAwesomeIcon icon={faPlus} className=" text-2xl" />
+            <FontAwesomeIcon icon={faPlus} className="text-2xl" />
           </button>
         </div>
       </div>
