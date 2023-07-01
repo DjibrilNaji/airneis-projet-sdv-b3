@@ -67,6 +67,8 @@ const routes = {
         changeDisplay: (imageHomePageId) =>
           `/admin/image-home-page/${imageHomePageId}`,
         create: () => `/admin/image-home-page`,
+        delete: (imageHomePageId) =>
+          `/admin/image-home-page/${imageHomePageId}`,
       },
       materials: {
         collection: () => "/admin/materials/all",

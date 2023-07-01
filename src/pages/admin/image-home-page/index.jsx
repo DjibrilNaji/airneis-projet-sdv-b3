@@ -1,11 +1,17 @@
 import Error from "@/pages/_error"
+import ConfirmDelete from "@/web/components/Admin/ConfirmDelete"
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
 import Title from "@/web/components/Admin/Title"
 import CenterItem from "@/web/components/CenterItem"
 import Dialog from "@/web/components/Dialog"
 import FormError from "@/web/components/FormError"
 import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
-import { faPlus, faTimes, faUpload } from "@fortawesome/free-solid-svg-icons"
+import {
+  faPlus,
+  faTimes,
+  faTrash,
+  faUpload,
+} from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Image from "next/image"
 import { useCallback, useEffect, useState } from "react"
@@ -17,12 +23,15 @@ const ImageHomePage = () => {
       changeDisplayImageHomePage,
       addMainImage,
       addImageHomePage,
+      deleteImageHomePage,
     },
   } = useAppContext()
 
   const [image, setImage] = useState([])
   const [isOpen, setIsOpen] = useState(false)
   const [error, setError] = useState("")
+  const [toggleDelete, setToggleDelete] = useState(false)
+  const [imageIdToRemove, setImageIdToRemove] = useState(false)
 
   const fetchData = useCallback(async () => {
     const [err, data] = await getImagesHomePage()
@@ -97,6 +106,27 @@ const ImageHomePage = () => {
       })
   }, [urlImage, file, addMainImage, addImageHomePage, fetchData])
 
+  const handleDelete = useCallback(
+    async (imageHomePageId) => {
+      const [err] = await deleteImageHomePage(imageHomePageId)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setToggleDelete(false)
+      fetchData()
+    },
+    [deleteImageHomePage, fetchData]
+  )
+
+  const selectedItemToRemove = useCallback((id) => {
+    setToggleDelete(true)
+    setImageIdToRemove(id)
+  }, [])
+
   if (errorCode) {
     return <Error statusCode={errorCode} />
   }
@@ -115,6 +145,13 @@ const ImageHomePage = () => {
           isOpen={isOpen}
           dialogTitle={"Upload image"}
           content={"The image is upload"}
+        />
+
+        <ConfirmDelete
+          isOpen={toggleDelete}
+          page="image home page"
+          close={() => setToggleDelete(false)}
+          remove={() => handleDelete(imageIdToRemove)}
         />
 
         <Title title="Image home page" />
@@ -179,6 +216,16 @@ const ImageHomePage = () => {
                   obj.display && imagesDisplay === 3 && "cursor-not-allowed"
                 }`}
               >
+                <button
+                  className="cursor-pointer"
+                  onClick={() => selectedItemToRemove(obj.id)}
+                >
+                  <FontAwesomeIcon
+                    icon={faTrash}
+                    className="text-white text-3xl"
+                  />
+                </button>
+
                 <button
                   className="cursor-pointer"
                   onClick={() => handleChangeDisplay(obj.id)}

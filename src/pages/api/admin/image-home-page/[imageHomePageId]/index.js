@@ -42,6 +42,34 @@ const handler = mw({
       })
     },
   ],
+  DELETE: [
+    validate({
+      query: {
+        imageHomePageId: idValidator.required(),
+      },
+    }),
+    async ({
+      locals: {
+        query: { imageHomePageId },
+      },
+      res,
+    }) => {
+      const imageHomePage = ImageHomePageModel.query().findById(imageHomePageId)
+
+      if (!imageHomePage) {
+        throw new NotFoundError()
+      }
+
+      const imageHomePageDeleted = await ImageHomePageModel.query()
+        .delete()
+        .where({ id: imageHomePageId })
+        .returning("*")
+
+      res.send({
+        result: imageHomePageDeleted,
+      })
+    },
+  ],
 })
 
 export default handler
