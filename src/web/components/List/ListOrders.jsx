@@ -1,5 +1,5 @@
 import classNames from "classnames"
-import Link from "./Link"
+import Link from "../Design/Link"
 import routes from "@/web/routes.js"
 
 const ListOrders = (props) => {

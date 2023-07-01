@@ -1,7 +1,7 @@
 import { Form, Formik } from "formik"
 import * as yup from "yup"
-import FormError from "@/web/components/FormError"
-import SubmitButton from "@/web/components/SubmitButton"
+import FormError from "@/web/components/Form/FormError"
+import SubmitButton from "@/web/components/Button/SubmitButton"
 import FormField from "@/web/components/Admin/Form/FormField"
 
 const defaultInitialValues = {

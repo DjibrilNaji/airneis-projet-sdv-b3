@@ -1,4 +1,4 @@
-import Button from "@/web/components/Button"
+import Button from "@/web/components/Button/Button"
 import classNames from "classnames"
 import { useTranslation } from "next-i18next"
 

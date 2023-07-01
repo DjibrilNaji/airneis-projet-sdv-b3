@@ -2,9 +2,9 @@ import Error from "@/pages/_error"
 import ConfirmDelete from "@/web/components/Admin/ConfirmDelete"
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
 import Title from "@/web/components/Admin/Title"
-import CenterItem from "@/web/components/CenterItem"
-import Dialog from "@/web/components/Dialog"
-import FormError from "@/web/components/FormError"
+import CenterItem from "@/web/components/Design/CenterItem"
+import Dialog from "@/web/components/Design/Dialog"
+import FormError from "@/web/components/Form/FormError"
 import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
 import {
   faPlus,

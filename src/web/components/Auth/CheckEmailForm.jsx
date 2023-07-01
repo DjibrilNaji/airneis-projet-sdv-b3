@@ -1,9 +1,9 @@
 import * as yup from "yup"
 import { Form, Formik } from "formik"
-import Button from "@/web/components/Button.jsx"
-import FormField from "@/web/components/FormField.jsx"
+import Button from "@/web/components/Button/Button.jsx"
+import FormField from "@/web/components/Form/FormField.jsx"
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons"
-import FormSuccess from "../FormSuccess.jsx"
+import FormSuccess from "../Form/FormSuccess.jsx"
 
 const defaultInitialValues = {
   email: "",

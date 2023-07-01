@@ -5,12 +5,12 @@ import useAppContext from "@/web/hooks/useAppContext"
 import { useCallback, useState } from "react"
 import { useTranslation } from "next-i18next"
 import Modal from "@/web/components/Modal"
-import FormError from "@/web/components/FormError"
+import FormError from "@/web/components/Form/FormError"
 import AddressForm from "@/web/components/Checkout/AddressForm"
 import { useRouter } from "next/router"
 import createAPIClient from "@/web/createAPIClient"
 import getAllAddressService from "@/web/services/address/getAllAddress"
-import Button from "@/web/components/Button"
+import Button from "@/web/components/Button/Button"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
   faEdit,
@@ -18,7 +18,7 @@ import {
   faPlus,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons"
-import OrderSummary from "@/web/components/OrderSummary"
+import OrderSummary from "@/web/components/Design/OrderSummary"
 import routes from "@/web/routes"
 
 export const getServerSideProps = async ({ req, locale }) => {

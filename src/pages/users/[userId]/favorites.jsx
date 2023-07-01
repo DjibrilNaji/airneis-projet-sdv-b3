@@ -9,14 +9,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons"
 import { useCallback, useContext, useEffect, useState } from "react"
 import { CartContext } from "@/web/hooks/cartContext"
-import Dialog from "@/web/components/Dialog"
+import Dialog from "@/web/components/Design/Dialog"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import useAppContext from "@/web/hooks/useAppContext"
-import FormError from "@/web/components/FormError"
+import FormError from "@/web/components/Form/FormError"
 import cookie from "cookie"
 import createAPIClient from "@/web/createAPIClient"
 import getFavoritesService from "@/web/services/favorites/getFavorites"
-import CenterItem from "@/web/components/CenterItem"
+import CenterItem from "@/web/components/Design/CenterItem"
 import { useTranslation } from "next-i18next"
 
 export const getServerSideProps = async ({ locale, params, req }) => {

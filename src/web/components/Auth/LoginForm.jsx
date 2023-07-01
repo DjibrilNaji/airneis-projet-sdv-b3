@@ -1,10 +1,10 @@
 import * as yup from "yup"
 import { Form, Formik } from "formik"
-import Button from "@/web/components/Button.jsx"
-import FormField from "@/web/components/FormField.jsx"
+import Button from "@/web/components/Button/Button.jsx"
+import FormField from "@/web/components/Form/FormField.jsx"
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons"
 import TextAuth from "@/web/components/Auth/TextAuth.jsx"
-import FormError from "../FormError.jsx"
+import FormError from "../Form/FormError.jsx"
 import routes from "@/web/routes.js"
 
 const defaultInitialValues = {

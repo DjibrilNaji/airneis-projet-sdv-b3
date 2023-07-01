@@ -1,9 +1,9 @@
-import FormField from "@/web/components/FormField.jsx"
+import FormField from "@/web/components/Form/FormField.jsx"
 import { Form, Formik } from "formik"
 import * as yup from "yup"
 import { faPerson } from "@fortawesome/free-solid-svg-icons"
-import FormError from "../FormError.jsx"
-import SubmitButton from "../SubmitButton.jsx"
+import FormError from "../Form/FormError.jsx"
+import SubmitButton from "../Button/SubmitButton.jsx"
 
 const defaultInitialValues = {
   addressFull: "",

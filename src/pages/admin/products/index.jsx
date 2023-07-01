@@ -7,7 +7,7 @@ import routes from "@/web/routes"
 import useAppContext, {
   AppContextProvider,
 } from "@/web/hooks/useAppContext.jsx"
-import FormError from "@/web/components/FormError"
+import FormError from "@/web/components/Form/FormError"
 import { useRouter } from "next/router"
 import Modal from "@/web/components/Modal"
 import EditProductForm from "@/web/components/Admin/Form/EditProductForm"

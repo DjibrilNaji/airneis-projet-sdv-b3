@@ -2,7 +2,7 @@ import useAppContext from "@/web/hooks/useAppContext.jsx"
 import { useCallback, useState } from "react"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import CheckEmailForm from "@/web/components/Auth/CheckEmailForm"
-import Form from "@/web/components/Form"
+import Form from "@/web/components/Form/Form"
 
 export async function getServerSideProps({ locale }) {
   return {
