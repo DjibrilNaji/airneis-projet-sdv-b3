@@ -1,7 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
 import logo from "@@/public/assets/img/logo.png"
-import profilepic from "@@/public/assets/img/profilepictest.jpeg"
 import {
   UserIcon,
   ShoppingCartIcon,
@@ -15,6 +14,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons"
 
 const NavAdmin = () => {
+  const username =
+    typeof window !== "undefined" && localStorage.getItem("username")
+
   const navItems = [
     {
       href: "/admin",
@@ -63,7 +65,7 @@ const NavAdmin = () => {
       <button
         className={`${
           !isOpen
-            ? "ml-6 mt-6 h-11 border-2 rounded-lg pb-1 pt-2 pl-3 pr-3 hover:bg-slate-200 z-50"
+            ? "ml-6 mt-6 h-11 border-2 rounded-lg pb-1 pt-2 pl-3 pr-3 hover:bg-slate-200 z-50 absolute"
             : "hidden"
         } `}
         onClick={handleIsOpenClick}
@@ -74,11 +76,9 @@ const NavAdmin = () => {
       </button>
 
       <aside
-        className={`${
-          isOpen
-            ? "bg-white drop-shadow-2xl w-[100vw] h-screen absolute lg:w-[18vw] z-50 lg:static"
-            : "hidden"
-        } `}
+        className={`transition-transform duration-500 ease-in-out transform ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        } bg-white drop-shadow-2xl h-screen w-2/12 absolute z-50`}
       >
         <nav>
           <div className="flex items-center justify-center border-b-2 mt-2">
@@ -112,22 +112,11 @@ const NavAdmin = () => {
           </ul>
         </nav>
         <div className="flex items-center gap-3 pl-5 w-full h-16 border-t-2 fixed bottom-0 ">
-          <Image
-            src={profilepic}
-            alt="profile picture"
-            className="w-10 rounded-full"
-          />
-
-          <Link
-            className="w-full"
-            href="/admin/settings"
-            onClick={handleIsOpenClick}
-          >
-            <div className="flex flex-col">
-              <p>John Doe</p>
-              <p className="text-xs text-red-900">Administrator</p>
-            </div>
-          </Link>
+          <div className="flex flex-col">
+            <p>
+              Welcome <span className="font-bold">{username}</span> !
+            </p>
+          </div>
         </div>
       </aside>
     </>
