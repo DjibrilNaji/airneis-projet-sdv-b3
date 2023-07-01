@@ -63,7 +63,7 @@ const handler = mw({
 
       if (imageHomePage) {
         res.send({
-          result: "An error occurred while retrieving image home page",
+          result: "Image already exists",
         })
       }
 
