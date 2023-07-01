@@ -106,7 +106,7 @@ const Navbar = () => {
       onClick: handleIsOpenClick,
     },
     {
-      href: "/",
+      href: routes.privacy(),
       title: t("menu_privacy"),
       icon: <FontAwesomeIcon icon={faFileContract} />,
       onClick: handleIsOpenClick,

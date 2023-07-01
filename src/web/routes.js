@@ -15,6 +15,7 @@ const routes = {
   signIn: () => "/login",
   product: (slug) => `/products/${slug}`,
   categorie: (slug) => `/categories/${slug}`,
+  privacy: () => "/privacy",
   contact: {
     contact: () => "/contact",
     confirmation: () => "/contact/confirmation",

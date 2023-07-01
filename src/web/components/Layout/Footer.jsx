@@ -24,7 +24,7 @@ const Footer = () => {
             {t("menu_conditions")}
           </a>
         </Link>
-        <Link href={`/`} legacyBehavior>
+        <Link href={`/privacy`} legacyBehavior>
           <a className="px-3 text-stone-400 text-lg font-bold">
             {t("menu_privacy")}
           </a>
