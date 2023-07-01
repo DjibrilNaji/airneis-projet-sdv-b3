@@ -4,6 +4,7 @@ import {
   boolValidator,
   idValidator,
   integerValidator,
+  orderValidator,
   stringValidator,
 } from "@/validators"
 import {
@@ -20,11 +21,12 @@ const handler = mw({
     validate({
       query: {
         userId: idValidator.required(),
+        order: orderValidator,
       },
     }),
     async ({
       locals: {
-        query: { userId },
+        query: { userId, order },
       },
       req,
       res,
@@ -40,7 +42,7 @@ const handler = mw({
       const address = await AddressModel.query()
         .where({ userId: userId })
         .where({ isDelete: false })
-        .orderBy("address.id")
+        .orderBy("address.id", order ? order : "asc")
 
       if (!address) {
         throw new NotFoundError()

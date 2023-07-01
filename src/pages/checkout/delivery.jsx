@@ -51,7 +51,7 @@ export const getServerSideProps = async ({ req, locale }) => {
 
   const getAllAddress = getAllAddressService({ api })
 
-  const [err, data] = await getAllAddress(userId)
+  const [err, data] = await getAllAddress(userId, "desc")
 
   if (err) {
     return redirection()
@@ -98,7 +98,7 @@ const Delivery = (props) => {
   const [selectedAddress, setSelectedAddress] = useState(defaultAddress)
 
   const fetchAddressData = useCallback(async () => {
-    const [err, data] = await getAllAddress(userId)
+    const [err, data] = await getAllAddress(userId, "desc")
 
     if (err) {
       setError(err)
@@ -107,6 +107,7 @@ const Delivery = (props) => {
     }
 
     setAddress(data.result)
+    setSelectedAddressId(data.result[0].id)
   }, [getAllAddress, userId])
 
   const handleChangeAddress = useCallback(

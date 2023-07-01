@@ -2,10 +2,10 @@ import routes from "@/web/routes.js"
 
 const getAllAddress =
   ({ api }) =>
-  async (userId) => {
+  async (userId, order) => {
     try {
       const { data } = await api.get(
-        routes.api.users.address.collection(userId)
+        routes.api.users.address.collection(userId, order && { order })
       )
 
       return [null, data]
