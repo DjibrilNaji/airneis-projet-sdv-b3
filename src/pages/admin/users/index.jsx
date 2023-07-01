@@ -13,6 +13,7 @@ import ContentPage from "@/web/components/Admin/ContentPage"
 import DeleteAllButton from "@/web/components/Admin/Button/DeleteAllButton"
 import ModalButtonInfo from "@/web/components/Admin/Button/ModalButtonInfo"
 import CenterItem from "@/web/components/CenterItem"
+import Dialog from "@/web/components/Dialog"
 
 const UsersAdmin = () => {
   const {
@@ -23,6 +24,7 @@ const UsersAdmin = () => {
       selectedItems,
       itemIdToRemove,
       currentPage,
+      toggleDeleteOne,
     },
     actions: {
       addUser,
@@ -31,6 +33,7 @@ const UsersAdmin = () => {
       getSingleUser,
       updateUser,
       setSelectedItems,
+      setToggleDeleteOne,
     },
   } = useAppContext()
 
@@ -40,6 +43,9 @@ const UsersAdmin = () => {
 
   const [error, setError] = useState("")
   const [isOpen, setIsOpen] = useState(false)
+  const [isOpenAddUser, setIsOpenAddUser] = useState(false)
+  const [isOpenEditUser, setIsOpenEditUser] = useState(false)
+  const [contentDialog, setContentDialog] = useState()
 
   const [user, setUser] = useState([])
   const [addressSingleUser, setAddressSingleUser] = useState([])
@@ -99,7 +105,6 @@ const UsersAdmin = () => {
   const [viewUserInfo, setViewUserInfo] = useState(false)
   const [toggleUpdateUser, setToggleUpdateUser] = useState(true)
 
-  const [toggleDeleteOne, setToggleDeleteOne] = useState()
   const [toggleDeleteSeveral, setToggleDeleteSeveral] = useState()
 
   const fetchData = useCallback(
@@ -145,8 +150,11 @@ const UsersAdmin = () => {
       setSelectedItems([])
       setToggleDeleteOne(false)
       setToggleDeleteSeveral(false)
+      setContentDialog("The user has been deleted")
+      setIsOpen(true)
+      setTimeout(() => setIsOpen(false), 3000)
     },
-    [fetchData, currentPage, deleteUser, setSelectedItems]
+    [fetchData, currentPage, deleteUser, setSelectedItems, setToggleDeleteOne]
   )
 
   const handleSubmit = useCallback(
@@ -161,6 +169,9 @@ const UsersAdmin = () => {
 
       setUser(data.result)
       setToggleUpdateUser(!toggleUpdateUser)
+      setContentDialog("The user has been updated")
+      setIsOpenEditUser(true)
+      setTimeout(() => setIsOpenEditUser(false), 3000)
       fetchData(currentPage)
     },
     [user.id, toggleUpdateUser, updateUser, fetchData, currentPage]
@@ -215,6 +226,8 @@ const UsersAdmin = () => {
       <div className="hidden md:block">
         {error ? <FormError error={error} /> : ""}
 
+        <Dialog isOpen={isOpen} content={contentDialog} />
+
         <ConfirmDelete
           isOpen={toggleDeleteOne || toggleDeleteSeveral}
           page="users"
@@ -231,9 +244,9 @@ const UsersAdmin = () => {
         />
 
         <Modal
-          isOpen={isOpen}
+          isOpen={isOpenAddUser}
           modalTitle="Add"
-          closeModal={() => setIsOpen(false)}
+          closeModal={() => setIsOpenAddUser(false)}
         >
           <UserForm onSubmit={handleAddUser} />
         </Modal>
@@ -263,7 +276,7 @@ const UsersAdmin = () => {
               disabled={selectedItems.length === 0}
             />
 
-            <Button onClick={() => setIsOpen(true)} className="mx-auto">
+            <Button onClick={() => setIsOpenAddUser(true)} className="mx-auto">
               Add new user
             </Button>
           </div>
@@ -324,6 +337,7 @@ const UsersAdmin = () => {
                 onSubmit={handleSubmit}
                 active={toggleUpdateUser}
               />
+              <Dialog isOpen={isOpenEditUser} content={contentDialog} />
             </>
           ) : selectedType.name === types.address.name ? (
             <>
