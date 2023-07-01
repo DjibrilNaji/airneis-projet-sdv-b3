@@ -14,7 +14,7 @@ import EditProductForm from "@/web/components/Admin/Form/EditProductForm"
 import Image from "next/image"
 import ContentPage from "@/web/components/Admin/ContentPage"
 import ConfirmDelete from "@/web/components/Admin/ConfirmDelete"
-import Dialog from "@/web/components/Dialog"
+import Dialog from "@/web/components/Design/Dialog"
 
 const ProductAdmin = () => {
   const {
