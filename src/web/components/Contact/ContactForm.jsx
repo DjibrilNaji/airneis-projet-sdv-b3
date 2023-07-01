@@ -1,10 +1,10 @@
-import FormField from "@/web/components/FormField.jsx"
+import FormField from "@/web/components/Form/FormField.jsx"
 import { Form, Formik } from "formik"
 import * as yup from "yup"
 import React from "react"
 import { faEnvelope, faPerson } from "@fortawesome/free-solid-svg-icons"
-import FormError from "./FormError"
-import SubmitButton from "./SubmitButton.jsx"
+import FormError from "@/web/components/Form/FormError"
+import SubmitButton from "@/web/components/Button/SubmitButton.jsx"
 import { useTranslation } from "next-i18next"
 import { useRouter } from "next/router"
 

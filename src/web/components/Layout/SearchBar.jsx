@@ -4,8 +4,8 @@ import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/router"
-import useAppContext from "../hooks/useAppContext"
-import FormError from "./FormError"
+import useAppContext from "@/web/hooks/useAppContext"
+import FormError from "@/web/components/Form/FormError"
 
 const SearchBar = () => {
   const router = useRouter()

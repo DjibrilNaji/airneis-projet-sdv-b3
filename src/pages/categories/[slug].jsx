@@ -1,5 +1,5 @@
 import Image from "next/image"
-import ListProduct from "@/web/components/ListProduct.jsx"
+import ListProduct from "@/web/components/List/ListProduct.jsx"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import getSingleCategoryService from "@/web/services/categories/getSingleCategory"
 import createAPIClient from "@/web/createAPIClient"

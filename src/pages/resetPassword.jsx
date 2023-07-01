@@ -4,7 +4,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import ResetPasswordForm from "@/web/components/Auth/ResetPasswordForm"
 import { useRouter } from "next/router"
 import routes from "@/web/routes"
-import Form from "@/web/components/Form"
+import Form from "@/web/components/Form/Form"
 
 export async function getServerSideProps({ locale, query }) {
   const token = query.token

@@ -1,4 +1,4 @@
-import Link from "@/web/components/Link"
+import Link from "@/web/components/Design/Link"
 
 const MessageConfirmation = (props) => {
   const { title, message, info, route, button } = props

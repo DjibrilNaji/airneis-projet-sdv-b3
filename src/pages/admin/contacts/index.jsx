@@ -1,12 +1,12 @@
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
 import { useCallback, useEffect, useState } from "react"
 import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
-import FormError from "@/web/components/FormError"
+import FormError from "@/web/components/Form/FormError"
 import ConfirmDelete from "@/web/components/Admin/ConfirmDelete"
 import ContentPage from "@/web/components/Admin/ContentPage"
 import DeleteAllButton from "@/web/components/Admin/Button/DeleteAllButton"
-import CenterItem from "@/web/components/CenterItem"
-import Dialog from "@/web/components/Dialog"
+import Dialog from "@/web/components/Design/Dialog"
+import CenterItem from "@/web/components/Design/CenterItem"
 
 const ContactAdmin = () => {
   const [data, setData] = useState([])

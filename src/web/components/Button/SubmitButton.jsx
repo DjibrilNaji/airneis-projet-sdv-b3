@@ -1,4 +1,4 @@
-import Button from "@/web/components/Button.jsx"
+import Button from "@/web/components/Button/Button.jsx"
 import classNames from "classnames"
 import { useFormikContext } from "formik"
 

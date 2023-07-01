@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import routes from "../routes"
+import routes from "@/web/routes"
 
 const ListProduct = (props) => {
   const { product } = props

@@ -1,4 +1,4 @@
-import Alert from "@/web/components/Alert.jsx"
+import Alert from "@/web/components/Form/Alert.jsx"
 import classNames from "classnames"
 
 const FormSuccess = (props) => {

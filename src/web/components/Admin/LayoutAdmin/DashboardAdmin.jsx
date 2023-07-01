@@ -1,6 +1,6 @@
-import SalesChart from "../Dashboard/SalesChart"
-import SalesToday from "../Dashboard/SalesToday"
-import CategoriesVolume from "../Dashboard/CategoriesVolumes"
+import SalesChart from "@/web/components/Admin/Dashboard/SalesChart"
+import SalesToday from "@/web/components/Admin/Dashboard/SalesToday"
+import CategoriesVolume from "@/web/components/Admin/Dashboard/CategoriesVolumes"
 
 const DashboardAdmin = () => {
   return (

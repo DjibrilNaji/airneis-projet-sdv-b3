@@ -1,11 +1,11 @@
-import ContactForm from "@/web/components/ContactForm"
+import ContactForm from "@/web/components/Contact/ContactForm"
 import { useRouter } from "next/router.js"
 import { useCallback, useState } from "react"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useTranslation } from "next-i18next"
 import useAppContext from "@/web/hooks/useAppContext"
-import FormError from "@/web/components/FormError"
-import Form from "@/web/components/Form"
+import FormError from "@/web/components/Form/FormError"
+import Form from "@/web/components/Form/Form"
 import routes from "@/web/routes"
 
 export async function getServerSideProps({ locale }) {
