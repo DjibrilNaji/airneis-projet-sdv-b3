@@ -5,6 +5,7 @@ import TableAddress from "@/web/components/Auth/TableAddress"
 import Link from "@/web/components/Link"
 import Button from "@/web/components/Button"
 import BillingAddressForm from "@/web/components/Auth/BillingAddressForm"
+import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import useAppContext from "@/web/hooks/useAppContext"
 import FormError from "@/web/components/FormError"
@@ -78,6 +79,8 @@ const MyAccount = (props) => {
   const [seeData, setSeeData] = useState("Personnal Data")
   const optionUser = ["Personnal Data", "Address", "Billing Address"]
   const [allAddress, setAllAddress] = useState(allAddressUser)
+
+  const { t } = useTranslation()
 
   const handleSubmit = useCallback(
     async (values) => {
@@ -170,6 +173,7 @@ const MyAccount = (props) => {
             name="typeData"
             className="top-0 h-full border-2 border-solid rounded-lg text-xl px-4 border-black mt-4 ml-10"
             onChange={handleChange}
+            title={t("personal_data_select")}
           >
             {optionUser.map((option, index) => (
               <option key={index} value={option}>

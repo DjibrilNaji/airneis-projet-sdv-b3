@@ -126,7 +126,7 @@ const Favorite = (props) => {
 
       {favorite.length > 0 ? (
         <>
-          <h1 className="flex text-stone-400 text-3xl font-bold justify-center my-6">
+          <h1 className="flex text-stone-500 text-3xl font-bold justify-center my-6">
             My Favourits
           </h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mx-4 my-4">

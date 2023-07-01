@@ -1,5 +1,7 @@
 {
   "delivery_title": "Livraison",
   "delivery_address": "Adresse de livraion",
-  "delivery_add_button": "Ajouter une adresse"
+  "delivery_add_button": "Ajouter une adresse",
+  "infos": "Informations",
+  "address_checkbox": "Choix addresse"
 }

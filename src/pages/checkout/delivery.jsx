@@ -228,6 +228,7 @@ const Delivery = (props) => {
                       className="cursor-pointer h-5 w-5 border-2 border-stone-500 appearance-none checked:bg-stone-500"
                       disabled={address.id === selectedAddressId}
                       checked={address.id === selectedAddressId}
+                      title={t("delivery:address_checkbox")}
                       readOnly
                     />
                     <span
@@ -254,7 +255,10 @@ const Delivery = (props) => {
                   </div>
 
                   <div className="flex flex-col justify-between">
-                    <button onClick={() => handleShowAddress(address.id)}>
+                    <button
+                      onClick={() => handleShowAddress(address.id)}
+                      title={t("delivery:infos")}
+                    >
                       <FontAwesomeIcon
                         icon={
                           visibleAddressId === address.id
@@ -262,7 +266,9 @@ const Delivery = (props) => {
                             : faInfoCircle
                         }
                         className="flex h-5 text-stone-600"
-                      />
+                      >
+                        <title>{t("delivery:infos")}</title>
+                      </FontAwesomeIcon>
                     </button>
 
                     <button

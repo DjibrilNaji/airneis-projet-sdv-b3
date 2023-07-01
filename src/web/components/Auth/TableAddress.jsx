@@ -79,6 +79,7 @@ const TableAddress = (props) => {
               <Link
                 href={routes.users.addressSingle(add.id)}
                 className="border-2 px-2 py-1 rounded-full flex justify-center bg-gray-100 hover:bg-gray-200"
+                title="Default address"
               >
                 <FontAwesomeIcon icon={faPencil} className="text-stone-400" />
               </Link>

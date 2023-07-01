@@ -27,7 +27,7 @@ const OrderSummary = (props) => {
         <span>{price} €</span>
       </p>
 
-      <p className="flex justify-between text-sm text-stone-400 font-bold">
+      <p className="flex justify-between text-sm text-stone-500 font-bold">
         <span>{t("tva")}</span>
         <span>{totalTva} €</span>
       </p>

@@ -1,3 +1,4 @@
+import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useEffect } from "react"
 import routes from "@/web/routes"
@@ -16,6 +17,8 @@ export const getServerSideProps = async ({ locale, query }) => {
 
 const Confirmation = (props) => {
   const { numberOrder } = props
+
+  const { t } = useTranslation("navigation")
 
   useEffect(() => {
     const date = new Date()
@@ -43,6 +46,7 @@ const Confirmation = (props) => {
             <Link
               href={routes.home()}
               className="bg-stone-500 px-4 text-xl py-2 rounded-md text-white"
+              title={t("cart")}
             >
               Continuer mes achats
             </Link>

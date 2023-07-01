@@ -252,22 +252,28 @@ const Product = (props) => {
           className="absolute top-[45%] text-stone-500 opacity-60 hover:opacity-100 left-0 transition-opacity ease-linear duration-300 disabled:opacity-20"
           onClick={handlePrevious}
           disabled={image.length === 1}
+          title={t("arrow_left", { locale })}
         >
           <FontAwesomeIcon
             icon={faArrowLeft}
             className="fa-2xl p-2 rounded-full bg-white"
-          />
+          >
+            <title>{t("arrow_left", { locale })}</title>
+          </FontAwesomeIcon>
         </button>
 
         <button
           className="absolute top-[45%] right-0 text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300 disabled:opacity-20"
           onClick={handleNext}
           disabled={image.length === 1}
+          title={t("arrow_right", { locale })}
         >
           <FontAwesomeIcon
             icon={faArrowRight}
             className="fa-2xl p-2 rounded-full bg-white"
-          />
+          >
+            <title>{t("arrow_right", { locale })}</title>
+          </FontAwesomeIcon>
         </button>
       </div>
 
@@ -281,6 +287,7 @@ const Product = (props) => {
                 ? "bg-stone-500"
                 : "bg-stone-200 hover:bg-stone-900"
             }`}
+            title={t("slides")}
           />
         ))}
       </div>
@@ -308,11 +315,14 @@ const Product = (props) => {
                 className="text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300 disabled:opacity-20"
                 onClick={handlePrevious}
                 disabled={image.length === 1}
+                title={t("arrow_left", { locale })}
               >
                 <FontAwesomeIcon
                   icon={faArrowLeft}
                   className="fa-2xl p-2 rounded-full bg-white "
-                />
+                >
+                  <title>{t("arrow_left", { locale })}</title>
+                </FontAwesomeIcon>
               </button>
             </div>
 
@@ -321,11 +331,14 @@ const Product = (props) => {
                 className="text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300 disabled:opacity-20"
                 onClick={handleNext}
                 disabled={image.length === 1}
+                title={t("arrow_right", { locale })}
               >
                 <FontAwesomeIcon
                   icon={faArrowRight}
                   className="fa-2xl p-2 rounded-full bg-white"
-                />
+                >
+                  <title>{t("arrow_right", { locale })}</title>
+                </FontAwesomeIcon>
               </button>
             </div>
 
@@ -339,6 +352,7 @@ const Product = (props) => {
                       ? "bg-stone-500"
                       : "bg-stone-200 hover:bg-stone-900"
                   }`}
+                  title={t("slides")}
                 />
               ))}
             </div>
@@ -369,7 +383,7 @@ const Product = (props) => {
             </div>
 
             {product.stock > 0 ? (
-              <h2 className="flex text-stone-500 opacity-60 font-bold">
+              <h2 className="flex text-stone-900 opacity-60 font-bold">
                 {t("in_stock")}
               </h2>
             ) : (
@@ -389,6 +403,7 @@ const Product = (props) => {
                     className="border-2 rounded-lg px-2 focus:outline-none"
                     onChange={handleQuantityChange}
                     value={selectedQuantity}
+                    title={t("quantity")}
                   >
                     {quantityDisplay}
                   </select>
@@ -408,7 +423,7 @@ const Product = (props) => {
               <span className="font-bold">{t("category")} : </span>
               <Link
                 href={routes.categorie(category.slug)}
-                className="opacity-40 italic font-bold"
+                className="opacity-60 italic font-bold"
               >
                 {category.name}
               </Link>

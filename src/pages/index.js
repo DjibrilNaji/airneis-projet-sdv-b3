@@ -91,12 +91,17 @@ const Home = (props) => {
             icon={faArrowLeft}
             className="absolute top-[45%] fa-2xl border-2 bg-white p-2 left-0 rounded-full text-stone-500"
             onClick={handlePrevious}
-          />
+          >
+            <title>{t("arrow_left")}</title>
+          </FontAwesomeIcon>
+
           <FontAwesomeIcon
             icon={faArrowRight}
             className="absolute top-[45%] fa-2xl border-2 bg-white p-2 right-0 rounded-full text-stone-500"
             onClick={handleNext}
-          />
+          >
+            <title>{t("arrow_right")}</title>
+          </FontAwesomeIcon>
         </div>
         <div className="flex justify-center">
           {result.imageHomePage.map((image, index) => (
@@ -108,13 +113,14 @@ const Home = (props) => {
                   ? "bg-stone-500"
                   : "bg-stone-200 hover:bg-stone-900"
               }`}
+              title={t("slides")}
             />
           ))}
         </div>
       </div>
       <div className="flex justify-center my-4">
         <p
-          className="p-6 text-center font-bold text-stone-400 text-xl"
+          className="p-6 text-center font-bold text-stone-500 text-xl"
           dir={direction}
         >
           {t("home_description_first")} <br />

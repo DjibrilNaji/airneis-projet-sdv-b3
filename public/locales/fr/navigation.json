@@ -11,5 +11,19 @@
   "menu_logout": "Se déconnecter",
   "menu_login": "Se connecter",
   "menu_register": "S'inscrire",
-  "menu_admin": "Admin"
+  "menu_admin": "Admin",
+  "arrow_left": "Gauche",
+  "arrow_right": "Droite",
+  "slides": "Galerie déroulant",
+  "cart": "Panier",
+  "menu": "Menu",
+  "burger_menu_annulation": "Annulation menu",
+  "search": "Recherche",
+  "search_input": "Barre de recherche",
+  "research_button": "Bouton de recherche",
+  "search_form": "Formulaire recherche",
+  "linkedin": "LinkedIn",
+  "instagram": "Instagram",
+  "facebook": "Facebook",
+  "personal_data_select": "Données personnelle"
 }

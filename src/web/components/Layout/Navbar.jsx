@@ -36,8 +36,8 @@ import NavBarItem from "@/web/components/Layout/NavBarItem"
 
 const Navbar = () => {
   const { t } = useTranslation("navigation")
-  const { locale } = useRouter()
-  const direction = t("direction", { locale })
+  const { locales } = useRouter()
+  const direction = t("direction", { locales })
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -76,7 +76,7 @@ const Navbar = () => {
       href:
         (session !== false) & (session !== null)
           ? routes.users.single(session.user.id)
-          : "/",
+          : routes.home(),
       title: t("menu_settings"),
       icon: <FontAwesomeIcon icon={faGear} />,
       onClick: handleIsOpenClick,
@@ -85,7 +85,7 @@ const Navbar = () => {
       href:
         (session !== false) & (session !== null)
           ? routes.users.favorites(session.user.id)
-          : "/",
+          : routes.home(),
       title: t("menu_favourites"),
       icon: <FontAwesomeIcon icon={faHeart} />,
       onClick: handleIsOpenClick,
@@ -94,7 +94,7 @@ const Navbar = () => {
       href:
         (session !== false) & (session !== null)
           ? routes.orders.collection(session.user.id)
-          : "/",
+          : routes.home(),
       title: t("menu_orders"),
       icon: <FontAwesomeIcon icon={faCircleCheck} />,
       onClick: handleIsOpenClick,
@@ -112,7 +112,7 @@ const Navbar = () => {
       onClick: handleIsOpenClick,
     },
     {
-      href: "/contact",
+      href: routes.contact(),
       title: t("menu_contact"),
       icon: <FontAwesomeIcon icon={faMessage} />,
       onClick: handleIsOpenClick,
@@ -124,7 +124,7 @@ const Navbar = () => {
       onClick: handleIsOpenClick,
     },
     {
-      href: "/",
+      href: routes.home(),
       title: t("menu_logout"),
       icon: <FontAwesomeIcon icon={faRightFromBracket} />,
       onClick: handleSignOut,
@@ -157,7 +157,7 @@ const Navbar = () => {
       onClick: handleIsOpenClick,
     },
     {
-      href: "/contact",
+      href: routes.contact(),
       title: t("menu_contact"),
       icon: <FontAwesomeIcon icon={faMessage} />,
       onClick: handleIsOpenClick,
@@ -172,27 +172,30 @@ const Navbar = () => {
 
   return (
     <nav className="flex items-center sticky top-0 bg-white border-b-2 border-stone-400 shadow-lg p-4 z-10">
-      <Link href={"/"} legacyBehavior>
+      <Link href={routes.home()} legacyBehavior>
         <Image src={logo} alt="logo" />
       </Link>
 
       <div className="flex items-center ml-auto transition-all transition-duration-200">
         <SearchBar />
-        <Link href={routes.checkout.cart()} className="px-2 py-1">
+        <Link
+          href={routes.checkout.cart()}
+          className="px-2 py-1"
+          title={t("cart")}
+        >
           <FontAwesomeIcon
             icon={faShoppingCart}
             className="h-6 text-stone-400"
           />
           {cartItems.length > 0 && (
-            <span className="absolute top-0 right-0 inline-flex items-center justify-center p-1 text-xs font-bold leading-none text-white bg-black rounded-full">
-              {cartItems.length}
-            </span>
+            <span className="absolute top-4 h-3 w-3 bg-red-500 rounded-full"></span>
           )}
         </Link>
 
         <button
           className={`px-2 py-1  transition duration-200 ease-in-out transform`}
           onClick={handleIsOpenClick}
+          title={t("menu")}
         >
           <FontAwesomeIcon icon={faBars} className="h-6 text-stone-400" />
         </button>
@@ -209,7 +212,10 @@ const Navbar = () => {
               className="flex justify-center gap-3 p-6 bg-stone-500"
               dir={direction}
             >
-              <button onClick={handleIsOpenClick}>
+              <button
+                onClick={handleIsOpenClick}
+                title={t("burger_menu_annulation")}
+              >
                 <FontAwesomeIcon icon={faXmark} className="h-6 text-white" />
               </button>
 
@@ -223,7 +229,7 @@ const Navbar = () => {
 
               {session.user.isAdmin && (
                 <Link
-                  href={"/admin"}
+                  href={routes.admin.admin()}
                   className="bg-white p-4 border-2 rounded-lg hover:bg-stone-200"
                   onClick={handleIsOpenClick}
                 >
@@ -240,7 +246,10 @@ const Navbar = () => {
         ) : (
           <>
             <div className="flex justify-center gap-3 p-6 bg-stone-500">
-              <button onClick={handleIsOpenClick}>
+              <button
+                onClick={handleIsOpenClick}
+                title={t("burger_menu_annulation")}
+              >
                 <FontAwesomeIcon icon={faXmark} className="h-6 text-white" />
               </button>
 

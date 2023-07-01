@@ -2,6 +2,7 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
+import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import FormError from "@/web/components/FormError"
 import createAPIClient from "@/web/createAPIClient"
@@ -47,6 +48,8 @@ const Search = (props) => {
     error,
   } = props
 
+  const { t } = useTranslation("navigation")
+
   const handleInputChange = (e) => {
     setInputValue(e.target.value)
   }
@@ -73,17 +76,23 @@ const Search = (props) => {
       {error ? <FormError error={error} /> : ""}
       <div className="flex-col mt-10">
         <div className="flex justify-center items-center">
-          <form onSubmit={handleSubmit} className="flex md:w-1/2 lg:w-1/2">
+          <form
+            onSubmit={handleSubmit}
+            className="flex md:w-1/2 lg:w-1/2"
+            title={t("search_form")}
+          >
             <input
               type="text"
               placeholder="Search products"
               className="border-2 border-gray-300 p-2 rounded-md w-full"
               value={inputValue}
               onChange={handleInputChange}
+              title={t("search_input")}
             />
             <button
               type="submit"
               className="bg-slate-600 text-white px-4 py-2 rounded-md p-4 ml-2"
+              title={t("research_button")}
             >
               Search
             </button>

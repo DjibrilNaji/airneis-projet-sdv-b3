@@ -90,6 +90,7 @@ const Cart = (props) => {
                       <button
                         className="flex items-center justify-center w-8 h-6 bg-gray-200 rounded-md hover:scale-110 duration-300"
                         onClick={() => handleClickReduceQuantity(product)}
+                        title={t("reduce_quantity")}
                       >
                         -
                       </button>
@@ -102,6 +103,7 @@ const Cart = (props) => {
                         className="flex items-center justify-center w-8 h-6 border bg-gray-200 rounded-md hover:scale-110 duration-300 disabled:cursor-not-allowed disabled:opacity-30"
                         onClick={() => handleClickIncreaseQuantity(product)}
                         disabled={product.quantity == product.stock}
+                        title={t("increase_quantity")}
                       >
                         +
                       </button>
@@ -121,6 +123,7 @@ const Cart = (props) => {
                         <button
                           className="duration-300 hover:scale-125"
                           onClick={() => handleClickDeleteOne(product)}
+                          title={t("delete")}
                         >
                           <FontAwesomeIcon
                             icon={faTrash}
@@ -146,7 +149,7 @@ const Cart = (props) => {
             ))}
 
             <button
-              className="flex justify-center w-1/4 rounded-lg p-2 bg-red-500 text-white shadow-lg duration-300 hover:bg-red-600"
+              className="flex justify-center w-1/4 rounded-lg p-2 bg-red-600 text-white shadow-lg duration-300 hover:bg-red-600"
               onClick={() => removeAllFromCart()}
             >
               {t("remove")}

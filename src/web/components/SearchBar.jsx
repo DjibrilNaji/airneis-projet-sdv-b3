@@ -2,6 +2,7 @@ import { faMagnifyingGlass, faXmark } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Image from "next/image"
 import Link from "next/link"
+import { useTranslation } from "next-i18next"
 import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/router"
 import useAppContext from "../hooks/useAppContext"
@@ -17,6 +18,10 @@ const SearchBar = () => {
   const [error, setError] = useState(null)
 
   const searchInputRef = useRef(null)
+
+  const { locales } = useRouter()
+
+  const { t } = useTranslation("navigation")
 
   const {
     actions: { getProductsSearch },
@@ -115,6 +120,7 @@ const SearchBar = () => {
               value={searchTerm}
               onChange={handleSearchChange}
               ref={searchInputRef}
+              title={t("search_input", { locales })}
             />
             {!isInputEmpty && (
               <div className="absolute top-full right-0 mt-2 mr-32 bg-white shadow-lg rounded-xl z-10 w-1/5 tooltip">
@@ -192,7 +198,11 @@ const SearchBar = () => {
           </button>
         </>
       )}
-      <Link className="block lg:hidden px-2 py-1" href={`/search`}>
+      <Link
+        className="block lg:hidden px-2 py-1"
+        href={`/search`}
+        title={t("search", { locales })}
+      >
         <FontAwesomeIcon
           icon={faMagnifyingGlass}
           className="h-6 text-stone-400"
