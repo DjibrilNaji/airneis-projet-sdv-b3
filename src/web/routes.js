@@ -66,6 +66,7 @@ const routes = {
         collection: () => "/admin/image-home-page",
         changeDisplay: (imageHomePageId) =>
           `/admin/image-home-page/${imageHomePageId}`,
+        create: () => `/admin/image-home-page`,
       },
       materials: {
         collection: () => "/admin/materials/all",

@@ -51,6 +51,7 @@ import getCategoriesSalesService from "../services/admin/dashboard/getCategories
 import getAverageBasketService from "../services/admin/dashboard/getAverageBasket"
 import getProductsSearchFilterService from "../services/search/getProductsSearchFilter"
 import categoriesAndProductsService from "../services/categoriesAndProducts"
+import addImageHomePageService from "../services/admin/image-home-page/addImageHomePage"
 
 import {
   createContext,
@@ -187,6 +188,8 @@ export const AppContextProvider = (props) => {
 
   const categoriesAndProducts = categoriesAndProductsService({ api })
 
+  const addImageHomePage = addImageHomePageService({ api })
+
   const signOut = useCallback(() => {
     localStorage.removeItem(config.session.localStorageKey)
     localStorage.removeItem("username")
@@ -268,6 +271,7 @@ export const AppContextProvider = (props) => {
           selectedItemToRemove,
           setToggleDeleteOne,
           setSelectedItems,
+          addImageHomePage,
         },
         state: {
           session,

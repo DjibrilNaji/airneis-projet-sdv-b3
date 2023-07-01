@@ -1,21 +1,28 @@
+import Error from "@/pages/_error"
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
 import Title from "@/web/components/Admin/Title"
 import CenterItem from "@/web/components/CenterItem"
+import Dialog from "@/web/components/Dialog"
 import FormError from "@/web/components/FormError"
 import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
-import { faPlus, faTimes } from "@fortawesome/free-solid-svg-icons"
+import { faPlus, faTimes, faUpload } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import Image from "next/image"
 import { useCallback, useEffect, useState } from "react"
 
 const ImageHomePage = () => {
-  const [image, setImage] = useState([])
-
-  const [error, setError] = useState("")
-
   const {
-    actions: { getImagesHomePage, changeDisplayImageHomePage },
+    actions: {
+      getImagesHomePage,
+      changeDisplayImageHomePage,
+      addMainImage,
+      addImageHomePage,
+    },
   } = useAppContext()
+
+  const [image, setImage] = useState([])
+  const [isOpen, setIsOpen] = useState(false)
+  const [error, setError] = useState("")
 
   const fetchData = useCallback(async () => {
     const [err, data] = await getImagesHomePage()
@@ -50,6 +57,50 @@ const ImageHomePage = () => {
     [changeDisplayImageHomePage, fetchData]
   )
 
+  const [file, setFile] = useState(null)
+  const [urlImage, setUrlImage] = useState(null)
+
+  const handleFileInput = (e) => {
+    setFile(e.target.files[0])
+
+    if (e.target.files[0]) {
+      setUrlImage(e.target.files[0].name)
+    }
+  }
+
+  const [errorCode, setErrorCode] = useState()
+
+  const handleSubmit = useCallback(async () => {
+    const addImage = await addImageHomePage(urlImage)
+    const formData = new FormData()
+    formData.append("file", file)
+    const uploadImage = await addMainImage(formData)
+
+    Promise.allSettled([addImage, uploadImage])
+      .then((results) => {
+        const [imageHomePageResult, imageResult] = results
+
+        if (
+          imageHomePageResult.status === "fulfilled" &&
+          imageResult.status === "fulfilled"
+        ) {
+          setIsOpen(true)
+          setTimeout(() => setIsOpen(false), 2500)
+          setUrlImage(null)
+          fetchData()
+        } else {
+          setErrorCode("404")
+        }
+      })
+      .catch((error) => {
+        setErrorCode(error.response.status)
+      })
+  }, [urlImage, file, addMainImage, addImageHomePage, fetchData])
+
+  if (errorCode) {
+    return <Error statusCode={errorCode} />
+  }
+
   return (
     <>
       <CenterItem
@@ -59,6 +110,13 @@ const ImageHomePage = () => {
 
       <div className="hidden md:block">
         {error ? <FormError error={error} /> : ""}
+
+        <Dialog
+          isOpen={isOpen}
+          dialogTitle={"Upload image"}
+          content={"The image is upload"}
+        />
+
         <Title title="Image home page" />
 
         <p className="italic text-lg my-8">
@@ -66,6 +124,34 @@ const ImageHomePage = () => {
         </p>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 w-screen m-2">
+          <div className="flex flex-col">
+            <div className="flex  items-center gap-4">
+              <input
+                type="file"
+                onChange={handleFileInput}
+                className="hidden"
+                id="file-upload"
+              />
+              <label
+                htmlFor="file-upload"
+                className="border-2 rounded-lg flex justify-center items-center bg-gray-200 cursor-pointer px-4 py-2 hover:bg-gray-300"
+              >
+                <FontAwesomeIcon icon={faPlus} className="text-2xl" />
+                <span className="ml-2">Choose File</span>
+              </label>
+
+              <button
+                className="border-2 rounded-lg flex justify-center items-center bg-gray-200 cursor-pointer px-4 py-2 hover:bg-gray-300"
+                onClick={handleSubmit}
+              >
+                <FontAwesomeIcon icon={faUpload} className="text-2xl" />
+                <span className="ml-2">Upload</span>
+              </button>
+            </div>
+
+            <p>{urlImage}</p>
+          </div>
+
           {image.map((obj, index) => (
             <div key={index} className="relative overflow-hidden w-72 h-48">
               <Image
@@ -97,14 +183,14 @@ const ImageHomePage = () => {
                   className="cursor-pointer"
                   onClick={() => handleChangeDisplay(obj.id)}
                 >
-                  {obj.display && imagesDisplay != 3 && imagesDisplay > 3 && (
+                  {obj.display && imagesDisplay !== 3 && imagesDisplay > 3 && (
                     <FontAwesomeIcon
                       icon={faTimes}
                       className="text-red-500 text-4xl"
                     />
                   )}
 
-                  {!obj.display && imagesDisplay != 4 && imagesDisplay < 4 && (
+                  {!obj.display && imagesDisplay !== 4 && imagesDisplay < 4 && (
                     <FontAwesomeIcon
                       icon={faPlus}
                       className="text-green-500 text-4xl"
@@ -114,10 +200,6 @@ const ImageHomePage = () => {
               </div>
             </div>
           ))}
-
-          <button className="w-72 h-48 border-2 rounded-lg flex justify-center items-center bg-gray-200 cursor-pointer">
-            <FontAwesomeIcon icon={faPlus} className="text-2xl" />
-          </button>
         </div>
       </div>
     </>
