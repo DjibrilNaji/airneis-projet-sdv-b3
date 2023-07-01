@@ -10,6 +10,7 @@ import ContentPage from "@/web/components/Admin/ContentPage"
 import CenterItem from "@/web/components/CenterItem"
 import ConfirmDelete from "@/web/components/Admin/ConfirmDelete"
 import DeleteAllButton from "@/web/components/Admin/Button/DeleteAllButton"
+import Dialog from "@/web/components/Dialog"
 
 const CategoriesAdmin = () => {
   const types = {
@@ -26,6 +27,9 @@ const CategoriesAdmin = () => {
   const [toggleUpdateCategory, setToggleUpdateCategory] = useState(true)
   const [category, setCategory] = useState(null)
   const [toggleDeleteSeveral, setToggleDeleteSeveral] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const [contentDialog, setContentDialog] = useState()
+  const [isOpenEditCategory, setIsOpenEditCategory] = useState(false)
 
   const {
     state: {
@@ -138,6 +142,9 @@ const CategoriesAdmin = () => {
       setCategory(data.result)
       setToggleUpdateCategory(!toggleUpdateCategory)
       fetchData(currentPage)
+      setContentDialog("The category has been updated")
+      setIsOpenEditCategory(true)
+      setTimeout(() => setIsOpenEditCategory(false), 3000)
     },
     [category, updateCategory, toggleUpdateCategory, fetchData, currentPage]
   )
@@ -155,6 +162,9 @@ const CategoriesAdmin = () => {
       fetchData(currentPage)
       setToggleDeleteOne(false)
       setToggleDeleteSeveral(false)
+      setContentDialog("The category has been deleted")
+      setIsOpen(true)
+      setTimeout(() => setIsOpen(false), 3000)
     },
     [deleteCategory, fetchData, currentPage, setToggleDeleteOne]
   )
@@ -168,6 +178,8 @@ const CategoriesAdmin = () => {
 
       <div className="hidden md:block">
         {error ? <FormError error={error} /> : ""}
+
+        <Dialog isOpen={isOpen} content={contentDialog} />
 
         <ConfirmDelete
           isOpen={toggleDeleteOne || toggleDeleteSeveral}
@@ -260,6 +272,7 @@ const CategoriesAdmin = () => {
             onSubmit={handleSubmitUpdate}
             active={toggleUpdateCategory}
           />
+          <Dialog isOpen={isOpenEditCategory} content={contentDialog} />
         </Modal>
       </div>
     </>
