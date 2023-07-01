@@ -16,10 +16,14 @@ export async function getServerSideProps({ locale }) {
 
 const Login = () => {
   const router = useRouter()
+  const query = router.query
+
   const {
     actions: { signIn },
   } = useAppContext()
+
   const [error, setError] = useState(null)
+
   const handleSubmit = useCallback(
     async (values) => {
       setError(null)
@@ -32,9 +36,11 @@ const Login = () => {
         return
       }
 
-      router.push(routes.home())
+      query.redirection === "cart"
+        ? router.push(routes.checkout.delivery())
+        : router.push(routes.home())
     },
-    [signIn, router]
+    [signIn, router, query.redirection]
   )
 
   return (

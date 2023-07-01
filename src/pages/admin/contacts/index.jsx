@@ -6,14 +6,16 @@ import ConfirmDelete from "@/web/components/Admin/ConfirmDelete"
 import ContentPage from "@/web/components/Admin/ContentPage"
 import DeleteAllButton from "@/web/components/Admin/Button/DeleteAllButton"
 import CenterItem from "@/web/components/CenterItem"
+import Dialog from "@/web/components/Dialog"
 
 const ContactAdmin = () => {
   const [data, setData] = useState([])
   const [totalPages, setTotalPages] = useState("")
-
   const [searchTerm, setSearchTerm] = useState(null)
   const [error, setError] = useState("")
 
+  const [isOpen, setIsOpen] = useState(false)
+  const [contentDialog, setContentDialog] = useState()
   const [toggleDeleteSeveral, setToggleDeleteSeveral] = useState(false)
 
   const {
@@ -77,6 +79,9 @@ const ContactAdmin = () => {
       setSelectedItems([])
       setToggleDeleteOne(false)
       setToggleDeleteSeveral(false)
+      setContentDialog("The message has been deleted")
+      setIsOpen(true)
+      setTimeout(() => setIsOpen(false), 3000)
     },
     [
       fetchData,
@@ -122,6 +127,8 @@ const ContactAdmin = () => {
       <div className="hidden md:block">
         {error ? <FormError error={error} /> : ""}
 
+        <Dialog isOpen={isOpen} content={contentDialog} />
+
         <ConfirmDelete
           isOpen={toggleDeleteOne || toggleDeleteSeveral}
           page="messages"
@@ -147,6 +154,7 @@ const ContactAdmin = () => {
           searchTerm={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           displayDeleteButton={true}
+          select={true}
         />
 
         {data.contacts?.length > 0 && (

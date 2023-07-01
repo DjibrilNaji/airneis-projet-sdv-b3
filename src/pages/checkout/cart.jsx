@@ -67,6 +67,7 @@ const Cart = (props) => {
   const handleClick = () => {
     router.push({
       pathname: jwt ? routes.checkout.delivery() : routes.signIn(),
+      query: !jwt && { redirection: "cart" },
     })
   }
 

@@ -13,10 +13,20 @@ import Modal from "@/web/components/Modal"
 import EditProductForm from "@/web/components/Admin/Form/EditProductForm"
 import Image from "next/image"
 import ContentPage from "@/web/components/Admin/ContentPage"
+import ConfirmDelete from "@/web/components/Admin/ConfirmDelete"
+import Dialog from "@/web/components/Dialog"
 
 const ProductAdmin = () => {
   const {
-    state: { currentPage, sortColumn, order, limit, selectedItems },
+    state: {
+      currentPage,
+      sortColumn,
+      order,
+      limit,
+      selectedItems,
+      toggleDeleteOne,
+      itemIdToRemove,
+    },
     actions: {
       getAllProducts,
       deleteProducts,
@@ -24,6 +34,7 @@ const ProductAdmin = () => {
       getMaterials,
       updateProduct,
       setSelectedItems,
+      setToggleDeleteOne,
     },
   } = useAppContext()
 
@@ -35,6 +46,11 @@ const ProductAdmin = () => {
   const [materials, setMaterials] = useState([])
   const [images, setImages] = useState([])
   const [toggleUpdateProduct, setToggleUpdateProduct] = useState(true)
+  const [toggleDeleteSeveral, setToggleDeleteSeveral] = useState()
+  const [isOpen, setIsOpen] = useState(false)
+  const [isOpenEditUser, setIsOpenEditUser] = useState(false)
+  const [contentDialog, setContentDialog] = useState()
+
   const router = useRouter()
 
   const columnsTableHead = [
@@ -135,8 +151,19 @@ const ProductAdmin = () => {
 
       fetchData(currentPage)
       setSelectedItems([])
+      setToggleDeleteOne(false)
+      setToggleDeleteSeveral(false)
+      setContentDialog("The product has been deleted")
+      setIsOpen(true)
+      setTimeout(() => setIsOpen(false), 3000)
     },
-    [deleteProducts, fetchData, currentPage, setSelectedItems]
+    [
+      deleteProducts,
+      fetchData,
+      currentPage,
+      setSelectedItems,
+      setToggleDeleteOne,
+    ]
   )
 
   const fetchSingleProduct = async (id) => {
@@ -174,6 +201,9 @@ const ProductAdmin = () => {
 
       setProduct(data.result)
       setToggleUpdateProduct(!toggleUpdateProduct)
+      setContentDialog("The product has been updated")
+      setIsOpenEditUser(true)
+      setTimeout(() => setIsOpenEditUser(false), 3000)
     },
     [product, toggleUpdateProduct, updateProduct]
   )
@@ -181,6 +211,23 @@ const ProductAdmin = () => {
   return (
     <>
       {error ? <FormError error={error} /> : ""}
+
+      <Dialog isOpen={isOpen} content={contentDialog} />
+
+      <ConfirmDelete
+        isOpen={toggleDeleteOne || toggleDeleteSeveral}
+        page="users"
+        close={
+          toggleDeleteSeveral
+            ? () => setToggleDeleteSeveral(false)
+            : () => setToggleDeleteOne(false)
+        }
+        remove={
+          toggleDeleteSeveral
+            ? () => selectedItems.map((id) => handleDelete(id))
+            : () => handleDelete(itemIdToRemove)
+        }
+      />
 
       <ContentPage
         title="Products"
@@ -203,6 +250,7 @@ const ProductAdmin = () => {
         displayHighlander={true}
         displayIsDelete={true}
         displayDeleteButton={true}
+        select={true}
       />
 
       <div className="flex flex-col justify-start">
@@ -277,13 +325,14 @@ const ProductAdmin = () => {
                 </button>
               )}
             </div>
-
             <EditProductForm
               initialValues={product}
               onSubmit={handleSubmitUpdate}
               active={toggleUpdateProduct}
               material={materials}
             />
+
+            <Dialog isOpen={isOpenEditUser} content={contentDialog} />
           </>
         ) : (
           <div className="flex">

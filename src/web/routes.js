@@ -113,7 +113,8 @@ const routes = {
       checkEmail: (email) => `users/resetPassword/${email}/check`,
       resetPassword: () => `/users/resetPassword/reset`,
       address: {
-        collection: (userId) => `/users/${userId}/address`,
+        collection: (userId, query) =>
+          createRouteWithQueryParams(`/users/${userId}/address`, query),
         single: (addressId) => `/users/address/${addressId}/addressSingle`,
         add: (userId) => `/users/${userId}/address`,
       },

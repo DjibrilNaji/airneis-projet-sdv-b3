@@ -29,6 +29,7 @@ const ImageHomePage = () => {
 
   const [image, setImage] = useState([])
   const [isOpen, setIsOpen] = useState(false)
+  const [contentDialog, setContentDialog] = useState()
   const [error, setError] = useState("")
   const [toggleDelete, setToggleDelete] = useState(false)
   const [imageIdToRemove, setImageIdToRemove] = useState(false)
@@ -93,8 +94,9 @@ const ImageHomePage = () => {
           imageHomePageResult.status === "fulfilled" &&
           imageResult.status === "fulfilled"
         ) {
+          setContentDialog("The image is upload")
           setIsOpen(true)
-          setTimeout(() => setIsOpen(false), 2500)
+          setTimeout(() => setIsOpen(false), 3000)
           setUrlImage(null)
           fetchData()
         } else {
@@ -117,6 +119,9 @@ const ImageHomePage = () => {
       }
 
       setToggleDelete(false)
+      setContentDialog("The image has been deleted")
+      setIsOpen(true)
+      setTimeout(() => setIsOpen(false), 3000)
       fetchData()
     },
     [deleteImageHomePage, fetchData]
@@ -141,11 +146,7 @@ const ImageHomePage = () => {
       <div className="hidden md:block">
         {error ? <FormError error={error} /> : ""}
 
-        <Dialog
-          isOpen={isOpen}
-          dialogTitle={"Upload image"}
-          content={"The image is upload"}
-        />
+        <Dialog isOpen={isOpen} content={contentDialog} />
 
         <ConfirmDelete
           isOpen={toggleDelete}
