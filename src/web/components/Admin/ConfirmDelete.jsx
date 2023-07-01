@@ -1,4 +1,4 @@
-import Button from "@/web/components/Button"
+import Button from "@/web/components/Button/Button"
 import Modal from "@/web/components/Modal"
 
 const ConfirmDelete = (props) => {

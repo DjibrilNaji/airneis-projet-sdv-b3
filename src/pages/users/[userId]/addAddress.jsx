@@ -4,7 +4,7 @@ import AddressForm from "@/web/components/Auth/AddressForm"
 import { useRouter } from "next/router"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import useAppContext from "@/web/hooks/useAppContext"
-import FormError from "@/web/components/FormError"
+import FormError from "@/web/components/Form/FormError"
 
 export const getServerSideProps = async ({ locale, params }) => {
   const userId = params.userId

@@ -3,7 +3,7 @@ import useAppContext from "@/web/hooks/useAppContext"
 import { useRouter } from "next/router.js"
 import { useCallback, useState } from "react"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
-import Form from "@/web/components/Form"
+import Form from "@/web/components/Form/Form"
 import routes from "@/web/routes"
 
 export async function getServerSideProps({ locale }) {

@@ -1,4 +1,4 @@
-import Button from "@/web/components/Button"
+import Button from "@/web/components/Button/Button"
 import { faXmark } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 

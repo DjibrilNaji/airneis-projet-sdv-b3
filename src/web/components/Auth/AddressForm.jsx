@@ -1,12 +1,12 @@
-import FormField from "@/web/components/FormField.jsx"
+import FormField from "@/web/components/Form/FormField.jsx"
 import { Form, Formik, Field } from "formik"
 import * as yup from "yup"
 import { faPerson } from "@fortawesome/free-solid-svg-icons"
-import FormError from "../FormError.jsx"
-import SubmitButton from "../SubmitButton.jsx"
+import FormError from "@/web/components/Form/FormError.jsx"
+import SubmitButton from "@/web/components/Button/SubmitButton.jsx"
 import routes from "@/web/routes.js"
 import Link from "next/link.js"
-import Button from "../Button.jsx"
+import Button from "@/web/components/Button/Button.jsx"
 
 const defaultInitialValues = {
   firstName: "",

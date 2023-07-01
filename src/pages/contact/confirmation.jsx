@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useTranslation } from "next-i18next"
 import { useRouter } from "next/router"
-import MessageConfirmation from "@/web/components/MessageConfirmation"
+import MessageConfirmation from "@/web/components/Contact/MessageConfirmation"
 import routes from "@/web/routes"
 
 export async function getServerSideProps({ locale }) {
