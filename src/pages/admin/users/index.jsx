@@ -251,6 +251,7 @@ const UsersAdmin = () => {
           getInfo={true}
           displayIsDelete={true}
           displayDeleteButton={true}
+          select={true}
         />
 
         {data.users?.length > 0 && (

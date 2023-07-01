@@ -19,6 +19,7 @@ const ContentPage = (props) => {
     displayIsDelete,
     displayDeleteButton,
     displayStatus,
+    select,
   } = props
 
   return (
@@ -41,6 +42,7 @@ const ContentPage = (props) => {
             columnsTableHead={columnsTableHead}
             fetchSingleItem={fetchSingleItem}
             getInfo={getInfo}
+            select={select}
             displayHighlander={displayHighlander}
             displayIsDelete={displayIsDelete}
             displayDeleteButton={displayDeleteButton}

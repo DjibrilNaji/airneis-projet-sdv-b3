@@ -147,6 +147,7 @@ const ContactAdmin = () => {
           searchTerm={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           displayDeleteButton={true}
+          select={true}
         />
 
         {data.contacts?.length > 0 && (
