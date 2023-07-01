@@ -196,8 +196,9 @@ const Product = (props) => {
 
       <Modal
         isOpen={toggleViewMaterials}
-        modalTitle={"Materials"}
+        modalTitle={t("materials")}
         closeModal={() => setToggleViewMaterials(false)}
+        dir={direction}
       >
         {materials.map((material, index) => (
           <ul key={index}>
@@ -271,7 +272,7 @@ const Product = (props) => {
                 onClick={() => setToggleViewMaterials(true)}
                 className="font-semibold text-gray-700 flex border-2 w-fit px-2 rounded-lg bg-stone-200 text-lg"
               >
-                More informations
+                {t("more_informations")}
               </button>
             )}
 

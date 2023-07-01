@@ -1,10 +1,11 @@
-const ButtonPagination = ({
-  icon,
-  handlePageChange,
-  changePage,
-  currentPage,
-  disabledPage,
-}) => {
+import useAppContext from "@/web/hooks/useAppContext"
+
+const ButtonPagination = ({ icon, changePage, disabledPage }) => {
+  const {
+    state: { currentPage },
+    actions: { handlePageChange },
+  } = useAppContext()
+
   return (
     <button
       className="w-6 disabled:opacity-30 disabled:cursor-not-allowed"

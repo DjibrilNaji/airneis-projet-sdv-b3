@@ -10,5 +10,6 @@
   "menu_logout": "Logout",
   "menu_login": "Login",
   "menu_register": "Register",
-  "menu_admin": "Admin"
+  "menu_admin": "Admin",
+  "go_back": "Regresa"
 }

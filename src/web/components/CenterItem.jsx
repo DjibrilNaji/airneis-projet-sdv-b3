@@ -11,7 +11,9 @@ const CenterItem = (props) => {
       <div className="flex items-center justify-center min-h-screen">
         <div className="flex flex-col items-center gap-10 bg-white rounded-lg">
           <div className="flex flex-col items-center gap-10">
-            <FontAwesomeIcon icon={icon} className="h-20 text-stone-500" />
+            {icon && (
+              <FontAwesomeIcon icon={icon} className="h-20 text-stone-500" />
+            )}
             <p className="text-xl font-bold">{content}</p>
           </div>
           {button && (

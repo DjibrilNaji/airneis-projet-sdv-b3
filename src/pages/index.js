@@ -1,36 +1,46 @@
 import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useRouter } from "next/router"
-import createAPIClient from "@/web/createAPIClient"
-import categoriesAndProductsService from "@/web/services/categoriesAndProducts"
 import FormError from "@/web/components/FormError"
 import Categories from "@/web/components/Cards/Categories"
 import Products from "@/web/components/Cards/Products"
 import Banner from "@/web/components/Banner"
 import Carousel from "@/web/components/Carousel"
+import { useEffect, useState } from "react"
+import useAppContext from "@/web/hooks/useAppContext"
 
 export const getServerSideProps = async (context) => {
   const { locale } = context
 
-  const api = createAPIClient({ jwt: null, server: true })
-  const categoriesAndProducts = categoriesAndProductsService({ api })
-
-  const [err, data] = await categoriesAndProducts()
-
   return {
     props: {
-      error: err,
       ...(await serverSideTranslations(locale, ["home-page", "navigation"])),
-      categoriesAndProducts: data,
     },
   }
 }
 
-const Home = (props) => {
+const Home = () => {
   const {
-    categoriesAndProducts: { result },
-    error,
-  } = props
+    actions: { categoriesAndProducts },
+  } = useAppContext()
+
+  const [data, setData] = useState([])
+  const [err, setError] = useState()
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const [err, data] = await categoriesAndProducts()
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setData(data.result)
+    }
+    fetchProducts()
+  }, [categoriesAndProducts])
 
   const { t } = useTranslation("home-page")
 
@@ -39,9 +49,9 @@ const Home = (props) => {
 
   return (
     <>
-      {error ? <FormError error={error} /> : ""}
+      {err ? <FormError error={err} /> : ""}
 
-      <Carousel image={result.imageHomePage} />
+      <Carousel image={data.imageHomePage} />
 
       <div className="flex justify-center my-4">
         <p
@@ -53,9 +63,9 @@ const Home = (props) => {
         </p>
       </div>
 
-      <Categories data={result.categories} />
+      <Categories data={data.categories} />
       <Banner text={t("highlander")} />
-      <Products data={result.products} />
+      <Products data={data.products} />
     </>
   )
 }

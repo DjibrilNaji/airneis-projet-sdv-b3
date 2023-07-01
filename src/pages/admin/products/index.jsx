@@ -15,20 +15,28 @@ import Image from "next/image"
 import ContentPage from "@/web/components/Admin/ContentPage"
 
 const ProductAdmin = () => {
+  const {
+    state: { currentPage, sortColumn, order, limit, selectedItems },
+    actions: {
+      getAllProducts,
+      deleteProducts,
+      getSingleProduct,
+      getMaterials,
+      updateProduct,
+      setSelectedItems,
+    },
+  } = useAppContext()
+
   const [data, setData] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState("")
-  const [sortColumn, setSortColumn] = useState("id")
-  const [order, setOrder] = useState("asc")
-  const [limit, setLimit] = useState(10)
   const [searchTerm, setSearchTerm] = useState("")
-  const [selectedProducts, setSelectedProducts] = useState([])
   const [error, setError] = useState(null)
   const [product, setProduct] = useState([])
   const [materials, setMaterials] = useState([])
   const [images, setImages] = useState([])
   const [toggleUpdateProduct, setToggleUpdateProduct] = useState(true)
   const router = useRouter()
+
   const columnsTableHead = [
     {
       displayName: "Select",
@@ -87,16 +95,6 @@ const ProductAdmin = () => {
   const [selectedType, setSelectedType] = useState(types.product)
   const [viewProductInfo, setViewProductInfo] = useState(false)
 
-  const {
-    actions: {
-      getAllProducts,
-      deleteProducts,
-      getSingleProduct,
-      getMaterials,
-      updateProduct,
-    },
-  } = useAppContext()
-
   const fetchData = useCallback(
     async (page) => {
       const [err, data] = await getAllProducts(
@@ -136,50 +134,9 @@ const ProductAdmin = () => {
       }
 
       fetchData(currentPage)
-      setSelectedProducts([])
+      setSelectedItems([])
     },
-    [deleteProducts, fetchData, currentPage]
-  )
-
-  const handlePageChange = useCallback(
-    (newPage) => {
-      setCurrentPage(newPage)
-      fetchData(newPage)
-    },
-    [fetchData]
-  )
-
-  const handleSelectItem = useCallback(
-    (productId) => {
-      if (selectedProducts.includes(productId)) {
-        setSelectedProducts(selectedProducts.filter((id) => id !== productId))
-      } else {
-        setSelectedProducts([...selectedProducts, productId])
-      }
-    },
-    [selectedProducts]
-  )
-
-  const handleLimitChange = useCallback(
-    (e) => {
-      setLimit(e.target.value)
-      fetchData
-    },
-    [fetchData]
-  )
-
-  const handleSortChange = useCallback(
-    (column) => {
-      if (column === sortColumn) {
-        setOrder(order === "asc" ? "desc" : "asc")
-      } else {
-        setSortColumn(column)
-        setOrder("asc")
-      }
-
-      fetchData(currentPage)
-    },
-    [fetchData, currentPage, order, sortColumn]
+    [deleteProducts, fetchData, currentPage, setSelectedItems]
   )
 
   const fetchSingleProduct = async (id) => {
@@ -224,6 +181,7 @@ const ProductAdmin = () => {
   return (
     <>
       {error ? <FormError error={error} /> : ""}
+
       <ContentPage
         title="Products"
         data={data.products}
@@ -237,29 +195,21 @@ const ProductAdmin = () => {
           "stock",
         ]}
         name={"products"}
-        currentPage={currentPage}
         totalPages={totalPages}
-        limit={limit}
         searchTerm={searchTerm}
-        selectedItems={selectedProducts}
-        handlePageChange={handlePageChange}
-        handleLimitChange={handleLimitChange}
-        handleSortChange={handleSortChange}
-        handleSelectItem={handleSelectItem}
         fetchSingleItem={fetchSingleProduct}
-        // selectItemToRemove={selectContactToRemove}
         onChange={(e) => setSearchTerm(e.target.value)}
         getInfo={true}
         displayHighlander={true}
         displayIsDelete={true}
         displayDeleteButton={true}
-        displayStatus={false}
       />
+
       <div className="flex flex-col justify-start">
         <button
           className="border-2 rounded-lg mx-3 my-4 p-2 bg-red-500 text-white disabled:cursor-not-allowed disabled:bg-red-200 w-fit"
-          onClick={() => selectedProducts.map((id) => handleDelete(id))}
-          disabled={selectedProducts.length === 0}
+          onClick={() => selectedItems.map((id) => handleDelete(id))}
+          disabled={selectedItems.length === 0}
         >
           Supprimer tous les éléments séléctionnés
         </button>
@@ -270,6 +220,7 @@ const ProductAdmin = () => {
           Ajouter un Produit
         </Link>
       </div>
+
       <Modal
         isOpen={viewProductInfo}
         modalTitle={selectedType.title}

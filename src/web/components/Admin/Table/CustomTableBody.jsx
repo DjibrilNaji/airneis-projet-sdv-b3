@@ -1,3 +1,4 @@
+import useAppContext from "@/web/hooks/useAppContext"
 import {
   faCheck,
   faCircle,
@@ -9,10 +10,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 const CustomTableBody = (props) => {
   const {
+    state: { selectedItems },
+    actions: { handleSelectItem, selectedItemToRemove },
+  } = useAppContext()
+
+  const {
     data,
-    selectedItems,
-    handleSelectItem,
-    selectItemToRemove,
     columns,
     getInfo,
     displayIsDelete,
@@ -24,7 +27,7 @@ const CustomTableBody = (props) => {
 
   return (
     <tbody>
-      {data.map((item) => (
+      {data?.map((item) => (
         <tr key={item.id} className="border-b text-sm border-gray-300">
           {selectedItems && (
             <td className="py-2 px-4">
@@ -94,7 +97,7 @@ const CustomTableBody = (props) => {
             <td className="text-center">
               <button
                 className="disabled:opacity-30 disabled:cursor-not-allowed"
-                onClick={() => selectItemToRemove(item.id)}
+                onClick={() => selectedItemToRemove(item.id)}
                 disabled={item.isDelete}
               >
                 <FontAwesomeIcon

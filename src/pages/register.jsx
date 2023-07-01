@@ -4,6 +4,7 @@ import { useRouter } from "next/router.js"
 import { useCallback, useState } from "react"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import Form from "@/web/components/Form"
+import routes from "@/web/routes"
 
 export async function getServerSideProps({ locale }) {
   return {
@@ -29,7 +30,7 @@ const Register = () => {
         return
       }
 
-      router.push("/login")
+      router.push(routes.signIn())
     },
     [signUp, router]
   )

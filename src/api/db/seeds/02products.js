@@ -7,14 +7,14 @@ exports.seed = async function (knex) {
   await knex.raw("TRUNCATE TABLE image_home_page RESTART IDENTITY CASCADE")
 
   const imageHomePage = [
-    { urlImage: "rooms.jpeg", display: true },
+    { urlImage: "rooms.jpeg", display: false },
     { urlImage: "chairs.jpeg", display: true },
-    { urlImage: "sofas.jpeg", display: true },
+    { urlImage: "sofas.jpeg", display: false },
     { urlImage: "table.jpeg", display: true },
-    { urlImage: "lighting.png", display: true },
-    { urlImage: "storage.jpg", display: true },
+    { urlImage: "lighting.png", display: false },
+    { urlImage: "storage.jpg", display: false },
     { urlImage: "bedding.png", display: true },
-    { urlImage: "garden.jpeg", display: true },
+    { urlImage: "garden.jpeg", display: false },
     { urlImage: "accessories.jpg", display: true },
   ]
 
