@@ -4,8 +4,8 @@ import * as yup from "yup"
 import TextAuth from "@/web/components/Auth/TextAuth.jsx"
 import React from "react"
 import { faEnvelope, faLock, faPerson } from "@fortawesome/free-solid-svg-icons"
-import FormError from "../Form/FormError.jsx"
-import SubmitButton from "../Button/SubmitButton.jsx"
+import FormError from "@/web/components/Form/FormError.jsx"
+import SubmitButton from "@/web/components/Button/SubmitButton.jsx"
 
 const defaultInitialValues = {
   userName: "",

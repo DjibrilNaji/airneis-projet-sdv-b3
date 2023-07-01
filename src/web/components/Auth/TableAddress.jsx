@@ -8,7 +8,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import classNames from "classnames"
 import Link from "next/link"
-import Button from "../Button/Button"
+import Button from "@/web/components/Button/Button"
 import TableHeadField from "./TableHeadField"
 
 const TableAddress = (props) => {

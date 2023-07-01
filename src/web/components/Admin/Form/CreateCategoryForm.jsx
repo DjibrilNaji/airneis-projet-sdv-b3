@@ -1,9 +1,9 @@
 import { Form, Formik } from "formik"
 import * as yup from "yup"
-import FormError from "../../Form/FormError.jsx"
+import FormError from "@/web/components/Form/FormError.jsx"
 import React from "react"
 import FormField from "@/web/components/Form/FormField.jsx"
-import SubmitButton from "../../Button/SubmitButton.jsx"
+import SubmitButton from "@/web/components/Button/SubmitButton.jsx"
 
 const categoryInitialValues = {
   name: "",

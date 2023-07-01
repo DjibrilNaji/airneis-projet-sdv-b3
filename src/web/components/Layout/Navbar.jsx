@@ -30,7 +30,7 @@ import { useCallback } from "react"
 import { UserIcon } from "@heroicons/react/24/outline"
 import SearchBar from "./SearchBar"
 import useCartContext from "@/web/hooks/cartContext"
-import SwitchLanguage from "../SwitchLanguage"
+import SwitchLanguage from "@/web/components/SwitchLanguage"
 import { useTranslation } from "next-i18next"
 import NavBarItem from "@/web/components/Layout/NavBarItem"
 

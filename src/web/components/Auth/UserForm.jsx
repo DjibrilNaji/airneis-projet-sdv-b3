@@ -3,8 +3,8 @@ import { Form, Formik } from "formik"
 import * as yup from "yup"
 import React from "react"
 import { faEnvelope, faPerson } from "@fortawesome/free-solid-svg-icons"
-import FormError from "../Form/FormError.jsx"
-import SubmitButton from "../Button/SubmitButton.jsx"
+import FormError from "@/web/components/Form/FormError.jsx"
+import SubmitButton from "@/web/components/Button/SubmitButton.jsx"
 
 const defaultInitialValues = {
   userName: "",

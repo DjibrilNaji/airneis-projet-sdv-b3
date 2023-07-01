@@ -4,7 +4,7 @@ import Button from "@/web/components/Button/Button.jsx"
 import FormField from "@/web/components/Form/FormField.jsx"
 import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons"
 import TextAuth from "@/web/components/Auth/TextAuth.jsx"
-import FormError from "../Form/FormError.jsx"
+import FormError from "@/web/components/Form/FormError.jsx"
 import routes from "@/web/routes.js"
 
 const defaultInitialValues = {

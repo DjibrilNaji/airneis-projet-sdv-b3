@@ -1,7 +1,7 @@
 import FormField from "@/web/components/Form/FormField.jsx"
 import { Form, Formik } from "formik"
 import * as yup from "yup"
-import FormError from "../Form/FormError.jsx"
+import FormError from "@/web/components/Form/FormError.jsx"
 import { useRouter } from "next/router.js"
 import { useTranslation } from "next-i18next"
 import Button from "@/web/components/Button/Button.jsx"
