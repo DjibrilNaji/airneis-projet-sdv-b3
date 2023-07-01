@@ -203,6 +203,7 @@ const ProductAdmin = () => {
         displayHighlander={true}
         displayIsDelete={true}
         displayDeleteButton={true}
+        select={true}
       />
 
       <div className="flex flex-col justify-start">

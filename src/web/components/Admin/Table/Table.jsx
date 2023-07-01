@@ -12,6 +12,7 @@ const Table = (props) => {
     displayIsDelete,
     displayDeleteButton,
     displayStatus,
+    select,
   } = props
 
   return (
@@ -23,6 +24,7 @@ const Table = (props) => {
         columns={columnsTableBody}
         fetchSingleItem={fetchSingleItem}
         getInfo={getInfo}
+        select={select}
         displayHighlander={displayHighlander}
         displayIsDelete={displayIsDelete}
         displayDeleteButton={displayDeleteButton}
