@@ -101,6 +101,7 @@ exports.seed = async function (knex) {
       isDelete: false,
     },
   ]
+
   await knex("categories").insert(categories)
 
   const products = [
@@ -112,7 +113,7 @@ exports.seed = async function (knex) {
       price: 249.99,
       stock: 15,
       highlander: false,
-      categoryId: 1,
+      categoryId: 2,
       isDelete: false,
     },
     {
@@ -123,7 +124,7 @@ exports.seed = async function (knex) {
       price: 799.99,
       stock: 8,
       highlander: true,
-      categoryId: 1,
+      categoryId: 2,
       isDelete: false,
     },
     {
@@ -134,7 +135,7 @@ exports.seed = async function (knex) {
       price: 89.99,
       stock: 20,
       highlander: false,
-      categoryId: 1,
+      categoryId: 2,
       isDelete: false,
     },
     {
@@ -145,7 +146,7 @@ exports.seed = async function (knex) {
       price: 149.99,
       stock: 12,
       highlander: false,
-      categoryId: 1,
+      categoryId: 2,
       isDelete: false,
     },
     {
@@ -156,7 +157,7 @@ exports.seed = async function (knex) {
       price: 129.99,
       stock: 10,
       highlander: false,
-      categoryId: 1,
+      categoryId: 2,
       isDelete: false,
     },
     {
@@ -167,7 +168,7 @@ exports.seed = async function (knex) {
       price: 299.99,
       stock: 5,
       highlander: false,
-      categoryId: 1,
+      categoryId: 2,
       isDelete: false,
     },
     {
@@ -178,7 +179,7 @@ exports.seed = async function (knex) {
       price: 79.99,
       stock: 18,
       highlander: false,
-      categoryId: 1,
+      categoryId: 2,
       isDelete: false,
     },
     {
@@ -189,7 +190,7 @@ exports.seed = async function (knex) {
       price: 599.99,
       stock: 3,
       highlander: false,
-      categoryId: 1,
+      categoryId: 2,
       isDelete: false,
     },
     {
@@ -200,7 +201,7 @@ exports.seed = async function (knex) {
       price: 149.99,
       stock: 7,
       highlander: false,
-      categoryId: 1,
+      categoryId: 2,
       isDelete: false,
     },
     {
@@ -211,7 +212,7 @@ exports.seed = async function (knex) {
       price: 349.99,
       stock: 4,
       highlander: false,
-      categoryId: 1,
+      categoryId: 2,
       isDelete: false,
     },
     {
@@ -222,7 +223,7 @@ exports.seed = async function (knex) {
       price: 549.99,
       stock: 10,
       highlander: false,
-      categoryId: 2,
+      categoryId: 3,
       isDelete: false,
     },
     {
@@ -233,7 +234,7 @@ exports.seed = async function (knex) {
       price: 399.99,
       stock: 6,
       highlander: false,
-      categoryId: 2,
+      categoryId: 3,
       isDelete: false,
     },
     {
@@ -244,7 +245,7 @@ exports.seed = async function (knex) {
       price: 299.99,
       stock: 8,
       highlander: true,
-      categoryId: 2,
+      categoryId: 3,
       isDelete: false,
     },
     {
@@ -255,7 +256,7 @@ exports.seed = async function (knex) {
       price: 199.99,
       stock: 12,
       highlander: false,
-      categoryId: 2,
+      categoryId: 3,
       isDelete: false,
     },
     {
@@ -266,7 +267,7 @@ exports.seed = async function (knex) {
       price: 449.99,
       stock: 5,
       highlander: false,
-      categoryId: 2,
+      categoryId: 3,
       isDelete: false,
     },
     {
@@ -277,7 +278,7 @@ exports.seed = async function (knex) {
       price: 149.99,
       stock: 15,
       highlander: false,
-      categoryId: 2,
+      categoryId: 3,
       isDelete: false,
     },
     {
@@ -288,7 +289,7 @@ exports.seed = async function (knex) {
       price: 379.99,
       stock: 7,
       highlander: false,
-      categoryId: 2,
+      categoryId: 3,
       isDelete: false,
     },
     {
@@ -299,7 +300,7 @@ exports.seed = async function (knex) {
       price: 279.99,
       stock: 9,
       highlander: false,
-      categoryId: 2,
+      categoryId: 3,
       isDelete: false,
     },
     {
@@ -310,7 +311,7 @@ exports.seed = async function (knex) {
       price: 429.99,
       stock: 4,
       highlander: false,
-      categoryId: 2,
+      categoryId: 3,
       isDelete: false,
     },
     {
@@ -321,7 +322,7 @@ exports.seed = async function (knex) {
       price: 599.99,
       stock: 4,
       highlander: false,
-      categoryId: 2,
+      categoryId: 3,
       isDelete: false,
     },
     {
@@ -332,7 +333,7 @@ exports.seed = async function (knex) {
       price: 699.99,
       stock: 8,
       highlander: false,
-      categoryId: 3,
+      categoryId: 4,
       isDelete: false,
     },
     {
@@ -343,7 +344,7 @@ exports.seed = async function (knex) {
       price: 849.99,
       stock: 4,
       highlander: true,
-      categoryId: 3,
+      categoryId: 4,
       isDelete: false,
     },
     {
@@ -354,7 +355,7 @@ exports.seed = async function (knex) {
       price: 799.99,
       stock: 5,
       highlander: false,
-      categoryId: 3,
+      categoryId: 4,
       isDelete: false,
     },
     {
@@ -365,7 +366,7 @@ exports.seed = async function (knex) {
       price: 999.99,
       stock: 2,
       highlander: false,
-      categoryId: 3,
+      categoryId: 4,
       isDelete: false,
     },
     {
@@ -376,7 +377,7 @@ exports.seed = async function (knex) {
       price: 749.99,
       stock: 6,
       highlander: false,
-      categoryId: 3,
+      categoryId: 4,
       isDelete: false,
     },
     {
@@ -387,7 +388,7 @@ exports.seed = async function (knex) {
       price: 549.99,
       stock: 4,
       highlander: false,
-      categoryId: 3,
+      categoryId: 4,
       isDelete: false,
     },
     {
@@ -398,7 +399,7 @@ exports.seed = async function (knex) {
       price: 649.99,
       stock: 7,
       highlander: false,
-      categoryId: 3,
+      categoryId: 4,
       isDelete: false,
     },
     {
@@ -409,7 +410,7 @@ exports.seed = async function (knex) {
       price: 899.99,
       stock: 3,
       highlander: false,
-      categoryId: 3,
+      categoryId: 4,
       isDelete: false,
     },
     {
@@ -420,7 +421,7 @@ exports.seed = async function (knex) {
       price: 799.99,
       stock: 4,
       highlander: false,
-      categoryId: 3,
+      categoryId: 4,
       isDelete: false,
     },
     {
@@ -431,7 +432,7 @@ exports.seed = async function (knex) {
       price: 749.99,
       stock: 6,
       highlander: false,
-      categoryId: 3,
+      categoryId: 4,
       isDelete: false,
     },
     {
@@ -442,7 +443,7 @@ exports.seed = async function (knex) {
       price: 699.99,
       stock: 8,
       highlander: true,
-      categoryId: 4,
+      categoryId: 5,
       isDelete: false,
     },
     {
@@ -453,7 +454,7 @@ exports.seed = async function (knex) {
       price: 299.99,
       stock: 12,
       highlander: false,
-      categoryId: 4,
+      categoryId: 5,
       isDelete: false,
     },
     {
@@ -464,7 +465,7 @@ exports.seed = async function (knex) {
       price: 349.99,
       stock: 10,
       highlander: false,
-      categoryId: 4,
+      categoryId: 5,
       isDelete: false,
     },
     {
@@ -475,7 +476,7 @@ exports.seed = async function (knex) {
       price: 149.99,
       stock: 5,
       highlander: false,
-      categoryId: 4,
+      categoryId: 5,
       isDelete: false,
     },
     {
@@ -486,7 +487,7 @@ exports.seed = async function (knex) {
       price: 249.99,
       stock: 7,
       highlander: false,
-      categoryId: 4,
+      categoryId: 5,
       isDelete: false,
     },
     {
@@ -497,7 +498,7 @@ exports.seed = async function (knex) {
       price: 399.99,
       stock: 6,
       highlander: false,
-      categoryId: 4,
+      categoryId: 5,
       isDelete: false,
     },
     {
@@ -508,7 +509,7 @@ exports.seed = async function (knex) {
       price: 549.99,
       stock: 3,
       highlander: false,
-      categoryId: 4,
+      categoryId: 5,
       isDelete: false,
     },
     {
@@ -519,7 +520,7 @@ exports.seed = async function (knex) {
       price: 499.99,
       stock: 4,
       highlander: false,
-      categoryId: 4,
+      categoryId: 5,
       isDelete: false,
     },
     {
@@ -530,7 +531,7 @@ exports.seed = async function (knex) {
       price: 199.99,
       stock: 9,
       highlander: false,
-      categoryId: 4,
+      categoryId: 5,
       isDelete: false,
     },
     {
@@ -541,7 +542,7 @@ exports.seed = async function (knex) {
       price: 599.99,
       stock: 2,
       highlander: false,
-      categoryId: 4,
+      categoryId: 5,
       isDelete: false,
     },
     {
@@ -552,7 +553,7 @@ exports.seed = async function (knex) {
       price: 199.99,
       stock: 5,
       highlander: false,
-      categoryId: 5,
+      categoryId: 6,
       isDelete: false,
     },
     {
@@ -563,7 +564,7 @@ exports.seed = async function (knex) {
       price: 149.99,
       stock: 3,
       highlander: false,
-      categoryId: 5,
+      categoryId: 6,
       isDelete: false,
     },
     {
@@ -574,7 +575,7 @@ exports.seed = async function (knex) {
       price: 249.99,
       stock: 7,
       highlander: true,
-      categoryId: 5,
+      categoryId: 6,
       isDelete: false,
     },
     {
@@ -585,7 +586,7 @@ exports.seed = async function (knex) {
       price: 99.99,
       stock: 10,
       highlander: false,
-      categoryId: 5,
+      categoryId: 6,
       isDelete: false,
     },
     {
@@ -596,7 +597,7 @@ exports.seed = async function (knex) {
       price: 399.99,
       stock: 2,
       highlander: false,
-      categoryId: 5,
+      categoryId: 6,
       isDelete: false,
     },
     {
@@ -607,7 +608,7 @@ exports.seed = async function (knex) {
       price: 79.99,
       stock: 8,
       highlander: false,
-      categoryId: 5,
+      categoryId: 6,
       isDelete: false,
     },
     {
@@ -618,7 +619,7 @@ exports.seed = async function (knex) {
       price: 299.99,
       stock: 4,
       highlander: false,
-      categoryId: 5,
+      categoryId: 6,
       isDelete: false,
     },
     {
@@ -629,7 +630,7 @@ exports.seed = async function (knex) {
       price: 89.99,
       stock: 12,
       highlander: false,
-      categoryId: 5,
+      categoryId: 6,
       isDelete: false,
     },
     {
@@ -640,7 +641,7 @@ exports.seed = async function (knex) {
       price: 129.99,
       stock: 6,
       highlander: false,
-      categoryId: 5,
+      categoryId: 6,
       isDelete: false,
     },
     {
@@ -651,7 +652,7 @@ exports.seed = async function (knex) {
       price: 349.99,
       stock: 3,
       highlander: false,
-      categoryId: 5,
+      categoryId: 6,
       isDelete: false,
     },
     {
@@ -662,7 +663,7 @@ exports.seed = async function (knex) {
       price: 129.99,
       stock: 8,
       highlander: false,
-      categoryId: 6,
+      categoryId: 7,
       isDelete: false,
     },
     {
@@ -673,7 +674,7 @@ exports.seed = async function (knex) {
       price: 149.99,
       stock: 4,
       highlander: false,
-      categoryId: 6,
+      categoryId: 7,
       isDelete: false,
     },
     {
@@ -684,7 +685,7 @@ exports.seed = async function (knex) {
       price: 149.99,
       stock: 4,
       highlander: false,
-      categoryId: 6,
+      categoryId: 7,
       isDelete: false,
     },
     {
@@ -695,7 +696,7 @@ exports.seed = async function (knex) {
       price: 69.99,
       stock: 10,
       highlander: false,
-      categoryId: 6,
+      categoryId: 7,
       isDelete: false,
     },
     {
@@ -706,7 +707,7 @@ exports.seed = async function (knex) {
       price: 299.99,
       stock: 2,
       highlander: false,
-      categoryId: 6,
+      categoryId: 7,
       isDelete: false,
     },
     {
@@ -717,7 +718,7 @@ exports.seed = async function (knex) {
       price: 59.99,
       stock: 12,
       highlander: false,
-      categoryId: 6,
+      categoryId: 7,
       isDelete: false,
     },
     {
@@ -728,7 +729,7 @@ exports.seed = async function (knex) {
       price: 199.99,
       stock: 5,
       highlander: false,
-      categoryId: 6,
+      categoryId: 7,
       isDelete: false,
     },
     {
@@ -739,7 +740,7 @@ exports.seed = async function (knex) {
       price: 79.99,
       stock: 8,
       highlander: false,
-      categoryId: 6,
+      categoryId: 7,
       isDelete: false,
     },
     {
@@ -750,7 +751,7 @@ exports.seed = async function (knex) {
       price: 119.99,
       stock: 6,
       highlander: false,
-      categoryId: 6,
+      categoryId: 7,
       isDelete: false,
     },
     {
@@ -761,7 +762,7 @@ exports.seed = async function (knex) {
       price: 249.99,
       stock: 3,
       highlander: false,
-      categoryId: 6,
+      categoryId: 7,
       isDelete: false,
     },
     {
@@ -772,7 +773,7 @@ exports.seed = async function (knex) {
       price: 249.99,
       stock: 3,
       highlander: false,
-      categoryId: 7,
+      categoryId: 8,
       isDelete: false,
     },
     {
@@ -783,7 +784,7 @@ exports.seed = async function (knex) {
       price: 79.99,
       stock: 7,
       highlander: false,
-      categoryId: 7,
+      categoryId: 8,
       isDelete: false,
     },
     {
@@ -794,7 +795,7 @@ exports.seed = async function (knex) {
       price: 199.99,
       stock: 5,
       highlander: false,
-      categoryId: 7,
+      categoryId: 8,
       isDelete: false,
     },
     {
@@ -805,7 +806,7 @@ exports.seed = async function (knex) {
       price: 129.99,
       stock: 10,
       highlander: false,
-      categoryId: 7,
+      categoryId: 8,
       isDelete: false,
     },
     {
@@ -816,7 +817,7 @@ exports.seed = async function (knex) {
       price: 59.99,
       stock: 8,
       highlander: false,
-      categoryId: 7,
+      categoryId: 8,
       isDelete: false,
     },
     {
@@ -827,7 +828,7 @@ exports.seed = async function (knex) {
       price: 49.99,
       stock: 12,
       highlander: false,
-      categoryId: 7,
+      categoryId: 8,
       isDelete: false,
     },
     {
@@ -838,7 +839,7 @@ exports.seed = async function (knex) {
       price: 149.99,
       stock: 4,
       highlander: false,
-      categoryId: 7,
+      categoryId: 8,
       isDelete: false,
     },
     {
@@ -849,7 +850,7 @@ exports.seed = async function (knex) {
       price: 39.99,
       stock: 15,
       highlander: false,
-      categoryId: 7,
+      categoryId: 8,
       isDelete: false,
     },
     {
@@ -860,7 +861,7 @@ exports.seed = async function (knex) {
       price: 69.99,
       stock: 6,
       highlander: false,
-      categoryId: 7,
+      categoryId: 8,
       isDelete: false,
     },
     {
@@ -871,7 +872,7 @@ exports.seed = async function (knex) {
       price: 59.99,
       stock: 9,
       highlander: false,
-      categoryId: 7,
+      categoryId: 8,
       isDelete: false,
     },
     {
@@ -882,7 +883,7 @@ exports.seed = async function (knex) {
       price: 699.99,
       stock: 5,
       highlander: false,
-      categoryId: 8,
+      categoryId: 9,
       isDelete: false,
     },
     {
@@ -893,7 +894,7 @@ exports.seed = async function (knex) {
       price: 499.99,
       stock: 3,
       highlander: false,
-      categoryId: 8,
+      categoryId: 9,
       isDelete: false,
     },
     {
@@ -904,7 +905,7 @@ exports.seed = async function (knex) {
       price: 799.99,
       stock: 2,
       highlander: false,
-      categoryId: 8,
+      categoryId: 9,
       isDelete: false,
     },
     {
@@ -915,7 +916,7 @@ exports.seed = async function (knex) {
       price: 149.99,
       stock: 8,
       highlander: false,
-      categoryId: 8,
+      categoryId: 9,
       isDelete: false,
     },
     {
@@ -926,7 +927,7 @@ exports.seed = async function (knex) {
       price: 39.99,
       stock: 12,
       highlander: false,
-      categoryId: 8,
+      categoryId: 9,
       isDelete: false,
     },
     {
@@ -937,7 +938,7 @@ exports.seed = async function (knex) {
       price: 249.99,
       stock: 6,
       highlander: false,
-      categoryId: 8,
+      categoryId: 9,
       isDelete: false,
     },
     {
@@ -948,7 +949,7 @@ exports.seed = async function (knex) {
       price: 59.99,
       stock: 15,
       highlander: false,
-      categoryId: 8,
+      categoryId: 9,
       isDelete: false,
     },
     {
@@ -959,7 +960,7 @@ exports.seed = async function (knex) {
       price: 399.99,
       stock: 4,
       highlander: false,
-      categoryId: 8,
+      categoryId: 9,
       isDelete: false,
     },
     {
@@ -970,7 +971,7 @@ exports.seed = async function (knex) {
       price: 199.99,
       stock: 7,
       highlander: false,
-      categoryId: 8,
+      categoryId: 9,
       isDelete: false,
     },
     {
@@ -981,7 +982,7 @@ exports.seed = async function (knex) {
       price: 129.99,
       stock: 10,
       highlander: false,
-      categoryId: 8,
+      categoryId: 9,
       isDelete: false,
     },
     {
@@ -992,7 +993,7 @@ exports.seed = async function (knex) {
       price: 24.99,
       stock: 8,
       highlander: true,
-      categoryId: 9,
+      categoryId: 10,
       isDelete: false,
     },
     {
@@ -1003,7 +1004,7 @@ exports.seed = async function (knex) {
       price: 89.99,
       stock: 5,
       highlander: false,
-      categoryId: 9,
+      categoryId: 10,
       isDelete: false,
     },
     {
@@ -1014,7 +1015,7 @@ exports.seed = async function (knex) {
       price: 12.99,
       stock: 12,
       highlander: false,
-      categoryId: 9,
+      categoryId: 10,
       isDelete: false,
     },
     {
@@ -1025,7 +1026,7 @@ exports.seed = async function (knex) {
       price: 19.99,
       stock: 10,
       highlander: false,
-      categoryId: 9,
+      categoryId: 10,
       isDelete: false,
     },
     {
@@ -1036,7 +1037,7 @@ exports.seed = async function (knex) {
       price: 29.99,
       stock: 7,
       highlander: false,
-      categoryId: 9,
+      categoryId: 10,
       isDelete: false,
     },
     {
@@ -1047,7 +1048,7 @@ exports.seed = async function (knex) {
       price: 19.99,
       stock: 15,
       highlander: false,
-      categoryId: 9,
+      categoryId: 10,
       isDelete: false,
     },
     {
@@ -1058,7 +1059,7 @@ exports.seed = async function (knex) {
       price: 39.99,
       stock: 6,
       highlander: false,
-      categoryId: 9,
+      categoryId: 10,
       isDelete: false,
     },
     {
@@ -1069,7 +1070,7 @@ exports.seed = async function (knex) {
       price: 49.99,
       stock: 4,
       highlander: false,
-      categoryId: 9,
+      categoryId: 10,
       isDelete: false,
     },
     {
@@ -1080,7 +1081,7 @@ exports.seed = async function (knex) {
       price: 34.99,
       stock: 9,
       highlander: false,
-      categoryId: 9,
+      categoryId: 10,
       isDelete: false,
     },
     {
@@ -1091,7 +1092,7 @@ exports.seed = async function (knex) {
       price: 79.99,
       stock: 5,
       highlander: false,
-      categoryId: 9,
+      categoryId: 10,
       isDelete: false,
     },
   ]
