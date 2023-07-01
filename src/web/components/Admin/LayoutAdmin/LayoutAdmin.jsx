@@ -5,7 +5,7 @@ const LayoutAdmin = ({ children }) => {
     <>
       <div className="flex">
         <NavAdmin />
-        <div>{children}</div>
+        <div className="mt-10">{children}</div>
       </div>
     </>
   )

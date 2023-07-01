@@ -209,6 +209,7 @@ const CategoriesAdmin = () => {
           getInfo={true}
           displayIsDelete={true}
           displayDeleteButton={true}
+          select={true}
         />
 
         {data.categories?.length > 0 && (
