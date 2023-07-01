@@ -78,7 +78,7 @@ const NavAdmin = () => {
       <aside
         className={`transition-transform duration-500 ease-in-out transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } bg-white drop-shadow-2xl h-screen w-2/12 absolute z-50`}
+        } bg-white drop-shadow-2xl h-screen w-[100vw] absolute z-50 lg:w-[20vw]`}
       >
         <nav>
           <div className="flex items-center justify-center border-b-2 mt-2">
