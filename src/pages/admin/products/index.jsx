@@ -48,7 +48,7 @@ const ProductAdmin = () => {
   const [toggleUpdateProduct, setToggleUpdateProduct] = useState(true)
   const [toggleDeleteSeveral, setToggleDeleteSeveral] = useState()
   const [isOpen, setIsOpen] = useState(false)
-  const [isOpenEditUser, setIsOpenEditUser] = useState(false)
+  const [isOpenEditProduct, setIsOpenEditProduct] = useState(false)
   const [contentDialog, setContentDialog] = useState()
 
   const router = useRouter()
@@ -202,8 +202,8 @@ const ProductAdmin = () => {
       setProduct(data.result)
       setToggleUpdateProduct(!toggleUpdateProduct)
       setContentDialog("The product has been updated")
-      setIsOpenEditUser(true)
-      setTimeout(() => setIsOpenEditUser(false), 3000)
+      setIsOpenEditProduct(true)
+      setTimeout(() => setIsOpenEditProduct(false), 3000)
     },
     [product, toggleUpdateProduct, updateProduct]
   )
@@ -332,7 +332,7 @@ const ProductAdmin = () => {
               material={materials}
             />
 
-            <Dialog isOpen={isOpenEditUser} content={contentDialog} />
+            <Dialog isOpen={isOpenEditProduct} content={contentDialog} />
           </>
         ) : (
           <div className="flex">

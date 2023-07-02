@@ -49,7 +49,7 @@ const SalesToday = () => {
   }
 
   return (
-    <div className="m-4 p-4 shadow-lg bg-slate-200 w-[13vw] rounded-xl ">
+    <div className="m-4 p-4 shadow-lg bg-slate-200 w-44 rounded-xl ">
       <div>
         {" "}
         Revenue for{" "}
