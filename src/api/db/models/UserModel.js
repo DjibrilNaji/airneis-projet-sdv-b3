@@ -1,7 +1,7 @@
 import BaseModel from "./BaseModel.js"
 import AddressModel from "./AddressModel.js"
 import BillingAddressModel from "./BillingAddressModel.js"
-import hashPassword from "../hashPassword.js"
+import hashPassword from "@/api/db/hashPassword.js"
 
 class UserModel extends BaseModel {
   static tableName = "users"

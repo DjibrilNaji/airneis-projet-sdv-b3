@@ -1,0 +1,18 @@
+{
+  "direction": "rtl",
+  "contact_us": "צור קשר",
+  "email": "אימייל",
+  "subject": "נושא",
+  "message": "הוֹדָעָה",
+  "send_message": "שלח את ההודעה",
+  "sent": "! נשלח",
+  "confirmation": "ההודעה שלך נשלחה עם הכתובת",
+  "not_email_return_message": "אם אתה רוצה ליצור איתנו קשר, חזור לדף צור קשר ממש כאן",
+  "go_home": "בחזרה לבית",
+  "yup_email": "אימייל שגוי",
+  "yup_email_required": "נדרש אימייל",
+  "yup_email_label": "אימייל",
+  "yup_subject_label": "נושא",
+  "yup_message_required": "נדרשת הודעה",
+  "yup_message_label": "הוֹדָעָה"
+}

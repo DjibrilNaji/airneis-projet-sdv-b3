@@ -1,0 +1,22 @@
+{
+  "direction": "rtl",
+  "firstName": "الاسم الأول",
+  "lastName": "اسم العائلة",
+  "full_address": "العنوان الكامل",
+  "optional_address": "العنوان اختياري",
+  "city": "مدينة",
+  "cp": "الرقم البريدي",
+  "country": "دولة",
+  "phoneNumber": "رقم الهاتف",
+  "yup_firstName_required": "الإسم الأول مطلوب",
+  "yup_lastName_required": "مطلوب اسم",
+  "yup_full_address_required": "العنوان مطلوب",
+  "yup_city_required": "المدينة إلزامية",
+  "yup_cp_required": "الرمز البريدي مطلوب",
+  "yup_country_required": "الدولة مطلوبة",
+  "yup_phoneNumber_required": "رقم الهاتف مطلوب",
+  "add_address_btn": "اضف عنوان",
+  "update_address_btn": "تغيير العنوان",
+  "add_address_modal_title": "أضف عنوانا",
+  "update_address_modal_title": "تغيير العنوان"
+}

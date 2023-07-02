@@ -1,0 +1,22 @@
+{
+  "direction": "rtl",
+  "firstName": "שם פרטי",
+  "lastName": "שֵׁם מִשׁפָּחָה",
+  "full_address": "כתובת מלאה",
+  "optional_address": "כתובת אופציונלית",
+  "city": "עִיר",
+  "cp": "מיקוד",
+  "country": "מדינה",
+  "phoneNumber": "מספר טלפון",
+  "yup_firstName_required": "נדרש שם פרטי",
+  "yup_lastName_required": "נדרש שם",
+  "yup_full_address_required": "כתובת נדרשת",
+  "yup_city_required": "עיר היא חובה",
+  "yup_cp_required": "יש צורך במיקוד",
+  "yup_country_required": "נדרשת מדינה",
+  "yup_phoneNumber_required": "נדרש מספר טלפון",
+  "add_address_btn": "הוסף כתובת",
+  "update_address_btn": "שינוי כתובת",
+  "add_address_modal_title": "הוסף כתובת",
+  "update_address_modal_title": "שינוי כתובת"
+}

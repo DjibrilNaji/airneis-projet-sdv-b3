@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {
@@ -7,9 +7,9 @@ import {
   faCircleInfo,
   faFileContract,
   faGear,
+  faHeart,
   faList,
   faLock,
-  faMagnifyingGlass,
   faMessage,
   faRightFromBracket,
   faRightToBracket,
@@ -28,28 +28,44 @@ import useAppContext from "@/web/hooks/useAppContext"
 import { useRouter } from "next/router.js"
 import { useCallback } from "react"
 import { UserIcon } from "@heroicons/react/24/outline"
+import SearchBar from "./SearchBar"
+import useCartContext from "@/web/hooks/cartContext"
+import SwitchLanguage from "@/web/components/SwitchLanguage"
+import { useTranslation } from "next-i18next"
+import NavBarItem from "@/web/components/Layout/NavBarItem"
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false)
-  const [showSearch, setShowSearch] = useState(false)
+  const { t } = useTranslation("navigation")
+  const { locale } = useRouter()
+  const direction = t("direction", { locale })
 
-  const handleShowSearchClick = () => {
-    setShowSearch(!showSearch)
-  }
+  const [isOpen, setIsOpen] = useState(false)
+
+  const {
+    state: { cart },
+  } = useCartContext()
+
+  const [cartItems, setCartItems] = useState([])
+
+  useEffect(() => {
+    setCartItems(cart)
+  }, [cart])
+
   const handleIsOpenClick = () => {
     setIsOpen(!isOpen)
   }
+
   const router = useRouter()
+
   const {
     state: { session },
-  } = useAppContext()
-  const {
     actions: { signOut },
   } = useAppContext()
+
   const handleSignOut = useCallback(async () => {
     await signOut()
 
-    router.push("/")
+    router.push(routes.home())
   }, [signOut, router])
 
   const username =
@@ -60,47 +76,56 @@ const Navbar = () => {
       href:
         (session !== false) & (session !== null)
           ? routes.users.single(session.user.id)
-          : "/",
-      title: "Mes paramètres",
+          : routes.home(),
+      title: t("menu_settings"),
       icon: <FontAwesomeIcon icon={faGear} />,
       onClick: handleIsOpenClick,
     },
     {
       href:
         (session !== false) & (session !== null)
+          ? routes.users.favorites(session.user.id)
+          : routes.home(),
+      title: t("menu_favourites"),
+      icon: <FontAwesomeIcon icon={faHeart} />,
+      onClick: handleIsOpenClick,
+    },
+    {
+      href:
+        (session !== false) & (session !== null)
           ? routes.orders.collection(session.user.id)
-          : "/",
-      title: "Mes commandes",
+          : routes.home(),
+      title: t("menu_orders"),
       icon: <FontAwesomeIcon icon={faCircleCheck} />,
       onClick: handleIsOpenClick,
     },
     {
-      href: "/",
-      title: "CGU",
+      href: routes.info.terms(),
+      title: t("menu_conditions"),
       icon: <FontAwesomeIcon icon={faList} />,
       onClick: handleIsOpenClick,
     },
     {
-      href: "/",
-      title: "Mentions légales",
+      href: routes.info.privacy(),
+      title: t("menu_privacy"),
       icon: <FontAwesomeIcon icon={faFileContract} />,
       onClick: handleIsOpenClick,
     },
     {
-      href: "/contact",
-      title: "Contact",
+      href: routes.contact.contact(),
+      title: t("menu_contact"),
       icon: <FontAwesomeIcon icon={faMessage} />,
       onClick: handleIsOpenClick,
     },
     {
       href: "/",
-      title: "À propos d'ÀIRNEIS",
+      title: t("menu_about"),
       icon: <FontAwesomeIcon icon={faCircleInfo} />,
       onClick: handleIsOpenClick,
     },
     {
-      href: "/",
-      title: "Se deconnecter",
+      href: routes.home(),
+      title: t("menu_logout"),
       icon: <FontAwesomeIcon icon={faRightFromBracket} />,
       onClick: handleSignOut,
     },
@@ -109,37 +134,37 @@ const Navbar = () => {
   const navItemsNotConnected = [
     {
       href: routes.signIn(),
-      title: "Se connecter",
+      title: t("menu_login"),
       icon: <FontAwesomeIcon icon={faRightToBracket} />,
       onClick: handleIsOpenClick,
     },
     {
       href: routes.signUp(),
-      title: "S'inscrire",
+      title: t("menu_register"),
       icon: <UserIcon />,
       onClick: handleIsOpenClick,
     },
     {
       href: "/",
-      title: "CGU",
+      title: t("menu_conditions"),
       icon: <FontAwesomeIcon icon={faList} />,
       onClick: handleIsOpenClick,
     },
     {
       href: "/",
-      title: "Mentions légales",
+      title: t("menu_privacy"),
       icon: <FontAwesomeIcon icon={faFileContract} />,
       onClick: handleIsOpenClick,
     },
     {
-      href: "/contact",
-      title: "Contact",
+      href: routes.contact.contact(),
+      title: t("menu_contact"),
       icon: <FontAwesomeIcon icon={faMessage} />,
       onClick: handleIsOpenClick,
     },
     {
-      href: "/",
-      title: "À propos d'ÀIRNEIS",
+      href: routes.about(),
+      title: t("menu_about"),
       icon: <FontAwesomeIcon icon={faCircleInfo} />,
       onClick: handleIsOpenClick,
     },
@@ -147,40 +172,20 @@ const Navbar = () => {
 
   return (
     <nav className="flex items-center sticky top-0 bg-white border-b-2 border-stone-400 shadow-lg p-4 z-10">
-      <Link href={"/"} legacyBehavior>
+      <Link href={routes.home()} legacyBehavior>
         <Image src={logo} alt="logo" />
       </Link>
 
-      <div className="flex items-center ml-auto transition-all transition-duration-200 ">
-        {showSearch ? (
-          <>
-            <button>
-              <FontAwesomeIcon
-                icon={faXmark}
-                className="h-6 text-stone-400 mr-4"
-                onClick={handleShowSearchClick}
-              />
-            </button>
-            <input
-              type="search"
-              placeholder="Rechercher..."
-              className="focus:outline-none focus:border-stone-400 focus:border-2 rounded placeholder-stone-400"
-            />
-          </>
-        ) : (
-          <button className="px-2 py-1" onClick={handleShowSearchClick}>
-            <FontAwesomeIcon
-              icon={faMagnifyingGlass}
-              className="h-6 text-stone-400"
-            />
-          </button>
-        )}
-
-        <Link href={`/cart`} className="px-2 py-1">
+      <div className="flex items-center ml-auto transition-all transition-duration-200">
+        <SearchBar />
+        <Link href={routes.checkout.cart()} className="px-2 py-1">
           <FontAwesomeIcon
             icon={faShoppingCart}
             className="h-6 text-stone-400"
           />
+          {cartItems.length > 0 && (
+            <span className="absolute top-4 h-3 w-3 bg-red-500 rounded-full"></span>
+          )}
         </Link>
 
         <button
@@ -198,34 +203,25 @@ const Navbar = () => {
       >
         {(session !== false) & (session !== null) ? (
           <>
-            <div className="flex justify-center gap-3 p-6 bg-stone-500">
+            <div
+              className="flex justify-center gap-3 p-6 bg-stone-500"
+              dir={direction}
+            >
               <button onClick={handleIsOpenClick}>
                 <FontAwesomeIcon icon={faXmark} className="h-6 text-white" />
               </button>
 
               <p className="text-md text-white font-bold  whitespace-nowrap">
-                Bonjour {username}
+                {t("menu_hello")} {username}
               </p>
             </div>
 
-            <ul className="flex flex-col gap-4 m-5">
-              {navItemsConnected.map((items) => (
-                <Link
-                  key={items.title}
-                  href={items.href}
-                  className="bg-white p-4 border-2 rounded-lg hover:bg-stone-200"
-                  onClick={items.onClick}
-                >
-                  <li className="w-full flex gap-3 items-center">
-                    <p className="w-4">{items.icon}</p>
-                    <p>{items.title}</p>
-                  </li>
-                </Link>
-              ))}
+            <ul className="flex flex-col gap-4 m-5" dir={direction}>
+              <NavBarItem data={navItemsConnected} />
 
               {session.user.isAdmin && (
                 <Link
-                  href={"/admin"}
+                  href={routes.admin.admin()}
                   className="bg-white p-4 border-2 rounded-lg hover:bg-stone-200"
                   onClick={handleIsOpenClick}
                 >
@@ -233,7 +229,7 @@ const Navbar = () => {
                     <p className="w-4">
                       <FontAwesomeIcon icon={faLock} />
                     </p>
-                    <p>{"Admin"}</p>
+                    <p>{t("menu_admin")}</p>
                   </li>
                 </Link>
               )}
@@ -252,19 +248,7 @@ const Navbar = () => {
             </div>
 
             <ul className="flex flex-col gap-4 m-5">
-              {navItemsNotConnected.map((items) => (
-                <Link
-                  key={items.title}
-                  href={items.href}
-                  className="bg-white p-4 border-2 rounded-lg hover:bg-stone-200"
-                  onClick={items.onClick}
-                >
-                  <li className="w-full flex gap-3 items-center">
-                    <p className="w-4">{items.icon}</p>
-                    <p>{items.title}</p>
-                  </li>
-                </Link>
-              ))}
+              <NavBarItem data={navItemsNotConnected} />
             </ul>
           </>
         )}
@@ -288,6 +272,7 @@ const Navbar = () => {
               className="fa-xl text-stone-500"
             />
           </Link>
+          <SwitchLanguage />
         </div>
       </div>
     </nav>

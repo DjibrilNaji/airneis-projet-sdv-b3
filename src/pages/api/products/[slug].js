@@ -1,4 +1,3 @@
-import ImageProductModel from "@/api/db/models/ImageProductModel"
 import ProductModel from "@/api/db/models/ProductModel"
 import { NotFoundError } from "@/api/errors"
 import validate from "@/api/middlewares/validate.js"
@@ -19,31 +18,66 @@ const handler = mw({
       },
       res,
     }) => {
-      const product = await ProductModel.query().where({ slug })
+      const product = await ProductModel.query()
+        .findOne({ slug: slug })
+        .where({ isDelete: false })
+        .withGraphFetched("image")
+        .withGraphFetched("category")
+        .withGraphFetched("materials")
 
       if (!product) {
         throw new NotFoundError()
       }
 
-      const imageProduct = await ImageProductModel.query().where({
-        productId: product[0].id,
-      })
+      product.image.map(
+        (product) =>
+          (product.urlImage = s3.getSignedUrl("getObject", {
+            Bucket: "airness-matd",
+            Key: product.urlImage,
+          }))
+      )
 
-      if (!imageProduct) {
+      const productsInCategory = await ProductModel.query()
+        .where({
+          categoryId: product.category[0].id,
+        })
+        .whereNot({ slug: slug })
+        .withGraphFetched("image")
+
+      if (!productsInCategory) {
         throw new NotFoundError()
       }
 
-      imageProduct.map((image) => {
-        image.urlImage = s3.getSignedUrl("getObject", {
-          Bucket: "airness-matd",
-          Key: image.urlImage,
-        })
-      })
+      productsInCategory.map((products) =>
+        products.image.map(
+          (img) =>
+            (img.urlImage = s3.getSignedUrl("getObject", {
+              Bucket: "airness-matd",
+              Key: img.urlImage,
+            }))
+        )
+      )
+
+      const randomProducts = []
+
+      const maxProducts = Math.min(6, productsInCategory.length)
+
+      while (randomProducts.length < maxProducts) {
+        const randomIndex = Math.floor(
+          Math.random() * productsInCategory.length
+        )
+
+        const randomProduct = productsInCategory[randomIndex]
+
+        if (!randomProducts.includes(randomProduct)) {
+          randomProducts.push(randomProduct)
+        }
+      }
 
       res.send({
         result: {
           product,
-          imageProduct,
+          randomProducts,
         },
       })
     },

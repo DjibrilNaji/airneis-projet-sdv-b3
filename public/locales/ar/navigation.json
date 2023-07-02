@@ -1,0 +1,16 @@
+{
+  "direction": "rtl",
+  "menu_hello": "مرحبًا",
+  "menu_settings": "إعداداتي",
+  "menu_favourites": "مفضلاتي",
+  "menu_orders": "طلباتي",
+  "menu_conditions": "الشروط والأحكام",
+  "menu_privacy": "سياسة الخصوصية",
+  "menu_contact": "اتصل بنا",
+  "menu_about": "معلومات عنا في Airneis",
+  "menu_logout": "تسجيل الخروج",
+  "menu_login": "تسجيل الدخول",
+  "menu_register": "تسجيل",
+  "menu_admin": "المشرف",
+  "go_back": "عُد"
+}

@@ -28,12 +28,12 @@ const handler = mw({
           "products.name",
           "products.slug",
           "products.price",
-          "products.quantity",
+          "products.stock",
           "products.highlander",
           "image_product.urlImage"
         )
         .distinctOn("image_product.productId")
-        .where({ highlander: true })
+        .where({ highlander: true, isDelete: false })
 
       if (!products) {
         res.send({ result: "An error occurred while retrieving products" })

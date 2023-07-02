@@ -1,249 +1,364 @@
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
-import axios from "axios"
 import Link from "next/link"
 import { useCallback, useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import {
-  faArrowLeft,
-  faArrowRight,
-  faCheck,
-  faPlus,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons"
-import TableHeadField from "@/web/components/Admin/TableHeadField"
+import { faCheck, faEdit } from "@fortawesome/free-solid-svg-icons"
 import routes from "@/web/routes"
+import useAppContext, {
+  AppContextProvider,
+} from "@/web/hooks/useAppContext.jsx"
+import FormError from "@/web/components/Form/FormError"
+import { useRouter } from "next/router"
+import Modal from "@/web/components/Modal"
+import EditProductForm from "@/web/components/Admin/Form/EditProductForm"
+import Image from "next/image"
+import ContentPage from "@/web/components/Admin/ContentPage"
+import ConfirmDelete from "@/web/components/Admin/ConfirmDelete"
+import Dialog from "@/web/components/Design/Dialog"
 
-const UsersAdmin = () => {
+const ProductAdmin = () => {
+  const {
+    state: {
+      currentPage,
+      sortColumn,
+      order,
+      limit,
+      selectedItems,
+      toggleDeleteOne,
+      itemIdToRemove,
+    },
+    actions: {
+      getAllProducts,
+      deleteProducts,
+      getSingleProduct,
+      getMaterials,
+      updateProduct,
+      setSelectedItems,
+      setToggleDeleteOne,
+    },
+  } = useAppContext()
+
   const [data, setData] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
-
   const [totalPages, setTotalPages] = useState("")
+  const [searchTerm, setSearchTerm] = useState("")
+  const [error, setError] = useState(null)
+  const [product, setProduct] = useState([])
+  const [materials, setMaterials] = useState([])
+  const [images, setImages] = useState([])
+  const [toggleUpdateProduct, setToggleUpdateProduct] = useState(true)
+  const [toggleDeleteSeveral, setToggleDeleteSeveral] = useState()
+  const [isOpen, setIsOpen] = useState(false)
+  const [isOpenEditProduct, setIsOpenEditProduct] = useState(false)
+  const [contentDialog, setContentDialog] = useState()
 
-  const [sortColumn, setSortColumn] = useState("id")
-  const [order, setOrder] = useState("asc")
-  const [limit, setLimit] = useState(10)
-  const [searchTerm, setSearchTerm] = useState(null)
+  const router = useRouter()
+
+  const columnsTableHead = [
+    {
+      displayName: "Select",
+      handleSort: false,
+    },
+    {
+      displayName: "Id",
+      fieldName: "id",
+      handleSort: true,
+    },
+    {
+      displayName: "Name",
+      fieldName: "name",
+      handleSort: true,
+    },
+    {
+      displayName: "Category",
+      handleSort: false,
+    },
+    {
+      displayName: "Materials",
+      handleSort: false,
+    },
+    {
+      displayName: "Price",
+      fieldName: "price",
+      handleSort: true,
+    },
+    {
+      displayName: "Stock",
+      fieldName: "stock",
+      handleSort: true,
+    },
+    {
+      displayName: "Higlhander",
+      handleSort: false,
+    },
+    {
+      displayName: "Active",
+      handleSort: false,
+    },
+    {
+      displayName: "Delete",
+      handleSort: false,
+    },
+    {
+      displayName: "Actions",
+      handleSort: false,
+    },
+  ]
+  const types = {
+    product: { name: "product", title: "Product informations" },
+    images: { name: "images", title: "Images Product" },
+  }
+
+  const [selectedType, setSelectedType] = useState(types.product)
+  const [viewProductInfo, setViewProductInfo] = useState(false)
 
   const fetchData = useCallback(
     async (page) => {
-      const result = await axios.get(
-        `/api${routes.api.admin.products()}?limit=${limit}&page=${page}&sortColumn=${sortColumn}&order=${order}` +
-          (searchTerm === null ? "" : `&searchTerm=${searchTerm}`)
+      const [err, data] = await getAllProducts(
+        limit,
+        page,
+        sortColumn,
+        order,
+        searchTerm
       )
 
-      const totalProducts = result.data.result.meta.count
+      if (err) {
+        router.push(routes.home())
+
+        return
+      }
+
+      const totalProducts = data.result.meta.count
       const totalPages = Math.ceil(totalProducts / limit)
       setTotalPages(totalPages)
-      setData(result.data.result)
+      setData(data.result)
     },
-    [order, sortColumn, limit, searchTerm]
+    [getAllProducts, limit, sortColumn, order, searchTerm, router]
   )
 
   useEffect(() => {
     fetchData(currentPage)
   }, [currentPage, fetchData])
 
-  const handlePageChange = useCallback(
-    (newPage) => {
-      setCurrentPage(newPage)
-      fetchData(newPage)
-    },
-    [fetchData]
-  )
+  const handleDelete = useCallback(
+    async (productId) => {
+      const [err] = await deleteProducts(productId)
 
-  const handleLimitChange = useCallback(
-    (e) => {
-      setLimit(e.target.value)
-      fetchData
-    },
-    [fetchData]
-  )
+      if (err) {
+        setError(err)
 
-  const handleSortChange = useCallback(
-    (column) => {
-      if (column === sortColumn) {
-        setOrder(order === "asc" ? "desc" : "asc")
-      } else {
-        setSortColumn(column)
-        setOrder("asc")
+        return
       }
 
       fetchData(currentPage)
+      setSelectedItems([])
+      setToggleDeleteOne(false)
+      setToggleDeleteSeveral(false)
+      setContentDialog("The product has been deleted")
+      setIsOpen(true)
+      setTimeout(() => setIsOpen(false), 3000)
     },
-    [fetchData, currentPage, order, sortColumn]
+    [
+      deleteProducts,
+      fetchData,
+      currentPage,
+      setSelectedItems,
+      setToggleDeleteOne,
+    ]
   )
 
-  const pagination = []
-  for (let i = 1; i <= totalPages; i++) {
-    pagination.push(
-      <button
-        key={i}
-        className={`h-12 border-2 border-r-0 border-stone-500
-               w-12  ${currentPage === i && "bg-stone-500 text-white"}`}
-        onClick={() => handlePageChange(i)}
-      >
-        {i}
-      </button>
-    )
+  const fetchSingleProduct = async (id) => {
+    const [err, dataProduct] = await getSingleProduct(id)
+
+    if (err) {
+      setError(err)
+
+      return
+    }
+
+    const [error, dataMaterials] = await getMaterials()
+
+    if (error) {
+      setError(error)
+
+      return
+    }
+
+    setProduct(dataProduct.result.product[0])
+    setMaterials(dataMaterials.result)
+    setImages(dataProduct.result.product[0].image)
+    setViewProductInfo(true)
   }
+
+  const handleSubmitUpdate = useCallback(
+    async (values) => {
+      const [err, data] = await updateProduct(product.id, values)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setProduct(data.result)
+      setToggleUpdateProduct(!toggleUpdateProduct)
+      setContentDialog("The product has been updated")
+      setIsOpenEditProduct(true)
+      setTimeout(() => setIsOpenEditProduct(false), 3000)
+    },
+    [product, toggleUpdateProduct, updateProduct]
+  )
 
   return (
     <>
-      <div className="flex w-full justify-center mb-5">
-        <span className="font-extrabold text-3xl text-stone-500 uppercase">
-          Products
-        </span>
+      {error ? <FormError error={error} /> : ""}
+
+      <Dialog isOpen={isOpen} content={contentDialog} />
+
+      <ConfirmDelete
+        isOpen={toggleDeleteOne || toggleDeleteSeveral}
+        page="users"
+        close={
+          toggleDeleteSeveral
+            ? () => setToggleDeleteSeveral(false)
+            : () => setToggleDeleteOne(false)
+        }
+        remove={
+          toggleDeleteSeveral
+            ? () => selectedItems.map((id) => handleDelete(id))
+            : () => handleDelete(itemIdToRemove)
+        }
+      />
+
+      <ContentPage
+        title="Products"
+        data={data.products}
+        columnsTableHead={columnsTableHead}
+        columnsTableBody={[
+          "id",
+          "name",
+          "categoryName",
+          "materialList",
+          "price",
+          "stock",
+        ]}
+        name={"products"}
+        totalPages={totalPages}
+        searchTerm={searchTerm}
+        fetchSingleItem={fetchSingleProduct}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        getInfo={true}
+        displayHighlander={true}
+        displayIsDelete={true}
+        displayDeleteButton={true}
+        select={true}
+      />
+
+      <div className="flex flex-col justify-start">
+        <button
+          className="border-2 rounded-lg mx-3 my-4 p-2 bg-red-500 text-white disabled:cursor-not-allowed disabled:bg-red-200 w-fit"
+          onClick={() => selectedItems.map((id) => handleDelete(id))}
+          disabled={selectedItems.length === 0}
+        >
+          Supprimer tous les éléments séléctionnés
+        </button>
+        <Link
+          href={routes.admin.products.create()}
+          className="border-2 rounded-lg mx-3 my-4 p-2 bg-blue-500 text-white w-fit"
+        >
+          Ajouter un Produit
+        </Link>
       </div>
-      <div className="flex justify-center my-5">
-        <div className="flex">
+
+      <Modal
+        isOpen={viewProductInfo}
+        modalTitle={selectedType.title}
+        closeModal={() => setViewProductInfo(false)}
+      >
+        <div className="flex gap-4">
           <button
-            className={
-              "h-12 border-2 border-r-0 text-stone-500  border-stone-500 px-4 rounded-l-lg hover:bg-stone-500 hover:text-white disabled:opacity-30 disabled:z-[-1]"
-            }
-            disabled={currentPage === 1}
-            onClick={() => handlePageChange(currentPage - 1)}
+            onClick={() => setSelectedType(types.product)}
+            className={`flex ${
+              selectedType.name === types.product.name && "font-bold underline"
+            }`}
           >
-            <FontAwesomeIcon icon={faArrowLeft} />
+            Product
           </button>
-          <div> {pagination}</div>
           <button
-            className="h-12 border-2 text-stone-500  border-stone-500 px-4 rounded-r-lg hover:bg-stone-500 hover:text-white disabled:opacity-30 disabled:z-[-1]"
-            disabled={currentPage === totalPages}
-            onClick={() => handlePageChange(currentPage + 1)}
+            onClick={() => setSelectedType(types.images)}
+            className={`flex ${
+              selectedType.name === types.images.name && "font-bold underline"
+            }`}
           >
-            <FontAwesomeIcon icon={faArrowRight} />
+            Image Product
           </button>
         </div>
-      </div>
 
-      <div className="flex items-center justify-between">
-        <div className="flex gap-2 my-6">
-          <span>Show</span>
-          <select
-            name="country"
-            className="border-2 rounded-lg px-3 text-right"
-            value={limit}
-            onChange={handleLimitChange}
-          >
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="15">15</option>
-            <option value="20">20</option>
-            <option value="25">25</option>
-            <option value="30">30</option>
-          </select>
-          <span>products per page</span>
-        </div>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            placeholder="Search"
-            className="border-2 border-stone-500 rounded-lg px-2 focus:outline-none"
-            value={searchTerm == null ? "" : searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-      </div>
-
-      <table className="w-full">
-        <thead className="text-xs text-left uppercase bg-gray-50 text-gray-700">
-          <tr>
-            <th className="py-2 px-4">Select</th>
-            <TableHeadField
-              displayName="Id"
-              handleSortChange={handleSortChange}
-              fieldName="id"
-            />
-            <TableHeadField
-              displayName="Name"
-              handleSortChange={handleSortChange}
-              fieldName="name"
-            />
-            <TableHeadField
-              displayName="Description"
-              handleSortChange={handleSortChange}
-              fieldName="description"
-            />
-            <TableHeadField
-              displayName="Price"
-              handleSortChange={handleSortChange}
-              fieldName="price"
-              className="hidden md:table-cell"
-            />
-            <TableHeadField
-              displayName="Quantity"
-              handleSortChange={handleSortChange}
-              fieldName="quantity"
-              className="hidden md:table-cell"
-            />
-            <th className="py-2 px-4 hidden md:table-cell">Highlander</th>
-            <th className="py-2 px-4 hidden md:table-cell">Active</th>
-            <th className="py-2 px-4">More</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {data.products?.map((product) => (
-            <tr key={product.id} className="border-b text-sm border-gray-300">
-              <td className="py-2 px-4">
-                <input
-                  type="checkbox"
-                  className="h-5 w-5 border-2 appearance-none checked:bg-stone-500 cursor-pointer"
-                />
-              </td>
-              <td className="py-2 px-4">{product.id} </td>
-              <td className="py-2 px-4">{product.name}</td>
-              <td className="py-2 px-4">{product.description}</td>
-              <td className="py-2 px-4 hidden md:table-cell">
-                {product.price}
-              </td>
-              <td className="py-2 px-4 hidden md:table-cell">
-                {product.quantity}
-              </td>
-              <td className="py-2 px-4 hidden md:table-cell">
-                {product.highlander ? (
-                  <FontAwesomeIcon
-                    icon={faXmark}
-                    className="h-6 text-red-500"
-                  />
-                ) : (
-                  <FontAwesomeIcon
-                    icon={faCheck}
-                    className="h-6 text-green-500"
-                  />
-                )}
-              </td>
-              <td className="py-2 px-4 hidden md:table-cell">
+        {selectedType.name === types.product.name ? (
+          <>
+            <div className="border-t-4 border-gray-500 px-3 my-4" />
+            <div className="flex items-center justify-between ">
+              <div className="px-4">
                 {product.isDelete ? (
-                  <FontAwesomeIcon
-                    icon={faXmark}
-                    className="h-6 text-red-500"
-                  />
+                  <span className="italic text-red-500 text-lg">
+                    (Product delete : id {product.id})
+                  </span>
                 ) : (
-                  <FontAwesomeIcon
-                    icon={faCheck}
-                    className="h-6 text-green-500"
-                  />
+                  <span className="italic text-green-500 text-lg">
+                    (Product active : id {product.id})
+                  </span>
                 )}
-              </td>
-              <td className="py-2 px-4 flex justify-center">
-                <Link
-                  href={""}
-                  className="border-2 px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200"
+              </div>
+              {!product.isDelete && (
+                <button
+                  className="flex justify-end text-stone-500 font-bold text-lg rounded"
+                  onClick={() => setToggleUpdateProduct(!toggleUpdateProduct)}
+                  title={
+                    toggleUpdateProduct
+                      ? "Update Product"
+                      : "Finish modifications"
+                  }
                 >
-                  <FontAwesomeIcon icon={faPlus} className="text-stone-400" />
-                </Link>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                  <FontAwesomeIcon
+                    icon={toggleUpdateProduct ? faEdit : faCheck}
+                    className="h-7"
+                  />
+                </button>
+              )}
+            </div>
+            <EditProductForm
+              initialValues={product}
+              onSubmit={handleSubmitUpdate}
+              active={toggleUpdateProduct}
+              material={materials}
+            />
+
+            <Dialog isOpen={isOpenEditProduct} content={contentDialog} />
+          </>
+        ) : (
+          <div className="flex">
+            {images.map((imageProduct) => (
+              <Image
+                key={imageProduct.id}
+                src={imageProduct.urlImage}
+                alt={`slide ${imageProduct.id}`}
+                className={`w-24 h-24 object-cover rounded-xl transition-opacity ease-linear duration-300 m-4`}
+                width="500"
+                height="500"
+              />
+            ))}
+          </div>
+        )}
+      </Modal>
     </>
   )
 }
 
-UsersAdmin.getLayout = function (page) {
-  return <LayoutAdmin>{page}</LayoutAdmin>
+ProductAdmin.getLayout = function (page) {
+  return (
+    <AppContextProvider>
+      <LayoutAdmin>{page}</LayoutAdmin>
+    </AppContextProvider>
+  )
 }
 
-export default UsersAdmin
+export default ProductAdmin

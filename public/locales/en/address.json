@@ -1,0 +1,21 @@
+{
+  "firstName": "First name",
+  "lastName": "Last name",
+  "full_address": "Full address",
+  "optional_address": "Address optional",
+  "city": "City",
+  "cp": "Postal code",
+  "country": "Country",
+  "phoneNumber": "Phone number",
+  "yup_firstName_required": "First name is required",
+  "yup_lastName_required": "Last name is required",
+  "yup_full_address_required": "Full address is required",
+  "yup_city_required": "City is required",
+  "yup_cp_required": "Postal code is required",
+  "yup_country_required": "Country is required",
+  "yup_phoneNumber_required": "Phone number name is required",
+  "add_address_btn": "Add address",
+  "update_address_btn": "Change address",
+  "add_address_modal_title": "Add an address",
+  "update_address_modal_title": "Change address"
+}

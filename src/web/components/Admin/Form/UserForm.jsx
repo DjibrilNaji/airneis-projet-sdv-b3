@@ -1,9 +1,9 @@
 import { Form, Formik } from "formik"
 import * as yup from "yup"
 import React from "react"
-import FormError from "@/web/components/FormError"
-import SubmitButton from "@/web/components/SubmitButton"
-import FormField from "@/web/components/Admin/FormField"
+import FormError from "@/web/components/Form/FormError"
+import SubmitButton from "@/web/components/Button/SubmitButton"
+import FormField from "@/web/components/Admin/Form/FormField"
 
 const defaultInitialValues = {
   userName: "",
@@ -48,6 +48,7 @@ const UserForm = (props) => {
       onSubmit={onSubmit}
       initialValues={initialValues}
       validationSchema={validationSchema}
+      enableReinitialize
     >
       <>
         <FormError error={error} />
@@ -55,21 +56,21 @@ const UserForm = (props) => {
           <FormField
             name="userName"
             type="text"
-            label="Nom d'utilisateur :"
+            label="Nom d'utilisateur* :"
             active={active}
           />
 
           <FormField
             name="firstName"
             type="text"
-            label="Prenom :"
+            label="Prenom* :"
             active={active}
           />
 
           <FormField
             name="lastName"
             type="text"
-            label="Nom :"
+            label="Nom* :"
             active={active}
           />
 
@@ -83,7 +84,7 @@ const UserForm = (props) => {
           <FormField
             name="password"
             type="password"
-            label="Password :"
+            label="Password* :"
             active={active}
           />
 

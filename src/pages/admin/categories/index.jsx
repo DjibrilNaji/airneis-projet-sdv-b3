@@ -1,251 +1,299 @@
 import LayoutAdmin from "@/web/components/Admin/LayoutAdmin/LayoutAdmin"
-import axios from "axios"
-import Link from "next/link"
 import { useCallback, useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import {
-  faArrowLeft,
-  faArrowRight,
-  faCheck,
-  faPlus,
-  faTrash,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons"
-import TableHeadField from "@/web/components/Admin/TableHeadField"
-import routes from "@/web/routes"
+import { faCheck, faEdit } from "@fortawesome/free-solid-svg-icons"
+import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
+import FormError from "@/web/components/Form/FormError"
+import Modal from "@/web/components/Modal"
+import EditCategoryForm from "@/web/components/Admin/Form/EditCategoryForm"
+import ContentPage from "@/web/components/Admin/ContentPage"
+import CenterItem from "@/web/components/Design/CenterItem"
+import ConfirmDelete from "@/web/components/Admin/ConfirmDelete"
+import DeleteAllButton from "@/web/components/Admin/Button/DeleteAllButton"
+import Dialog from "@/web/components/Design/Dialog"
 
 const CategoriesAdmin = () => {
-  const [data, setData] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState("")
+  const types = {
+    category: { name: "category", title: "Category informations" },
+    images: { name: "images", title: "Images Category" },
+  }
 
-  const [sortColumn, setSortColumn] = useState("id")
-  const [order, setOrder] = useState("asc")
-  const [limit, setLimit] = useState(10)
-  const [searchTerm, setSearchTerm] = useState(null)
+  const [data, setData] = useState([])
+  const [totalPages, setTotalPages] = useState("")
+  const [searchTerm, setSearchTerm] = useState("")
+  const [error, setError] = useState(null)
+  const [selectedType, setSelectedType] = useState(types.category)
+  const [viewCategoryInfo, setViewCategoryInfo] = useState(false)
+  const [toggleUpdateCategory, setToggleUpdateCategory] = useState(true)
+  const [category, setCategory] = useState(null)
+  const [toggleDeleteSeveral, setToggleDeleteSeveral] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const [contentDialog, setContentDialog] = useState()
+  const [isOpenEditCategory, setIsOpenEditCategory] = useState(false)
+
+  const {
+    state: {
+      limit,
+      sortColumn,
+      order,
+      currentPage,
+      toggleDeleteOne,
+      itemIdToRemove,
+      selectedItems,
+    },
+    actions: {
+      getAllCategories,
+      deleteCategory,
+      getSingleCategory,
+      updateCategory,
+      setToggleDeleteOne,
+    },
+  } = useAppContext()
+
+  const columnsTableHead = [
+    {
+      displayName: "Select",
+      handleSort: false,
+    },
+    {
+      displayName: "Id",
+      fieldName: "id",
+      handleSort: true,
+    },
+    {
+      displayName: "Name",
+      fieldName: "name",
+      handleSort: true,
+    },
+    {
+      displayName: "Slug",
+      fieldName: "slug",
+      handleSort: true,
+    },
+    {
+      displayName: "Active",
+      handleSort: false,
+    },
+    {
+      displayName: "Actions",
+      handleSort: false,
+    },
+    {
+      displayName: "More",
+      handleSort: false,
+    },
+  ]
 
   const fetchData = useCallback(
     async (page) => {
-      const result = await axios.get(
-        `/api${routes.api.admin.categories()}?limit=${limit}&page=${page}&sortColumn=${sortColumn}&order=${order}` +
-          (searchTerm === null ? "" : `&searchTerm=${searchTerm}`)
+      const [err, data] = await getAllCategories(
+        limit,
+        page,
+        sortColumn,
+        order,
+        searchTerm
       )
 
-      const totalCategories = result.data.result.meta.count
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      const totalCategories = data.result.meta.count
       const totalPages = Math.ceil(totalCategories / limit)
 
       setTotalPages(totalPages)
-      setData(result.data.result)
+      setData(data.result)
     },
-    [order, sortColumn, limit, searchTerm]
+    [order, limit, sortColumn, searchTerm, getAllCategories]
   )
 
   useEffect(() => {
     fetchData(currentPage)
   }, [currentPage, fetchData])
 
-  const handlePageChange = useCallback(
-    (newPage) => {
-      setCurrentPage(newPage)
-      fetchData(newPage)
-    },
-    [fetchData]
-  )
+  const fetchSingleCategory = useCallback(
+    async (id) => {
+      const [err, data] = await getSingleCategory(id)
 
-  const handleLimitChange = useCallback(
-    (e) => {
-      setLimit(e.target.value)
-      fetchData
-    },
-    [fetchData]
-  )
+      if (err) {
+        setError(err)
 
-  const handleSortChange = useCallback(
-    (column) => {
-      if (column === sortColumn) {
-        setOrder(order === "asc" ? "desc" : "asc")
-      } else {
-        setSortColumn(column)
-        setOrder("asc")
+        return
       }
 
-      fetchData(currentPage)
+      setCategory(data.result[0])
+      setViewCategoryInfo(true)
     },
-    [fetchData, currentPage, order, sortColumn]
+    [getSingleCategory]
+  )
+
+  const handleSubmitUpdate = useCallback(
+    async (values) => {
+      const [err, data] = await updateCategory(category.id, values)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      setCategory(data.result)
+      setToggleUpdateCategory(!toggleUpdateCategory)
+      fetchData(currentPage)
+      setContentDialog("The category has been updated")
+      setIsOpenEditCategory(true)
+      setTimeout(() => setIsOpenEditCategory(false), 3000)
+    },
+    [category, updateCategory, toggleUpdateCategory, fetchData, currentPage]
   )
 
   const handleDelete = useCallback(
     async (categoryId) => {
-      await axios.patch(`/api/admin/${categoryId}/delete`)
-      fetchData(currentPage)
-    },
-    [fetchData, currentPage]
-  )
+      if (categoryId === 1) {
+        setContentDialog("You can't delete this category")
+        setIsOpen(true)
+        setTimeout(() => setIsOpen(false), 3000)
 
-  const pagination = []
-  for (let i = 1; i <= totalPages; i++) {
-    pagination.push(
-      <button
-        key={i}
-        className={`h-12 border-2 border-r-0 border-stone-500
-               w-12  ${currentPage === i && "bg-stone-500 text-white"}`}
-        onClick={() => handlePageChange(i)}
-      >
-        {i}
-      </button>
-    )
-  }
+        return
+      }
+
+      const [err] = await deleteCategory(categoryId)
+
+      if (err) {
+        setError(err)
+
+        return
+      }
+
+      fetchData(currentPage)
+      setToggleDeleteOne(false)
+      setToggleDeleteSeveral(false)
+      setContentDialog("The category has been deleted")
+      setIsOpen(true)
+      setTimeout(() => setIsOpen(false), 3000)
+    },
+    [deleteCategory, fetchData, currentPage, setToggleDeleteOne]
+  )
 
   return (
     <>
-      <div className="flex w-full justify-center mb-5">
-        <span className="font-extrabold text-3xl text-stone-500 uppercase">
-          Categories
-        </span>
-      </div>
+      <CenterItem
+        className="md:hidden"
+        content="Use a larger screen to access the backoffice"
+      />
 
-      <div className="flex justify-center my-5">
-        <div className="flex">
-          <button
-            className={
-              "h-12 border-2 border-r-0 text-stone-500  border-stone-500 px-4 rounded-l-lg hover:bg-stone-500 hover:text-white disabled:opacity-30 disabled:z-[-1]"
-            }
-            disabled={currentPage === 1}
-            onClick={() => handlePageChange(currentPage - 1)}
-          >
-            <FontAwesomeIcon icon={faArrowLeft} />
-          </button>
-          <div> {pagination}</div>
-          <button
-            className="h-12 border-2 text-stone-500  border-stone-500 px-4 rounded-r-lg hover:bg-stone-500 hover:text-white disabled:opacity-30 disabled:z-[-1]"
-            disabled={currentPage === totalPages}
-            onClick={() => handlePageChange(currentPage + 1)}
-          >
-            <FontAwesomeIcon icon={faArrowRight} />
-          </button>
-        </div>
-      </div>
+      <div className="hidden md:block">
+        {error ? <FormError error={error} /> : ""}
 
-      <div className="flex items-center justify-between">
-        <div className="flex gap-2 my-6">
-          <span>Show</span>
-          <select
-            name="country"
-            className="border-2 rounded-lg px-3 text-right"
-            value={limit}
-            onChange={handleLimitChange}
-          >
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="15">15</option>
-            <option value="20">20</option>
-            <option value="25">25</option>
-            <option value="30">30</option>
-          </select>
-          <span>Categories per page</span>
-        </div>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            placeholder="Search"
-            className="border-2 border-stone-500 rounded-lg px-2 focus:outline-none"
-            value={searchTerm == null ? "" : searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+        <Dialog isOpen={isOpen} content={contentDialog} />
+
+        <ConfirmDelete
+          isOpen={toggleDeleteOne || toggleDeleteSeveral}
+          page="categories"
+          close={
+            toggleDeleteSeveral
+              ? () => setToggleDeleteSeveral(false)
+              : () => setToggleDeleteOne(false)
+          }
+          remove={
+            toggleDeleteSeveral
+              ? () => selectedItems.map((id) => handleDelete(id))
+              : () => handleDelete(itemIdToRemove)
+          }
+        />
+
+        <ContentPage
+          title="Categories"
+          data={data.categories}
+          columnsTableHead={columnsTableHead}
+          columnsTableBody={["id", "name", "slug"]}
+          name={"categories"}
+          totalPages={totalPages}
+          searchTerm={searchTerm}
+          fetchSingleItem={fetchSingleCategory}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          getInfo={true}
+          displayIsDelete={true}
+          displayDeleteButton={true}
+          select={true}
+        />
+
+        {data.categories?.length > 0 && (
+          <DeleteAllButton
+            title="Delete all selected categories"
+            className="mx-3"
+            onClick={() => setToggleDeleteSeveral(true)}
+            disabled={selectedItems.length === 0}
           />
-        </div>
-      </div>
+        )}
 
-      <table className="w-full">
-        <thead className="text-xs text-left uppercase bg-gray-50 text-gray-700">
-          <tr>
-            <th className="py-2 px-4">Select</th>
-            <TableHeadField
-              displayName="Id"
-              handleSortChange={handleSortChange}
-              fieldName="id"
-            />
-            <TableHeadField
-              displayName="Name"
-              handleSortChange={handleSortChange}
-              fieldName="name"
-            />
-            <TableHeadField
-              displayName="Description"
-              handleSortChange={handleSortChange}
-              fieldName="description"
-            />
-            <TableHeadField
-              displayName="Slug"
-              handleSortChange={handleSortChange}
-              fieldName="slug"
-              className="hidden md:table-cell"
-            />
-            <th className="py-2 px-4 hidden md:table-cell">Active</th>
-            <th className="py-2 px-1">Actions</th>
-            <th className="py-2 px-4">More</th>
-          </tr>
-        </thead>
+        <Modal
+          isOpen={viewCategoryInfo}
+          modalTitle={selectedType.title}
+          closeModal={() => setViewCategoryInfo(false)}
+        >
+          <div className="flex gap-4">
+            <button
+              onClick={() => setSelectedType(types.category)}
+              className={`flex ${
+                selectedType.name === types.category.name &&
+                "font-bold underline"
+              }`}
+            >
+              Categories
+            </button>
+          </div>
 
-        <tbody>
-          {data.categories?.map((category) => (
-            <tr key={category.id} className="border-b text-sm border-gray-300">
-              <td className="py-2 px-4">
-                <input
-                  type="checkbox"
-                  className="h-5 w-5 border-2 appearance-none checked:bg-stone-500 cursor-pointer"
+          <div className="border-t-4 border-gray-500 px-3 my-4" />
+          <div className="flex items-center justify-between ">
+            <div className="px-4">
+              {category?.isDelete ? (
+                <span className="italic text-red-500 text-lg">
+                  (Category delete : id {category?.id})
+                </span>
+              ) : (
+                <span className="italic text-green-500 text-lg">
+                  (Category active : id {category?.id})
+                </span>
+              )}
+            </div>
+            {!category?.isDelete && (
+              <button
+                className="flex justify-end text-stone-500 font-bold text-lg rounded"
+                onClick={() => setToggleUpdateCategory(!toggleUpdateCategory)}
+                title={
+                  toggleUpdateCategory
+                    ? "Update Category"
+                    : "Finish modifications"
+                }
+              >
+                <FontAwesomeIcon
+                  icon={toggleUpdateCategory ? faEdit : faCheck}
+                  className="h-7"
                 />
-              </td>
-              <td className="py-2 px-4">{category.id} </td>
-              <td className="py-2 px-4">{category.name}</td>
-              <td className="py-2 px-4">{category.description}</td>
-              <td className="py-2 px-4 hidden md:table-cell">
-                {category.slug}
-              </td>
-              <td className="py-2 px-4 hidden md:table-cell">
-                {category.isDelete ? (
-                  <FontAwesomeIcon
-                    icon={faXmark}
-                    className="h-6 text-red-500"
-                  />
-                ) : (
-                  <FontAwesomeIcon
-                    icon={faCheck}
-                    className="h-6 text-green-500"
-                  />
-                )}
-              </td>
-              <td className="text-center">
-                <div className="flex gap-2">
-                  <button
-                    className="disabled:opacity-30 disabled:cursor-not-allowed"
-                    onClick={() => handleDelete(category.id)}
-                    disabled={category.isDelete}
-                  >
-                    <FontAwesomeIcon
-                      icon={faTrash}
-                      className="text-stone-400 h-5"
-                    />
-                  </button>
-                </div>
-              </td>
-              <td className="py-2 px-4 flex justify-center">
-                <Link
-                  href={""}
-                  className="border-2 px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200"
-                >
-                  <FontAwesomeIcon icon={faPlus} className="text-stone-400" />
-                </Link>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </button>
+            )}
+          </div>
+          <EditCategoryForm
+            initialValues={category}
+            onSubmit={handleSubmitUpdate}
+            active={toggleUpdateCategory}
+          />
+          <Dialog isOpen={isOpenEditCategory} content={contentDialog} />
+        </Modal>
+      </div>
     </>
   )
 }
 
 CategoriesAdmin.getLayout = function (page) {
-  return <LayoutAdmin>{page}</LayoutAdmin>
+  return (
+    <AppContextProvider>
+      <LayoutAdmin>{page}</LayoutAdmin>
+    </AppContextProvider>
+  )
 }
 
 export default CategoriesAdmin

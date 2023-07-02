@@ -1,12 +1,12 @@
-import FormField from "@/web/components/FormField.jsx"
+import FormField from "@/web/components/Form/FormField.jsx"
 import { Form, Formik, Field } from "formik"
 import * as yup from "yup"
 import { faPerson } from "@fortawesome/free-solid-svg-icons"
-import FormError from "../FormError.jsx"
-import SubmitButton from "../SubmitButton.jsx"
+import FormError from "@/web/components/Form/FormError.jsx"
+import SubmitButton from "@/web/components/Button/SubmitButton.jsx"
 import routes from "@/web/routes.js"
 import Link from "next/link.js"
-import Button from "../Button.jsx"
+import Button from "@/web/components/Button/Button.jsx"
 
 const defaultInitialValues = {
   firstName: "",
@@ -54,55 +54,74 @@ const AddressForm = (props) => {
       onSubmit={onSubmit}
       initialValues={initialValues}
       validationSchema={validationSchema}
+      enableReinitialize
     >
       <>
         <FormError error={error} />
         <Form className="flex flex-col gap-4 p-4">
-          <FormField
-            name="firstName"
-            type="text"
-            label="firstName"
-            icon={faPerson}
-          />
-          <FormField
-            name="lastName"
-            type="text"
-            label="lastName"
-            icon={faPerson}
-          />
+          <div className="flex">
+            <FormField
+              name="firstName"
+              type="text"
+              label="First name :"
+              icon={faPerson}
+              className="pr-4 w-1/2"
+            />
+            <FormField
+              name="lastName"
+              type="text"
+              label="Last name :"
+              icon={faPerson}
+              className="w-1/2"
+            />
+          </div>
           <FormField
             name="addressFull"
             type="text"
-            label="addressFull"
+            label="Address :"
             icon={faPerson}
           />
           <FormField
             name="addressOptional"
             type="text"
-            label="addressOptional"
+            label="Address Optional :"
             icon={faPerson}
           />
-          <FormField name="city" type="text" label="city" icon={faPerson} />
-          <FormField name="cp" type="text" label="cp" icon={faPerson} />
-          <FormField
-            name="country"
-            type="text"
-            label="country"
-            icon={faPerson}
-          />
+          <div className="flex">
+            <FormField
+              name="city"
+              type="text"
+              label="City :"
+              icon={faPerson}
+              className="pr-4"
+            />
+            <FormField
+              name="cp"
+              type="text"
+              label="CP :"
+              icon={faPerson}
+              className="pr-4"
+            />
+            <FormField
+              name="country"
+              type="text"
+              label="Country :"
+              icon={faPerson}
+            />
+          </div>
           <FormField
             name="phoneNumber"
             type="text"
-            label="phoneNumber"
+            label="Phone Number :"
             icon={faPerson}
           />
-          <label className="flex flex-col gap-2">
+          <label className="flex gap-2">
             {" "}
-            Address default
+            Address default :
             <Field name="address_default" type="checkbox" />
           </label>
-          <div className="flex">
-            <SubmitButton className="mr-2">Update</SubmitButton>
+          <div className="flex justify-center">
+            <SubmitButton className="mr-2">Submit</SubmitButton>
             <Link href={routes.users.single(userId)}>
               <Button>Back</Button>
             </Link>

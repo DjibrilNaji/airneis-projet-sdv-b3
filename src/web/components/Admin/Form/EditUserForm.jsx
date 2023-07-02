@@ -1,9 +1,9 @@
 import { Form, Formik } from "formik"
 import * as yup from "yup"
 import React from "react"
-import FormError from "@/web/components/FormError"
-import SubmitButton from "@/web/components/SubmitButton"
-import FormField from "@/web/components/Admin/FormField"
+import FormError from "@/web/components/Form/FormError"
+import SubmitButton from "@/web/components/Button/SubmitButton"
+import FormField from "@/web/components/Admin/Form/FormField"
 
 const defaultInitialValues = {
   userName: "",
@@ -54,6 +54,7 @@ const EditUserForm = (props) => {
       onSubmit={onSubmit}
       initialValues={initialValues}
       validationSchema={validationSchema}
+      enableReinitialize
     >
       <>
         <FormError error={error} />
@@ -64,43 +65,38 @@ const EditUserForm = (props) => {
             label="Nom d'utilisateur :"
             active={active}
           />
-
           <FormField
             name="firstName"
             type="text"
             label="Prenom :"
             active={active}
           />
-
           <FormField
             name="lastName"
             type="text"
             label="Nom :"
             active={active}
           />
-
           <FormField
             name="email"
             type="email"
             label="E-mail* :"
             active={active}
           />
-
           <FormField
             name="password"
             type="password"
             label="Password :"
             active={active}
           />
-
-          <FormField
-            name="isAdmin"
-            type="text"
-            label="Admin ?"
-            helpText="`true` or `false`"
-            active={active}
-          />
-
+          <span>isAdmin :</span>
+          <select
+            className="font-bold border-stone-500 border focus:border-2 rounded-lg px-2 py-1 focus:outline-none disabled:border-0 disabled:cursor-text"
+            disabled={active}
+          >
+            <option value={1}>true</option>
+            <option value={2}>false</option>
+          </select>
           <SubmitButton
             active={active.toString()}
             color="light"

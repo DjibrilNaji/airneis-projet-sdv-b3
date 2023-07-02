@@ -4,6 +4,7 @@ import chalk from "chalk"
 import deepmerge from "deepmerge"
 import knex from "knex"
 import winston from "winston"
+import jsonwebtoken from "jsonwebtoken"
 
 const db = knex(config.db)
 BaseModel.knex(db)
@@ -37,6 +38,19 @@ const mw = (methodHandlers) => async (req, res) => {
     res.status(405).send({ error: "method not allowed" })
 
     return
+  }
+
+  const { authorization } = req.headers
+
+  if (!authorization) {
+    req.session = { user: null }
+  } else {
+    const { payload } = jsonwebtoken.verify(
+      authorization.slice(7),
+      config.security.jwt.secret
+    )
+
+    req.session = payload
   }
 
   const handlers = Array.isArray(methodHandler)

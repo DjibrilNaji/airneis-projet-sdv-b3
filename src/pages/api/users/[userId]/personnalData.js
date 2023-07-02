@@ -20,19 +20,6 @@ const handler = mw({
       req,
       res,
     }) => {
-      const { authorization } = req.headers
-
-      if (!authorization) {
-        throw new InvalidSessionError()
-      } else {
-        const { payload } = jsonwebtoken.verify(
-          authorization.slice(7),
-          config.security.jwt.secret
-        )
-
-        req.session = payload
-      }
-
       const {
         session: { user: sessionUser },
       } = req
@@ -50,6 +37,7 @@ const handler = mw({
           "users.lastName",
           "users.email"
         )
+        .withGraphFetched("billingAddress")
 
       if (!user) {
         res.status(401).send({ error: "No user found" })

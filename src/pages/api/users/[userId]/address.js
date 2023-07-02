@@ -4,6 +4,7 @@ import {
   boolValidator,
   idValidator,
   integerValidator,
+  orderValidator,
   stringValidator,
 } from "@/validators"
 import {
@@ -20,28 +21,16 @@ const handler = mw({
     validate({
       query: {
         userId: idValidator.required(),
+        order: orderValidator,
       },
     }),
     async ({
       locals: {
-        query: { userId },
+        query: { userId, order },
       },
       req,
       res,
     }) => {
-      const { authorization } = req.headers
-
-      if (!authorization) {
-        throw new InvalidSessionError()
-      } else {
-        const { payload } = jsonwebtoken.verify(
-          authorization.slice(7),
-          config.security.jwt.secret
-        )
-
-        req.session = payload
-      }
-
       const {
         session: { user: sessionUser },
       } = req
@@ -53,13 +42,21 @@ const handler = mw({
       const address = await AddressModel.query()
         .where({ userId: userId })
         .where({ isDelete: false })
-        .orderBy("address.id")
+        .orderBy("address.id", order ? order : "asc")
 
       if (!address) {
         throw new NotFoundError()
       }
 
-      res.send({ result: address })
+      const defaultAddress = await AddressModel.query()
+        .where({ userId: userId })
+        .where({ address_default: true })
+
+      if (!defaultAddress) {
+        throw new NotFoundError()
+      }
+
+      res.send({ result: address, defaultAddress })
     },
   ],
   POST: [

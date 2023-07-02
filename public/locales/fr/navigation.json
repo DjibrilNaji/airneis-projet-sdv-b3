@@ -1,0 +1,16 @@
+{
+  "direction": "ltr",
+  "menu_hello": "Bonjour",
+  "menu_settings": "Mes paramètres",
+  "menu_favourites": "Mes favoris",
+  "menu_orders": "Mes commandes",
+  "menu_conditions": "Termes & Conditions",
+  "menu_privacy": "Politique de confidentialité",
+  "menu_contact": "Nous contacter",
+  "menu_about": "À propos de nous chez Airneis",
+  "menu_logout": "Se déconnecter",
+  "menu_login": "Se connecter",
+  "menu_register": "S'inscrire",
+  "menu_admin": "Admin",
+  "go_back": "Retour"
+}

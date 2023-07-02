@@ -1,0 +1,17 @@
+{
+  "contact_us": "Contactez-nous",
+  "email": "Email",
+  "subject": "Sujet",
+  "message": "Message",
+  "send_message": "Envoyer le message",
+  "sent": "Envoyé !",
+  "confirmation": "Votre message a bien été envoyé avec l'adresse",
+  "not_email_return_message": "Si vous voulez nous contactez, retournez sur la page de contact juste ici",
+  "go_home": "Retourner à l'accueil",
+  "yup_email": "Email invalide",
+  "yup_email_required": "L'email est obligatoire",
+  "yup_email_label": "Email",
+  "yup_subject_label": "Sujet",
+  "yup_message_required": "Le message est obligatoire",
+  "yup_message_label": "Message"
+}

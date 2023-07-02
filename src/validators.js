@@ -2,10 +2,12 @@ import knexfile from "@@/knexfile"
 import * as yup from "yup"
 
 // generic
-export const boolValidator = yup.bool()
+export const boolValidator = yup.boolean().default(false)
+export const materialValidator = yup.array().of(yup.string())
 export const stringValidator = yup.string()
 export const idValidator = yup.number().integer().min(1)
 export const integerValidator = yup.number().integer().min(1)
+export const numberValidator = yup.number()
 export const urlSlugValidator = yup
   .string()
   .matches(
@@ -40,3 +42,5 @@ export const orderFieldValidator = (fields) => yup.string().oneOf(fields)
 export const orderValidator = yup.string().lowercase().oneOf(["asc", "desc"])
 
 export const createValidator = (object) => yup.object().shape(object)
+
+export const stockValidator = yup.number().integer()

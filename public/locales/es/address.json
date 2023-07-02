@@ -1,0 +1,21 @@
+{
+  "firstName": "Nombre de pila",
+  "lastName": "Apellido",
+  "full_address": "Dirección completa",
+  "optional_address": "Dirección opcional",
+  "city": "Ciudad",
+  "cp": "Código postal",
+  "country": "País",
+  "phoneNumber": "Número de teléfono",
+  "yup_firstName_required": "Se requiere el primer nombre",
+  "yup_lastName_required": "Se requiere el nombre",
+  "yup_full_address_required": "La dirección es necesaria",
+  "yup_city_required": "La ciudad es obligatoria",
+  "yup_cp_required": "Se requiere código postal",
+  "yup_country_required": "El país es obligatorio",
+  "yup_phoneNumber_required": "Se requiere el número de teléfono",
+  "add_address_btn": "Añadir dirección",
+  "update_address_btn": "Cambiar dirección",
+  "add_address_modal_title": "Añadir una dirección",
+  "update_address_modal_title": "Cambiar dirección"
+}

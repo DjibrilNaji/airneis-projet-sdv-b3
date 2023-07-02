@@ -30,21 +30,17 @@ const handler = mw({
         .where({
           categoryId: category[0].id,
         })
-        .innerJoin(
-          "image_product",
-          "products.id",
-          "=",
-          "image_product.productId"
-        )
+        .withGraphJoined("image")
         .select(
           "products.id",
           "products.name",
           "products.slug",
           "products.price",
-          "products.quantity",
-          "image_product.urlImage"
+          "products.stock",
+          "image.urlImage"
         )
         .distinctOn("products.id")
+        .where({ isDelete: false })
 
       products.map((product) => {
         product.urlImage = s3.getSignedUrl("getObject", {

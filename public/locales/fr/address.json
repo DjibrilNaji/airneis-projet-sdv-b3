@@ -1,0 +1,21 @@
+{
+  "firstName": "Prénom",
+  "lastName": "Nom de famille",
+  "full_address": "Adresse entière",
+  "optional_address": "Adresse optionnel",
+  "city": "Ville",
+  "cp": "Code postal",
+  "country": "Pays",
+  "phoneNumber": "Numéro de téléphone",
+  "yup_firstName_required": "Le prenom est obligatoire",
+  "yup_lastName_required": "Le nom est obligatoire",
+  "yup_full_address_required": "L'adresse est obligatoire",
+  "yup_city_required": "La vile est obligatoire",
+  "yup_cp_required": "Le code postal est obligatoire",
+  "yup_country_required": "Le pays est obligatoire",
+  "yup_phoneNumber_required": "Le numéro de téléphone est obligatoire",
+  "add_address_btn": "Ajouter l'adresse",
+  "update_address_btn": "Modifier l'adresse",
+  "add_address_modal_title": "Ajouter une adresse",
+  "update_address_modal_title": "Modifier l'adresse"
+}

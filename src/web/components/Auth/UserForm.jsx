@@ -1,10 +1,10 @@
-import FormField from "@/web/components/FormField.jsx"
+import FormField from "@/web/components/Form/FormField.jsx"
 import { Form, Formik } from "formik"
 import * as yup from "yup"
 import React from "react"
 import { faEnvelope, faPerson } from "@fortawesome/free-solid-svg-icons"
-import FormError from "../FormError.jsx"
-import SubmitButton from "../SubmitButton.jsx"
+import FormError from "@/web/components/Form/FormError.jsx"
+import SubmitButton from "@/web/components/Button/SubmitButton.jsx"
 
 const defaultInitialValues = {
   userName: "",
@@ -43,6 +43,7 @@ const UserForm = (props) => {
       onSubmit={onSubmit}
       initialValues={initialValues}
       validationSchema={validationSchema}
+      enableReinitialize
     >
       <>
         <FormError error={error} />
@@ -50,20 +51,25 @@ const UserForm = (props) => {
           <FormField
             name="userName"
             type="text"
-            label="Identifiant"
+            label="Identifiant :"
             icon={faPerson}
           />
           <FormField
             name="firstName"
             type="text"
-            label="Prenom"
+            label="First name :"
             icon={faPerson}
           />
-          <FormField name="lastName" type="text" label="Nom" icon={faPerson} />
+          <FormField
+            name="lastName"
+            type="text"
+            label="Last name ;"
+            icon={faPerson}
+          />
           <FormField
             name="email"
             type="email"
-            label="E-mail*"
+            label="E-mail* :"
             icon={faEnvelope}
           />
           <SubmitButton>Update</SubmitButton>

@@ -1,64 +1,212 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import Image from "next/image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import {
-  faArrowLeft,
-  faArrowRight,
-  faCartPlus,
-  faHeart,
-  faShoppingBasket,
-} from "@fortawesome/free-solid-svg-icons"
-import axios from "axios"
-import config from "@/web/config"
+import { faHeart, faHeartBroken } from "@fortawesome/free-solid-svg-icons"
 import routes from "@/web/routes"
+import { useCallback, useContext, useEffect, useState } from "react"
+import Link from "next/link"
+import BackButton from "@/web/components/Button/BackButton"
+import cookie from "cookie"
+import Button from "@/web/components/Button/Button"
+import { CartContext } from "@/web/hooks/cartContext"
+import Dialog from "@/web/components/Design/Dialog"
+import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import { useTranslation } from "next-i18next"
 import { useRouter } from "next/router"
-import { useState } from "react"
+import useAppContext from "@/web/hooks/useAppContext"
+import FormError from "@/web/components/Form/FormError"
+import getSingleProductBySlugService from "@/web/services/products/getSingleProductBySlug"
+import createAPIClient from "@/web/createAPIClient"
+import getSingleFavoriteService from "@/web/services/products/favorites/getSingleFavorite"
+import Banner from "@/web/components/Design/Banner"
+import Modal from "@/web/components/Modal"
+import Carousel from "@/web/components/Design/Carousel"
 
-export const getServerSideProps = async ({ params, req: { url } }) => {
+export const getServerSideProps = async ({ locale, params, req }) => {
   const productSlug = params.slug
-  const query = Object.fromEntries(
-    new URL(`http://example.com/${url}`).searchParams.entries()
-  )
 
-  const { data } = await axios.get(
-    `${config.api.baseURL}${routes.api.products.single(productSlug, query)}`
-  )
+  const cookies = req.headers.cookie
+    ? cookie.parse(req.headers.cookie || "")
+    : null
+
+  const jwt = cookies ? (cookies.jwt !== undefined ? cookies.jwt : null) : null
+  const userId = cookies
+    ? cookies.userId !== undefined
+      ? cookies.userId
+      : null
+    : null
+
+  const redirection = () => {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    }
+  }
+
+  const api = createAPIClient({ jwt, server: true })
+
+  const getSingleProductBySlug = getSingleProductBySlugService({ api })
+  const getSingleFavorite = getSingleFavoriteService({ api })
+
+  const [err, data] = await getSingleProductBySlug(productSlug)
+
+  if (err) {
+    return redirection()
+  }
+
+  let favorite = []
+
+  if (jwt && userId) {
+    const [error, dataFavorites] = await getSingleFavorite(userId, productSlug)
+
+    if (error) {
+      return redirection()
+    } else {
+      favorite = dataFavorites
+    }
+  }
 
   return {
     props: {
-      product: data,
+      jwt,
+      favorite: jwt ? favorite.result : [],
+      userId,
+      data,
+      materials: data.result.product.materials,
+      product: data.result.product,
+      randomProducts: data.result.randomProducts,
+      image: data.result.product.image,
+      category: data.result.product.category[0],
+      ...(await serverSideTranslations(locale, ["product", "navigation"])),
     },
   }
 }
 
 const Product = (props) => {
   const {
-    product: { result },
+    jwt,
+    favorite,
+    userId,
+    data,
+    product,
+    randomProducts,
+    image,
+    category,
+    materials,
   } = props
 
-  const router = useRouter()
-  const mainImage = result.imageProduct.find((objet) => objet.isMain)
-  const [activeIndex, setActiveIndex] = useState(0)
+  const {
+    actions: { addFavorite },
+  } = useAppContext()
+  const {
+    actions: { addToCart },
+    state: { cart },
+  } = useContext(CartContext)
 
-  const handlePrevious = () => {
-    setActiveIndex(
-      (prevActiveIndex) =>
-        (prevActiveIndex - 1 + result.imageProduct.length) %
-        result.imageProduct.length
-    )
-  }
+  const { t } = useTranslation("product")
+  const { locale } = useRouter()
+  const direction = t("direction", { locale })
 
-  const handleNext = () => {
-    setActiveIndex(
-      (prevActiveIndex) => (prevActiveIndex + 1) % result.imageProduct.length
-    )
-  }
+  const [isOpen, setIsOpen] = useState(false)
+  const [contentDialog, setContentDialog] = useState()
+  const [quantity, setQuantity] = useState(1)
+  const [isFavorite, setIsFavorite] = useState()
+  const [selectedQuantity, setSelectedQuantity] = useState(1)
+  const [quantityDisplay, setQuantityDisplay] = useState([])
+  const [mainImage, setMainImage] = useState([])
+  const [error, setError] = useState("")
+
+  const [toggleViewMaterials, setToggleViewMaterials] = useState(false)
+
+  useEffect(() => {
+    setMainImage(image.find((img) => img.isMain))
+    setIsFavorite(favorite.length > 0 ? true : false)
+  }, [data.result.product.category, image, favorite])
+
+  const cartItems = cart.find((item) => item.slug === product.slug)
+
+  const currentInventory = cartItems
+    ? product.stock - cartItems.quantity
+    : product.stock
+
+  const handleAddFavorites = useCallback(
+    async (productId) => {
+      if (isFavorite) {
+        setContentDialog(t("pop_already_in_favorite"))
+      } else {
+        const [err] = await addFavorite(userId, productId)
+
+        if (err) {
+          setError(err)
+
+          return
+        }
+
+        setIsFavorite(true)
+        setContentDialog(t("pop_add_to_favorite"))
+      }
+
+      setIsOpen(true)
+      setTimeout(() => setIsOpen(false), 3000)
+    },
+    [userId, isFavorite, addFavorite, t]
+  )
+
+  const handleAddProduct = useCallback(
+    (product, image) => {
+      addToCart(product, image, parseInt(quantity))
+      setContentDialog(t("pop_add_to_cart"))
+      setIsOpen(true)
+      setTimeout(() => setIsOpen(false), 3000)
+      setQuantity(1)
+      setSelectedQuantity(1)
+    },
+    [addToCart, quantity, t]
+  )
+
+  const handleQuantityChange = useCallback((e) => {
+    setQuantity(e.target.value)
+    setSelectedQuantity(e.target.value)
+  }, [])
+
+  useEffect(() => {
+    const newQuantityDisplay = []
+    for (let i = 1; i <= currentInventory; i++) {
+      newQuantityDisplay.push(
+        <option key={i} value={i}>
+          {i}
+        </option>
+      )
+    }
+    setQuantityDisplay(newQuantityDisplay)
+  }, [currentInventory])
 
   return (
     <>
+      {error ? <FormError error={error} /> : ""}
+
+      <Dialog isOpen={isOpen} content={contentDialog} dir={direction} />
+
+      <Modal
+        isOpen={toggleViewMaterials}
+        modalTitle={t("materials")}
+        closeModal={() => setToggleViewMaterials(false)}
+        dir={direction}
+      >
+        {materials.map((material, index) => (
+          <ul key={index}>
+            <li className="text-lg font-semibold">- {material.nameMaterial}</li>
+          </ul>
+        ))}
+      </Modal>
+
       <div className="hidden md:flex items-center justify-center">
         <span className="absolute uppercase text-2xl font-bold text-stone-500 border-2 border-stone-500 bg-white rounded-xl p-2">
-          {result.product[0].name}
+          {product.name}
         </span>
+
         <Image
           src={mainImage.urlImage}
           alt="slide 1"
@@ -68,210 +216,118 @@ const Product = (props) => {
         />
       </div>
 
-      <div className="hidden md:flex m-4 font-bold ">
-        <button
-          onClick={() => router.back()}
-          className="transform hover:scale-110 transition-all"
-        >
-          <FontAwesomeIcon icon={faArrowLeft} /> Retour
-        </button>
+      <div className="hidden md:flex m-4 font-bold">
+        <BackButton />
       </div>
 
-      <div className="md:hidden relative">
-        <div className="m-4 h-96 relative">
-          {result.imageProduct.map((image, index) => (
-            <Image
-              key={image.id}
-              src={image.urlImage}
-              alt="slide 2"
-              className={`w-full h-full object-cover rounded-xl absolute ${
-                index === activeIndex ? "opacity-100" : "opacity-0"
-              } transition-opacity ease-linear duration-300`}
-              width="500"
-              height="500"
-            />
-          ))}
+      <Carousel image={image} className="md:hidden" />
+
+      <div className="flex">
+        <div className="hidden md:block w-full md:w-2/5 md:pr-8">
+          <Carousel image={image} />
         </div>
-        <button
-          className="absolute top-[45%] text-stone-500 opacity-60 hover:opacity-100 left-0 transition-opacity ease-linear duration-300"
-          onClick={handlePrevious}
-        >
-          <FontAwesomeIcon
-            icon={faArrowLeft}
-            className="fa-2xl p-2 rounded-full bg-white"
-          />
-        </button>
 
-        <button
-          className="absolute top-[45%] right-0 text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300"
-          onClick={handleNext}
-        >
-          <FontAwesomeIcon
-            icon={faArrowRight}
-            className="fa-2xl p-2 rounded-full bg-white"
-          />
-        </button>
-      </div>
+        <div className="flex w-full md:w-3/5">
+          <div className="flex flex-col m-4 w-full">
+            <div className="flex gap-4 items-center">
+              <h1 className="text-lg font-bold">{product.name}</h1>
 
-      <div className="md:hidden flex justify-center">
-        {result.imageProduct.map((image, index) => (
-          <button
-            onClick={() => setActiveIndex(index)}
-            key={image.id}
-            className={`rounded-full h-2 w-8 mt-2 mx-2 ${
-              index === activeIndex
-                ? "bg-stone-500"
-                : "bg-stone-200 hover:bg-stone-900"
-            }`}
-          />
-        ))}
-      </div>
-
-      <div className="hidden md:flex ">
-        <div className="w-full md:w-2/5 md:pr-8">
-          <div className="relative">
-            <div className="m-4 h-96 relative">
-              {result.imageProduct.map((image, index) => (
-                <Image
-                  key={image.id}
-                  src={image.urlImage}
-                  alt="Carousel products"
-                  className={`w-full h-full object-cover rounded-xl absolute ${
-                    index === activeIndex ? "opacity-100" : "opacity-0"
-                  } transition-opacity ease-linear duration-300`}
-                  width="500"
-                  height="500"
-                />
-              ))}
-            </div>
-
-            <div className="hidden md:block absolute top-1/2 transform -translate-y-1/2 left-0">
-              <button
-                className="text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300"
-                onClick={handlePrevious}
-              >
-                <FontAwesomeIcon
-                  icon={faArrowLeft}
-                  className="fa-2xl p-2 rounded-full bg-white"
-                />
-              </button>
-            </div>
-
-            <div className="hidden md:block absolute top-1/2 transform -translate-y-1/2 right-0">
-              <button
-                className="text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300"
-                onClick={handleNext}
-              >
-                <FontAwesomeIcon
-                  icon={faArrowRight}
-                  className="fa-2xl p-2 rounded-full bg-white"
-                />
-              </button>
-            </div>
-
-            <div className=" flex justify-center">
-              {result.imageProduct.map((image, index) => (
+              {jwt && (
                 <button
-                  onClick={() => setActiveIndex(index)}
-                  key={image.id}
-                  className={`rounded-full h-2 w-8 mt-2 mx-2 ${
-                    index === activeIndex
-                      ? "bg-stone-500"
-                      : "bg-stone-200 hover:bg-stone-900"
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
+                  className="flex items-center transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
+                  title="Ajouter aux favoris"
+                >
+                  <FontAwesomeIcon
+                    icon={isFavorite ? faHeart : faHeartBroken}
+                    className={`h-5 ${
+                      isFavorite ? " text-red-500" : "text-yellow-500"
+                    }`}
+                    onClick={() => handleAddFavorites(product.id)}
+                  />
+                </button>
+              )}
 
-        <div className="w-full md:w-3/5">
-          <div className="flex flex-col m-4 ">
-            <div className="flex">
-              <h1 className="text-lg font-bold">{result.product[0].name}</h1>
-
-              <span className="ml-auto mx-4 font-bold">
-                {result.product[0].price} €
-              </span>
+              <span className="ml-auto mx-4 font-bold">{product.price} €</span>
             </div>
 
-            {result.product[0].quantity > 0 ? (
+            {product.stock > 0 ? (
               <h2 className="flex text-stone-500 opacity-60 font-bold">
-                En stock
+                {t("in_stock")}
               </h2>
             ) : (
-              <h2 className="flex text-red-300 opacity-100 font-bold">
-                Out of stock
+              <h2 className="flex text-red-300 opacity-60 font-bold">
+                {t("out_of_stock")}
               </h2>
             )}
 
-            <p className="text-lg font-semibold my-4">
-              {result.product[0].description}
-            </p>
+            <p className="text-lg font-semibold my-4">{product.description}</p>
 
-            <div className="flex justify-end gap-10 items-center m-6">
+            {materials.length > 0 && (
               <button
-                className="transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
-                title="Ajouter aux favoris"
-                disabled={result.product[0].quantity == 0}
+                onClick={() => setToggleViewMaterials(true)}
+                className="font-semibold text-gray-700 flex border-2 w-fit px-2 rounded-lg bg-stone-200 text-lg"
               >
-                <FontAwesomeIcon icon={faHeart} className="h-6 text-red-500" />
+                {t("more_informations")}
               </button>
-              <button
-                className="transform hover:scale-125 transition-all disabled:scale-100 disabled:cursor-not-allowed disabled:opacity-50"
-                title="Ajouter au panier"
-                disabled={result.product[0].quantity == 0}
+            )}
+
+            <div className="flex my-4">
+              <div className="flex flex-col gap-4 ml-auto">
+                <div className="flex justify-center gap-2">
+                  <span>{t("quantity")}</span>
+
+                  <select
+                    className="border-2 rounded-lg px-2 focus:outline-none"
+                    onChange={handleQuantityChange}
+                    value={selectedQuantity}
+                  >
+                    {quantityDisplay}
+                  </select>
+                </div>
+
+                <Button
+                  onClick={() => handleAddProduct(product, mainImage.urlImage)}
+                  className="disabled:cursor-not-allowed disabled:bg-stone-300"
+                  disabled={currentInventory === 0}
+                >
+                  {t("add_to_cart")}
+                </Button>
+              </div>
+            </div>
+
+            <div className="border-b-2 border-t-2 py-4" dir={direction}>
+              <span className="font-bold">{t("category")} : </span>
+              <Link
+                href={routes.categorie(category.slug)}
+                className="opacity-40 italic font-bold"
               >
-                <FontAwesomeIcon icon={faCartPlus} className="h-6" />
-              </button>
+                {category.name}
+              </Link>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="md:hidden w-full md:w-3/5">
-        <div className="flex flex-col m-4 ">
-          <div className="flex">
-            <h1 className="text-lg font-bold">{result.product[0].name}</h1>
+      <Banner text={t("similar_products")} />
 
-            <span className="ml-auto mx-4 font-bold">
-              {result.product[0].price} €
-            </span>
+      <div className="flex overflow-x-auto w-full gap-7 mb-8 bg-stone-300 p-4">
+        {randomProducts.map((product) => (
+          <div key={product.id} className="flex-none w-full md:w-1/2 lg:w-1/3">
+            <Link href={routes.product(product.slug)} className="relative">
+              <Image
+                src={product.image.find((img) => img.isMain).urlImage}
+                alt={product.name}
+                className="w-full h-56 object-cover"
+                width="500"
+                height="500"
+              />
+
+              <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xl border-2 text-stone-500 font-semibold border-stone-500 bg-white p-1 whitespace-nowrap rounded-lg">
+                {product.name}
+              </span>
+            </Link>
           </div>
-
-          {result.product[0].quantity > 0 ? (
-            <h2 className="flex text-stone-500 opacity-60 font-bold">
-              En stock
-            </h2>
-          ) : (
-            <h2 className="flex text-stone-500 opacity-60 font-bold">
-              Out of stock
-            </h2>
-          )}
-
-          <p className="text-lg font-semibold my-4">
-            {result.product[0].description}
-          </p>
-
-          <div className="flex justify-end gap-10 items-center m-6">
-            <button
-              className="transform hover:scale-125 transition-all"
-              title="Ajouter aux favoris"
-            >
-              <FontAwesomeIcon icon={faHeart} className="h-5 text-red-500" />
-            </button>
-            <button
-              className="transform hover:scale-125 transition-all"
-              title="Ajouter au panier"
-            >
-              <FontAwesomeIcon icon={faShoppingBasket} className="h-5" />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex justify-center bg-stone-500 my-10">
-        <p className="p-6 font-bold text-white text-xl">Produits similaires</p>
+        ))}
       </div>
     </>
   )

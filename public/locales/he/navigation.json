@@ -1,0 +1,16 @@
+{
+  "direction": "rtl",
+  "menu_hello": "שלום",
+  "menu_settings": "הגדרות שלי",
+  "menu_favourites": "המועדפים שלי",
+  "menu_orders": "הזמנות שלי",
+  "menu_conditions": "תנאים והגבלות",
+  "menu_privacy": "מדיניות פרטיות",
+  "menu_contact": "צור קשר",
+  "menu_about": "אודותינו ב-Airneis",
+  "menu_logout": "התנתקות",
+  "menu_login": "כניסה",
+  "menu_register": "הרשמה",
+  "menu_admin": "מנהל",
+  "go_back": "תחזור"
+}
