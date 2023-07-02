@@ -2,6 +2,7 @@ import config from "@/api/config.js"
 import UserModel from "@/api/db/models/UserModel.js"
 import validate from "@/api/middlewares/validate.js"
 import mw from "@/api/mw.js"
+import sgMail from "@sendgrid/mail"
 import { emailValidator, stringValidator } from "@/validators.js"
 import jsonwebtoken from "jsonwebtoken"
 
@@ -25,6 +26,16 @@ const handler = mw({
       const user = await query
 
       if (!user || !(await user.checkPassword(password))) {
+        sgMail.setApiKey(process.env.KEY_SEND_GRID)
+
+        const sendGridMail = {
+          to: email,
+          from: "airnesMATD@gmail.com",
+          templateId: "d-05062b3b8dad4c8db36e786e6a97904d",
+        }
+
+        await sgMail.send(sendGridMail)
+
         res.status(401).send({ error: "Invalid credentials" })
 
         return
