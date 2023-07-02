@@ -107,8 +107,9 @@ const Search = () => {
       }))
     }
 
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value)
+    if (name === "searchTerm") {
+      setSearchTerm(value)
+    }
   }
 
   const handleSubmit = (e) => {
@@ -143,22 +144,148 @@ const Search = () => {
   )
 
   return (
-    <>
-      {error ? <FormError error={error} /> : ""}
-      <div className="flex-col mt-10">
-        <div className="flex justify-center items-center">
-          <form onSubmit={handleSubmit} className="flex md:w-1/2 lg:w-1/2">
-            <input
-              type="text"
-              placeholder="Search products"
-              className="border-2 border-gray-300 p-2 rounded-md w-full"
-              value={inputValue}
-              onChange={handleInputChange}
-            />
+    <div>
+      <div className="flex">
+        <div>
+          <div className="bg-gray-100 p-4 rounded-xl m-4 shadow-md">
+            <div className="bg-white rounded-xl p-4">
+              <input
+                type="text"
+                name="searchTerm"
+                value={searchTerm}
+                onChange={updateForm}
+                placeholder="Search..."
+                className="border-2 border-gray-300 p-2 rounded-md w-full"
+              />
+            </div>
+            <div className="bg-white p-4 rounded-xl mt-2">
+              <label>
+                Order:
+                <select
+                  id="order"
+                  value={order}
+                  onChange={(e) => setOrder(e.target.value)}
+                >
+                  <option value="asc">ASC</option>
+                  <option value="desc">DESC</option>
+                </select>
+              </label>
+            </div>
+            <div className="mt-2">
+              <SelectShow
+                limit={limit}
+                handleLimitChange={handleLimitChange}
+                name={"products"}
+              />
+            </div>
+          </div>
+          <div className="bg-gray-100 p-4 rounded-xl m-4 shadow-md">
+            <div className="bg-white rounded-xl p-4 mt-2">
+              <label>
+                Material:
+                <div>
+                  <label>
+                    <input
+                      type="radio"
+                      name="material"
+                      value=""
+                      checked={form.material === ""}
+                      onChange={updateForm}
+                      className="h-5 w-5 border-2 appearance-none checked:bg-stone-500 cursor-pointer"
+                    />
+                    All
+                  </label>
+                </div>
+                {materials.slice(0, visibleMaterials).map((mat, index) => (
+                  <div key={index}>
+                    <label>
+                      <input
+                        type="radio"
+                        name="material"
+                        value={mat.nameMaterial}
+                        checked={form.material.includes(mat.nameMaterial)}
+                        onChange={updateForm}
+                        className="h-5 w-5 border-2 appearance-none checked:bg-stone-500 cursor-pointer"
+                      />
+                      {mat.nameMaterial}
+                    </label>
+                  </div>
+                ))}
+              </label>
+              {materials.length > visibleMaterials && (
+                <button onClick={handleShowMoreMaterials}>Show more</button>
+              )}
+            </div>
+            <div className="bg-white rounded-xl p-4 mt-2">
+              <label>
+                Category:
+                <div className="flex flex-wrap">
+                  <div>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="category"
+                        value=""
+                        checked={form.category === ""}
+                        onChange={updateForm}
+                        className="h-5 w-5 border-2 appearance-none checked:bg-stone-500 cursor-pointer"
+                      />
+                      All
+                    </label>
+                  </div>
+                </div>
+                {categories.slice(0, visibleCategories).map((cat, index) => (
+                  <div key={index} className="flex flex-wrap">
+                    <div>
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="radio"
+                          name="category"
+                          value={cat.id}
+                          checked={form.category.includes(cat.id)}
+                          onChange={updateForm}
+                          className="h-5 w-5 border-2 appearance-none checked:bg-stone-500 cursor-pointer"
+                        />
+                        {cat.name}
+                      </label>
+                    </div>
+                  </div>
+                ))}
+              </label>
+              {categories.length > visibleCategories && (
+                <button onClick={handleShowMoreCategories}>Show more</button>
+              )}
+            </div>
+            <div className="bg-white p-4 rounded-xl mt-2">
+              <label>
+                Min Price:
+                <input
+                  type="number"
+                  id="minPrice"
+                  name="minPrice"
+                  value={form.minPrice}
+                  onChange={updateForm}
+                  placeholder="Minimum Price"
+                />
+              </label>
+            </div>
+            <div className="bg-white p-4 rounded-xl mt-2">
+              <label>
+                Max Price:
+                <input
+                  type="number"
+                  id="maxPrice"
+                  name="maxPrice"
+                  value={form.maxPrice}
+                  onChange={updateForm}
+                  placeholder="Maximum Price"
+                />
+              </label>
+            </div>
             <button
               className="bg-slate-600 text-white rounded-xl p-4 mt-2 w-full"
               type="submit"
-              className="bg-slate-600 text-white px-4 py-2 rounded-md p-4 ml-2"
+              onClick={handleSubmit}
             >
               Submit
             </button>
