@@ -71,3 +71,31 @@ npm run dev
 ```
 
 > Your server will be running on : http://localhost:3000
+
+### Accessibility testing :
+
+##### _Installation du CLI pa11y_
+
+Pour l'installation du CLI sur notre environnement de développement on éxécute cette commande :
+
+>
+
+    npm install -g pa11y
+
+##### _Execution du test d'une page_
+
+Pour éxécuter le test d'accessibilité, taper cette commande :
+
+>
+
+    pa11y {l'url de la page à analyser}
+
+###### _Vérification de la passation des corrections_
+
+S'il n'y a aucune erreur au niveau de l'accessibilité, on aura ce message dans le terminal.
+
+>
+
+    Welcome to Pa11y
+    > Running Pa11y on URL {l'url de la page à analyser}
+    No issues found!
