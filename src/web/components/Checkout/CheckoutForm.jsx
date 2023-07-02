@@ -6,7 +6,7 @@ import useAppContext from "@/web/hooks/useAppContext"
 import useCartContext from "@/web/hooks/cartContext"
 
 export default function CheckoutForm(props) {
-  const { numberOrder, userId, addressId } = props
+  const { numberOrder, userId, addressId, path } = props
 
   const stripe = useStripe()
   const elements = useElements()
@@ -96,7 +96,7 @@ export default function CheckoutForm(props) {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: `http://localhost:3000${routes.checkout.confirmation()}`,
+        return_url: `${path}${routes.checkout.confirmation()}`,
       },
     })
 

@@ -28,6 +28,8 @@ export const getServerSideProps = async ({ req, locale }) => {
       : null
     : null
 
+  const path = `${config.api.hostPath}`
+
   const redirection = () => {
     return {
       redirect: {
@@ -46,6 +48,7 @@ export const getServerSideProps = async ({ req, locale }) => {
       jwt,
       userId,
       addressId,
+      path,
       ...(await serverSideTranslations(locale, [
         "navigation",
         "cart",
@@ -61,7 +64,7 @@ const stripePromise = loadStripe(
 )
 
 const Payment = (props) => {
-  const { userId, addressId } = props
+  const { userId, addressId, path } = props
   const {
     state: { totalStripe },
   } = useCartContext()
@@ -109,6 +112,7 @@ const Payment = (props) => {
             numberOrder={numberOrder}
             userId={userId}
             addressId={addressId}
+            path={path}
           />
         </Elements>
       )}
