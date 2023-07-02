@@ -29,7 +29,7 @@ const handler = mw({
       const orders = await OrderModel.query()
         .where({ userId: userId })
         .orderBy("createdAt", "desc")
-        .withGraphJoined("product")
+        .innerJoinRelated("product")
         .select(
           "orders.numberOrder",
           "orders.status",
@@ -42,8 +42,7 @@ const handler = mw({
           "orders.status",
           "orders.createdAt",
           "orders.total_price",
-          "orders.id",
-          "product.id"
+          "orders.id"
         )
 
       if (!orders) {

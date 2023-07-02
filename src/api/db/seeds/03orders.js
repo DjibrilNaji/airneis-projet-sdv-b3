@@ -73,6 +73,46 @@ exports.seed = async function (knex) {
       userId: 2,
       addressId: 2,
     },
+    {
+      numberOrder: "ORD1234",
+      status: "Delivered",
+      createdAt: "2023-06-25 00:00:00.540005+01",
+      price: 309.97,
+      amount_tva: 61.99,
+      total_price: 371.96,
+      userId: 2,
+      addressId: 2,
+    },
+    {
+      numberOrder: "ORD1274",
+      status: "Delivered",
+      createdAt: "2023-06-26 00:00:00.540005+01",
+      price: 309.97,
+      amount_tva: 61.99,
+      total_price: 570,
+      userId: 2,
+      addressId: 2,
+    },
+    {
+      numberOrder: "ORD1374",
+      status: "Delivered",
+      createdAt: "2023-06-23 00:00:00.540005+01",
+      price: 309.97,
+      amount_tva: 61.99,
+      total_price: 862,
+      userId: 2,
+      addressId: 2,
+    },
+    {
+      numberOrder: "ORD1275",
+      status: "Delivered",
+      createdAt: "2023-06-15 00:00:00.540005+01",
+      price: 309.97,
+      amount_tva: 61.99,
+      total_price: 234,
+      userId: 2,
+      addressId: 2,
+    },
   ]
 
   await knex("orders").insert(orders)
@@ -96,6 +136,18 @@ exports.seed = async function (knex) {
 
     { orderId: 7, productId: 90, quantity: 2 },
     { orderId: 7, productId: 74, quantity: 1 },
+
+    { orderId: 8, productId: 31, quantity: 2 },
+    { orderId: 8, productId: 74, quantity: 1 },
+
+    { orderId: 9, productId: 66, quantity: 2 },
+    { orderId: 9, productId: 74, quantity: 1 },
+
+    { orderId: 10, productId: 56, quantity: 2 },
+    { orderId: 10, productId: 58, quantity: 1 },
+
+    { orderId: 11, productId: 23, quantity: 6 },
+    { orderId: 11, productId: 31, quantity: 1 },
   ]
 
   await knex("rel_order_product").insert(relOrderProduct)

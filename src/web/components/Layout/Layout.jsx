@@ -5,13 +5,11 @@ const Layout = (props) => {
   const { children } = props
 
   return (
-    <>
-      <div className="flex flex-col md:min-h-screen justify-between">
-        <Navbar />
-        {children}
-        <Footer />
-      </div>
-    </>
+    <div className="flex flex-col md:min-h-screen">
+      <Navbar />
+      <div className="flex-grow">{children}</div>
+      <Footer />
+    </div>
   )
 }
 

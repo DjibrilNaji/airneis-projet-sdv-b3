@@ -1,29 +1,26 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import Image from "next/image"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import {
-  faArrowLeft,
-  faArrowRight,
-  faHeart,
-  faHeartBroken,
-} from "@fortawesome/free-solid-svg-icons"
+import { faHeart, faHeartBroken } from "@fortawesome/free-solid-svg-icons"
 import routes from "@/web/routes"
 import { useCallback, useContext, useEffect, useState } from "react"
 import Link from "next/link"
-import BackButton from "@/web/components/BackButton"
+import BackButton from "@/web/components/Button/BackButton"
 import cookie from "cookie"
-import Button from "@/web/components/Button"
+import Button from "@/web/components/Button/Button"
 import { CartContext } from "@/web/hooks/cartContext"
-import Dialog from "@/web/components/Dialog"
+import Dialog from "@/web/components/Design/Dialog"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useTranslation } from "next-i18next"
 import { useRouter } from "next/router"
 import useAppContext from "@/web/hooks/useAppContext"
-import FormError from "@/web/components/FormError"
+import FormError from "@/web/components/Form/FormError"
 import getSingleProductBySlugService from "@/web/services/products/getSingleProductBySlug"
 import createAPIClient from "@/web/createAPIClient"
 import getSingleFavoriteService from "@/web/services/products/favorites/getSingleFavorite"
-import Banner from "@/web/components/Banner"
+import Banner from "@/web/components/Design/Banner"
+import Modal from "@/web/components/Modal"
+import Carousel from "@/web/components/Design/Carousel"
 
 export const getServerSideProps = async ({ locale, params, req }) => {
   const productSlug = params.slug
@@ -77,6 +74,7 @@ export const getServerSideProps = async ({ locale, params, req }) => {
       favorite: jwt ? favorite.result : [],
       userId,
       data,
+      materials: data.result.product.materials,
       product: data.result.product,
       randomProducts: data.result.randomProducts,
       image: data.result.product.image,
@@ -96,6 +94,7 @@ const Product = (props) => {
     randomProducts,
     image,
     category,
+    materials,
   } = props
 
   const {
@@ -110,15 +109,16 @@ const Product = (props) => {
   const { locale } = useRouter()
   const direction = t("direction", { locale })
 
-  const [activeIndex, setActiveIndex] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
-  const [contentModal, setContentModal] = useState()
+  const [contentDialog, setContentDialog] = useState()
   const [quantity, setQuantity] = useState(1)
   const [isFavorite, setIsFavorite] = useState()
   const [selectedQuantity, setSelectedQuantity] = useState(1)
   const [quantityDisplay, setQuantityDisplay] = useState([])
   const [mainImage, setMainImage] = useState([])
   const [error, setError] = useState("")
+
+  const [toggleViewMaterials, setToggleViewMaterials] = useState(false)
 
   useEffect(() => {
     setMainImage(image.find((img) => img.isMain))
@@ -131,30 +131,10 @@ const Product = (props) => {
     ? product.stock - cartItems.quantity
     : product.stock
 
-  const handlePrevious = () => {
-    setActiveIndex(
-      (prevActiveIndex) => (prevActiveIndex - 1 + image.length) % image.length
-    )
-  }
-
-  const handleNext = () => {
-    setActiveIndex((prevActiveIndex) => (prevActiveIndex + 1) % image.length)
-  }
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setActiveIndex((prevActiveIndex) => (prevActiveIndex + 1) % image.length)
-    }, 5000)
-
-    return () => {
-      clearInterval(intervalId)
-    }
-  }, [image.length])
-
   const handleAddFavorites = useCallback(
     async (productId) => {
       if (isFavorite) {
-        setContentModal(t("pop_already_in_favorite"))
+        setContentDialog(t("pop_already_in_favorite"))
       } else {
         const [err] = await addFavorite(userId, productId)
 
@@ -165,11 +145,11 @@ const Product = (props) => {
         }
 
         setIsFavorite(true)
-        setContentModal(t("pop_add_to_favorite"))
+        setContentDialog(t("pop_add_to_favorite"))
       }
 
       setIsOpen(true)
-      setTimeout(() => setIsOpen(false), 2000)
+      setTimeout(() => setIsOpen(false), 3000)
     },
     [userId, isFavorite, addFavorite, t]
   )
@@ -177,9 +157,9 @@ const Product = (props) => {
   const handleAddProduct = useCallback(
     (product, image) => {
       addToCart(product, image, parseInt(quantity))
-      setContentModal(t("pop_add_to_cart"))
+      setContentDialog(t("pop_add_to_cart"))
       setIsOpen(true)
-      setTimeout(() => setIsOpen(false), 2000)
+      setTimeout(() => setIsOpen(false), 3000)
       setQuantity(1)
       setSelectedQuantity(1)
     },
@@ -207,12 +187,20 @@ const Product = (props) => {
     <>
       {error ? <FormError error={error} /> : ""}
 
-      <Dialog
-        isOpen={isOpen}
-        dialogTitle={t("pop_title")}
-        content={contentModal}
+      <Dialog isOpen={isOpen} content={contentDialog} dir={direction} />
+
+      <Modal
+        isOpen={toggleViewMaterials}
+        modalTitle={t("materials")}
+        closeModal={() => setToggleViewMaterials(false)}
         dir={direction}
-      />
+      >
+        {materials.map((material, index) => (
+          <ul key={index}>
+            <li className="text-lg font-semibold">- {material.nameMaterial}</li>
+          </ul>
+        ))}
+      </Modal>
 
       <div className="hidden md:flex items-center justify-center">
         <span className="absolute uppercase text-2xl font-bold text-stone-500 border-2 border-stone-500 bg-white rounded-xl p-2">
@@ -232,131 +220,11 @@ const Product = (props) => {
         <BackButton />
       </div>
 
-      <div className="md:hidden relative">
-        <div className="m-4 h-96 relative">
-          {image.map((image, index) => (
-            <Image
-              key={image.id}
-              src={image.urlImage}
-              alt="slide 2"
-              className={`w-full h-full object-cover rounded-xl absolute ${
-                index === activeIndex ? "opacity-100" : "opacity-0"
-              } transition-opacity ease-linear duration-300`}
-              width="500"
-              height="500"
-            />
-          ))}
-        </div>
-
-        <button
-          className="absolute top-[45%] text-stone-500 opacity-60 hover:opacity-100 left-0 transition-opacity ease-linear duration-300 disabled:opacity-20"
-          onClick={handlePrevious}
-          disabled={image.length === 1}
-          title={t("arrow_left", { locale })}
-        >
-          <FontAwesomeIcon
-            icon={faArrowLeft}
-            className="fa-2xl p-2 rounded-full bg-white"
-          >
-            <title>{t("arrow_left", { locale })}</title>
-          </FontAwesomeIcon>
-        </button>
-
-        <button
-          className="absolute top-[45%] right-0 text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300 disabled:opacity-20"
-          onClick={handleNext}
-          disabled={image.length === 1}
-          title={t("arrow_right", { locale })}
-        >
-          <FontAwesomeIcon
-            icon={faArrowRight}
-            className="fa-2xl p-2 rounded-full bg-white"
-          >
-            <title>{t("arrow_right", { locale })}</title>
-          </FontAwesomeIcon>
-        </button>
-      </div>
-
-      <div className="md:hidden flex justify-center">
-        {image.map((image, index) => (
-          <button
-            onClick={() => setActiveIndex(index)}
-            key={image.id}
-            className={`rounded-full h-2 w-8 mt-2 mx-2 ${
-              index === activeIndex
-                ? "bg-stone-500"
-                : "bg-stone-200 hover:bg-stone-900"
-            }`}
-            title={t("slides")}
-          />
-        ))}
-      </div>
+      <Carousel image={image} className="md:hidden" />
 
       <div className="flex">
         <div className="hidden md:block w-full md:w-2/5 md:pr-8">
-          <div className="relative">
-            <div className="m-4 h-96 relative">
-              {image.map((image, index) => (
-                <Image
-                  key={image.id}
-                  src={image.urlImage}
-                  alt="Carousel products"
-                  className={`w-full h-full object-cover rounded-xl absolute ${
-                    index === activeIndex ? "opacity-100" : "opacity-0"
-                  } transition-opacity ease-linear duration-300`}
-                  width="500"
-                  height="500"
-                />
-              ))}
-            </div>
-
-            <div className="hidden md:block absolute top-1/2 transform -translate-y-1/2 left-0">
-              <button
-                className="text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300 disabled:opacity-20"
-                onClick={handlePrevious}
-                disabled={image.length === 1}
-                title={t("arrow_left", { locale })}
-              >
-                <FontAwesomeIcon
-                  icon={faArrowLeft}
-                  className="fa-2xl p-2 rounded-full bg-white "
-                >
-                  <title>{t("arrow_left", { locale })}</title>
-                </FontAwesomeIcon>
-              </button>
-            </div>
-
-            <div className="hidden md:block absolute top-1/2 transform -translate-y-1/2 right-0">
-              <button
-                className="text-stone-500 opacity-60 hover:opacity-100 transition-opacity ease-linear duration-300 disabled:opacity-20"
-                onClick={handleNext}
-                disabled={image.length === 1}
-                title={t("arrow_right", { locale })}
-              >
-                <FontAwesomeIcon
-                  icon={faArrowRight}
-                  className="fa-2xl p-2 rounded-full bg-white"
-                >
-                  <title>{t("arrow_right", { locale })}</title>
-                </FontAwesomeIcon>
-              </button>
-            </div>
-
-            <div className="flex justify-center">
-              {image.map((image, index) => (
-                <button
-                  onClick={() => setActiveIndex(index)}
-                  key={image.id}
-                  className={`rounded-full h-2 w-8 mt-2 mx-2 ${
-                    index === activeIndex
-                      ? "bg-stone-500"
-                      : "bg-stone-200 hover:bg-stone-900"
-                  }`}
-                  title={t("slides")}
-                />
-              ))}
-            </div>
-          </div>
+          <Carousel image={image} />
         </div>
 
         <div className="flex w-full md:w-3/5">
@@ -393,6 +261,15 @@ const Product = (props) => {
             )}
 
             <p className="text-lg font-semibold my-4">{product.description}</p>
+
+            {materials.length > 0 && (
+              <button
+                onClick={() => setToggleViewMaterials(true)}
+                className="font-semibold text-gray-700 flex border-2 w-fit px-2 rounded-lg bg-stone-200 text-lg"
+              >
+                {t("more_informations")}
+              </button>
+            )}
 
             <div className="flex my-4">
               <div className="flex flex-col gap-4 ml-auto">
@@ -434,27 +311,24 @@ const Product = (props) => {
 
       <Banner text={t("similar_products")} />
 
-      <div className="grid gap-12 pb-7 md:grid-cols-2 md:gap-8 md:px-4 lg:grid-cols-3">
-        {randomProducts.map((product) => {
-          return (
-            <Link
-              key={product.id}
-              href={routes.product(product.slug)}
-              className="flex items-center justify-center h-60 transition duration-800 hover:scale-105 hover:opacity-90"
-            >
-              <span className="absolute uppercase font-bold text-2xl bg-white text-stone-500 rounded-lg p-1 border-2 border-stone-500">
-                {product.name}
-              </span>
+      <div className="flex overflow-x-auto w-full gap-7 mb-8 bg-stone-300 p-4">
+        {randomProducts.map((product) => (
+          <div key={product.id} className="flex-none w-full md:w-1/2 lg:w-1/3">
+            <Link href={routes.product(product.slug)} className="relative">
               <Image
                 src={product.image.find((img) => img.isMain).urlImage}
                 alt={product.name}
-                className="h-full w-[90vw] md:w-full object-cover rounded-2xl"
+                className="w-full h-56 object-cover"
                 width="500"
                 height="500"
               />
+
+              <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xl border-2 text-stone-500 font-semibold border-stone-500 bg-white p-1 whitespace-nowrap rounded-lg">
+                {product.name}
+              </span>
             </Link>
-          )
-        })}
+          </div>
+        ))}
       </div>
     </>
   )

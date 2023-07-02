@@ -7,10 +7,10 @@ import Link from "next/link"
 import React, { useCallback, useContext, useEffect, useState } from "react"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useTranslation } from "next-i18next"
-import OrderSummary from "@/web/components/OrderSummary"
+import OrderSummary from "@/web/components/Design/OrderSummary"
 import { useRouter } from "next/router"
 import cookie from "cookie"
-import EmptyPage from "@/web/components/EmptyPage"
+import CenterItem from "@/web/components/Design/CenterItem"
 
 export async function getServerSideProps({ locale, req }) {
   const cookies = req.headers.cookie
@@ -67,6 +67,7 @@ const Cart = (props) => {
   const handleClick = () => {
     router.push({
       pathname: jwt ? routes.checkout.delivery() : routes.signIn(),
+      query: !jwt && { redirection: "cart" },
     })
   }
 
@@ -165,7 +166,7 @@ const Cart = (props) => {
           />
         </div>
       ) : (
-        <EmptyPage
+        <CenterItem
           icon={faCartShopping}
           content={t("empty_cart")}
           button={t("go_home")}

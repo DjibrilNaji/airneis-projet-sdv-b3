@@ -9,14 +9,15 @@ import {
 } from "@fortawesome/free-solid-svg-icons"
 import { useCallback, useContext, useEffect, useState } from "react"
 import { CartContext } from "@/web/hooks/cartContext"
-import Dialog from "@/web/components/Dialog"
+import Dialog from "@/web/components/Design/Dialog"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import useAppContext from "@/web/hooks/useAppContext"
-import FormError from "@/web/components/FormError"
+import FormError from "@/web/components/Form/FormError"
 import cookie from "cookie"
 import createAPIClient from "@/web/createAPIClient"
 import getFavoritesService from "@/web/services/favorites/getFavorites"
-import EmptyPage from "@/web/components/EmptyPage"
+import CenterItem from "@/web/components/Design/CenterItem"
+import { useTranslation } from "next-i18next"
 
 export const getServerSideProps = async ({ locale, params, req }) => {
   const userId = params.userId
@@ -53,13 +54,18 @@ export const getServerSideProps = async ({ locale, params, req }) => {
     props: {
       userId,
       data: data.result,
-      ...(await serverSideTranslations(locale, ["common", "navigation"])),
+      ...(await serverSideTranslations(locale, [
+        "common",
+        "navigation",
+        "product",
+      ])),
     },
   }
 }
 
 const Favorite = (props) => {
   const { userId, data } = props
+  const { t } = useTranslation("product")
 
   const {
     actions: { addToCart },
@@ -100,6 +106,9 @@ const Favorite = (props) => {
       }
 
       setFavorite(data.result)
+      setContentDialog("Votre produit a été retiré des favoris")
+      setIsOpen(true)
+      setTimeout(() => setIsOpen(false), 3000)
     },
     [deleteFavorite, getFavorites, userId]
   )
@@ -109,7 +118,7 @@ const Favorite = (props) => {
       addToCart(product, image, 1)
       setContentDialog("Votre produit a bien été ajouté aux panier")
       setIsOpen(true)
-      setTimeout(() => setIsOpen(false), 2500)
+      setTimeout(() => setIsOpen(false), 3000)
     },
     [addToCart]
   )
@@ -118,16 +127,12 @@ const Favorite = (props) => {
     <>
       {error ? <FormError error={error} /> : ""}
 
-      <Dialog
-        isOpen={isOpen}
-        dialogTitle="Informations"
-        content={contentDialog}
-      />
+      <Dialog isOpen={isOpen} content={contentDialog} />
 
       {favorite.length > 0 ? (
         <>
-          <h1 className="flex text-stone-500 text-3xl font-bold justify-center my-6">
-            My Favourits
+          <h1 className="flex text-stone-400 text-3xl font-bold justify-center my-6">
+            {t("favorite")}
           </h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mx-4 my-4">
             {favorite.map((product) => (
@@ -189,7 +194,7 @@ const Favorite = (props) => {
           </div>
         </>
       ) : (
-        <EmptyPage
+        <CenterItem
           icon={faBoxOpen}
           content="Your favorites list is empty !"
           button="Go home"

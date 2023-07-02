@@ -10,10 +10,10 @@ import {
   faTrash,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons"
-import TableHeadField from "@/web/components/Admin/TableHeadField"
+import TableHeadField from "@/web/components/Admin/Table/TableHeadField"
 import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
-import FormError from "@/web/components/FormError"
-import SelectShow from "@/web/components/Admin/SelectShow"
+import FormError from "@/web/components/Form/FormError"
+import SelectShow from "@/web/components/Admin/SelectAndSearch/SelectShow"
 import Modal from "@/web/components/Modal"
 import EditCategoryForm from "@/web/components/Admin/Form/EditCategoryForm"
 
@@ -314,43 +314,42 @@ const CategoriesAdmin = () => {
             }`}
           ></button>
         </div>
-        <>
-          <div className="border-t-4 border-gray-500 px-3 my-4" />
-          <div className="flex items-center justify-between ">
-            <div className="px-4">
-              {category?.isDelete ? (
-                <span className="italic text-red-500 text-lg">
-                  (Category delete : id {category?.id})
-                </span>
-              ) : (
-                <span className="italic text-green-500 text-lg">
-                  (Category active : id {category?.id})
-                </span>
-              )}
-            </div>
-            {!category?.isDelete && (
-              <button
-                className="flex justify-end text-stone-500 font-bold text-lg rounded"
-                onClick={() => setToggleUpdateCategory(!toggleUpdateCategory)}
-                title={
-                  toggleUpdateCategory
-                    ? "Update Category"
-                    : "Finish modifications"
-                }
-              >
-                <FontAwesomeIcon
-                  icon={toggleUpdateCategory ? faEdit : faCheck}
-                  className="h-7"
-                />
-              </button>
+
+        <div className="border-t-4 border-gray-500 px-3 my-4" />
+        <div className="flex items-center justify-between ">
+          <div className="px-4">
+            {category?.isDelete ? (
+              <span className="italic text-red-500 text-lg">
+                (Category delete : id {category?.id})
+              </span>
+            ) : (
+              <span className="italic text-green-500 text-lg">
+                (Category active : id {category?.id})
+              </span>
             )}
           </div>
-          <EditCategoryForm
-            initialValues={category}
-            onSubmit={handleSubmitUpdate}
-            active={toggleUpdateCategory}
-          />
-        </>
+          {!category?.isDelete && (
+            <button
+              className="flex justify-end text-stone-500 font-bold text-lg rounded"
+              onClick={() => setToggleUpdateCategory(!toggleUpdateCategory)}
+              title={
+                toggleUpdateCategory
+                  ? "Update Category"
+                  : "Finish modifications"
+              }
+            >
+              <FontAwesomeIcon
+                icon={toggleUpdateCategory ? faEdit : faCheck}
+                className="h-7"
+              />
+            </button>
+          )}
+        </div>
+        <EditCategoryForm
+          initialValues={category}
+          onSubmit={handleSubmitUpdate}
+          active={toggleUpdateCategory}
+        />
       </Modal>
     </>
   )

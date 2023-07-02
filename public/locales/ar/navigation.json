@@ -11,5 +11,6 @@
   "menu_logout": "تسجيل الخروج",
   "menu_login": "تسجيل الدخول",
   "menu_register": "تسجيل",
-  "menu_admin": "المشرف"
+  "menu_admin": "المشرف",
+  "go_back": "عُد"
 }

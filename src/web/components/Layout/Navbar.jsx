@@ -28,9 +28,9 @@ import useAppContext from "@/web/hooks/useAppContext"
 import { useRouter } from "next/router.js"
 import { useCallback } from "react"
 import { UserIcon } from "@heroicons/react/24/outline"
-import SearchBar from "../SearchBar"
+import SearchBar from "./SearchBar"
 import useCartContext from "@/web/hooks/cartContext"
-import SwitchLanguage from "../SwitchLanguage"
+import SwitchLanguage from "@/web/components/SwitchLanguage"
 import { useTranslation } from "next-i18next"
 import NavBarItem from "@/web/components/Layout/NavBarItem"
 
@@ -65,7 +65,7 @@ const Navbar = () => {
   const handleSignOut = useCallback(async () => {
     await signOut()
 
-    router.push("/")
+    router.push(routes.home())
   }, [signOut, router])
 
   const username =
@@ -112,7 +112,7 @@ const Navbar = () => {
       onClick: handleIsOpenClick,
     },
     {
-      href: routes.contact(),
+      href: "/contact",
       title: t("menu_contact"),
       icon: <FontAwesomeIcon icon={faMessage} />,
       onClick: handleIsOpenClick,
@@ -157,7 +157,7 @@ const Navbar = () => {
       onClick: handleIsOpenClick,
     },
     {
-      href: routes.contact(),
+      href: "/contact",
       title: t("menu_contact"),
       icon: <FontAwesomeIcon icon={faMessage} />,
       onClick: handleIsOpenClick,

@@ -5,8 +5,8 @@ const resetPassword =
   async (token, { password }) => {
     try {
       const { data } = await api.patch(routes.api.users.resetPassword(), {
-        token, 
-        password
+        token,
+        password,
       })
 
       return [null, data]

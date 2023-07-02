@@ -1,10 +1,10 @@
-import FormField from "@/web/components/FormField.jsx"
+import FormField from "@/web/components/Form/FormField.jsx"
 import { Form, Formik } from "formik"
 import * as yup from "yup"
-import FormError from "../FormError.jsx"
+import FormError from "@/web/components/Form/FormError.jsx"
 import { useRouter } from "next/router.js"
 import { useTranslation } from "next-i18next"
-import Button from "@/web/components/Button.jsx"
+import Button from "@/web/components/Button/Button.jsx"
 
 const AddressForm = (props) => {
   const { t } = useTranslation("address")

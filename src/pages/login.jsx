@@ -3,6 +3,8 @@ import useAppContext from "@/web/hooks/useAppContext.jsx"
 import { useRouter } from "next/router.js"
 import { useCallback, useState } from "react"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import Form from "@/web/components/Form/Form"
+import routes from "@/web/routes"
 
 export async function getServerSideProps({ locale }) {
   return {
@@ -14,10 +16,14 @@ export async function getServerSideProps({ locale }) {
 
 const Login = () => {
   const router = useRouter()
+  const query = router.query
+
   const {
     actions: { signIn },
   } = useAppContext()
+
   const [error, setError] = useState(null)
+
   const handleSubmit = useCallback(
     async (values) => {
       setError(null)
@@ -30,23 +36,17 @@ const Login = () => {
         return
       }
 
-      router.push("/")
+      query.redirection === "cart"
+        ? router.push(routes.checkout.delivery())
+        : router.push(routes.home())
     },
-    [signIn, router]
+    [signIn, router, query.redirection]
   )
 
   return (
-    <>
-      <div className="w-80 mx-auto">
-        <div>
-          <h1 className="font-semibold text-2xl text-center uppercase">
-            Connexion
-          </h1>
-
-          <LoginForm onSubmit={handleSubmit} error={error} />
-        </div>
-      </div>
-    </>
+    <Form title="Connection">
+      <LoginForm onSubmit={handleSubmit} error={error} />
+    </Form>
   )
 }
 

@@ -1,6 +1,6 @@
 import { pbkdf2 as pbkdf2Callback, randomBytes } from "node:crypto"
 import { promisify } from "node:util"
-import config from "../config.js"
+import config from "@/api/config"
 
 const pbkdf2 = promisify(pbkdf2Callback)
 

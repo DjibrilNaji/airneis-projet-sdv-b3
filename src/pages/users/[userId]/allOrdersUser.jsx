@@ -1,4 +1,4 @@
-import ListOrders from "@/web/components/ListOrders"
+import ListOrders from "@/web/components/List/ListOrders"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
 import { useState } from "react"
 import cookie from "cookie"

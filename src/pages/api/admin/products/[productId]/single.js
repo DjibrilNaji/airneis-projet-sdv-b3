@@ -6,9 +6,9 @@ import mw from "@/api/mw.js"
 import {
   boolValidator,
   idValidator,
-  integerValidator,
   materialValidator,
   numberValidator,
+  stockValidator,
   stringValidator,
   urlSlugValidator,
 } from "@/validators"
@@ -75,7 +75,7 @@ const handler = mw({
         name: stringValidator,
         description: stringValidator,
         price: numberValidator,
-        stock: integerValidator,
+        stock: stockValidator,
         highlander: boolValidator,
         slug: urlSlugValidator,
         materials: materialValidator,
@@ -105,23 +105,25 @@ const handler = mw({
 
       await db("rel_material_product").where({ productId: productId }).del()
 
-      materials.map(async (mat) => {
-        const materialId = await MaterialModel.query()
-          .select("materials.id")
-          .findOne({ nameMaterial: mat })
+      if (materials) {
+        materials.map(async (mat) => {
+          const materialId = await MaterialModel.query()
+            .select("materials.id")
+            .findOne({ nameMaterial: mat })
 
-        await db("rel_material_product").insert({
-          productId,
-          materialId: materialId.id,
+          await db("rel_material_product").insert({
+            productId,
+            materialId: materialId.id,
+          })
         })
-      })
+      }
 
       const newProduct = await ProductModel.query()
         .updateAndFetchById(productId, {
           ...(name ? { name } : {}),
           ...(description ? { description } : {}),
           ...(price ? { price } : {}),
-          ...(stock ? { stock } : {}),
+          ...(stock || stock === 0 ? { stock } : {}),
           ...(highlander ? { highlander } : {}),
           ...(slug ? { slug } : {}),
         })

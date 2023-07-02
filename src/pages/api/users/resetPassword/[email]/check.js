@@ -1,14 +1,11 @@
 import validate from "@/api/middlewares/validate.js"
 import mw from "@/api/mw.js"
 import { emailValidator } from "@/validators"
-import {
-  NotFoundError,
-} from "@/api/errors"
+import { NotFoundError } from "@/api/errors"
 import config from "@/api/config"
 import jsonwebtoken from "jsonwebtoken"
 import UserModel from "@/api/db/models/UserModel"
 import sgMail from "@sendgrid/mail"
-
 
 const handler = mw({
   GET: [
@@ -23,7 +20,7 @@ const handler = mw({
       },
       res,
     }) => {
-      const query =  UserModel.query().findOne({email})
+      const query = UserModel.query().findOne({ email })
 
       const user = await query
 
@@ -31,13 +28,13 @@ const handler = mw({
         throw new NotFoundError()
       }
 
-      const userDelete = await query.where({isDelete: false})
+      const userDelete = await query.where({ isDelete: false })
 
       if (!userDelete) {
         throw new NotFoundError()
       }
 
-      const userValidate = await query.where({validate: true})
+      const userValidate = await query.where({ validate: true })
 
       if (!userValidate) {
         throw new NotFoundError()

@@ -11,5 +11,6 @@
   "menu_logout": "התנתקות",
   "menu_login": "כניסה",
   "menu_register": "הרשמה",
-  "menu_admin": "מנהל"
+  "menu_admin": "מנהל",
+  "go_back": "תחזור"
 }

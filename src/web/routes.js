@@ -16,6 +16,10 @@ const routes = {
   contact: () => "/contact",
   product: (slug) => `/products/${slug}`,
   categorie: (slug) => `/categories/${slug}`,
+  contact: {
+    contact: () => "/contact",
+    confirmation: () => "/contact/confirmation",
+  },
   checkout: {
     cart: () => "/checkout/cart",
     delivery: () => "/checkout/delivery",
@@ -23,6 +27,7 @@ const routes = {
     confirmation: () => "/checkout/confirmation",
   },
   admin: {
+    admin: () => "/admin",
     users: {
       single: (userId) => `/admin/users/${userId}/view`,
       collection: () => "/admin/users",
@@ -58,6 +63,14 @@ const routes = {
       payment: () => "/payment",
     },
     admin: {
+      imageHomePage: {
+        collection: () => "/admin/image-home-page",
+        changeDisplay: (imageHomePageId) =>
+          `/admin/image-home-page/${imageHomePageId}`,
+        create: () => `/admin/image-home-page`,
+        delete: (imageHomePageId) =>
+          `/admin/image-home-page/${imageHomePageId}`,
+      },
       materials: {
         collection: () => "/admin/materials/all",
       },
@@ -86,6 +99,14 @@ const routes = {
         collection: () => `/admin/orders`,
         single: (userId) => `/admin/orders/${userId}`,
       },
+      dashboard: {
+        sales: () => `/sales`,
+        salesToday: () => `/salesToday`,
+        categoriesSales: (startDate, endDate) =>
+          `/categoriesSales?startDate=${startDate}&endDate=${endDate}`,
+        averageBasket: (startDate, endDate) =>
+          `/averageBasket?startDate=${startDate}&endDate=${endDate}`,
+      },
     },
     users: {
       collection: () => `/users`,
@@ -93,7 +114,8 @@ const routes = {
       checkEmail: (email) => `users/resetPassword/${email}/check`,
       resetPassword: () => `/users/resetPassword/reset`,
       address: {
-        collection: (userId) => `/users/${userId}/address`,
+        collection: (userId, query) =>
+          createRouteWithQueryParams(`/users/${userId}/address`, query),
         single: (addressId) => `/users/address/${addressId}/addressSingle`,
         add: (userId) => `/users/${userId}/address`,
       },
@@ -125,7 +147,8 @@ const routes = {
       favorites: (userId, slug) => `/users/${userId}/favorites/${slug}`,
     },
     search: {
-      collection: (query) => createRouteWithQueryParams(`/search`, query),
+      collection: () => "/search",
+      searchFilter: () => "/searchFilter",
     },
     orders: {
       collection: (userId) => `/users/${userId}/allOrdersUser`,
