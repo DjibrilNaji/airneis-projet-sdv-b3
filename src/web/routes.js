@@ -13,9 +13,13 @@ const routes = {
   checkEmail: () => "/checkEmail",
   signUp: () => "/register",
   signIn: () => "/login",
-  contact: () => "/contact",
+  about: () => "/about_us",
   product: (slug) => `/products/${slug}`,
   categorie: (slug) => `/categories/${slug}`,
+  info: {
+    terms: () => "/terms",
+    privacy: () => "/privacy",
+  },
   contact: {
     contact: () => "/contact",
     confirmation: () => "/contact/confirmation",

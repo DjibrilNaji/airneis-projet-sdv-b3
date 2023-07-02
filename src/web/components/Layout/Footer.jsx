@@ -7,7 +7,7 @@ import {
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useTranslation } from "next-i18next"
-// import routes from "@/web/routes"
+import routes from "@/web/routes"
 
 const Footer = () => {
   const { t } = useTranslation("navigation")
@@ -20,13 +20,13 @@ const Footer = () => {
       dir={direction}
     >
       <div>
-        <Link href={`/`} legacyBehavior>
-          <a className="pr-3 text-stone-500 text-lg font-bold">
+        <Link href={routes.info.terms()} legacyBehavior>
+          <a className="pr-3 text-stone-400 text-lg font-bold">
             {t("menu_conditions")}
           </a>
         </Link>
-        <Link href={`/`} legacyBehavior>
-          <a className="px-3 text-stone-500 text-lg font-bold">
+        <Link href={routes.info.privacy()} legacyBehavior>
+          <a className="px-3 text-stone-400 text-lg font-bold">
             {t("menu_privacy")}
           </a>
         </Link>
