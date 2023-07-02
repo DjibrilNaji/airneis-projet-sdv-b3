@@ -101,14 +101,16 @@ const SearchBar = () => {
       {error ? <FormError error={error} /> : ""}
       {showSearch ? (
         <>
-          <button>
+          <button title="Search">
             <FontAwesomeIcon
               icon={faXmark}
               className="hidden lg:block h-6 text-stone-400 mr-4"
               onClick={() => {
                 handleShowSearchClick()
               }}
-            />
+            >
+              <title>Search</title>
+            </FontAwesomeIcon>
           </button>
           <form className="hidden lg:block" onSubmit={handleSearchSubmit}>
             <input

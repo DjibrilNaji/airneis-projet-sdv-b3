@@ -51,6 +51,7 @@ const Carousel = (props) => {
         disabled={image?.length === 1}
         onClick={handlePrevious}
         className="absolute top-[45%] border-2 opacity-60 hover:opacity-100 bg-white p-2 left-0 rounded-full transition-opacity ease-linear duration-300 disabled:opacity-20"
+        title="Left arrow"
       >
         <FontAwesomeIcon icon={faArrowLeft} className="fa-2xl text-stone-500" />
       </button>
@@ -59,6 +60,7 @@ const Carousel = (props) => {
         disabled={image?.length === 1}
         onClick={handleNext}
         className="absolute top-[45%] border-2 opacity-60 hover:opacity-100 bg-white p-2 right-0 rounded-full transition-opacity ease-linear duration-300 disabled:opacity-20"
+        title="Right arrow"
       >
         <FontAwesomeIcon
           icon={faArrowRight}
@@ -75,6 +77,7 @@ const Carousel = (props) => {
                 ? "bg-stone-500"
                 : "bg-stone-200 hover:bg-stone-900"
             }`}
+            title="Slides"
           />
         ))}
       </div>
