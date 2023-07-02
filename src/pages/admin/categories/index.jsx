@@ -4,14 +4,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCheck, faEdit } from "@fortawesome/free-solid-svg-icons"
 import useAppContext, { AppContextProvider } from "@/web/hooks/useAppContext"
 import FormError from "@/web/components/Form/FormError"
-import SelectShow from "@/web/components/Admin/SelectAndSearch/SelectShow"
 import Modal from "@/web/components/Modal"
 import EditCategoryForm from "@/web/components/Admin/Form/EditCategoryForm"
 import ContentPage from "@/web/components/Admin/ContentPage"
-import CenterItem from "@/web/components/CenterItem"
+import CenterItem from "@/web/components/Design/CenterItem"
 import ConfirmDelete from "@/web/components/Admin/ConfirmDelete"
 import DeleteAllButton from "@/web/components/Admin/Button/DeleteAllButton"
-import Dialog from "@/web/components/Dialog"
+import Dialog from "@/web/components/Design/Dialog"
 
 const CategoriesAdmin = () => {
   const types = {
