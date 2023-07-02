@@ -151,6 +151,14 @@ const CategoriesAdmin = () => {
 
   const handleDelete = useCallback(
     async (categoryId) => {
+      if (categoryId === 1) {
+        setContentDialog("You can't delete this category")
+        setIsOpen(true)
+        setTimeout(() => setIsOpen(false), 3000)
+
+        return
+      }
+
       const [err] = await deleteCategory(categoryId)
 
       if (err) {
