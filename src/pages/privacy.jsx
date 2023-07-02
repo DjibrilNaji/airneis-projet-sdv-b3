@@ -1,4 +1,6 @@
+import { useTranslation } from "next-i18next"
 import { serverSideTranslations } from "next-i18next/serverSideTranslations"
+import { useRouter } from "next/router"
 import React from "react"
 
 export async function getServerSideProps(context) {
@@ -6,63 +8,57 @@ export async function getServerSideProps(context) {
 
   return {
     props: {
-      ...(await serverSideTranslations(locale, ["common", "navigation"])),
+      ...(await serverSideTranslations(locale, [
+        "common",
+        "navigation",
+        "termsprivacy",
+      ])),
     },
   }
 }
 
 const PrivacyPolicy = () => {
+  const { locale } = useRouter()
+  const { t } = useTranslation("termsprivacy")
+  const direction = t("direction", { locale })
+
   return (
-    <div className="p-4 sm:p-6">
+    <div className="p-4 sm:p-6" dir={direction}>
       <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 sm:mb-4">
-        Detailed Privacy Policy
+        {t("Detailed_privacy_policy")}
       </h1>
       <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mt-4 sm:mt-6 mb-1 sm:mb-2">
-        PRIVACY POLICY
+        {t("Privacy_policy")}
       </h2>
       <h3 className="text-lg sm:text-xl font-semibold mt-3 sm:mt-4 mb-1 sm:mb-2">
-        1- User Data
+        {t("User_data")}
       </h3>
       <p className="text-sm sm:text-base mb-2 sm:mb-4">
-        We collect data provided by users for the sole purpose of improving our
-        service. This data will not be shared with any third-party services
-        without explicit consent. We implement stringent data protection
-        measures to ensure the integrity and confidentiality of user data.
+        {t("User_data_paragraph")}
       </p>
       <h3 className="text-lg sm:text-xl font-semibold mt-3 sm:mt-4 mb-1 sm:mb-2">
-        2- Cookies
+        {t("CookiesPrivacy")}
       </h3>
       <p className="text-sm sm:text-base mb-2 sm:mb-4">
-        Our site uses cookies to improve the user experience. These do not
-        contain any personal identification information, but they do track user
-        interaction for analysis. Users can manage cookie preferences in their
-        browser settings.
+        {t("Cookies_paragraph")}
       </p>
       <h3 className="text-lg sm:text-xl font-semibold mt-3 sm:mt-4 mb-1 sm:mb-2">
-        3- Third-Party Services
+        {t("Third_party_services")}
       </h3>
       <p className="text-sm sm:text-base mb-2 sm:mb-4">
-        We may incorporate third-party services for certain functionalities.
-        This policy does not cover data collected by such third parties. Users
-        are advised to review the privacy policies of these third-party
-        services.
+        {t("Third_party_services_paragraph")}
       </p>
       <h3 className="text-lg sm:text-xl font-semibold mt-3 sm:mt-4 mb-1 sm:mb-2">
-        4- Security Measures
+        {t("Security_measures")}
       </h3>
       <p className="text-sm sm:text-base mb-2 sm:mb-4">
-        We implement robust security measures to protect your data, including
-        encryption, anonymization, and secure servers. However, no data
-        transmission over the internet can be 100% secure. As such, we cannot
-        guarantee the absolute security of your data.
+        {t("Security_measures_paragraph")}
       </p>
       <h3 className="text-lg sm:text-xl font-semibold mt-3 sm:mt-4 mb-1 sm:mb-2">
-        5- User Rights
+        {t("User_rights")}
       </h3>
       <p className="text-sm sm:text-base mb-2 sm:mb-4">
-        Users have certain rights regarding their personal data, such as the
-        right to access, correct, or delete their personal data. Users can
-        contact us to exercise these rights.
+        {t("User_rights_paragraph")}
       </p>
     </div>
   )
