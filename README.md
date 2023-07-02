@@ -35,6 +35,8 @@ npm install
 > Create your .env with these fields
 
 ```dotenv
+# Example :
+HOST_PATH=http://localhost:3000
 BASE_URL=http://localhost:3000/api
 
 # Database
