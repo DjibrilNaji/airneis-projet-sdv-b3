@@ -100,13 +100,13 @@ const Navbar = () => {
       onClick: handleIsOpenClick,
     },
     {
-      href: "/",
+      href: routes.info.terms(),
       title: t("menu_conditions"),
       icon: <FontAwesomeIcon icon={faList} />,
       onClick: handleIsOpenClick,
     },
     {
-      href: "/",
+      href: routes.info.privacy(),
       title: t("menu_privacy"),
       icon: <FontAwesomeIcon icon={faFileContract} />,
       onClick: handleIsOpenClick,

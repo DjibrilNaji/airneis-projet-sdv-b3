@@ -15,6 +15,10 @@ const routes = {
   signIn: () => "/login",
   product: (slug) => `/products/${slug}`,
   categorie: (slug) => `/categories/${slug}`,
+  info: {
+    terms: () => "/terms",
+    privacy: () => "/privacy",
+  },
   contact: {
     contact: () => "/contact",
     confirmation: () => "/contact/confirmation",
