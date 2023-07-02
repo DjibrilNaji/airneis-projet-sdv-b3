@@ -4,7 +4,7 @@ import CategoriesVolume from "@/web/components/Admin/Dashboard/CategoriesVolumes
 
 const DashboardAdmin = () => {
   return (
-    <div className="">
+    <div className="mt-10 ml-2">
       <div className="">
         <div className="">
           <SalesToday />
