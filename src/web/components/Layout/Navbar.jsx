@@ -163,7 +163,7 @@ const Navbar = () => {
       onClick: handleIsOpenClick,
     },
     {
-      href: "/",
+      href: routes.about(),
       title: t("menu_about"),
       icon: <FontAwesomeIcon icon={faCircleInfo} />,
       onClick: handleIsOpenClick,

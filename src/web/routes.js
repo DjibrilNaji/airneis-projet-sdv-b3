@@ -13,6 +13,7 @@ const routes = {
   checkEmail: () => "/checkEmail",
   signUp: () => "/register",
   signIn: () => "/login",
+  about: () => "/about_us",
   product: (slug) => `/products/${slug}`,
   categorie: (slug) => `/categories/${slug}`,
   info: {
